@@ -1,0 +1,267 @@
+import { Request, Response, NextFunction } from "express";
+import company from "../../models/company";
+import { config } from "../../config";
+import User_token from "../../helper/helper";
+import get_token from "../../helper/userHeader";
+import axios from "axios";
+import moment from "moment";
+
+const getDasboardDetail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = await get_token(req);
+    const user_detail = await User_token(token);
+    let dashboard_response_obj: { [key: string]: any } = {};
+
+    let companyDetail: any = await company.findOne({
+      _id: user_detail?.cid,
+      is_deleted: 0,
+    });
+
+    if (!companyDetail) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Company Not Found.",
+      });
+    }
+
+    let start_date: any = req.query.start_date;
+    let end_date: any = req.query.end_date;
+    let call_matrics_type: any = req.query.call_matrics_type;
+    let type_value: any = ["today", "week", "month", "year"];
+
+    if (start_date == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: `Start Date Is Mandatory.`,
+      });
+    }
+
+    if (end_date == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: `End Date Is Mandatory.`,
+      });
+    }
+
+    if (call_matrics_type == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: `Call Matrics Type Is Mandatory.`,
+      });
+    }
+
+    if (
+      start_date == "" ||
+      !moment(start_date, "YYYY-MM-DD HH:mm", true).isValid()
+    ) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: `Start Date Is Invalid.`,
+      });
+    }
+
+    if (
+      end_date == "" ||
+      !moment(end_date, "YYYY-MM-DD HH:mm", true).isValid()
+    ) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: `End Date Is Invalid.`,
+      });
+    }
+
+    if (call_matrics_type == "" || !type_value.includes(call_matrics_type)) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: `Call Matrics Type Is Invalid.`,
+      });
+    }
+
+    let api_config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: config.PBX_API.DASHBOARD.GET_REPORTS,
+      auth: config.PBX_API.AUTH,
+      data: {
+        domain_id: companyDetail.domain_uuid,
+        start_date: start_date,
+        end_date: end_date,
+      },
+    };
+
+    console.log("api_config", api_config);
+    try {
+      const reports_api_data: any = await axios.request(api_config);
+
+      if (
+        reports_api_data?.data?.data &&
+        reports_api_data?.data?.total_counts &&
+        reports_api_data?.data?.sla &&
+        reports_api_data?.data?.call_comparison
+      ) {
+        let extension_detail_data: any = {
+          extensions: reports_api_data?.data?.data,
+        };
+        dashboard_response_obj.extensions_detail = extension_detail_data;
+
+        let reports_counts: any = {
+          total_calls: reports_api_data?.data?.total_counts.total_calls,
+          total_outbound: reports_api_data?.data?.total_counts.total_outbound,
+          total_local: reports_api_data?.data?.total_counts.total_local,
+          total_answered: reports_api_data?.data?.total_counts.total_answered,
+          total_missed: reports_api_data?.data?.total_counts.total_missed,
+          total_duration_sec:
+            reports_api_data?.data?.total_counts.total_duration_sec,
+          avg_response_sec:
+            reports_api_data?.data?.total_counts.avg_response_sec,
+          today_total_calls:
+            reports_api_data?.data?.total_counts.today_total_calls,
+          today_missed_calls:
+            reports_api_data?.data?.total_counts.today_missed_calls,
+          today_missed_calls_percentage:
+            reports_api_data?.data?.total_counts.today_missed_calls_percentage,
+          sla: reports_api_data?.data?.sla,
+          call_comparison: reports_api_data?.data?.call_comparison,
+        };
+        dashboard_response_obj.reports_counts = reports_counts;
+      }
+    } catch (error: any) {
+      console.log("error", error);
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "Failed to Get Reports",
+      });
+    }
+
+    let api_config_call_metrix = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: config.PBX_API.DASHBOARD.GET_CALL_MATRICS,
+      auth: config.PBX_API.AUTH,
+      data: {
+        domain_id: companyDetail.domain_uuid,
+        type: call_matrics_type,
+      },
+    };
+
+    try {
+      const call_metrix_api_data: any = await axios.request(
+        api_config_call_metrix
+      );
+      if (
+        call_metrix_api_data?.data?.data &&
+        call_metrix_api_data?.data?.total_counts
+      ) {
+        let call_matrics_data = {
+          call_metrics: call_metrix_api_data?.data?.data,
+          total_inbound: call_metrix_api_data?.data?.total_counts.total_inbound,
+          total_outbound:
+            call_metrix_api_data?.data?.total_counts.total_outbound,
+          total_local: call_metrix_api_data?.data?.total_counts.total_local,
+          total_answered:
+            call_metrix_api_data?.data?.total_counts.total_answered,
+          total_unanswered:
+            call_metrix_api_data?.data?.total_counts.total_unanswered,
+          total_missed: call_metrix_api_data?.data?.total_counts.total_missed,
+        };
+        dashboard_response_obj.call_metrics_detail = call_matrics_data;
+      }
+    } catch (error: any) {
+      console.log("error",error)
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "Failed to Get Reports",
+      });
+    }
+
+    let api_config_missed_call = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: config.PBX_API.DASHBOARD.GET_MISSED_CALL,
+      auth: config.PBX_API.AUTH,
+      data: {
+        domain_id: companyDetail.domain_uuid,
+        start_date: start_date,
+        end_date: end_date,
+      },
+    };
+
+    try {
+      const missed_call_api_data: any = await axios.request(
+        api_config_missed_call
+      );
+      if (
+        missed_call_api_data?.data?.data &&
+        missed_call_api_data?.data?.total_counts
+      ) {
+        let missed_call_data = {
+          missed_call: missed_call_api_data?.data?.data,
+          total_missed: missed_call_api_data?.data?.total_counts.total_missed,
+          total_missed_persentage:
+            missed_call_api_data?.data?.total_counts.total_missed_persentage,
+          avg_wait_sec: missed_call_api_data?.data?.total_counts.avg_wait_sec,
+        };
+        dashboard_response_obj.missed_call_detail = missed_call_data;
+      }
+    } catch (error: any) {
+      console.log("error in misscalled api",error)
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "Failed to Get Reports",
+      });
+    }
+
+    let api_ring_groups = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: config.PBX_API.DASHBOARD.GET_RINGGROUP_CALL,
+      auth: config.PBX_API.AUTH,
+      data: {
+        domain_id: companyDetail.domain_uuid,
+        start_date: start_date,
+        end_date: end_date,
+      },
+    };
+    console.log("api_ring_groups",api_ring_groups)
+    try {
+      const ringroup_api_data: any = await axios.request(
+        api_ring_groups
+      );
+      console.log("ringroup_api_data",ringroup_api_data)
+      if (
+        ringroup_api_data?.data?.data
+      ) {
+        let ring_group_call_data = {
+          ring_group_call: ringroup_api_data?.data?.data,
+        }
+        dashboard_response_obj.ring_group_detail = ring_group_call_data;
+      }
+    } catch (error: any) {
+      console.log("error in misscalled api",error)
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "Failed to Get Reports",
+      });
+    }
+
+    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      success: 1,
+      message: "Dashboard Detail",
+      DashboardDetail: dashboard_response_obj,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+      success: 0,
+      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+    });
+  }
+};
+export default {
+  getDasboardDetail,
+};

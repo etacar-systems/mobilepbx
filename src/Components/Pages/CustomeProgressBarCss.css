@@ -1,0 +1,26 @@
+.circular-progress {
+        width: 100px;
+        /* Adjust size of the circular progress bar */
+        height: 100px;
+        /* Adjust size of the circular progress bar */
+        margin: 0 auto;
+        position: relative;
+}
+
+.progress-circle-bg {
+        fill: none;
+        stroke:var(--main-progresscirclebg-color);
+        /* Background color */
+}
+
+.progress-circle {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+}
+
+.progress-text {
+        font-size: 16px;
+        /* Adjust font size */
+        font-weight: bold;
+}

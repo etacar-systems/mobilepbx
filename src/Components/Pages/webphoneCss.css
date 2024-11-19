@@ -1,0 +1,218 @@
+@import url("~@fortawesome/fontawesome-free/css/all.min.css");
+
+.webphone-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-top: 5px;
+}
+
+.right_chat li {
+  position: relative;
+}
+
+.right_chat li:last-child .medias {
+  margin: 0px;
+}
+
+.medias {
+  display: flex;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.right_chat .medias .avtar-pic {
+  margin-right: 10px;
+}
+
+.avtar-pic.w35 {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+.avtar-pic.w35{
+  width: 35px;
+    height: 35px;
+    line-height: 35px;
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+}
+.tabcontent .badge{}
+.avtar-pic {
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.bg-cyan {
+  background: var(--main-cyan-color);
+  color: var(--main-bgcolor-color);
+}
+.badge
+.avtar-pic span {
+  font-size: 12px;
+  color: var(--main-white-color);
+  font-weight: 500;
+  display: block;
+  text-align: center;
+}
+
+.medias .medias-body {
+  font-size: 14px;
+}
+
+.medias-body {
+  -ms-flex: 1;
+  flex: 1;
+  text-overflow: ellipsis !important;
+  width: 100%;
+}
+
+.right_chat .medias .name {
+  display: block;
+  vertical-align: middle;
+  font-size: 15px;
+  color: var(--main-adminheaderpage-color);
+  margin: 0px;
+  line-height: 18px;
+  width: 80%;
+  text-overflow: ellipsis;
+  
+}
+
+.right_chat .medias .message {
+  font-size: 13px;
+}
+
+.right_chat .medias .message {
+  display: inline-block;
+  vertical-align: middle;
+  color: var(--main-adminnumberfont-color);
+}
+
+.right_chat .medias .status {
+  border-color: var(--main-white-color);
+}
+
+.right_chat.Online .status {
+  background: var(--main-green-color);
+  outline: 3px solid var(--main-white-color);
+}
+.right_chat.offline .status {
+  background: var(--main-orangecustomermodal-color) !important;
+  outline: 3px solid var(--main-white-color);
+}
+.right_chat.Busy .status {
+  background: var(--main-badgebusy-color) !important;
+  outline: 3px solid var(--main-white-color);
+}
+
+.right_chat .medias .status {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 50px;
+  min-width: inherit;
+  position: absolute;
+  left: 23px;
+  top: 23px;
+  width: 14px;
+  height: 14px;
+}
+.tabcontent .right_chat .medias .status {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 50px;
+  min-width: inherit;
+  position: absolute;
+  left: 27px;
+  top: 26px;
+  width: 12px;
+  height: 12px;
+}
+.tabcontent .badge{
+  --bs-badge-font-size:0.35em !important;
+}
+.right_chat li.Busy .status {
+  background: var(--main-badgebusy-color);
+}
+
+.right_chat li.Offline .status {
+  background:var(--main-orange-color);
+}
+
+.webphone-table {
+  border-bottom: 0px solid transparent;
+}
+
+.webphone-table td {
+  background-color: var(--main-modalbackground-color) !important;
+  box-shadow: none !important;
+}
+
+.webphone-table:hover {
+  background-color: transparent;
+}
+
+.webphone-modal-header {
+  font-size: 16px !important;
+  color: var(--main-adminheaderpage-color) !important;
+}
+
+.webphone-firstname {
+  color: var(--main-adminnumberfont-color) !important;
+}
+
+.webphone-lastname {
+  color: var(--main-adminnumberfont-color) !important;
+  width: 150px !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden;
+}
+
+.webphone-btn {
+  color: var(--main-phone-color) !important;
+  background-color: var(--main-orange-color) !important;
+  border-color: var(--main-orange-color) !important;
+  font-size: 14px !important; 
+  font-weight: 300 !important;
+  padding: 0.375rem 0.75rem !important;
+  display: inline-block !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  border: 1px solid var(--main-orange-color) !important;
+  line-height: 1.5 !important;
+  width: 50% !important;
+  margin: 0px 25px !important;
+}
+
+.mb-55 {
+  margin-bottom: 0.75rem !important;
+}
+
+.webphone-close-btn {
+  background: var(--main-orange-color);
+  border-color: 1px solid var(--main-orange-color);
+  color: var(--main-phone-color);
+  font-weight: 400;
+  padding: 6px 18px;
+  border-radius: 50px;
+}
+
+.webphone-btn:hover {
+  background-color: var(--main-orange-color) !important;
+  color: white !important;
+}
+
+/* .webphone-close-btn:hover { */
+  /* box-shadow: var(--mian-webphonecloseshadow-color) 0px 5px 10px 0px; */
+/* } */
+
+.webphone-modal {
+  background-color: var(--main-white-color);
+}

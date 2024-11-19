@@ -1,0 +1,66 @@
+import React, { useState } from "react";
+import "./CustomeChartCss.css";
+
+const ProgressCircle = ({
+  classNames,
+  pragressLable,
+  passWholeProgress,
+  completedColor,
+  bgcolor,
+  Totalcall,
+  Answeredcall,
+  Title1,
+  Title2,
+}) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const radius = 40; // Radius of the circle
+  const circumference = 2 * Math.PI * radius; // Calculate circumference
+  const totalUnits = Totalcall;
+  const completedUnits = Answeredcall;
+  // Calculate the percent for completed units out of the total
+  const completedPercent = (completedUnits / totalUnits) * 100;
+  const formatPercent = (value) => {
+    return value > 0 ? parseFloat(value.toFixed(2)) : 0;
+  };
+  return (
+    <div
+      className={passWholeProgress}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <svg className={classNames} viewBox="0 0 100 100">
+        <circle
+          className="progress-circle__background"
+          cx="50"
+          cy="50"
+          r={radius}
+          style={{ stroke: bgcolor }}
+        />
+        <circle
+          className="progress-circle__bar"
+          cx="50"
+          cy="50"
+          r={radius}
+          style={{
+            stroke: completedColor,
+            strokeDasharray: circumference,
+            strokeDashoffset:
+              circumference - (completedPercent / 100) * circumference,
+          }}
+        />
+      </svg>
+      <div className={pragressLable}>{totalUnits || 0}</div>
+
+      {/* Tooltip */}
+      {showTooltip && (
+        <div className="tooltipert">
+          {Title1}: {formatPercent(completedPercent)}% <br />
+          {Title2}: {formatPercent(100 - completedPercent)}%
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProgressCircle;
