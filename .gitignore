@@ -1,0 +1,19 @@
+# Dependency directories
+node_modules/
+nodejs/node_modules/
+
+# Build output
+dist/
+build/
+
+# Cache directories
+.cache/
+.next/
+out/
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+.env
+nodejs/.DS_Store

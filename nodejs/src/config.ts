@@ -7,7 +7,8 @@ const DB_NAME = process.env.DBNAME;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "";
 const PBX_API_USERNAME = "apiuser";
 const PBX_API_PASSWORD = "d6kVImEEV1A34B2fjduZpxxFAf4";
-const PBX_BASE_URL = "https://voip.mobiililinja.fi/webapi/core/";
+//const PBX_BASE_URL = "https://voip.mobiililinja.fi/webapi/core/";
+const PBX_BASE_URL = "https://mobilepbx.mobiililinja.fi/webapi/core/";
 
 export const config = {
   mongo: {

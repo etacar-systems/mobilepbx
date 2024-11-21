@@ -182,7 +182,7 @@ const addNewRecord = async (
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: "https://voip.mobiililinja.fi/webapi/core/extension/create.php",
+      url: "https://mobilepbx.mobiililinja.fi/webapi/core/extension/create.php",
       auth: {
         username: "apiuser",
         password: "d6kVImEEV1A34B2fjduZpxxFAf4",
@@ -447,7 +447,7 @@ const EditNewRecord = async (
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: "https://voip.mobiililinja.fi/webapi/core/extension/update.php",
+      url: "https://mobilepbx.mobiililinja.fi/webapi/core/extension/update.php",
       auth: {
         username: "apiuser",
         password: "d6kVImEEV1A34B2fjduZpxxFAf4",
@@ -556,7 +556,7 @@ const DeleteRocrd = async (req: Request, res: Response, next: NextFunction) => {
   let config = {
     method: "delete",
     maxBodyLength: Infinity,
-    url: "https://voip.mobiililinja.fi/webapi/core/extension/delete.php",
+    url: "https://mobilepbx.mobiililinja.fi/webapi/core/extension/delete.php",
     auth: {
       username: "apiuser",
       password: "d6kVImEEV1A34B2fjduZpxxFAf4",

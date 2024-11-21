@@ -197,7 +197,7 @@ const deleteRecording = async (req: Request, res: Response) => {
     let api_config = {
       method: "delete",
       maxBodyLength: Infinity,
-      url: "https://voip.mobiililinja.fi/webapi/core/recording/delete.php",
+      url: "https://mobilepbx.mobiililinja.fi/webapi/core/recording/delete.php",
       auth: {
         username: "apiuser",
         password: "d6kVImEEV1A34B2fjduZpxxFAf4",
@@ -281,7 +281,7 @@ const getrecodlist = async (
       method: "get",
       maxBodyLength: Infinity,
       url:
-        "https://voip.mobiililinja.fi/webapi/core/recording/fetch_recording_by_domain.php?id=" +
+        "https://mobilepbx.mobiililinja.fi/webapi/core/recording/fetch_recording_by_domain.php?id=" +
         companyDetail?.domain_uuid,
       auth: {
         username: "apiuser",

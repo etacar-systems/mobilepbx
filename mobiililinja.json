@@ -1,0 +1,26 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": "1"
+  },
+  "connections": [
+    {
+      "id": "bdf2f2b2-84d5-4dac-930e-aae69661891b",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1731406729611"
+        }
+      },
+      "favorite": {
+        "name": "cluster0.zrm15.mongodb.net"
+      },
+      "savedConnectionType": "recent",
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://CelloIP:trello@cluster0.zrm15.mongodb.net/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      }
+    }
+  ]
+}
