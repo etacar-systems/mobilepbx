@@ -16,7 +16,7 @@
       },
       "savedConnectionType": "recent",
       "connectionOptions": {
-        "connectionString": "mongodb+srv://CelloIP:trello@cluster0.zrm15.mongodb.net/",
+        "connectionString": "mongodb://dbadmin:2f2b2e-aU3RhdGVW@70.34.197.173/?directConnection=true&appName=mongosh+2.3.3",
         "oidc": {
           "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
         }
