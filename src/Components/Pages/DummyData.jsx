@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-
+import { format } from "date-fns";
 const ChartDataComponent = () => {
   const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
   console.log(data, "datacheckdummy");
   let valuedata = data?.DashboardDetail?.reports_counts;
-  console.log(valuedata,"valuedatacheck")
+  console.log(valuedata, "valuedatacheck");
   const chartData = [
     {
       id: "chart-bg-users-1",
@@ -20,7 +20,7 @@ const ChartDataComponent = () => {
       columns: [["data1", 12, 21, 17, 40, 19, 22, 13]],
       colors: ["#e74c3c"],
       title: "Answered",
-      value: valuedata?.total_answered, 
+      value: valuedata?.total_answered,
     },
     {
       id: "chart-bg-users-3",
@@ -36,7 +36,11 @@ const ChartDataComponent = () => {
       columns: [["data1", 30, 40, 10, 40, 12, 22, 40]],
       colors: ["#f1c40f"],
       title: "Response time",
-      value: valuedata?.avg_response_sec.toFixed(2), 
+      value: `${Math.floor((valuedata?.avg_response_sec * 100).toFixed(0) / 60)
+        .toString()
+        .padStart(2, "0")}:${((valuedata?.avg_response_sec * 100).toFixed(0) % 60)
+        .toString()
+        .padStart(2, "0")}`,
     },
   ];
 

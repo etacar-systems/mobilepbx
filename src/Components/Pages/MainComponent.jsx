@@ -511,9 +511,7 @@ function MainComponent({ children }) {
                 </>
               )}
             </div>
-            {console.log("@@@@@@@@@@@@@@@@@@localurl@@@@@@@@@@@@@@@@", localurl)}
-            {console.log("@@@@@@@@@@@@@@profile_url@@@@@@@@@@@@@@@@", profile_url)}
-            {console.log("@@@@@@@@@@@@user@@@@@@@@", user)}
+
             <div style={{ maxHeight: dynamicHeight, overflow: "auto" }} className="sidebar_scroll">
               <div className="user-full d-flex align-items-center mt-3 ">
                 {localurl ? (

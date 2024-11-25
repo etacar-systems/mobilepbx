@@ -12,7 +12,7 @@ function DashboardCardDetails() {
   const allListeners = useSelector((state) => state.allListeners.allListeners);
   const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
   let valuedata = data?.DashboardDetail?.reports_counts;
-  console.log(data,valuedata, "datacheckfinal");
+  console.log(data, valuedata, "datacheckfinal");
   console.log(allListeners, "allListenerscheck");
   const busyAndOnlineCount =
     (allListeners?.listener_params?.busy_extension?.length || 0) +
@@ -23,7 +23,7 @@ function DashboardCardDetails() {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-  
+
     if (hrs > 0) {
       return `${hrs}h ${mins}m ${secs}s`;
     } else if (mins > 0) {
@@ -32,14 +32,11 @@ function DashboardCardDetails() {
       return `${secs}s`;
     }
   };
-  
+
   return (
     <>
       <Col lg={3} md={6} className="col-name">
-        <Card
-          className="dear-card "
-          style={{ padding: "20px 24px", whiteSpace: "nowrap" }}
-        >
+        <Card className="dear-card " style={{ padding: "20px 24px", whiteSpace: "nowrap" }}>
           <Card.Body style={{ padding: "20px " }}>
             <div className="d-flex align-items-center">
               <div className="icon-in-bg bg-green text-white rounded-circle">
@@ -55,17 +52,11 @@ function DashboardCardDetails() {
         </Card>
       </Col>
       <Col lg={3} md={6} className="col-name">
-        <Card
-          className="dear-card"
-          style={{ padding: " 20px 24px", whiteSpace: "nowrap" }}
-        >
+        <Card className="dear-card" style={{ padding: " 20px 24px", whiteSpace: "nowrap" }}>
           <Card.Body style={{ padding: "20px " }}>
             <div className="d-flex align-items-center">
               <div className="icon-in-bg bg-primary newbg-primary text-white rounded-circle">
-                <i
-                  className="fa fa-sign-out fa-2x"
-                  style={{ fontSize: "x-large" }}
-                ></i>
+                <i className="fa fa-sign-out fa-2x" style={{ fontSize: "x-large" }}></i>
               </div>
               <div className="ml-4">
                 <span className="chart-value">{t("Agent offline")}</span>
@@ -76,10 +67,7 @@ function DashboardCardDetails() {
         </Card>
       </Col>
       <Col lg={3} md={6} className="col-name">
-        <Card
-          className="dear-card"
-          style={{ padding: "20px 24px", whiteSpace: "nowrap" }}
-        >
+        <Card className="dear-card" style={{ padding: "20px 24px", whiteSpace: "nowrap" }}>
           <Card.Body style={{ padding: "20px " }}>
             <div className="d-flex align-items-center">
               <div className="icon-in-bg bg-warning text-white rounded-circle">
@@ -87,17 +75,14 @@ function DashboardCardDetails() {
               </div>
               <div className="ml-4">
                 <span className="chart-value">{t("Calls queue")}</span>
-                <h4 className="mb-0 font-weight-medium chart-value">85</h4>
+                <h4 className="mb-0 font-weight-medium chart-value">0</h4>
               </div>
             </div>
           </Card.Body>
         </Card>
       </Col>
       <Col lg={3} md={6} className="col-name">
-        <Card
-          className="dear-card"
-          style={{ padding: "20px 24px", whiteSpace: "nowrap" }}
-        >
+        <Card className="dear-card" style={{ padding: "20px 24px", whiteSpace: "nowrap" }}>
           <Card.Body style={{ padding: "20px " }}>
             <div className="d-flex align-items-center">
               <div className="icon-in-bg bg-indigo text-white rounded-circle">
@@ -108,7 +93,7 @@ function DashboardCardDetails() {
                 <span className="chart-value">{t("Durations")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
                   {formatDuration(valuedata?.total_duration_sec)}
-                  </h4>
+                </h4>
               </div>
             </div>
           </Card.Body>

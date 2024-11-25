@@ -27,8 +27,9 @@ function NoticeBoardDashboard({ timelineHeight }) {
         className="timeline-container new-timeline dashboardtablescroll"
         style={{ height: `${timelineHeight}px` }}
       >
-        <Card.Body className="noticeboard">
-          <ul className="timeline">
+        <Card.Body className="noticeboard" style={{ height: "100%" }}>
+          <div className="text-center text-muted mt-3">No Data Found</div>
+          {/* <ul className="timeline">
             <li className="timeline-item">
               <div className="timeline-info">
                 <span className="missed-header">Feb 15, 2024 - Timestamp</span>
@@ -78,10 +79,7 @@ function NoticeBoardDashboard({ timelineHeight }) {
             <li className="timeline-item period">
               <div className="timeline-info"></div>
               <div className="timeline-content">
-                <h2
-                  className="timeline-title ptag-use missed-header"
-                  style={{ padding: "15px" }}
-                >
+                <h2 className="timeline-title ptag-use missed-header" style={{ padding: "15px" }}>
                   March 2024
                 </h2>
               </div>
@@ -89,9 +87,7 @@ function NoticeBoardDashboard({ timelineHeight }) {
 
             <li className="timeline-item">
               <div className="timeline-info">
-                <span className="missed-header">
-                  April 02, 2024 - Timestamp
-                </span>
+                <span className="missed-header">April 02, 2024 - Timestamp</span>
               </div>
               <div className="timeline-marker"></div>
               <div className="timeline-content">
@@ -111,7 +107,7 @@ function NoticeBoardDashboard({ timelineHeight }) {
                 </ul>
               </div>
             </li>
-          </ul>
+          </ul> */}
         </Card.Body>
       </div>
     );
@@ -132,11 +128,7 @@ function NoticeBoardDashboard({ timelineHeight }) {
             <h2 onClick={openmodal}>
               <Bigsize height={14} width={14} style={{ cursor: "pointer" }} />
             </h2>
-            <td
-              className="table_edit"
-              onClick={openmodal2}
-              style={{ marginLeft: "10px" }}
-            >
+            <td className="table_edit" onClick={openmodal2} style={{ marginLeft: "10px" }}>
               <button>
                 <Edit_logo width={14} height={14} className="edithover" />
               </button>
@@ -165,13 +157,9 @@ function NoticeBoardDashboard({ timelineHeight }) {
               >
                 <h2>{t("Notice board")}</h2>
                 <h2 onClick={() => setshow(false)}>
-                  <Bigsize
-                    height={14}
-                    width={14}
-                    style={{ cursor: "pointer" }}
-                  />
+                  <Bigsize height={14} width={14} style={{ cursor: "pointer" }} />
                 </h2>
-            </Card.Header>
+              </Card.Header>
               {graphnotice()}
             </Card>
           </div>

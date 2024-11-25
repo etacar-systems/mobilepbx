@@ -22,16 +22,13 @@ export default function Supports({ show, setShow }) {
   useEffect(() => {
     dispatch(
       getapiAll({
-        Api: config.INTEGRATION_LIST.VIDEO_BY_ROLE+Role,
-        Token:Token
-        
+        Api: config.INTEGRATION_LIST.VIDEO_BY_ROLE + Role,
+        Token: Token,
       })
     )
       .then((response) => {
         if (response?.payload?.response?.success === 1) {
-          setVideoURL(
-            file_base + response.payload.response.IntergationList[0].video_url
-          );
+          setVideoURL(file_base + response.payload.response.IntergationList[0].video_url);
         } else {
           toast.error(response?.payload?.response?.message);
           setVideoURL(promo);
