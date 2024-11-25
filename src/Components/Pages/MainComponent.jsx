@@ -40,17 +40,12 @@ import Cookies from "js-cookie";
 import SipConnection from "../Call/SipConnection";
 import DialPad from "../Call/DialPad";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getapiAll,
-  postapiAll,
-  setUnreadCount,
-} from "../../Redux/Reducers/ApiServices";
+import { getapiAll, postapiAll, setUnreadCount } from "../../Redux/Reducers/ApiServices";
 import SocketConfig, { AllEmit } from "../Chat/SocketConfig";
 import ConfirmationModal from "../Chat/ConfirmationModal";
 import Whatsappsocketconfig from "../Whatsapp/Whatsappsocketconfig";
 import Supports from "../Chat/Supports";
 import { useTranslation } from "react-i18next";
-import i18n from "../../i18next";
 import ChatWidget from "./ChatWidget";
 import { company_Features } from "../ConstantConfig";
 import LanguageSelect from "../Modal/LanguageSelect";
@@ -98,21 +93,15 @@ function MainComponent({ children }) {
   const sideRef = useRef(null);
   const role = Cookies.get("role");
   const navigate = useNavigate();
-  const settingUpdateStatus = useSelector(
-    (state) => state.settingUpdateStatus.settingUpdateStatus
-  );
+  const settingUpdateStatus = useSelector((state) => state.settingUpdateStatus.settingUpdateStatus);
   let profile_url = Cookies.get("profile_url");
 
   const getDetail = Cookies.get("company_features");
   const hex_code = Cookies.get("hex_code");
-  const companyFeatures =
-    getDetail == "undefined" ? null : JSON.parse(getDetail);
+  const companyFeatures = getDetail == "undefined" ? null : JSON.parse(getDetail);
   if (hex_code && role !== "3") {
     document.documentElement.style.setProperty("--main-orange-color", hex_code);
-    document.documentElement.setAttribute(
-      "style",
-      `--main-orange-color: ${hex_code}`
-    );
+    document.documentElement.setAttribute("style", `--main-orange-color: ${hex_code}`);
     document.documentElement.style.cssText = `--main-orange-color: ${hex_code}`;
   } else {
     // If hex_code is not provided or role is "3", reset to default color
@@ -260,11 +249,11 @@ function MainComponent({ children }) {
         icon: Icon22,
         to: "/smtp",
       },
-        {
-          name: t("Video upload"),
-          icon: Icon24,
-          to: "/video",
-        }
+      {
+        name: t("Video upload"),
+        icon: Icon24,
+        to: "/video",
+      }
     );
   } else {
     navigate("/");
@@ -522,11 +511,10 @@ function MainComponent({ children }) {
                 </>
               )}
             </div>
-
-            <div
-              style={{ maxHeight: dynamicHeight, overflow: "auto" }}
-              className="sidebar_scroll"
-            >
+            {console.log("@@@@@@@@@@@@@@@@@@localurl@@@@@@@@@@@@@@@@", localurl)}
+            {console.log("@@@@@@@@@@@@@@profile_url@@@@@@@@@@@@@@@@", profile_url)}
+            {console.log("@@@@@@@@@@@@user@@@@@@@@", user)}
+            <div style={{ maxHeight: dynamicHeight, overflow: "auto" }} className="sidebar_scroll">
               <div className="user-full d-flex align-items-center mt-3 ">
                 {localurl ? (
                   <img
@@ -545,16 +533,8 @@ function MainComponent({ children }) {
                     className="rounded"
                   />
                 ) : (
-                  <div
-                    style={{ backgroundColor: "var(--main-orange-color)" }}
-                    className="rounded"
-                  >
-                    <img
-                      src={user}
-                      width={40}
-                      height={40}
-                      className="rounded"
-                    />
+                  <div style={{ backgroundColor: "var(--main-orange-color)" }} className="rounded">
+                    <img src={user} width={40} height={40} className="rounded" />
                   </div>
                 )}
 
@@ -590,14 +570,11 @@ function MainComponent({ children }) {
                           color: "var(--main-adminheaderpage-color)",
                         }}
                       >
-                        {(company_name !== "undefined" && role == 2) ||
-                        role == 4 ? (
+                        {(company_name !== "undefined" && role == 2) || role == 4 ? (
                           company_name
                         ) : (
                           <>
-                            <span style={{ marginRight: "4px" }}>
-                              {firstname}
-                            </span>
+                            <span style={{ marginRight: "4px" }}>{firstname}</span>
                             <span>{lastname}</span>
                           </>
                         )}
@@ -608,8 +585,7 @@ function MainComponent({ children }) {
                       style={{
                         border: "none !important",
                         borderRadius: "10px",
-                        boxShadow:
-                          "var(--main-boxshadowdropdown-color) 0px 2px 20px 0px",
+                        boxShadow: "var(--main-boxshadowdropdown-color) 0px 2px 20px 0px",
                       }}
                     >
                       <Dropdown.Item
@@ -661,30 +637,24 @@ function MainComponent({ children }) {
                         <Link
                           to={val.to}
                           className={`d-flex align-items-center py-2 ${
-                            window.location.pathname === val.to
-                              ? "active_bg"
-                              : "active_color"
+                            window.location.pathname === val.to ? "active_bg" : "active_color"
                           }`}
                         >
                           <div
                             className={`sideimg_manage ${
-                              window.location.pathname === val.to
-                                ? "sideimg_bg"
-                                : "sideimg_manage"
+                              window.location.pathname === val.to ? "sideimg_bg" : "sideimg_manage"
                             }`}
                           >
                             <val.icon
                               className="icontest"
                               width={
-                                val.name ==
-                                  ("Call History" || "Puheluhistoria") ||
+                                val.name == ("Call History" || "Puheluhistoria") ||
                                 val.name_2 == "Call History"
                                   ? 28
                                   : 18
                               }
                               height={
-                                val.name ==
-                                  ("Call History" || "Puheluhistoria") ||
+                                val.name == ("Call History" || "Puheluhistoria") ||
                                 val.name_2 == "Call History"
                                   ? 28
                                   : 18
@@ -709,10 +679,7 @@ function MainComponent({ children }) {
           </div>
         )}
         {isDrawerOpen && (
-          <div
-            className={`drawer ${isDrawerOpen == true ? "open" : ""}`}
-            ref={sideRef}
-          >
+          <div className={`drawer ${isDrawerOpen == true ? "open" : ""}`} ref={sideRef}>
             <div className="">
               <div className="sidebar_logo">
                 <img src={logo} alt="" />
@@ -745,12 +712,7 @@ function MainComponent({ children }) {
                       style={{ backgroundColor: "var(--main-orange-color)" }}
                       className="rounded"
                     >
-                      <img
-                        src={user}
-                        width={40}
-                        height={40}
-                        className="rounded"
-                      />
+                      <img src={user} width={40} height={40} className="rounded" />
                     </div>
                   )}
 
@@ -779,14 +741,11 @@ function MainComponent({ children }) {
                             color: "var(--main-adminnumberheader-color)",
                           }}
                         >
-                          {(company_name !== "undefined" && role == 2) ||
-                          role == 4 ? (
+                          {(company_name !== "undefined" && role == 2) || role == 4 ? (
                             company_name
                           ) : (
                             <>
-                              <span style={{ marginRight: "4px" }}>
-                                {firstname}
-                              </span>
+                              <span style={{ marginRight: "4px" }}>{firstname}</span>
                               <span>{lastname}</span>
                             </>
                           )}
@@ -852,9 +811,7 @@ function MainComponent({ children }) {
                             onClick={() => setIsDrawerOpen(false)}
                             key={index}
                             className={`d-flex align-items-center py-2 ${
-                              window.location.pathname === val.to
-                                ? "active_bg"
-                                : "active_color"
+                              window.location.pathname === val.to ? "active_bg" : "active_color"
                             }`}
                           >
                             <div
@@ -867,15 +824,13 @@ function MainComponent({ children }) {
                               <val.icon
                                 className="icontest"
                                 width={
-                                  val.name ==
-                                    ("Call History" || "Puheluhistoria") ||
+                                  val.name == ("Call History" || "Puheluhistoria") ||
                                   val.name_2 == "Call History"
                                     ? 28
                                     : 18
                                 }
                                 height={
-                                  val.name ==
-                                    ("Call History" || "Puheluhistoria") ||
+                                  val.name == ("Call History" || "Puheluhistoria") ||
                                   val.name_2 == "Call History"
                                     ? 28
                                     : 18
@@ -937,10 +892,7 @@ function MainComponent({ children }) {
                     style={{ height: "100%" }}
                   >
                     <Dialpad className="dial_pad" style={{ height: "100%" }} />
-                    <h6
-                      className="mb-0 location_path"
-                      style={{ fontSize: "small" }}
-                    >
+                    <h6 className="mb-0 location_path" style={{ fontSize: "small" }}>
                       {t("Dial pad")}
                     </h6>{" "}
                   </div>
@@ -974,9 +926,7 @@ function MainComponent({ children }) {
           <div
             style={{
               padding:
-                path1 == "/chat" ||
-                path1 == "/whatsappChat" ||
-                path1 == "/dashboard"
+                path1 == "/chat" || path1 == "/whatsappChat" || path1 == "/dashboard"
                   ? "0px 0px"
                   : "11px 15px",
               background: "var(--main-grey-color)",

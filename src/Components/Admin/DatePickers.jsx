@@ -20,7 +20,7 @@ import CustomDropDown from "../CustomDropDown";
 // Register Finnish locale
 registerLocale("fi", fi);
 registerLocale("en-GB", enGB);
-// import { enGB } from 'date-fns/locale';
+
 export default function DatePickers({
   date_picker,
   btn_name,
@@ -117,10 +117,7 @@ export default function DatePickers({
     <>
       <div className="report_form">
         <Form>
-          <Row
-            style={{ justifyContent: !date_picker ? "end" : "" }}
-            className={marginb}
-          >
+          <Row style={{ justifyContent: !date_picker ? "end" : "" }} className={marginb}>
             {!date_picker && (
               <>
                 <Col lg={2} md={4} sm={6}>
@@ -158,9 +155,7 @@ export default function DatePickers({
                   </div> */}
                 </Col>
                 <Col lg={2} md={4} sm={6}>
-                  <Form.Label className="modal-head">
-                    {t("Select extension")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Select extension")}</Form.Label>
                   <CustomDropDown
                     toggleDropdown={toggleDropdown}
                     showValue={extension}
@@ -194,9 +189,7 @@ export default function DatePickers({
                   </div> */}
                 </Col>
                 <Col lg={2} md={4} sm={6} className="mt-2 mt-lg-0 mt-md-0">
-                  <Form.Label className="modal-head">
-                    {t("Category")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Category")}</Form.Label>
                   <CustomDropDown
                     toggleDropdown={toggleDropdown}
                     showValue={Direction}
@@ -216,10 +209,7 @@ export default function DatePickers({
             <Col lg={4} md={8} sm={12} className="mt-2  mt-lg-0">
               <Form.Label className="modal-head">{t("Date Picker")}</Form.Label>
               <div className="input-group">
-                <div
-                  className="input-daterange input-group flex-nowrap"
-                  id="datepicker"
-                >
+                <div className="input-daterange input-group flex-nowrap" id="datepicker">
                   <DatePickerComponent
                     startDate={startDate}
                     selected={startDate}
@@ -253,10 +243,7 @@ export default function DatePickers({
             </Col>
             {(!date_picker || clear) && (
               <Col lg={lg} md={4} sm={6} className="filter_btn2 mt-2  mt-lg-0">
-                <Button
-                  style={{ fontWeight: fontwidth, width: width }}
-                  onClick={clear_Filter}
-                >
+                <Button style={{ fontWeight: fontwidth, width: width }} onClick={clear_Filter}>
                   {t("Clear")}
                 </Button>
               </Col>
