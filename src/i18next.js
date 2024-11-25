@@ -155,7 +155,7 @@ i18n
 
           // Video
           "You can watch the instructional video and make the desired changes at the same time. In the video, select the Picture in Picture function from the icon, on the right side of the video image, and close this tab from the upper right corner.":
-            "Voit katsoa opastusvideon ja tehdä haluamasi muutokset samalla. Valitse videosta "Kuva kuvassa" toiminto  ikonista, videokuvan oikeasta alallaidasta ja sulje tämä välilehti oikeasta yläkulmasta.",
+            "Voit katsoa opastusvideon ja tehdä haluamasi muutokset samalla. Valitse videosta 'Kuva kuvassa' toiminto  ikonista, videokuvan oikeasta alallaidasta ja sulje tämä välilehti oikeasta yläkulmasta.",
           "Operating support": "Käyttötuki",
           "Our chatbot is at the bottom right of the page answering questions and to help with the use of the gear service.":
             "Chatbotimme on sivun oikeassa alakulmassa vastaamassa kysymyksiin ja auttamassa palvelun käytössä.",
