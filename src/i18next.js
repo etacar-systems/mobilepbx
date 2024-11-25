@@ -934,13 +934,13 @@ i18n
           "expression detail": "ilmaisun yksityiskohta",
           "access control description": "kulunvalvonnan kuvaus",
 
-          "Extension number": "alanumero",
+          "Extension number": "Alanumero",
           "First name": "Etunimi",
           "Last name": "Sukunimi",
           "Pstn number": "PSTN-numero",
           "Ring group duration is required": "Soittoryhmän kesto vaaditaan",
           "At least one extension must be selected":
-            "Vähintään yksi laajennus on valittava",
+            "Vähintään yksi alaliittymä on valittava",
 
           "Extension is required": "Laajennus vaaditaan",
           "Exit application is required": "Lopetussovellus vaaditaan",
