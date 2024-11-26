@@ -872,7 +872,7 @@ i18n
           "Edit recording": "Muokkaa tallennetta",
           Outbound: "Lähtevä",
           Inbound: "Saapuva",
-          Local: "Paikallinen",
+          Local: "Sisäinen",
           local: "Paikallinen",
           "Select extension": "Valitse alaliittymä",
           ZIP: "Postinumero",
