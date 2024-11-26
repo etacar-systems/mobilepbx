@@ -203,7 +203,7 @@ i18n
           "Ring group strategy": "Soittoryhmän strategia",
           "Remote no answer": "Soittoryhmä ei vastaa",
           "None selected": "Ei valittu",
-          "No answer endpoint": "Ei vastaa päätepisteelle",
+          "No answer endpoint": "Valitse päätepiste",
           "Select number": "Valitse numero",
           "Extension number": "Alaliittymänumero",
           Password: "Salasana",
