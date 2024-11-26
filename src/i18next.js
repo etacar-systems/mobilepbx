@@ -824,7 +824,7 @@ i18n
           " numbers are duplicates and were ignored:":
             " numerot ovat jo palvelussa ja ne jätettiin huomiotta:",
           These: "Nämä",
-          "No Record": "Ei tallennusta",
+          "No Record": "Ei valintaa",
           Default: "Oletus",
           "Node type": "Noodin tyyppi",
           "Node CIDR": "Noodin CIDR",
@@ -1425,7 +1425,7 @@ i18n
             "Ring Group Enabled Is Mandatory.",
           "Please provide valid extension numbers.":
             "Please provide valid extension numbers.",
-          "Ring Group added successfully.": "Ring Group added successfully.",
+          "Ring Group added successfully.": "Soittoryhmän lisäys onnistui",
           "Failed To Create Ring Group": "Failed To Create Ring Group",
           "Ring Group Id Is Mandatory.": "Ring Group Id Is Mandatory.",
           "Ring Group UUID Is Mandatory.": "Ring Group UUID Is Mandatory.",
@@ -1466,9 +1466,9 @@ i18n
           "Description is invalid": "Description is invalid",
           "Record name is invalid": "Record name is invalid",
           "System Recording Added Successfully":
-            "System Recording Added Successfully",
+            "Järjestelmän nauhoite lisätty onnistuneesti",
           "System Recording Update Successfully":
-            "System Recording Update Successfully",
+            "Järjestelmän nauhoitteen päivitys onnistui",
           "Failed to Find Recording, Try Again !!":
             "Failed to Find Recording, Try Again !!",
           "Failed to delete System Record": "Failed to delete System Record",
@@ -1542,11 +1542,11 @@ i18n
           "Enter Phone number ID": "Enter Phone number ID",
           "Enter Whatsapp Number": "Enter Whatsapp Number",
           "Enter WhatsApp API access token": "Enter WhatsApp API access token",
-          "Call recording": "Call recording",
+          "Call recording": "Puhelun tallennus",
           "Copied successfully!": "Copied successfully!",
           "Whatsaap Token Added Successfully":
             "Whatsaap Token Added Successfully",
-          "Ring all": "Ring all",
+          "Ring all": "Soittoryhmä",
           Andorra: "Andorra",
           "United Arab Emirates": "Yhdistyneet arabiemiirikunnat",
           Afghanistan: "Afghanistan",
