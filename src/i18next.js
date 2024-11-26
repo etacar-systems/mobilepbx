@@ -551,7 +551,7 @@ i18n
           "Add new Outbound route": "Lisää lähtevä reitti",
           "Outbound routes": "Lähtevät reitit",
           Prepend: "Etuliite",
-          prepend: "etuliite",
+          prepend: "Etuliite",
           Prefix: "Prefiksi",
           prefix: "prefiksi",
           "Match pattern": "Sallitut numerot",
