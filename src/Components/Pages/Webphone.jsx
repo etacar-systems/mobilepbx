@@ -351,6 +351,7 @@ export default function Webphone() {
                           hasMore={hasMore}
                         >
                           <div className="row g-0">
+                            {console.log(extensionList, "extensionList")}
                             {extensionList
                               ?.filter((item) => item.role.type === 1)
                               .map((item, index) => {

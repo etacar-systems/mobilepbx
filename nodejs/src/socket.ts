@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 
 export let socket: any;
 export const connectTosocket = () => {
-  const SERVER_URL = `ws://70.34.220.241:8081`;
+  const SERVER_URL = `ws://70.34.213.98:8081`;
   console.log(SERVER_URL, "SERVER_URL");
   const options = {
     query: {
