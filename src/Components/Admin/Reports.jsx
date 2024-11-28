@@ -12,11 +12,7 @@ import Paginationall from "../Pages/Paginationall";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  getapiAll,
-  getapiAllWithBasicAuth,
-  postapiAll,
-} from "../../Redux/Reducers/ApiServices";
+import { getapiAll, getapiAllWithBasicAuth, postapiAll } from "../../Redux/Reducers/ApiServices";
 import Cookies from "js-cookie";
 import config from "../../config";
 import Loader from "../Loader";
@@ -48,10 +44,8 @@ export default function Reports() {
   const [selectextension, setselectextension] = useState("");
   const [module, setModule] = useState("");
   const [filter, setfilter] = useState(false);
-  const formattedDate =
-    startDate && new Date(startDate).toLocaleDateString("en-CA");
-  const formattedEnddata =
-    endDate && new Date(endDate).toLocaleDateString("en-CA");
+  const formattedDate = startDate && new Date(startDate).toLocaleDateString("en-CA");
+  const formattedEnddata = endDate && new Date(endDate).toLocaleDateString("en-CA");
   const clearSearch = () => {
     setSearchterm("");
   };
@@ -157,12 +151,12 @@ export default function Reports() {
         const durationB = convertToSeconds(b[name]);
         return ascending ? durationA - durationB : durationB - durationA;
       } else {
-      const valueA = a[name];
-      const valueB = b[name];
+        const valueA = a[name];
+        const valueB = b[name];
 
-      const strA = String(valueA);
-      const strB = String(valueB);
-      return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
+        const strA = String(valueA);
+        const strB = String(valueB);
+        return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
       }
     });
 
@@ -218,11 +212,7 @@ export default function Reports() {
   };
   return (
     <div className="tablespadding">
-      <AdminHeader
-        openModal={openModal}
-        pathname={t("Reports")}
-        addBtn={true}
-      />
+      <AdminHeader openModal={openModal} pathname={t("Reports")} addBtn={true} />
       <DatePickers
         btn_name={t("Search")}
         fontwidth="300"
@@ -307,6 +297,15 @@ export default function Reports() {
                     {arrowShow("duration")}
                   </div>
                 </th>
+                <th style={{ width: "15%" }}>
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={() => sortingTable("destination_number")}
+                  >
+                    <p className="mb-0">{t("Endpoint")}</p>
+                    {arrowShow("destination_number")}
+                  </div>
+                </th>
                 <th style={{ width: "10%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
@@ -316,12 +315,12 @@ export default function Reports() {
                     {arrowShow("direction")}
                   </div>
                 </th>
-                <th style={{ width: "21%" }}>
+                <th style={{ width: "18%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("destination_number")}
                   >
-                    <p className="mb-0">{t("Endpoint")}</p>
+                    <p className="mb-0">{t("Direction")}</p>
                     {arrowShow("destination_number")}
                   </div>
                 </th>
@@ -339,13 +338,9 @@ export default function Reports() {
                   {Row && Row.length > 0 ? (
                     Row?.map((val) => {
                       const formatTime = (seconds) =>
-                        `${String(Math.floor(seconds / 3600)).padStart(
-                          2,
-                          "0"
-                        )}:${String(Math.floor(seconds / 60) % 60).padStart(
-                          2,
-                          "0"
-                        )}:${String(seconds % 60).padStart(2, "0")}`;
+                        `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
+                          Math.floor(seconds / 60) % 60
+                        ).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
                       const date = new Date(val?.start_stamp);
                       const formattedDate = new Date(date)
                         .toLocaleDateString("en-GB")
@@ -364,34 +359,23 @@ export default function Reports() {
                         <>
                           <tr className="table_body">
                             <td style={{ padding: "22px" }}>
-                              {formattedDate}{" "}
-                              {extractTimeFromDate(val?.start_stamp)}
+                              {formattedDate} {extractTimeFromDate(val?.start_stamp)}
                             </td>
+                            <td style={{ padding: "22px" }}>{val.caller_id_number}</td>
+
                             <td style={{ padding: "22px" }}>
-                              {val.caller_id_number}
+                              {val.duration == null ? "00:00:00" : formattedTime}{" "}
                             </td>
-                            <td style={{ padding: "22px" }}>
-                              {val.duration == null
-                                ? "00:00:00"
-                                : formattedTime}{" "}
-                            </td>
-                            <td style={{ padding: "22px" }}>
-                              {" "}
-                              {t(val.direction)}
-                            </td>
-                            <td style={{ padding: "22px" }}>
-                              {val.destination_number}
-                            </td>
+                            <td style={{ padding: "22px" }}>{val.destination_number}</td>
+                            <td style={{ padding: "22px" }}> {t(val.status)}</td>
+                            <td style={{ padding: "22px" }}>{val.direction}</td>
                           </tr>
                         </>
                       );
                     })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -403,8 +387,8 @@ export default function Reports() {
         </div>
         <div className="show show2 mt-2 d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")}{" "}
-            {fetchData.total_record} {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {fetchData.total_record}{" "}
+            {t("entries")}
           </h6>
           <div>
             <Paginationall
