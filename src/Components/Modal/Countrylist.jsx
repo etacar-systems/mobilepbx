@@ -14,7 +14,7 @@ const CountrySelector = ({
   const [searchItem, setSearchItem] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(getNames());
   const dropdownRef = useRef(null);
-
+  const { t, i18n } = useTranslation();
   const handleInputChange = (e) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm);
@@ -48,22 +48,33 @@ const CountrySelector = ({
     };
   }, [openDropdown]);
 
-  const { t } = useTranslation();
+  const [sortedCountries, setSortedCountries] = useState([]);
+
+  useEffect(() => {
+    // Ensure i18n.language is loaded before applying localeCompare
+    if (i18n.language) {
+      const sortedData = [...filteredUsers]
+        .filter((item) => typeof item === "string")
+        .sort((a, b) => a.localeCompare(b, i18n.language, { sensitivity: "base" }));
+      setSortedCountries(sortedData);
+    }
+  }, [i18n.language, filteredUsers]);
+
+  console.log(i18n.language, "-------------- t------------------");
+
+  // const testArray = ["a", "o", "z", "ä", "ö"];
+  // const collator = new Intl.Collator("fi"); // Finnish locale
+  // const sortedArray = testArray.sort((a, b) => collator.compare(a, b));
+
+  // console.log("Original array:", testArray);
+  // console.log("Sorted array (locale 'fi'):", sortedArray);
+
+  console.log(Intl.Collator.supportedLocalesOf(["fi"]));
 
   return (
-    <div
-      className="Selfmade-dropdown"
-      style={{ width: "100%" }}
-      ref={dropdownRef}
-    >
-      <div
-        className="Selfmadedropdown-btn"
-        onClick={() => toggleDropdown("type")}
-      >
-        <span className="conlist">
-          {" "}
-          {t(formData.Country) || t("--Select Country--")}
-        </span>
+    <div className="Selfmade-dropdown" style={{ width: "100%" }} ref={dropdownRef}>
+      <div className="Selfmadedropdown-btn" onClick={() => toggleDropdown("type")}>
+        <span className="conlist"> {t(formData.Country) || t("--Select Country--")}</span>
         <div>
           <Dropdownicon />
         </div>
@@ -96,15 +107,17 @@ const CountrySelector = ({
               placeholder={t("Search country")}
             />
           </div>
-
-          {filteredUsers?.sort().map((type) => (
-            <a
-              key={type}
-              onClick={() => handleSelection("Country", type, type)}
-              className="elipsisDrodownshow"
-            >
-              {t(type)}
-            </a>
+          {sortedCountries.map((type) => (
+            <>
+              <a
+                key={type}
+                onClick={() => handleSelection("Country", type, type)}
+                className="elipsisDrodownshow"
+              >
+                {t(type)}
+                <br />
+              </a>
+            </>
           ))}
         </div>
       )}

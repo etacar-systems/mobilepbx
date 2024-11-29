@@ -172,9 +172,7 @@ function ExtensionModal({
     if (mode === "edit" && dropdown === "") {
       // setOpenDropdown(null);
     } else {
-      setOpenDropdown((prevState) =>
-        prevState === dropdown ? null : dropdown
-      );
+      setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
     }
   };
   const handleClickOutside = (event) => {
@@ -246,37 +244,27 @@ function ExtensionModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row className="mb-5">
                 <Col lg={4} className="mt-4">
-                  <Form.Label className="modal-head">
-                    {t("Select number")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Select number")}</Form.Label>
 
                   {mode === "edit" ? (
                     <CustomTooltipModal tooltip={t("This is not editable")} />
                   ) : (
                     <>
                       {getPstnNumber.length === 0 && (
-                        <CustomTooltipModal
-                          tooltip={t("Please first create Pstn number")}
-                        />
+                        <CustomTooltipModal tooltip={t("Please first create Pstn number")} />
                       )}
                     </>
                   )}
 
                   <div className="Selfmade-dropdown">
                     {formData.User_type !== Usertype_Admin ? (
-                      <div
-                        className="Selfmadedropdown-btn"
-                        onClick={handleDropdownClick}
-                      >
-                        {selectedPstnNumber ||
-                          pstndestination ||
-                          t("None selected")}
+                      <div className="Selfmadedropdown-btn" onClick={handleDropdownClick}>
+                        {selectedPstnNumber || pstndestination || t("None selected")}
                         <div>
                           <Dropdownicon />
                         </div>
@@ -307,11 +295,7 @@ function ExtensionModal({
                                 <a
                                   key={number._id}
                                   onClick={() =>
-                                    handleSelection(
-                                      "Pstn_number",
-                                      number.destination,
-                                      number._id
-                                    )
+                                    handleSelection("Pstn_number", number.destination, number._id)
                                   }
                                 >
                                   {number.destination}
@@ -323,24 +307,16 @@ function ExtensionModal({
                     )}
                   </div>
                   {errors.Pstn_number && (
-                    <div className="text-danger error-ui">
-                      {errors.Pstn_number}
-                    </div>
+                    <div className="text-danger error-ui">{errors.Pstn_number}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-4">
-                  <Form.Label className="modal-head">
-                    {t("Extension number")}
-                  </Form.Label>
-                  {mode == "edit" && (
-                    <CustomTooltipModal tooltip={t("This is not editable")} />
-                  )}
+                  <Form.Label className="modal-head">{t("Extension number")}</Form.Label>
+                  {mode == "edit" && <CustomTooltipModal tooltip={t("This is not editable")} />}
 
                   <InputGroup>
                     <Form.Control
-                      disabled={
-                        mode == "edit" || formData.User_type === Usertype_Admin
-                      }
+                      disabled={mode == "edit" || formData.User_type === Usertype_Admin}
                       placeholder=""
                       aria-label="Extension Number"
                       aria-describedby="basic-addon1"
@@ -352,15 +328,11 @@ function ExtensionModal({
                     />
                   </InputGroup>
                   {errors.Extension_number && (
-                    <div className="text-danger error-ui">
-                      {errors.Extension_number}
-                    </div>
+                    <div className="text-danger error-ui">{errors.Extension_number}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-4">
-                  <Form.Label className="modal-head">
-                    {t("User type")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("User type")}</Form.Label>
                   <CustomDropDown
                     toggleDropdown={toggleDropdown}
                     showValue={formData.User_type}
@@ -376,15 +348,11 @@ function ExtensionModal({
                     sorting={true}
                   />
                   {errors.User_type && (
-                    <div className="text-danger error-ui">
-                      {errors.User_type}
-                    </div>
+                    <div className="text-danger error-ui">{errors.User_type}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-5">
-                  <Form.Label className="modal-head">
-                    {t("First name")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("First name")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -397,15 +365,11 @@ function ExtensionModal({
                     />
                   </InputGroup>
                   {errors.First_name && (
-                    <div className="text-danger error-ui">
-                      {errors.First_name}
-                    </div>
+                    <div className="text-danger error-ui">{errors.First_name}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-5">
-                  <Form.Label className="modal-head">
-                    {t("Last name")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Last name")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -418,9 +382,7 @@ function ExtensionModal({
                     />
                   </InputGroup>
                   {errors.Last_name && (
-                    <div className="text-danger error-ui">
-                      {errors.Last_name}
-                    </div>
+                    <div className="text-danger error-ui">{errors.Last_name}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-5">
@@ -463,11 +425,7 @@ function ExtensionModal({
                       autoComplete="new-password"
                     />
                   </InputGroup>
-                  {errors.Password && (
-                    <div className="text-danger error-ui">
-                      {errors.Password}
-                    </div>
-                  )}
+                  {errors.Password && <div className="text-danger error-ui">{errors.Password}</div>}
                 </Col>
                 <Col lg={4} className="mt-5">
                   <Form.Label className="modal-head">{t("Email")}</Form.Label>
@@ -488,14 +446,10 @@ function ExtensionModal({
                       autoComplete="new-email"
                     />
                   </InputGroup>
-                  {errors.Email && (
-                    <div className="text-danger error-ui">{errors.Email}</div>
-                  )}
+                  {errors.Email && <div className="text-danger error-ui">{errors.Email}</div>}
                 </Col>
                 <Col lg={4} className="mt-5">
-                  <Form.Label className="modal-head">
-                    {t("Mobile phone")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Mobile phone")}</Form.Label>
                   <InputGroup className="">
                     <InputGroup.Text id="basic-addon1" className="modal-icon">
                       <PhoneRegister
@@ -515,15 +469,11 @@ function ExtensionModal({
                       onKeyPress={Mobilenumberkeypress}
                     />
                   </InputGroup>
-                  {errors.Mobile && (
-                    <div className="text-danger error-ui">{errors.Mobile}</div>
-                  )}
+                  {errors.Mobile && <div className="text-danger error-ui">{errors.Mobile}</div>}
                 </Col>
                 <Col lg={4} className="mt-5">
-                  <Form.Label className="modal-head">
-                    {t("Select country")}
-                  </Form.Label>
-
+                  <Form.Label className="modal-head">{t("Select country")}</Form.Label>
+                  {console.log(openDropdown, "----------formData-----------")}
                   <InputGroup className="">
                     <CountrySelector
                       formData={formData}
@@ -535,9 +485,7 @@ function ExtensionModal({
                     />
                   </InputGroup>
 
-                  {errors.Country && (
-                    <div className="text-danger error-ui">{errors.Country}</div>
-                  )}
+                  {errors.Country && <div className="text-danger error-ui">{errors.Country}</div>}
                 </Col>
                 {/* <Col lg={4} className="mt-5">
                   <Form.Label
@@ -587,11 +535,7 @@ function ExtensionModal({
             className="d-flex justify-content-end "
             style={{ marginBottom: "37px", marginRight: "33px" }}
           >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (

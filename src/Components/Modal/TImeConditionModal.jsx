@@ -14,11 +14,7 @@ import ConstantConfig, {
   EXTENSIONVALALL,
   TimeconditionDropArray,
 } from "../ConstantConfig";
-import {
-  getapiAll,
-  postapiAll,
-  putapiall,
-} from "../../Redux/Reducers/ApiServices";
+import { getapiAll, postapiAll, putapiall } from "../../Redux/Reducers/ApiServices";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import config from "../../config";
@@ -89,22 +85,11 @@ function TimeConditionModal({
     "Saturday",
     "Sunday",
   ];
-  const weekOfYearList = () =>
-    Array.from({ length: 52 }, (_, i) => `${t("Week")} ${i + 1}`);
-  const weekOfMonthList = () => [
-    "1st Week",
-    "2nd Week",
-    "3rd Week",
-    "4th Week",
-    "5th Week",
-  ];
+  const weekOfYearList = () => Array.from({ length: 52 }, (_, i) => `${t("Week")} ${i + 1}`);
+  const weekOfMonthList = () => ["1st Week", "2nd Week", "3rd Week", "4th Week", "5th Week"];
   const hoursOfDayList = () => Array.from({ length: 24 }, (_, i) => `${i}`);
   const timeOfDayList = () => ["Morning", "Afternoon", "Evening", "Night"];
-  const dateTimeList = () => [
-    "2023-08-09 12:00",
-    "2023-08-10 12:00",
-    "2023-08-11 12:00",
-  ]; // Example list
+  const dateTimeList = () => ["2023-08-09 12:00", "2023-08-10 12:00", "2023-08-11 12:00"]; // Example list
 
   const [errors, setErrors] = useState({});
   const handleChange = (e) => {
@@ -248,30 +233,20 @@ function TimeConditionModal({
         updatedFormData.selectData1 = value.data;
         updatedFormData.selectFilter1 = `${value.app}:${value.data}`;
       } else if (dropdown.startsWith("TimeList_")) {
-        const updatedTimeConditionData = [
-          ...updatedFormData.timecondition_data,
-        ];
-        updatedTimeConditionData[index].dialplan_detail_type =
-          displayToApiTimeType(value);
+        const updatedTimeConditionData = [...updatedFormData.timecondition_data];
+        updatedTimeConditionData[index].dialplan_detail_type = displayToApiTimeType(value);
         updatedTimeConditionData[index].dialplan_detail_data = "";
         updatedFormData.timecondition_data = updatedTimeConditionData;
         helperFunction(value, index); // Pass both value and index
-      } else if (
-        dropdown.startsWith("Value_") ||
-        dropdown.startsWith("Range_")
-      ) {
-        const updatedTimeConditionData = [
-          ...updatedFormData.timecondition_data,
-        ];
-        const currentData =
-          updatedTimeConditionData[index].dialplan_detail_data.split("-");
+      } else if (dropdown.startsWith("Value_") || dropdown.startsWith("Range_")) {
+        const updatedTimeConditionData = [...updatedFormData.timecondition_data];
+        const currentData = updatedTimeConditionData[index].dialplan_detail_data.split("-");
         if (dropdown.startsWith("Value_")) {
           currentData[0] = value;
         } else {
           currentData[1] = value;
         }
-        updatedTimeConditionData[index].dialplan_detail_data =
-          currentData.join("-");
+        updatedTimeConditionData[index].dialplan_detail_data = currentData.join("-");
         updatedFormData.timecondition_data = updatedTimeConditionData;
       }
 
@@ -303,9 +278,7 @@ function TimeConditionModal({
     if (!formData.extension) {
       newErrors.extension = t("Extension is required");
       valid = false;
-    } else if (
-      !ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)
-    ) {
+    } else if (!ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)) {
       newErrors.extension = t("Ring group extension must contain only digits");
       valid = false;
     } else if (!EXTENSIONVALALL.test(formData.extension)) {
@@ -332,10 +305,10 @@ function TimeConditionModal({
         valid = false;
       }
       const [value, range] = item.dialplan_detail_data.split("-");
-      if (!value) {
-        rowErrors.Value = t("Value is required");
-        valid = false;
-      }
+      // if (!value) {
+      //   rowErrors.Value = t("Value is required");
+      //   valid = false;
+      // }
       if (!range) {
         rowErrors.Range = t("Range is required");
         valid = false;
@@ -504,8 +477,7 @@ function TimeConditionModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
               className="mb-3"
             >
@@ -513,9 +485,7 @@ function TimeConditionModal({
                 <Col lg={4} className="mb-3">
                   <Form.Label className="modal-head">
                     {t("Time condition name")}
-                    <CustomTooltipModal
-                      tooltip={t("Enter the name for the time condition")}
-                    />
+                    <CustomTooltipModal tooltip={t("Enter the name for the time condition")} />
                   </Form.Label>
                   <InputGroup className="">
                     <Form.Control
@@ -528,16 +498,10 @@ function TimeConditionModal({
                       onChange={handleChange}
                     />
                   </InputGroup>
-                  {errors.timename && (
-                    <div className="text-danger error-ui">
-                      {errors.timename}
-                    </div>
-                  )}
+                  {errors.timename && <div className="text-danger error-ui">{errors.timename}</div>}
                 </Col>
                 <Col lg={4} className="mb-3">
-                  <Form.Label className="modal-head">
-                    {t("Description")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Description")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -550,17 +514,13 @@ function TimeConditionModal({
                     />
                   </InputGroup>
                   {errors.description && (
-                    <div className="text-danger error-ui">
-                      {errors.description}
-                    </div>
+                    <div className="text-danger error-ui">{errors.description}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mb-3">
                   <Form.Label className="modal-head">
                     {t("Extension")}
-                    <CustomTooltipModal
-                      tooltip={t("Enter the extension number")}
-                    />
+                    <CustomTooltipModal tooltip={t("Enter the extension number")} />
                   </Form.Label>
                   <InputGroup className="">
                     <Form.Control
@@ -576,15 +536,11 @@ function TimeConditionModal({
                     />
                   </InputGroup>
                   {errors.extension && (
-                    <div className="text-danger error-ui">
-                      {errors.extension}
-                    </div>
+                    <div className="text-danger error-ui">{errors.extension}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mb-3">
-                  <Form.Label className="modal-head">
-                    {t("Destination matches")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Destination matches")}</Form.Label>
 
                   <DestinationDropdown
                     valueArray={apidropdown || {}}
@@ -600,16 +556,12 @@ function TimeConditionModal({
                     handleSelection={handleSelection}
                   />
                   {errors.selectFilter && (
-                    <div className="text-danger error-ui">
-                      {errors.selectFilter}
-                    </div>
+                    <div className="text-danger error-ui">{errors.selectFilter}</div>
                   )}
                 </Col>
 
                 <Col lg={4} className="mb-3">
-                  <Form.Label className="modal-head">
-                    {t("Destination non-matches")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Destination non-matches")}</Form.Label>
                   <DestinationDropdown
                     valueArray={apidropdown || {}}
                     name={"selectFilter1"}
@@ -624,9 +576,7 @@ function TimeConditionModal({
                     handleSelection={handleSelection}
                   />
                   {errors.selectFilter1 && (
-                    <div className="text-danger error-ui">
-                      {errors.selectFilter1}
-                    </div>
+                    <div className="text-danger error-ui">{errors.selectFilter1}</div>
                   )}
                 </Col>
                 <Col lg={4} />
@@ -641,19 +591,13 @@ function TimeConditionModal({
                     }}
                   >
                     <Col>
-                      <Form.Label className="modal-head">
-                        {t("Time")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Time")}</Form.Label>
                       <CustomDropDown
                         toggleDropdown={toggleDropdown}
-                        showValue={
-                          apiToDisplayTimeType(set.dialplan_detail_type) || ""
-                        }
+                        showValue={apiToDisplayTimeType(set.dialplan_detail_type) || ""}
                         openDropdown={openDropdown}
                         valueArray={TimeconditionDropArray}
-                        handleSelection={(item, value) =>
-                          handleSelection(item, value, index)
-                        }
+                        handleSelection={(item, value) => handleSelection(item, value, index)}
                         name={`TimeList_${index}`}
                         defaultValue={t("None selected")}
                         setOpenDropdown={setOpenDropdown}
@@ -665,7 +609,7 @@ function TimeConditionModal({
                         </div>
                       )}
                     </Col>
-                    <Col>
+                    {/* <Col>
                       <Form.Label className="modal-head">
                         {t("Value")}
                         <CustomTooltipModal
@@ -694,7 +638,7 @@ function TimeConditionModal({
                           {errors.timecondition_data[index].Value}
                         </div>
                       )}
-                    </Col>
+                    </Col> */}
                     <Col>
                       <Form.Label className="modal-head">
                         {t("Range")}
@@ -706,14 +650,10 @@ function TimeConditionModal({
                       </Form.Label>
                       <CustomDropDown
                         toggleDropdown={toggleDropdown}
-                        showValue={
-                          t(set.dialplan_detail_data.split("-")[1]) || ""
-                        }
+                        showValue={t(set.dialplan_detail_data.split("-")[1]) || ""}
                         openDropdown={openDropdown}
                         valueArray={timepass[index] || []}
-                        handleSelection={(item, value) =>
-                          handleSelection(item, value, index)
-                        }
+                        handleSelection={(item, value) => handleSelection(item, value, index)}
                         name={`Range_${index}`}
                         defaultValue={t("None selected")}
                         setOpenDropdown={setOpenDropdown}
@@ -734,11 +674,7 @@ function TimeConditionModal({
                         }}
                       >
                         {index === 0 ? (
-                          <button
-                            className="btn_save"
-                            type="button"
-                            onClick={addNewDropdownSet}
-                          >
+                          <button className="btn_save" type="button" onClick={addNewDropdownSet}>
                             {t("Add")}
                           </button>
                         ) : (
@@ -747,11 +683,7 @@ function TimeConditionModal({
                             type="button"
                             onClick={() => removeDropdownSet(index)}
                           >
-                            <DeleteIcon
-                              width={14}
-                              height={14}
-                              className="edithover"
-                            />
+                            <DeleteIcon width={14} height={14} className="edithover" />
                           </button>
                         )}
                       </div>
@@ -761,15 +693,8 @@ function TimeConditionModal({
               })}
             </Form>
           </div>
-          <div
-            className="d-flex justify-content-end me-4"
-            style={{ marginBottom: "37px" }}
-          >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+          <div className="d-flex justify-content-end me-4" style={{ marginBottom: "37px" }}>
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (
