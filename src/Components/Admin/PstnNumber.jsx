@@ -8,12 +8,7 @@ import { ReactComponent as Edit_logo } from "../../Assets/Icon/edit.svg";
 import { toast } from "react-toastify";
 import PstnModal from "../Modal/PstnModal";
 import DeleteModal from "../Modal/DeleteModal";
-import {
-  deleteapiAll,
-  getapiAll,
-  postapiAll,
-  putapiall,
-} from "../../Redux/Reducers/ApiServices";
+import { deleteapiAll, getapiAll, postapiAll, putapiall } from "../../Redux/Reducers/ApiServices";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import Paginationall from "../Pages/Paginationall";
@@ -30,11 +25,7 @@ import ConstantConfig from "../ConstantConfig";
 const SuccessModal = ({ data, showSuccessModal, setShowSuccessModal }) => {
   const { t } = useTranslation();
   return (
-    <Modal
-      show={showSuccessModal}
-      onHide={() => setShowSuccessModal(false)}
-      centered
-    >
+    <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
       <Modal.Header style={{ backgroundColor: "var(--main-white-color)" }}>
         <Modal.Title
           style={{
@@ -56,50 +47,45 @@ const SuccessModal = ({ data, showSuccessModal, setShowSuccessModal }) => {
         {data && data.message && data.message.created_number.length !== 0 && (
           <div>
             <p style={{ fontSize: "16px", color: "var(--main-orange-color)" }}>
-              {data.message.created_number.length}{" "}
-              {t("numbers were successfully created.")}
+              {data.message.created_number.length} {t("numbers were successfully created.")}
             </p>
           </div>
         )}
-        {data &&
-          data.message &&
-          data.message.duplicate_numbers.length !== 0 && (
-            <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontSize: "16px", color: "var(--main-error-color)" }}>
-                {t("These")} {data.message.duplicate_numbers.length}
-                {t(" numbers are duplicates and were ignored:")}
-              </p>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                  justifyContent: "center",
-                  border: "1px solid var(--main-error-color)",
-                  padding: "10px",
-                  borderRadius: "8px",
-                  backgroundColor: "var(--main-error-bg-color)",
-                }}
-              >
-                {data.message.duplicate_numbers.map((item, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      whiteSpace: "nowrap",
-                      fontSize: "14px",
-                      color: "var(--main-error-color)",
-                    }}
-                  >
-                    {item}
-                    {index < data.message.duplicate_numbers.length - 1
-                      ? ","
-                      : ""}
-                  </span>
-                ))}
-              </div>
+        {data && data.message && data.message.duplicate_numbers.length !== 0 && (
+          <div style={{ marginBottom: "20px" }}>
+            <p style={{ fontSize: "16px", color: "var(--main-error-color)" }}>
+              {t("These")} {data.message.duplicate_numbers.length}
+              {t(" numbers are duplicates and were ignored:")}
+            </p>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
+                justifyContent: "center",
+                border: "1px solid var(--main-error-color)",
+                padding: "10px",
+                borderRadius: "8px",
+                backgroundColor: "var(--main-error-bg-color)",
+              }}
+            >
+              {data.message.duplicate_numbers.map((item, index) => (
+                <span
+                  key={index}
+                  style={{
+                    whiteSpace: "nowrap",
+                    fontSize: "14px",
+                    color: "var(--main-error-color)",
+                  }}
+                >
+                  {item}
+                  {index < data.message.duplicate_numbers.length - 1 ? "," : ""}
+                </span>
+              ))}
             </div>
-          )}
+          </div>
+        )}
       </Modal.Body>
       <Modal.Footer
         style={{
@@ -127,14 +113,10 @@ const SuccessModal = ({ data, showSuccessModal, setShowSuccessModal }) => {
 export default function PstnNumber() {
   const { t } = useTranslation();
   const Token = Cookies.get("Token");
-  const pstnlist = useSelector(
-    (state) => state.postapiAll.postapiall.Pstnnumber.data
-  );
+  const pstnlist = useSelector((state) => state.postapiAll.postapiall.Pstnnumber.data);
   const abortControllerRef = useRef(null);
 
-  const count = useSelector(
-    (state) => state.postapiAll.postapiall.Pstnnumber.pstn_total_counts
-  );
+  const count = useSelector((state) => state.postapiAll.postapiall.Pstnnumber.pstn_total_counts);
   const [allDropdown, setAllDropDown] = useState({});
   const [valueid, setvalueid] = useState("");
 
@@ -388,8 +370,8 @@ export default function PstnNumber() {
       setsaveLoading(true);
       const data = {
         ...datavalues,
-        destination: formData.destination_number,
-        create_range: +Math.abs(formData.range - formData.destination_number),
+        destination: `${formData.range}-${formData.destination_number}`,
+        create_range: 1,
       };
       dispatch(
         postapiAll({
@@ -466,9 +448,7 @@ export default function PstnNumber() {
       } else {
         const strA = String(valueA);
         const strB = String(valueB);
-        return newAscending
-          ? strA.localeCompare(strB)
-          : strB.localeCompare(strA);
+        return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
       }
     });
 
@@ -479,11 +459,7 @@ export default function PstnNumber() {
 
   return (
     <div className="tablespadding">
-      <AdminHeader
-        openModal={openModal}
-        pathname={t("PSTN-numbers")}
-        addBtn={false}
-      />
+      <AdminHeader openModal={openModal} pathname={t("PSTN-numbers")} addBtn={false} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">
@@ -502,10 +478,7 @@ export default function PstnNumber() {
             </div>
             <h6>{t("entries")}</h6>
           </div>
-          <div
-            className="table_search searchwidth pstnnumber"
-            style={{ width: "55%" }}
-          >
+          <div className="table_search searchwidth pstnnumber" style={{ width: "55%" }}>
             <h6>{t("Search")}:</h6>
             <Form.Control
               type="text"
@@ -515,24 +488,16 @@ export default function PstnNumber() {
               onChange={handleSearchChange}
               className="search-bg new-search-add"
             />
-            {searchTerm && (
-              <ClearSearch clearSearch={clearSearch} number={true} />
-            )}
+            {searchTerm && <ClearSearch clearSearch={clearSearch} number={true} />}
 
             <div className="companyfilter">
-              <h6 style={{ width: "120px", marginLeft: "15px" }}>
-                {t("Select company")}:
-              </h6>
+              <h6 style={{ width: "120px", marginLeft: "15px" }}>{t("Select company")}:</h6>
               <div style={{ width: "140px" }}>
                 <CustomDropDown
                   toggleDropdown={toggleDropdown}
                   showValue={Company}
                   openDropdown={openDropdown}
-                  valueArray={
-                    companylist
-                      ? [{ company_name: "All", _id: "" }, ...companylist]
-                      : []
-                  }
+                  valueArray={companylist ? [{ company_name: "All", _id: "" }, ...companylist] : []}
                   handleSelection={handleSelection}
                   name={"Company"}
                   defaultValue={t("All")}
@@ -546,10 +511,7 @@ export default function PstnNumber() {
             </div>
           </div>
         </div>
-        <div
-          style={{ overflow: "auto", height: dynamicHeight }}
-          className="sidebar_scroll"
-        >
+        <div style={{ overflow: "auto", height: dynamicHeight }} className="sidebar_scroll">
           <table className="responshive">
             <thead className="Tablehead">
               <tr>
@@ -586,10 +548,7 @@ export default function PstnNumber() {
             <tbody>
               {loading ? (
                 <tr style={{ height: dynamicHeight - 50 }}>
-                  <td
-                    style={{ width: "100%", textAlign: "center" }}
-                    colSpan="6"
-                  >
+                  <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                     <Loader />
                   </td>
                 </tr>
@@ -604,31 +563,17 @@ export default function PstnNumber() {
                         <td>{val?.company_name}</td>
                         <td className="table_edit">
                           <button onClick={() => handleEdit(val?._id)}>
-                            <Edit_logo
-                              width={14}
-                              height={14}
-                              className="edithover"
-                            />
+                            <Edit_logo width={14} height={14} className="edithover" />
                           </button>
-                          <button
-                            className="ms-1"
-                            onClick={() => openDelete(val?._id)}
-                          >
-                            <Delete_logo
-                              width={14}
-                              height={14}
-                              className="edithover"
-                            />
+                          <button className="ms-1" onClick={() => openDelete(val?._id)}>
+                            <Delete_logo width={14} height={14} className="edithover" />
                           </button>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -640,8 +585,7 @@ export default function PstnNumber() {
         </div>
         <div className="show  show2 mt-2  d-flex align-items-center justify-content-between ">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count} {t("entries")}
           </h6>
           <div>
             <Paginationall

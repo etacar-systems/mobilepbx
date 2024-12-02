@@ -18,11 +18,7 @@ import time_condition from "../../models/time_condition";
 import system_recording from "../../models/system_recording";
 import role from "../../models/role";
 
-const addNewRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -170,16 +166,16 @@ const addNewRecord = async (
         copy_action_to_all: "NO",
       },
     };
-    console.log(api_config);
+    //   console.log(api_config);
 
     try {
       const data: any = await axios.request(api_config);
-      console.log(data?.data, "12333");
+      //     console.log(data?.data, "12333");
 
       const formattedArray = Object.keys(data?.data)
         .filter((key) => !isNaN(Number(key)))
         .map((key) => data?.data[key]);
-      console.log(data?.data, "pbx response");
+      //   console.log(data?.data, "pbx response");
 
       if (data) {
         let newCreateObj: any = [];
@@ -235,11 +231,7 @@ const addNewRecord = async (
   }
 };
 
-const UpdateRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const UpdateRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -298,10 +290,7 @@ const UpdateRecord = async (
     }
 
     for (const action of destination_action) {
-      if (
-        action.destination_app == undefined ||
-        action.destination_data == undefined
-      ) {
+      if (action.destination_app == undefined || action.destination_data == undefined) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
           success: 0,
           message:
@@ -395,11 +384,7 @@ const UpdateRecord = async (
   }
 };
 
-const getpstnNumberList = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getpstnNumberList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let page: any = data.page;
@@ -566,8 +551,7 @@ const removepstn = async (req: Request, res: Response, next: NextFunction) => {
     if (get_company_pstn?.isassigned === 1) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
-        message:
-          "Pstn Number already assigned to Extension  pls Unassign First.",
+        message: "Pstn Number already assigned to Extension  pls Unassign First.",
       });
     }
 
@@ -612,11 +596,7 @@ const removepstn = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-const getAnAssignedPstnNumberList = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAnAssignedPstnNumberList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //  let get_anassigned_pstn:any []= await pstn_number.find({
     //   isassigned:0,
@@ -656,11 +636,7 @@ const getAnAssignedPstnNumberList = async (
   }
 };
 
-const CompanyWisePstnList = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const CompanyWisePstnList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail: any = await User_token(token);
@@ -732,9 +708,7 @@ const CompanyWisePstnList = async (
     //   .limit(limit)
     //   .skip(skip);
 
-    const pstn_total_counts: any = await pstn_number
-      .find(find_query)
-      .countDocuments();
+    const pstn_total_counts: any = await pstn_number.find(find_query).countDocuments();
 
     let total_page_count: any = Math.ceil(pstn_total_counts / size);
 
@@ -755,11 +729,7 @@ const CompanyWisePstnList = async (
   }
 };
 
-const assignPSTNInNumber = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -807,10 +777,7 @@ const assignPSTNInNumber = async (
     }
 
     for (const action of destination_action) {
-      if (
-        action.destination_app == undefined ||
-        action.destination_data == undefined
-      ) {
+      if (action.destination_app == undefined || action.destination_data == undefined) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
           success: 0,
           message:
@@ -862,8 +829,7 @@ const assignPSTNInNumber = async (
         });
       }
 
-      select_type_data.select_name =
-        get_extension?.first_name + " " + get_extension?.last_name;
+      select_type_data.select_name = get_extension?.first_name + " " + get_extension?.last_name;
       select_type_data.select_extension = get_extension?.user_extension;
       select_type_data.select_id = get_extension?._id;
     }
@@ -952,8 +918,7 @@ const assignPSTNInNumber = async (
         destination_condition: get_company_pstn?.destination_condition,
         destination_action,
         description: get_company_pstn?.description,
-        destination_enabled:
-          get_company_pstn?.destination_enabled == true ? "true" : "false",
+        destination_enabled: get_company_pstn?.destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
       },
     };
@@ -1047,12 +1012,10 @@ const assignPSTNInNumber = async (
           case config.SELECT_NAME.RECORDING:
             break;
           default:
-            return res
-              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-              .send({
-                success: 0,
-                message: "Fetch Error in Assign Module Data ||",
-              });
+            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+              success: 0,
+              message: "Fetch Error in Assign Module Data ||",
+            });
         }
 
         if (select_type == config.SELECT_NAME.EXTENSION) {
@@ -1077,14 +1040,10 @@ const assignPSTNInNumber = async (
               user: get_extension_detail.user_extension,
               extension_password: get_extension_detail.password,
               outbound_caller_id_name:
-                get_extension_detail.first_name +
-                " " +
-                get_extension_detail.last_name,
+                get_extension_detail.first_name + " " + get_extension_detail.last_name,
               outbound_caller_id_number: get_company_pstn?.destination,
               effective_caller_id_name:
-                get_extension_detail.first_name +
-                " " +
-                get_extension_detail.last_name,
+                get_extension_detail.first_name + " " + get_extension_detail.last_name,
               effective_caller_id_number: get_company_pstn?.destination,
               max_registrations: "5",
               limit_max: "5",
@@ -1096,26 +1055,22 @@ const assignPSTNInNumber = async (
               description: "",
             },
           };
-          console.log("api_config", api_config);
+          //     console.log("api_config", api_config);
 
           try {
             const data: any = await axios.request(api_config);
-            console.log("data", data.data);
+            //      console.log("data", data.data);
             if (!data) {
-              return res
-                .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-                .send({
-                  success: 0,
-                  message: "Failed To add Extension number",
-                });
+              return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+                success: 0,
+                message: "Failed To add Extension number",
+              });
             }
           } catch (error: any) {
-            return res
-              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-              .send({
-                success: 0,
-                message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-              });
+            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+              success: 0,
+              message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+            });
           }
         }
 
@@ -1143,11 +1098,7 @@ const assignPSTNInNumber = async (
     });
   }
 };
-const updateAssignPSTN = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -1204,10 +1155,7 @@ const updateAssignPSTN = async (
     }
 
     for (const action of destination_action) {
-      if (
-        action.destination_app == undefined ||
-        action.destination_data == undefined
-      ) {
+      if (action.destination_app == undefined || action.destination_data == undefined) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
           success: 0,
           message:
@@ -1236,8 +1184,8 @@ const updateAssignPSTN = async (
         message: `PSTN Data Not Found.`,
       });
     }
-    console.log(select_type);
-    console.log(select_type_id);
+    //    console.log(select_type);
+    //   console.log(select_type_id);
 
     if (pstn_id && number_id != pstn_id) {
       await user.updateMany(
@@ -1268,10 +1216,7 @@ const updateAssignPSTN = async (
         select_type_id?.select_type_data?.select_id,
         select_type_id?.select_type
       );
-    } else if (
-      number_id == pstn_id &&
-      select_type != select_type_id?.select_type
-    ) {
+    } else if (number_id == pstn_id && select_type != select_type_id?.select_type) {
       await user.updateMany(
         {
           pstn_number: number_id,
@@ -1324,7 +1269,7 @@ const updateAssignPSTN = async (
     }
 
     async function handleSelectType(select_id: string, select_type: Number) {
-      console.log(select_id, select_type);
+      //     console.log(select_id, select_type);
 
       switch (select_type) {
         case config.SELECT_NAME.IVR:
@@ -1539,8 +1484,7 @@ const updateAssignPSTN = async (
           message: `Extension Not Found.`,
         });
       }
-      select_type_data.select_name =
-        get_extension?.first_name + " " + get_extension?.last_name;
+      select_type_data.select_name = get_extension?.first_name + " " + get_extension?.last_name;
       select_type_data.select_extension = get_extension?.user_extension;
       select_type_data.select_id = get_extension?._id;
     }
@@ -1636,8 +1580,7 @@ const updateAssignPSTN = async (
         destination_condition: get_company_pstn?.destination_condition,
         destination_action,
         description: get_company_pstn?.description,
-        destination_enabled:
-          get_company_pstn?.destination_enabled == true ? "true" : "false",
+        destination_enabled: get_company_pstn?.destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
       },
     };
@@ -1731,12 +1674,10 @@ const updateAssignPSTN = async (
           case config.SELECT_NAME.RECORDING:
             break;
           default:
-            return res
-              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-              .send({
-                success: 0,
-                message: "Fetch Error in Assign Module Data ||",
-              });
+            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+              success: 0,
+              message: "Fetch Error in Assign Module Data ||",
+            });
         }
 
         if (select_type == config.SELECT_NAME.EXTENSION) {
@@ -1761,14 +1702,10 @@ const updateAssignPSTN = async (
               user: get_extension_detail.user_extension,
               extension_password: get_extension_detail.password,
               outbound_caller_id_name:
-                get_extension_detail.first_name +
-                " " +
-                get_extension_detail.last_name,
+                get_extension_detail.first_name + " " + get_extension_detail.last_name,
               outbound_caller_id_number: get_company_pstn?.destination,
               effective_caller_id_name:
-                get_extension_detail.first_name +
-                " " +
-                get_extension_detail.last_name,
+                get_extension_detail.first_name + " " + get_extension_detail.last_name,
               effective_caller_id_number: get_company_pstn?.destination,
               max_registrations: "5",
               limit_max: "5",
@@ -1780,26 +1717,22 @@ const updateAssignPSTN = async (
               description: "mob",
             },
           };
-          console.log("api_config", api_config);
+          //    console.log("api_config", api_config);
 
           try {
             const data: any = await axios.request(api_config);
-            console.log("data", data.data);
+            //       console.log("data", data.data);
             if (!data) {
-              return res
-                .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-                .send({
-                  success: 0,
-                  message: "Failed To add Extension number",
-                });
+              return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+                success: 0,
+                message: "Failed To add Extension number",
+              });
             }
           } catch (error: any) {
-            return res
-              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-              .send({
-                success: 0,
-                message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-              });
+            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+              success: 0,
+              message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+            });
           }
         }
 
@@ -1827,11 +1760,7 @@ const updateAssignPSTN = async (
     });
   }
 };
-const removeAssignpstn = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const removeAssignpstn = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let pstn_id: any = data.pstn_id;
@@ -1891,8 +1820,7 @@ const removeAssignpstn = async (
         caller_id_number: get_company_pstn?.caller_id_number,
         destination_condition: get_company_pstn?.destination_condition,
         description: get_company_pstn?.description,
-        destination_enabled:
-          get_company_pstn?.destination_enabled == true ? "true" : "false",
+        destination_enabled: get_company_pstn?.destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
         destination_action: [],
       },
@@ -1987,12 +1915,10 @@ const removeAssignpstn = async (
           case config.SELECT_NAME.RECORDING:
             break;
           default:
-            return res
-              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
-              .send({
-                success: 0,
-                message: "Fetch Error in Assign Module Data ||",
-              });
+            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+              success: 0,
+              message: "Fetch Error in Assign Module Data ||",
+            });
         }
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -2015,11 +1941,7 @@ const removeAssignpstn = async (
   }
 };
 
-const getNumberdetailByid = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getNumberdetailByid = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let number_id: any = data.number_id;
@@ -2071,11 +1993,7 @@ const getNumberdetailByid = async (
   }
 };
 
-const dropdownData = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const dropdownData = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -2308,9 +2226,7 @@ const dropdownData = async (
 
       try {
         const data: any = await axios.request(api_config);
-        const selectTypeUUIDs = recordCheck?.map(
-          (item: any) => item.select_type_uuid
-        );
+        const selectTypeUUIDs = recordCheck?.map((item: any) => item.select_type_uuid);
 
         unAssignRecord = data?.data?.recordings?.filter(
           (item: any) => !selectTypeUUIDs.includes(item.uuid)
@@ -2325,7 +2241,7 @@ const dropdownData = async (
     }
 
     if (selectType == 3) {
-      console.log("cid", create_cid);
+      //    console.log("cid", create_cid);
       unAssignRecord = await user.aggregate([
         {
           $match: {
@@ -2392,11 +2308,7 @@ const dropdownData = async (
     });
   }
 };
-const updatePstnNumber = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updatePstnNumber = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -2519,7 +2431,7 @@ const updatePstnNumber = async (
         message: "Pstn Number Already Exists",
       });
     }
-    console.log("get_company_pstn", get_company_pstn);
+    //   console.log("get_company_pstn", get_company_pstn);
     let api_config = {
       method: "delete",
       maxBodyLength: Infinity,
@@ -2840,11 +2752,7 @@ const CompanyWisePstnListByQueryParams = async (
     });
   }
 };
-const getPstnNumberdetailByid = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getPstnNumberdetailByid = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let pstn_number_id: any = req.query.pstn_number_id;
 
@@ -2884,11 +2792,7 @@ const getPstnNumberdetailByid = async (
     });
   }
 };
-const CallReportsdropdownData = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const CallReportsdropdownData = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);

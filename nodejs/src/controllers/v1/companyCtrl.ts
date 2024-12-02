@@ -26,24 +26,20 @@ import { socket } from "../../socket";
 import firewall from "../../models/firewall";
 import { CompanyFeaturesModel } from "../../models/company_feature";
 import uploadFile from "../../upload";
-import {MESSAGE} from "../../constant_message";
+import { MESSAGE } from "../../constant_message";
 import path from "path";
 import getsmtpDetail from "../../helper/getsmtpDetail";
 import email from "../../models/email";
 import sendMail from "../../helper/sendMail";
 import sendMailSendGrid from "../../helper/sendMail_sendGrid";
 
-const toBoolean = (value:any) => {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
+const toBoolean = (value: any) => {
+  if (value === "true") return true;
+  if (value === "false") return false;
   return undefined;
 };
 
-const addNewRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -102,7 +98,7 @@ const addNewRecord = async (
       whatsapp_count,
       calendar_integration_count,
       text_to_speech_count,
-      virtual_assistant_count
+      virtual_assistant_count,
     } = req.body;
 
     let parsedPbx = toBoolean(pbx);
@@ -181,133 +177,133 @@ const addNewRecord = async (
     if (parsedPbx === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Pbx is invalid."
+        message: "Pbx is invalid.",
       });
     }
-    
+
     if (parsedExtension === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Extension is invalid."
+        message: "Extension is invalid.",
       });
     }
-    
+
     if (parsedRingGroup === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Ring Group is invalid."
+        message: "Ring Group is invalid.",
       });
     }
-    
+
     if (parsedConference === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Conference is invalid."
+        message: "Conference is invalid.",
       });
     }
-    
+
     if (parsedVideoCall === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Video Call is invalid."
+        message: "Video Call is invalid.",
       });
     }
-    
+
     if (parsedIvr === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "IVR is invalid."
+        message: "IVR is invalid.",
       });
     }
-    
+
     if (parsedSpeechToText === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Speech-to-Text is invalid."
+        message: "Speech-to-Text is invalid.",
       });
     }
-    
+
     if (parsedPhoneInBrowser === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Phone in Browser is invalid."
+        message: "Phone in Browser is invalid.",
       });
     }
-    
+
     if (parsedVoicemail === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Voicemail is invalid."
+        message: "Voicemail is invalid.",
       });
     }
-    
+
     if (parsedCallback === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Callback is invalid."
+        message: "Callback is invalid.",
       });
     }
-    
+
     if (parsedRecordCalls === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Record Calls are invalid."
+        message: "Record Calls are invalid.",
       });
     }
-    
+
     if (parsedReportage === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Reportage is invalid."
+        message: "Reportage is invalid.",
       });
     }
-    
+
     if (parsedMonitoring === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Monitoring is invalid."
+        message: "Monitoring is invalid.",
       });
     }
-    
+
     if (parsedCallerId === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Caller ID is invalid."
+        message: "Caller ID is invalid.",
       });
     }
-    
+
     if (parsedTimeControls === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Time Controls are invalid."
+        message: "Time Controls are invalid.",
       });
     }
-    
+
     if (parsedWhatsapp === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "WhatsApp is invalid."
+        message: "WhatsApp is invalid.",
       });
     }
-    
+
     if (parsedCalendarIntegration === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Calendar Integration is invalid."
+        message: "Calendar Integration is invalid.",
       });
     }
-    
+
     if (parsedTextToSpeech === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Text to Speech is invalid."
+        message: "Text to Speech is invalid.",
       });
     }
-    
+
     if (parsedVirtualAssistant === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Virtual Assistant is invalid."
+        message: "Virtual Assistant is invalid.",
       });
     }
 
@@ -330,23 +326,23 @@ const addNewRecord = async (
       whatsapp_count: "WhatsApp Count",
       calendar_integration_count: "Calendar Integration Count",
       text_to_speech_count: "Text to Speech Count",
-      virtual_assistant_count: "Virtual Assistant Count"
+      virtual_assistant_count: "Virtual Assistant Count",
     };
 
     for (const [key, label] of Object.entries(params)) {
       const value = req.body[key];
-    
+
       if (value === undefined) {
         return res.status(400).send({
           success: 0,
-          message: `${label} is mandatory.`
+          message: `${label} is mandatory.`,
         });
       }
-    
+
       if (value !== undefined && !REGEXP.COMMON.INTEGER.test(String(value))) {
         return res.status(400).send({
           success: 0,
-          message: `${label} is invalid.`
+          message: `${label} is invalid.`,
         });
       }
     }
@@ -383,7 +379,7 @@ const addNewRecord = async (
     }
 
     let upload_file_detail = await uploadFile(req, res);
-    if(upload_file_detail.small_logo){
+    if (upload_file_detail.small_logo) {
       var myUrl = upload_file_detail.small_logo.file_path;
       let get_file_name: any = upload_file_detail.small_logo.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -394,8 +390,8 @@ const addNewRecord = async (
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -403,11 +399,11 @@ const addNewRecord = async (
       );
 
       small_logo = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       small_logo = "";
     }
 
-    if(upload_file_detail.logo_text){
+    if (upload_file_detail.logo_text) {
       var myUrl = upload_file_detail.logo_text.file_path;
       let get_file_name: any = upload_file_detail.logo_text.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -418,8 +414,8 @@ const addNewRecord = async (
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -427,11 +423,11 @@ const addNewRecord = async (
       );
 
       logo_text = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       logo_text = "";
     }
 
-    if(upload_file_detail.dark_small_logo){
+    if (upload_file_detail.dark_small_logo) {
       var myUrl = upload_file_detail.dark_small_logo.file_path;
       let get_file_name: any = upload_file_detail.dark_small_logo.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -442,8 +438,8 @@ const addNewRecord = async (
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -451,11 +447,11 @@ const addNewRecord = async (
       );
 
       dark_small_logo = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       dark_small_logo = "";
     }
 
-    if(upload_file_detail.dark_logo_text){
+    if (upload_file_detail.dark_logo_text) {
       var myUrl = upload_file_detail.dark_logo_text.file_path;
       let get_file_name: any = upload_file_detail.dark_logo_text.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -466,8 +462,8 @@ const addNewRecord = async (
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -475,24 +471,21 @@ const addNewRecord = async (
       );
 
       dark_logo_text = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       dark_logo_text = "";
     }
 
     let create_company_obj: any = {
       company_name: company_name,
-      company_street_address:
-        company_street_address !== undefined ? company_street_address : "",
+      company_street_address: company_street_address !== undefined ? company_street_address : "",
       company_zipcode: company_zipcode !== undefined ? company_zipcode : "",
       company_city: company_city !== undefined ? company_city : "",
       company_country: company_country !== undefined ? company_country : "",
       company_vat: company_vat !== undefined ? company_vat : "",
-      company_contact_person:
-        company_contact_person !== undefined ? company_contact_person : "",
+      company_contact_person: company_contact_person !== undefined ? company_contact_person : "",
       company_password: company_password,
       company_email: company_email,
-      company_phone_number:
-        company_phone_number !== undefined ? company_phone_number : "",
+      company_phone_number: company_phone_number !== undefined ? company_phone_number : "",
       domain_name: domain_name,
       hex_code,
       pbx,
@@ -581,35 +574,42 @@ const addNewRecord = async (
         await user.create(userObj);
 
         try {
-          let get_emptdetail_tmp:any = await getsmtpDetail();
-          let get_email_content:any = await email.findOne({
-            email_type:2
-          })
-    
-          if(get_email_content !== null && Object.keys(get_emptdetail_tmp).length > 0){
-            let customer_email_tmp:any = userObj.user_email;
-            let customer_password_tmp:any = userObj.password;
-            let user_name_tmp:any = company_name;
-            let replace_name:any = get_email_content.message.replace("{{CustomerName}}",user_name_tmp)
-          replace_name = replace_name.replace("{{CustomerEmail}}",customer_email_tmp)
-          replace_name = replace_name.replace("{{CustomerPass}}",customer_password_tmp)
-           
-              let notification_obj:any = {
-                host:get_emptdetail_tmp.mail_host,
-                port:get_emptdetail_tmp.port,
-                username:get_emptdetail_tmp.auth_user,
-                password:get_emptdetail_tmp.auth_password,
-                from:get_email_content.from,
-                to:customer_email_tmp,
-                subject:get_email_content.subject,
-                html:replace_name,
-                title:get_email_content.email_title
-              }
-              if(get_emptdetail_tmp.sendgrid_auth){
-                sendMailSendGrid(notification_obj,get_emptdetail_tmp.is_auth,get_emptdetail_tmp.sendgrid_token)
-              }else{
-                sendMail(notification_obj,get_emptdetail_tmp.is_auth);
-              }
+          let get_emptdetail_tmp: any = await getsmtpDetail();
+          let get_email_content: any = await email.findOne({
+            email_type: 2,
+          });
+
+          if (get_email_content !== null && Object.keys(get_emptdetail_tmp).length > 0) {
+            let customer_email_tmp: any = userObj.user_email;
+            let customer_password_tmp: any = userObj.password;
+            let user_name_tmp: any = company_name;
+            let replace_name: any = get_email_content.message.replace(
+              "{{CustomerName}}",
+              user_name_tmp
+            );
+            replace_name = replace_name.replace("{{CustomerEmail}}", customer_email_tmp);
+            replace_name = replace_name.replace("{{CustomerPass}}", customer_password_tmp);
+
+            let notification_obj: any = {
+              host: get_emptdetail_tmp.mail_host,
+              port: get_emptdetail_tmp.port,
+              username: get_emptdetail_tmp.auth_user,
+              password: get_emptdetail_tmp.auth_password,
+              from: get_email_content.from,
+              to: customer_email_tmp,
+              subject: get_email_content.subject,
+              html: replace_name,
+              title: get_email_content.email_title,
+            };
+            if (get_emptdetail_tmp.sendgrid_auth) {
+              sendMailSendGrid(
+                notification_obj,
+                get_emptdetail_tmp.is_auth,
+                get_emptdetail_tmp.sendgrid_token
+              );
+            } else {
+              sendMail(notification_obj, get_emptdetail_tmp.is_auth);
+            }
           }
         } catch (error) {
           //console.log("Error in sending Email for new Enterprise creation :",error);
@@ -641,11 +641,7 @@ const addNewRecord = async (
     });
   }
 };
-const getCompnayUsersById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getCompnayUsersById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -757,11 +753,7 @@ const getCompnayUsersById = async (
     });
   }
 };
-const getCompnanylist = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getCompnanylist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -814,9 +806,7 @@ const getCompnanylist = async (
       .limit(limit)
       .skip(skip);
 
-    const company_total_counts: any = await company
-      .find(find_query)
-      .countDocuments();
+    const company_total_counts: any = await company.find(find_query).countDocuments();
 
     let total_page_count: any = Math.ceil(company_total_counts / size);
 
@@ -894,7 +884,7 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       whatsapp_count,
       calendar_integration_count,
       text_to_speech_count,
-      virtual_assistant_count
+      virtual_assistant_count,
     } = req.body;
 
     let parsedPbx = toBoolean(pbx);
@@ -987,133 +977,133 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
     if (parsedPbx === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Pbx is invalid."
+        message: "Pbx is invalid.",
       });
     }
-    
+
     if (parsedExtension === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Extension is invalid."
+        message: "Extension is invalid.",
       });
     }
-    
+
     if (parsedRingGroup === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Ring Group is invalid."
+        message: "Ring Group is invalid.",
       });
     }
-    
+
     if (parsedConference === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Conference is invalid."
+        message: "Conference is invalid.",
       });
     }
-    
+
     if (parsedVideoCall === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Video Call is invalid."
+        message: "Video Call is invalid.",
       });
     }
-    
+
     if (parsedIvr === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "IVR is invalid."
+        message: "IVR is invalid.",
       });
     }
-    
+
     if (parsedSpeechToText === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Speech-to-Text is invalid."
+        message: "Speech-to-Text is invalid.",
       });
     }
-    
+
     if (parsedPhoneInBrowser === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Phone in Browser is invalid."
+        message: "Phone in Browser is invalid.",
       });
     }
-    
+
     if (parsedVoicemail === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Voicemail is invalid."
+        message: "Voicemail is invalid.",
       });
     }
-    
+
     if (parsedCallback === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Callback is invalid."
+        message: "Callback is invalid.",
       });
     }
-    
+
     if (parsedRecordCalls === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Record Calls are invalid."
+        message: "Record Calls are invalid.",
       });
     }
-    
+
     if (parsedReportage === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Reportage is invalid."
+        message: "Reportage is invalid.",
       });
     }
-    
+
     if (parsedMonitoring === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Monitoring is invalid."
+        message: "Monitoring is invalid.",
       });
     }
-    
+
     if (parsedCallerId === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Caller ID is invalid."
+        message: "Caller ID is invalid.",
       });
     }
-    
+
     if (parsedTimeControls === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Time Controls are invalid."
+        message: "Time Controls are invalid.",
       });
     }
-    
+
     if (parsedWhatsapp === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "WhatsApp is invalid."
+        message: "WhatsApp is invalid.",
       });
     }
-    
+
     if (parsedCalendarIntegration === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Calendar Integration is invalid."
+        message: "Calendar Integration is invalid.",
       });
     }
-    
+
     if (parsedTextToSpeech === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Text to Speech is invalid."
+        message: "Text to Speech is invalid.",
       });
     }
-    
+
     if (parsedVirtualAssistant === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Virtual Assistant is invalid."
+        message: "Virtual Assistant is invalid.",
       });
     }
 
@@ -1136,27 +1126,27 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       whatsapp_count: "WhatsApp Count",
       calendar_integration_count: "Calendar Integration Count",
       text_to_speech_count: "Text to Speech Count",
-      virtual_assistant_count: "Virtual Assistant Count"
+      virtual_assistant_count: "Virtual Assistant Count",
     };
 
     for (const [key, label] of Object.entries(params)) {
       const value = req.body[key];
-    
+
       if (value === undefined) {
         return res.status(400).send({
           success: 0,
-          message: `${label} is mandatory.`
+          message: `${label} is mandatory.`,
         });
       }
-    
+
       if (value !== undefined && !REGEXP.COMMON.INTEGER.test(String(value))) {
         return res.status(400).send({
           success: 0,
-          message: `${label} is invalid.`
+          message: `${label} is invalid.`,
         });
       }
     }
-    
+
     if (domain_name == undefined) {
       return res.status(400).send({
         success: 0,
@@ -1196,7 +1186,7 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     let upload_file_detail = await uploadFile(req, res);
-    if(upload_file_detail.small_logo){
+    if (upload_file_detail.small_logo) {
       var myUrl = upload_file_detail.small_logo.file_path;
       let get_file_name: any = upload_file_detail.small_logo.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -1207,8 +1197,8 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -1216,11 +1206,11 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       );
 
       small_logo = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       small_logo = small_logo;
     }
 
-    if(upload_file_detail.logo_text){
+    if (upload_file_detail.logo_text) {
       var myUrl = upload_file_detail.logo_text.file_path;
       let get_file_name: any = upload_file_detail.logo_text.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -1231,8 +1221,8 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -1240,11 +1230,11 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       );
 
       logo_text = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       logo_text = logo_text;
     }
 
-    if(upload_file_detail.dark_small_logo){
+    if (upload_file_detail.dark_small_logo) {
       var myUrl = upload_file_detail.dark_small_logo.file_path;
       let get_file_name: any = upload_file_detail.dark_small_logo.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -1255,8 +1245,8 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -1264,11 +1254,11 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       );
 
       dark_small_logo = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       dark_small_logo = dark_small_logo;
     }
 
-    if(upload_file_detail.dark_logo_text){
+    if (upload_file_detail.dark_logo_text) {
       var myUrl = upload_file_detail.dark_logo_text.file_path;
       let get_file_name: any = upload_file_detail.dark_logo_text.file_path.split("/");
       //console.log("get_file_name",get_file_name)
@@ -1279,8 +1269,8 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       let folder_nm: any = get_file_name[2];
 
       let thumbnail_nm: any = path.join(
-        '..',
-        '..',
+        "..",
+        "..",
         "..",
         "uploads",
         folder_nm,
@@ -1288,24 +1278,21 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       );
 
       dark_logo_text = myUrl.replace("../uploads", "uploads");
-    }else{
+    } else {
       dark_logo_text = dark_logo_text;
     }
 
     let update_company_obj: any = {
       company_name: company_name,
-      company_street_address:
-        company_street_address !== undefined ? company_street_address : "",
+      company_street_address: company_street_address !== undefined ? company_street_address : "",
       company_zipcode: company_zipcode !== undefined ? company_zipcode : "",
       company_city: company_city !== undefined ? company_city : "",
       company_country: company_country !== undefined ? company_country : "",
       company_vat: company_vat !== undefined ? company_vat : "",
-      company_contact_person:
-        company_contact_person !== undefined ? company_contact_person : "",
+      company_contact_person: company_contact_person !== undefined ? company_contact_person : "",
       company_password: company_password,
       company_email: company_email.toLowerCase(),
-      company_phone_number:
-        company_phone_number !== undefined ? company_phone_number : "",
+      company_phone_number: company_phone_number !== undefined ? company_phone_number : "",
       domain_name: domain_name,
       hex_code,
       pbx,
@@ -1424,18 +1411,14 @@ const editCompany = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
   } catch (error) {
-    console.log("error",error)
+    console.log("error", error);
     return res.status(500).send({
       success: 0,
       message: "Internal Server Error",
     });
   }
 };
-const DeleteCompany = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const DeleteCompany = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -1556,18 +1539,18 @@ const DeleteCompany = async (
             runValidators: true,
           }
         );
-        await trunks.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        // await trunks.updateMany(
+        //   {
+        //     cid: cid,
+        //   },
+        //   {
+        //     is_deleted: 1,
+        //     last_updated_user: user_detail?.uid,
+        //   },
+        //   {
+        //     runValidators: true,
+        //   }
+        // );
         await outbound_route.updateMany(
           {
             cid: cid,
@@ -1638,11 +1621,7 @@ const DeleteCompany = async (
     });
   }
 };
-const getCompanyDetailbyID = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getCompanyDetailbyID = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let cid: any = data.cid;
@@ -1683,11 +1662,7 @@ const getCompanyDetailbyID = async (
     });
   }
 };
-const getCompanyNameList = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getCompanyNameList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const comnayName: any[] = await company
       .find({

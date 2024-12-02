@@ -5,11 +5,7 @@ import user from "../../models/user";
 import jwt from "jsonwebtoken";
 import company from "../../models/company";
 
-const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data: any = req.body;
 
@@ -41,7 +37,7 @@ const resetPassword = async (
       })
       .select("user_email cid _id");
 
-    console.log(findUser);
+    //   console.log(findUser);
 
     if (!findUser) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -86,11 +82,7 @@ const resetPassword = async (
   }
 };
 
-const updatePassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data: any = req.body;
 
@@ -126,7 +118,7 @@ const updatePassword = async (
         message: "Token Is Expired",
       });
     }
-    console.log(decoded);
+    //   console.log(decoded);
 
     const findUser: any = await user.findOneAndUpdate(
       {
@@ -164,7 +156,7 @@ const updatePassword = async (
       }
     }
 
-    console.log(findUser);
+    //  console.log(findUser);
 
     if (!findUser) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -178,7 +170,7 @@ const updatePassword = async (
       message: "Password Reset Successfully ||",
     });
   } catch (error: any) {
-    console.log(error.name);
+    //  console.log(error.name);
 
     if (error.name == config.RESPONSE.ERROR.EXPIRETOKEN) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({

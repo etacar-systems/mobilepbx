@@ -135,9 +135,7 @@ const EditRecording = async (req: Request, res: Response) => {
       }
 
       if (req?.file == undefined) {
-        const oldUrl = await system_recording
-          .findById(record_id)
-          .select("record_url");
+        const oldUrl = await system_recording.findById(record_id).select("record_url");
         myUrl = oldUrl?.record_url;
         console.log(myUrl);
       }
@@ -253,11 +251,7 @@ const deleteRecording = async (req: Request, res: Response) => {
   }
 };
 
-const getrecodlist = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getrecodlist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -276,7 +270,7 @@ const getrecodlist = async (
       });
     }
 
-    console.log(user_detail);
+    //   console.log(user_detail);
     let api_config = {
       method: "get",
       maxBodyLength: Infinity,

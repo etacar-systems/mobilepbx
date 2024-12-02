@@ -10,17 +10,13 @@ import User_token from "../../helper/helper";
 import { config } from "../../config";
 import pstn_number from "../../models/pstn_number";
 
-const toBoolean = (value:any) => {
-  if (value === 'true') return true;
-  if (value === 'false') return false;
+const toBoolean = (value: any) => {
+  if (value === "true") return true;
+  if (value === "false") return false;
   return undefined;
 };
 
-const createConferference = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const createConferference = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -41,10 +37,10 @@ const createConferference = async (
         message: "Please Select Domain.",
       });
     }
-  
-    let conferenceCount = await conferncers.find({cid:cid, is_deleted: 0 }).countDocuments()
-    
-    if(company_details?.conference_count === conferenceCount){
+
+    let conferenceCount = await conferncers.find({ cid: cid, is_deleted: 0 }).countDocuments();
+
+    if (company_details?.conference_count === conferenceCount) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: `You can't create more than ${company_details?.conference_count} conferences`,
@@ -58,8 +54,8 @@ const createConferference = async (
     let extension_number: any = data?.extension_number;
     let conference_profile: any = data?.conference_profile;
     let conference_flags: any = data?.conference_flags;
-    let conference_record_parse:any = toBoolean(conference_record)
-    let conference_flags_parse:any = toBoolean(conference_flags)
+    let conference_record_parse: any = toBoolean(conference_record);
+    let conference_flags_parse: any = toBoolean(conference_flags);
 
     if (Object.keys(data).length == 0) {
       return res.status(400).send({
@@ -85,9 +81,7 @@ const createConferference = async (
         message: "conference_description is Mandatory",
       });
     }
-    if (
-      !REGEXP.conference.conference_description.test(conference_description)
-    ) {
+    if (!REGEXP.conference.conference_description.test(conference_description)) {
       return res.status(400).send({
         success: 0,
         message: "conference_description is Invalid",
@@ -139,7 +133,7 @@ const createConferference = async (
         message: "conference_record is Invalid",
       });
     }
-    
+
     if (conference_flags_parse == undefined) {
       return res.status(400).send({
         success: 0,
@@ -194,19 +188,19 @@ const createConferference = async (
         domain: companyDetail?.domain_uuid,
         pin_number: conference_pin,
         description: conference_description,
-        conference_enabled:"true",
+        conference_enabled: "true",
         conference_profile: "default",
         conference_flags: conference_flags,
         conference_account_code: companyDetail?.domain_name,
         conference_context: companyDetail?.domain_name,
-        record:conference_record,
-        wait_mod:conference_flags
+        record: conference_record,
+        wait_mod: conference_flags,
       },
     };
-   
+
     try {
       const data: any = await axios.request(api_config);
-      console.log("data",data)
+      console.log("data", data);
 
       if (data?.data?.id) {
         conferenceObj.conference_uuid = data?.data?.id;
@@ -236,11 +230,7 @@ const createConferference = async (
   }
 };
 
-const editConferference = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const editConferference = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -262,9 +252,8 @@ const editConferference = async (
     let extension_number: any = data?.extension_number;
     let conference_profile: any = data?.conference_profile;
     let conference_flags: any = data?.conference_flags;
-    let conference_record_parse:any = toBoolean(conference_record)
-    let conference_flags_parse:any = toBoolean(conference_flags)
-
+    let conference_record_parse: any = toBoolean(conference_record);
+    let conference_flags_parse: any = toBoolean(conference_flags);
 
     if (Object.keys(data).length == 0) {
       return res.status(400).send({
@@ -296,9 +285,7 @@ const editConferference = async (
         message: "conference_description is Mandatory",
       });
     }
-    if (
-      !REGEXP.conference.conference_description.test(conference_description)
-    ) {
+    if (!REGEXP.conference.conference_description.test(conference_description)) {
       return res.status(400).send({
         success: 0,
         message: "conference_description is Invalid",
@@ -348,14 +335,13 @@ const editConferference = async (
         message: "conference_record is Invalid",
       });
     }
-    
+
     if (conference_flags_parse == undefined) {
       return res.status(400).send({
         success: 0,
         message: "conference_flags is Invalid",
       });
     }
-
 
     const conferenceDetail = await conferncers.findOne({
       _id: conference_id,
@@ -403,7 +389,7 @@ const editConferference = async (
       conference_flags: conference_flags,
       conference_account_code: companyDetail?.domain_name,
       conference_context: companyDetail?.domain_name,
-      last_updated_user: user_detail?.uid
+      last_updated_user: user_detail?.uid,
     };
 
     let api_config = {
@@ -417,17 +403,17 @@ const editConferference = async (
         domain: companyDetail?.domain_uuid,
         pin_number: conference_pin,
         description: conference_description,
-        conference_enabled:"true",
+        conference_enabled: "true",
         conference_id: conferenceDetail?.conference_uuid,
         conference_profile: conference_profile,
         conference_flags: conference_flags,
         conference_account_code: companyDetail?.domain_name,
         conference_context: companyDetail?.domain_name,
-        record:conference_record,
-        wait_mod:conference_flags
+        record: conference_record,
+        wait_mod: conference_flags,
       },
     };
-    console.log("api_config",api_config)
+    //  console.log("api_config",api_config)
     try {
       const data: any = await axios.request(api_config);
 
@@ -467,11 +453,7 @@ const editConferference = async (
   }
 };
 
-const deleteConference = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const deleteConference = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -562,11 +544,7 @@ const deleteConference = async (
   }
 };
 
-const conferenceGetById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const conferenceGetById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -613,11 +591,7 @@ const conferenceGetById = async (
   }
 };
 
-const conferenceList = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const conferenceList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
 
@@ -700,11 +674,7 @@ const conferenceList = async (
   }
 };
 
-const getConferenceProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getConferenceProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let api_config = {
       method: "get",
