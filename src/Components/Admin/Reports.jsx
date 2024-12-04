@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import yes_logo from "../../Assets/Icon/yes.svg";
 import edit_logo from "../../Assets/Icon/edit.svg";
 import delete_logo from "../../Assets/Icon/delete.svg";
+import { ReactComponent as CallLogo } from "../../Assets/Icon/call_logo.svg";
 import { ReactComponent as Uparrow } from "../../Assets/Icon/up-arrow.svg";
 import { ReactComponent as Downarrow } from "../../Assets/Icon/down-arrow.svg";
 import NumberModal from "../Modal/NumberModal";
@@ -43,6 +44,9 @@ export default function Reports() {
   const [extension, setextension] = useState([]);
   const [selectextension, setselectextension] = useState("");
   const [module, setModule] = useState("");
+  const [Date1, setDate] = useState("");
+  const [listner, setListner] = useState(false);
+  const [audioURL, setAudioURL] = useState(null);
   const [filter, setfilter] = useState(false);
   const formattedDate = startDate && new Date(startDate).toLocaleDateString("en-CA");
   const formattedEnddata = endDate && new Date(endDate).toLocaleDateString("en-CA");
@@ -89,6 +93,11 @@ export default function Reports() {
       }
     });
   }, [searchTerm, select, currentPage, filter]);
+  const handlelistner = (URL, date) => {
+    setDate(date);
+    setAudioURL(URL);
+    setListner(true);
+  };
 
   const [dynamicHeight, setDynamicHeight] = useState(0);
   const [show, setShow] = useState(false);
@@ -270,22 +279,40 @@ export default function Reports() {
           <table className="responshive">
             <thead className="Tablehead">
               <tr>
-                <th style={{ width: "21%" }}>
+                <th style={{ width: "20%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("start_stamp")}
                   >
                     <p className="mb-0">{t("Date")}</p>
-                    {arrowShow("start_stamp")}
+                    <div>{arrowShow("start_stamp")}</div>
+                  </div>
+                </th>
+                <th style={{ width: "15%" }}>
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={() => sortingTable("caller_id_number")}
+                  >
+                    <p className="mb-0">{t("Caller ID")} </p>
+                    <div>{arrowShow("caller_id_number")}</div>
                   </div>
                 </th>
                 <th style={{ width: "18%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("caller_id_number")}
+                    onClick={() => sortingTable("caller_id_name")}
                   >
-                    <p className="mb-0">{t("Caller ID")}</p>
-                    {arrowShow("caller_id_number")}
+                    <p className="mb-0">{t("Caller Name")} </p>
+                    <div>{arrowShow("caller_id_name")}</div>
+                  </div>
+                </th>
+                <th style={{ width: "10%" }}>
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={() => sortingTable("destination_number")}
+                  >
+                    <p className="mb-0">{t("Endpoint")} </p>
+                    <div>{arrowShow("destination_number")}</div>
                   </div>
                 </th>
                 <th style={{ width: "12%" }}>
@@ -294,34 +321,21 @@ export default function Reports() {
                     onClick={() => sortingTable("duration")}
                   >
                     <p className="mb-0">{t("Duration")}</p>
-                    {arrowShow("duration")}
+                    <div>{arrowShow("duration")}</div>
                   </div>
                 </th>
-                <th style={{ width: "15%" }}>
+                <th style={{ width: "12%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("destination_number")}
+                    onClick={() => sortingTable("status")}
                   >
-                    <p className="mb-0">{t("Endpoint")}</p>
-                    {arrowShow("destination_number")}
+                    <p className="mb-0"> {t("Call type")}</p>
+                    <div>{arrowShow("status")}</div>
                   </div>
                 </th>
                 <th style={{ width: "10%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("direction")}
-                  >
-                    <p className="mb-0">{t("Call type")}</p>
-                    {arrowShow("direction")}
-                  </div>
-                </th>
-                <th style={{ width: "18%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("destination_number")}
-                  >
-                    <p className="mb-0">{t("Direction")}</p>
-                    {arrowShow("destination_number")}
+                  <div className="d-flex align-items-center justify-content-between">
+                    <p className="mb-0">{t("Record")}</p>
                   </div>
                 </th>
               </tr>
@@ -355,6 +369,7 @@ export default function Reports() {
                           // hourCycle: "h12",
                         });
                       }
+                      console.log(val, "--------val-----------");
                       return (
                         <>
                           <tr className="table_body">
@@ -362,13 +377,38 @@ export default function Reports() {
                               {formattedDate} {extractTimeFromDate(val?.start_stamp)}
                             </td>
                             <td style={{ padding: "22px" }}>{val.caller_id_number}</td>
+                            <td style={{ padding: "22px" }}>{val.caller_id_name}</td>
+                            <td style={{ padding: "22px" }}>{val.destination_number}</td>
 
                             <td style={{ padding: "22px" }}>
                               {val.duration == null ? "00:00:00" : formattedTime}{" "}
                             </td>
-                            <td style={{ padding: "22px" }}>{val.destination_number}</td>
-                            <td style={{ padding: "22px" }}> {t(val.status)}</td>
-                            <td style={{ padding: "22px" }}>{val.direction}</td>
+                            <td style={{ padding: "22px" }}> {t(val.direction)}</td>
+                            <td className="table_edit2">
+                              <button
+                                onClick={() => {
+                                  handlelistner(val.recording_url, val.start_stamp);
+                                }}
+                              >
+                                <CallLogo width={14} height={14} className="edithover" />
+                              </button>
+                              {/* <button className="ms-1"  onClick={handleEditListner}>
+                              <EditLogo
+                                width={14}
+                                height={14}
+                                className="edithover"
+                              
+                              />
+                            </button>
+                            <button className="ms-1" onClick={openDelete}>
+                              <DeleteLogo
+                                width={14}
+                                height={14}
+                                className="edithover"
+                               
+                              />
+                            </button> */}
+                            </td>
                           </tr>
                         </>
                       );

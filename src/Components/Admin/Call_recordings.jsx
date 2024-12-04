@@ -40,10 +40,8 @@ export default function Call_recordings() {
   const [endDate, setEndDate] = useState("");
   let Token = Cookies.get("Token");
   const [filter, setfilter] = useState(false);
-  const formattedStartDate =
-    startDate && new Date(startDate).toLocaleDateString("en-CA");
-  const formattedEnddata =
-    endDate && new Date(endDate).toLocaleDateString("en-CA");
+  const formattedStartDate = startDate && new Date(startDate).toLocaleDateString("en-CA");
+  const formattedEnddata = endDate && new Date(endDate).toLocaleDateString("en-CA");
   // const [deletemodal, setDeletemodal] = useState(false);
   // const [editListner, setEditListner] = useState(false);
 
@@ -297,21 +295,30 @@ export default function Call_recordings() {
                     <div>{arrowShow("start_stamp")}</div>
                   </div>
                 </th>
+                <th style={{ width: "15%" }}>
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    onClick={() => sortingTable("caller_id_number")}
+                  >
+                    <p className="mb-0">{t("Caller ID")} </p>
+                    <div>{arrowShow("caller_id_number")}</div>
+                  </div>
+                </th>
                 <th style={{ width: "18%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("caller_id_name")}
                   >
-                    <p className="mb-0">{t("Caller ID")} </p>
+                    <p className="mb-0">{t("Caller Name")} </p>
                     <div>{arrowShow("caller_id_name")}</div>
                   </div>
                 </th>
-                <th style={{ width: "16%" }}>
+                <th style={{ width: "10%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("destination_number")}
                   >
-                    <p className="mb-0">{t("Receiver ID")} </p>
+                    <p className="mb-0">{t("Endpoint")} </p>
                     <div>{arrowShow("destination_number")}</div>
                   </div>
                 </th>
@@ -333,18 +340,9 @@ export default function Call_recordings() {
                     <div>{arrowShow("status")}</div>
                   </div>
                 </th>
-                <th style={{ width: "12%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("direction")}
-                  >
-                    <p className="mb-0">{t("Direction")}</p>
-                    <div>{arrowShow("direction")}</div>
-                  </div>
-                </th>
                 <th style={{ width: "10%" }}>
                   <div className="d-flex align-items-center justify-content-between">
-                    <p className="mb-0">{t("Actions")}</p>
+                    <p className="mb-0">{t("Record")}</p>
                   </div>
                 </th>
               </tr>
@@ -361,13 +359,9 @@ export default function Call_recordings() {
                   {listData && listData.length > 0 ? (
                     listData?.map((val, index) => {
                       const formatTime = (seconds) =>
-                        `${String(Math.floor(seconds / 3600)).padStart(
-                          2,
-                          "0"
-                        )}:${String(Math.floor(seconds / 60) % 60).padStart(
-                          2,
-                          "0"
-                        )}:${String(seconds % 60).padStart(2, "0")}`;
+                        `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
+                          Math.floor(seconds / 60) % 60
+                        ).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
                       const Duration = formatTime(val?.duration);
                       const formattedDate = new Date(val.start_stamp)
                         .toLocaleDateString("en-GB")
@@ -390,25 +384,18 @@ export default function Call_recordings() {
                               {"  "}
                               {extractTimeFromDate(val?.start_stamp)}
                             </td>
+                            <td>{val.caller_id_number}</td>
                             <td>{val.caller_id_name}</td>
                             <td>{val.destination_number}</td>
                             <td>{Duration}</td>
-                            <td>{t(val.status)}</td>
                             <td>{t(val.direction)}</td>
                             <td className="table_edit2">
                               <button
                                 onClick={() => {
-                                  handlelistner(
-                                    val.recording_url,
-                                    val.start_stamp
-                                  );
+                                  handlelistner(val.recording_url, val.start_stamp);
                                 }}
                               >
-                                <CallLogo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                                <CallLogo width={14} height={14} className="edithover" />
                               </button>
                               {/* <button className="ms-1"  onClick={handleEditListner}>
                               <EditLogo
@@ -433,10 +420,7 @@ export default function Call_recordings() {
                     })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="7"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="7">
                         {t(" No data found")}
                       </td>
                     </tr>
@@ -448,8 +432,7 @@ export default function Call_recordings() {
         </div>
         <div className="show show2 mt-2  d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count} {t("entries")}
           </h6>
           <div>
             <Paginationall

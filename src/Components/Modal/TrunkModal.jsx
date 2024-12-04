@@ -18,15 +18,7 @@ import ConstantConfig, { trunkTransport } from "../ConstantConfig";
 import CustomTooltipModal from "../CustomTooltipModal";
 import DropDown from "../Dropdown";
 
-function TrunkModal({
-  handleClose,
-  show,
-  header,
-  loader,
-  handlesavedata,
-  formData,
-  setFormData,
-}) {
+function TrunkModal({ handleClose, show, header, loader, handlesavedata, formData, setFormData }) {
   const { t } = useTranslation();
   // STATE
   const [errors, setErrors] = useState({});
@@ -182,9 +174,7 @@ function TrunkModal({
                           <Col lg={4}>
                             <Form.Label className="modal-head">
                               {t("Trunk name")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the gateway name here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the gateway name here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -193,17 +183,13 @@ function TrunkModal({
                               onChange={handleChange}
                             />
                             {errors.gateway_name && (
-                              <div className="text-danger error-ui ">
-                                {errors.gateway_name}
-                              </div>
+                              <div className="text-danger error-ui ">{errors.gateway_name}</div>
                             )}
                           </Col>
                           <Col lg={4}>
                             <Form.Label className="modal-head">
                               {t("Description")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the description.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the description.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -212,17 +198,13 @@ function TrunkModal({
                               onChange={handleChange}
                             />
                             {errors.description && (
-                              <div className="text-danger error-ui">
-                                {errors.description}
-                              </div>
+                              <div className="text-danger error-ui">{errors.description}</div>
                             )}
                           </Col>
                           <Col lg={4}>
                             <Form.Label className="modal-head">
                               {t("Secret")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the username here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the username here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -231,17 +213,13 @@ function TrunkModal({
                               onChange={handleChange}
                             />
                             {errors.Secret && (
-                              <div className="text-danger error-ui">
-                                {errors.Secret}
-                              </div>
+                              <div className="text-danger error-ui">{errors.Secret}</div>
                             )}
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
                               {t("Authentication")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the password here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the password here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -251,17 +229,13 @@ function TrunkModal({
                               autocomplete="new-password"
                             />
                             {errors.password && (
-                              <div className="text-danger error-ui">
-                                {errors.password}
-                              </div>
+                              <div className="text-danger error-ui">{errors.password}</div>
                             )}
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
                               {t("Registration")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the from user here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the from user here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -270,17 +244,13 @@ function TrunkModal({
                               onChange={handleChange}
                             />
                             {errors.from_user && (
-                              <div className="text-danger error-ui">
-                                {errors.from_user}
-                              </div>
+                              <div className="text-danger error-ui">{errors.from_user}</div>
                             )}
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
                               {t("SIP Server")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the realm here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the realm here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -289,17 +259,13 @@ function TrunkModal({
                               onChange={handleChange}
                             />
                             {errors.realm && (
-                              <div className="text-danger error-ui">
-                                {errors.realm}
-                              </div>
+                              <div className="text-danger error-ui">{errors.realm}</div>
                             )}
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
                               {t("SIP Server Port")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the proxy here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
@@ -308,20 +274,13 @@ function TrunkModal({
                               onChange={handleChange}
                             />
                             {errors.proxy && (
-                              <div className="text-danger error-ui">
-                                {errors.proxy}
-                              </div>
+                              <div className="text-danger error-ui">{errors.proxy}</div>
                             )}
                           </Col>
                           <Col lg={4} className="mt-2">
-                            <Form.Label
-                              className="modal-head"
-                              style={{ marginLeft: "6px" }}
-                            >
+                            <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
                               {t("Context")}
-                              <CustomTooltipModal
-                                tooltip={t("Please select domain here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Please select domain here.")} />
                             </Form.Label>
                             <CustomDropDown
                               toggleDropdown={toggleDropdown}
@@ -331,27 +290,17 @@ function TrunkModal({
                               handleSelection={handleSelection}
                               name={"cid"}
                               defaultValue={t("None selected")}
-                              mapValue={
-                                ConstantConfig.TRUNKS.COMPANY_SELECT.MAPVALUE
-                              }
-                              storeValue={
-                                ConstantConfig.TRUNKS.COMPANY_SELECT.STOREVALUE
-                              }
+                              mapValue={ConstantConfig.TRUNKS.COMPANY_SELECT.MAPVALUE}
+                              storeValue={ConstantConfig.TRUNKS.COMPANY_SELECT.STOREVALUE}
                               setOpenDropdown={setOpenDropdown}
                               sorting={true}
                             />
-                            {errors.cid && (
-                              <div className="text-danger error-ui">
-                                {errors.cid}
-                              </div>
-                            )}
+                            {errors.cid && <div className="text-danger error-ui">{errors.cid}</div>}
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
                               {t("Transport")}
-                              <CustomTooltipModal
-                                tooltip={t("Enter the proxy here.")}
-                              />
+                              <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
                             </Form.Label>
                             <DropDown
                               toggleDropdown={toggleDropdown}
@@ -364,9 +313,7 @@ function TrunkModal({
                               setOpenDropdown={setOpenDropdown}
                             />
                             {errors.transport && (
-                              <div className="text-danger error-ui">
-                                {errors.transport}
-                              </div>
+                              <div className="text-danger error-ui">{errors.transport}</div>
                             )}
                           </Col>
                         </Row>
@@ -382,11 +329,7 @@ function TrunkModal({
           className="mb-4 d-flex justify-content-end "
           style={{ marginBottom: "37px", marginRight: "33px" }}
         >
-          <button
-            className="btn_cancel me-2"
-            onClick={handleClose}
-            disabled={loader}
-          >
+          <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
             {t("Cancel")}
           </button>
           {loader ? (

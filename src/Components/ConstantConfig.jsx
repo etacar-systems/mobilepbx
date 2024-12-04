@@ -3,8 +3,7 @@ export const Numeric = {
   TCP: 2,
   WSS: 3,
 };
-export const regex_pssword =
-  /^[A-Za-z0-9!@#$%^&*()_+{}|;:'",.<>?/\\[\]\-=`~]{4,15}$/;
+export const regex_pssword = /^[A-Za-z0-9!@#$%^&*()_+{}|;:'",.<>?/\\[\]\-=`~]{4,15}$/;
 export const regex_email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export default {
@@ -51,8 +50,7 @@ export default {
   EXTENSION: {
     VALIDATION: {
       // Extension_number: /^\d{3,15}$/,
-      Password:
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:;'\"<>,.?/~`[\]\\\-]).{6,}$/,
+      Password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:;'\"<>,.?/~`[\]\\\-]).{6,}$/,
       Email: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
     },
   },
@@ -89,7 +87,7 @@ export const TimeconditionDropArray = [
   "Day of Week",
   "Week of Year",
   "Hours of Day",
-  "Time of Day",
+  // "Time of Day",
   // "Date & Time",
 ];
 
@@ -168,11 +166,7 @@ export const Linechartdash = {
   bordercolor3: "#e15858",
   tikscolor: "#343a40",
 };
-export const isassignlist = [
-  { name: "Internet" },
-  { name: "Local" },
-  { name: "Trusted" },
-];
+export const isassignlist = [{ name: "Internet" }, { name: "Local" }, { name: "Trusted" }];
 export const TypeInnumber = [
   { type: "Extension", value: "3" },
   { type: "Ring groups", value: "2" },
@@ -211,17 +205,9 @@ export const Multilinechart = {
   dataset1color: "#E15858",
   dataset2color: "#F5C10A",
 };
-export const Picharbgcolors = [
-  "rgb(92, 182, 95)",
-  "rgb(0, 127, 255)",
-  "rgb(225, 88, 88)",
-];
+export const Picharbgcolors = ["rgb(92, 182, 95)", "rgb(0, 127, 255)", "rgb(225, 88, 88)"];
 export const Piechartsbordercolor = ["#ffffff", "#ffffff", "#ffffff"];
-export const Piedarkbordercolor = [
-  "rgb(40, 43, 47)",
-  "rgb(40, 43, 47)",
-  "rgb(40, 43, 47)",
-];
+export const Piedarkbordercolor = ["rgb(40, 43, 47)", "rgb(40, 43, 47)", "rgb(40, 43, 47)"];
 export const Piechartdata = [52.9, 37.0, 10.1];
 export const Piechartlabels = ["Answered", "Called", "Missed"];
 export const Light = "light";
@@ -251,10 +237,7 @@ export const Todaylables = Array.from(
   (_, index) => `${String(index).padStart(2, "0")}`
 );
 export const Weeklables = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-export const Monthlables = Array.from(
-  { length: 31 },
-  (_, index) => `${index + 1}`
-);
+export const Monthlables = Array.from({ length: 31 }, (_, index) => `${index + 1}`);
 export const Yearlables = [
   "Jan",
   "Feb",

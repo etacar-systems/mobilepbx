@@ -11,11 +11,7 @@ import TrunkModal from "../Modal/TrunkModal";
 import DeleteModal from "../Modal/DeleteModal";
 import { useDispatch, useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  deleteapiAll,
-  postapiAll,
-  putapiall,
-} from "../../Redux/Reducers/ApiServices";
+import { deleteapiAll, postapiAll, putapiall } from "../../Redux/Reducers/ApiServices";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import Pagination from "../Pages/Paginationall";
@@ -32,15 +28,9 @@ export default function Truncks() {
 
   // DISPATCH THE DATA
   const dispatch = useDispatch();
-  const count = useSelector(
-    (state) => state.postapiAll.postapiall.Trunks.company_total_counts
-  );
-  const countdata = useSelector(
-    (state) => state.postapiAll.postapiall.Trunks.total_page_count
-  );
-  const trunksdata = useSelector(
-    (state) => state.postapiAll.postapiall.Trunks.data
-  );
+  const count = useSelector((state) => state.postapiAll.postapiall.Trunks.company_total_counts);
+  const countdata = useSelector((state) => state.postapiAll.postapiall.Trunks.total_page_count);
+  const trunksdata = useSelector((state) => state.postapiAll.postapiall.Trunks.data);
   // STATE
   const [Trunksdata, setTrunksdata] = useState([]);
   const [searchTerm, setSearchterm] = useState("");
@@ -124,9 +114,7 @@ export default function Truncks() {
       } else {
         const strA = String(valueA);
         const strB = String(valueB);
-        return newAscending
-          ? strA.localeCompare(strB)
-          : strB.localeCompare(strA);
+        return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
       }
     });
     setSortedColumn(name);
@@ -352,11 +340,7 @@ export default function Truncks() {
   };
   return (
     <div className="tablespadding">
-      <AdminHeader
-        openModal={openModal}
-        pathname={t("Trunks")}
-        addBtn={false}
-      />
+      <AdminHeader openModal={openModal} pathname={t("Trunks")} addBtn={false} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">
@@ -388,10 +372,7 @@ export default function Truncks() {
             {searchTerm && <ClearSearch clearSearch={clearSearch} />}
           </div>
         </div>
-        <div
-          style={{ overflowX: "auto", height: dynamicHeight }}
-          className="sidebar_scroll"
-        >
+        <div style={{ overflowX: "auto", height: dynamicHeight }} className="sidebar_scroll">
           <table className="responshive">
             <thead className="Tablehead">
               <tr>
@@ -472,31 +453,17 @@ export default function Truncks() {
                         </td>
                         <td className="table_edit">
                           <button onClick={() => handleEdit(val?._id)}>
-                            <Edit_logo
-                              width={14}
-                              height={14}
-                              className="edithover"
-                            />
+                            <Edit_logo width={14} height={14} className="edithover" />
                           </button>
-                          <button
-                            className="ms-1"
-                            onClick={() => openDelete(val?._id)}
-                          >
-                            <Delete_logo
-                              width={14}
-                              height={14}
-                              className="edithover"
-                            />
+                          <button className="ms-1" onClick={() => openDelete(val?._id)}>
+                            <Delete_logo width={14} height={14} className="edithover" />
                           </button>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -508,8 +475,7 @@ export default function Truncks() {
         </div>
         <div className="show show2 mt-2  d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count} {t("entries")}
           </h6>
           <div>
             <Pagination

@@ -305,10 +305,10 @@ function TimeConditionModal({
         valid = false;
       }
       const [value, range] = item.dialplan_detail_data.split("-");
-      // if (!value) {
-      //   rowErrors.Value = t("Value is required");
-      //   valid = false;
-      // }
+      if (!value) {
+        rowErrors.Value = t("Value is required");
+        valid = false;
+      }
       if (!range) {
         rowErrors.Range = t("Range is required");
         valid = false;
@@ -609,7 +609,7 @@ function TimeConditionModal({
                         </div>
                       )}
                     </Col>
-                    {/* <Col>
+                    <Col>
                       <Form.Label className="modal-head">
                         {t("Value")}
                         <CustomTooltipModal
@@ -620,14 +620,10 @@ function TimeConditionModal({
                       </Form.Label>
                       <CustomDropDown
                         toggleDropdown={toggleDropdown}
-                        showValue={
-                          t(set.dialplan_detail_data.split("-")[0]) || ""
-                        }
+                        showValue={t(set.dialplan_detail_data.split("-")[0]) || ""}
                         openDropdown={openDropdown}
                         valueArray={timepass[index] || []}
-                        handleSelection={(item, value) =>
-                          handleSelection(item, value, index)
-                        }
+                        handleSelection={(item, value) => handleSelection(item, value, index)}
                         name={`Value_${index}`}
                         defaultValue={t("None selected")}
                         setOpenDropdown={setOpenDropdown}
@@ -638,7 +634,7 @@ function TimeConditionModal({
                           {errors.timecondition_data[index].Value}
                         </div>
                       )}
-                    </Col> */}
+                    </Col>
                     <Col>
                       <Form.Label className="modal-head">
                         {t("Range")}
