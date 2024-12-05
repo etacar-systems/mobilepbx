@@ -296,7 +296,7 @@ function PstnModal({
                 </Col>
                 {mode === "edit" ? (
                   formData && formData.Number && formData.Number.includes("-") ? (
-                    <Col lg={6}>
+                    <Col lg={4}>
                       <Form.Label className="modal-head">
                         {t("Number pool")}
                         <CustomTooltipModal tooltip={t("Please enter PSTN number pool range")} />
