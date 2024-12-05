@@ -126,7 +126,7 @@ function PstnModal({
       newErrors[name] = `${t(name.replace(/_/g, " "))} ${t("is required")}`;
       valid = false;
     }
-    if (mode === "add") {
+    if (mode === "add" || mode === "edit") {
       const { destination_number, range } = formData;
       if (!destination_number || !String(destination_number).trim()) {
         newErrors.destination_number = t("Destination number is required");
@@ -156,9 +156,7 @@ function PstnModal({
         range.length < number_pool_minimum_length ||
         range.length > number_pool_maximum_length
       ) {
-        newErrors.destination_number = t(
-          "Range must be between 3 and 15 digits long."
-        );
+        newErrors.destination_number = t("Range must be between 3 and 15 digits long.");
         valid = false;
       }
 
@@ -174,22 +172,16 @@ function PstnModal({
           destination_number.length < number_pool_minimum_length ||
           destination_number.length > number_pool_maximum_length
         ) {
-          newErrors.destination_number = t(
-            "Range must be between 3 and 15 digits long."
-          );
+          newErrors.destination_number = t("Range must be between 3 and 15 digits long.");
           valid = false;
         } else if (
           range.length < number_pool_minimum_length ||
           range.length > number_pool_maximum_length
         ) {
-          newErrors.destination_number = t(
-            "Range must be between 3 and 15 digits long."
-          );
+          newErrors.destination_number = t("Range must be between 3 and 15 digits long.");
           valid = false;
         } else if (difference >= 100) {
-          newErrors.destination_number = t(
-            "The difference between numbers must be less than 100."
-          );
+          newErrors.destination_number = t("The difference between numbers must be less than 100.");
           valid = false;
         } else if (destination_number >= range) {
           newErrors.destination_number = t(
@@ -274,22 +266,16 @@ function PstnModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
                 padding: "0px 7px",
               }}
             >
               <Row className="mb-3">
-                <Col lg={mode == "edit" ? 4 : 3}>
-                  <Form.Label
-                    className="modal-head"
-                    style={{ marginLeft: "6px" }}
-                  >
+                <Col lg={mode === "edit" ? 4 : 3}>
+                  <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
                     {t("Provider")}
                     <CustomTooltipModal
-                      tooltip={t(
-                        "Select the Gateway to use with this outbound route."
-                      )}
+                      tooltip={t("Select the Gateway to use with this outbound route.")}
                     />
                   </Form.Label>
                   <OutboundDropDown
@@ -305,36 +291,55 @@ function PstnModal({
                     setOpenDropdown={setOpenDropdown}
                   />
                   {errors.gateway_id && (
-                    <div className="text-danger error-ui">
-                      {errors.gateway_id}
-                    </div>
+                    <div className="text-danger error-ui">{errors.gateway_id}</div>
                   )}
                 </Col>
                 {mode === "edit" ? (
-                  <Col lg={4}>
-                    <Form.Label className="modal-head">
-                      {t("Number")}
-                    </Form.Label>
-                    <Form.Control
-                      className="input_padding search-bg"
-                      name="Number"
-                      value={formData.Number}
-                      onChange={handleChange}
-                      onKeyPress={handleKeyPress}
-                    />
-                    {errors.Number && (
-                      <div className="text-danger error-ui">
-                        {errors.Number}
+                  formData && formData.Number && formData.Number.includes("-") ? (
+                    <Col lg={6}>
+                      <Form.Label className="modal-head">
+                        {t("Number pool")}
+                        <CustomTooltipModal tooltip={t("Please enter PSTN number pool range")} />
+                      </Form.Label>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Control
+                          className="input_padding search-bg"
+                          name="destination_number"
+                          value={formData.destination_number}
+                          onChange={handleChange}
+                          onKeyPress={handleKeyPress}
+                        />
+                        <div className="px-2">-</div>
+                        <Form.Control
+                          className="input_padding search-bg"
+                          name="range"
+                          value={formData.range}
+                          onChange={handleChange}
+                          onKeyPress={handleKeyPress}
+                        />
                       </div>
-                    )}
-                  </Col>
+                      {errors.destination_number && (
+                        <div className="text-danger error-ui">{errors.destination_number}</div>
+                      )}
+                    </Col>
+                  ) : (
+                    <Col lg={4}>
+                      <Form.Label className="modal-head">{t("Number")}</Form.Label>
+                      <Form.Control
+                        className="input_padding search-bg"
+                        name="Number"
+                        value={formData.Number}
+                        onChange={handleChange}
+                        onKeyPress={handleKeyPress}
+                      />
+                      {errors.Number && <div className="text-danger error-ui">{errors.Number}</div>}
+                    </Col>
+                  )
                 ) : (
                   <Col lg={6}>
                     <Form.Label className="modal-head">
                       {t("Number pool")}
-                      <CustomTooltipModal
-                        tooltip={t("Please enter PSTN number pool range")}
-                      />
+                      <CustomTooltipModal tooltip={t("Please enter PSTN number pool range")} />
                     </Form.Label>
                     <div className="d-flex align-items-center justify-content-between">
                       <Form.Control
@@ -354,17 +359,12 @@ function PstnModal({
                       />
                     </div>
                     {errors.destination_number && (
-                      <div className="text-danger error-ui">
-                        {errors.destination_number}
-                      </div>
+                      <div className="text-danger error-ui">{errors.destination_number}</div>
                     )}
                   </Col>
                 )}
                 <Col lg={mode == "edit" ? 4 : 3}>
-                  <Form.Label
-                    className="modal-head"
-                    style={{ marginLeft: "6px" }}
-                  >
+                  <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
                     {t("Company")}
                   </Form.Label>
                   <CustomDropDown
@@ -380,9 +380,7 @@ function PstnModal({
                     setOpenDropdown={setOpenDropdown}
                     sorting={true}
                   />
-                  {errors.Domain && (
-                    <div className="text-danger error-ui">{errors.Domain}</div>
-                  )}
+                  {errors.Domain && <div className="text-danger error-ui">{errors.Domain}</div>}
                 </Col>
               </Row>
             </Form>
@@ -391,11 +389,7 @@ function PstnModal({
             className="d-flex justify-content-end "
             style={{ marginBottom: "37px", marginRight: "33px" }}
           >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (

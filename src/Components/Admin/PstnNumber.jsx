@@ -246,6 +246,12 @@ export default function PstnNumber() {
           Domain: editsvalues?.cid,
           gateway_id: editsvalues?.gateway_id,
           Number: editsvalues?.destination,
+          ...((editsvalues?.destination).includes("-")
+            ? {
+                destination_number: editsvalues?.destination.split("-")[1],
+                range: editsvalues?.destination.split("-")[0],
+              }
+            : { Number: editsvalues?.destination }),
         });
       });
     }
@@ -371,7 +377,7 @@ export default function PstnNumber() {
       const data = {
         ...datavalues,
         destination: `${formData.range}-${formData.destination_number}`,
-        create_range: 1,
+        create_range: 0,
       };
       dispatch(
         postapiAll({
@@ -400,7 +406,7 @@ export default function PstnNumber() {
       setsaveLoading(true);
       const data = {
         ...datavalues,
-        destination: formData.Number,
+        destination: `${formData.range}-${formData.destination_number}`,
         pstn_id: EditId,
       };
       dispatch(
