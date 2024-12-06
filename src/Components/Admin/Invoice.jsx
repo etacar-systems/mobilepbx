@@ -113,11 +113,7 @@ export default function Invoice() {
   }, [window.innerWidth, window.innerHeight, dynamicHeight]);
   return (
     <div className="tablespadding">
-      <AdminHeader
-        openModal={openModal}
-        pathname={t("Invoices")}
-        addBtn={false}
-      />
+      <AdminHeader openModal={openModal} pathname={t("Invoices")} addBtn={false} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">
@@ -134,11 +130,7 @@ export default function Invoice() {
           </div>
           <div className="table_search">
             <h6>{t("Search")}:</h6>
-            <Form.Control
-              type="text"
-              height={38}
-              className="search-bg new-search-add"
-            />
+            <Form.Control type="text" height={38} className="search-bg new-search-add" />
           </div>
         </div>
         <div
@@ -153,11 +145,7 @@ export default function Invoice() {
                     <p className="mb-0">{t("Customer Number")}</p>
                     <div>
                       <Uparrow width={10} height={20} />
-                      <Downarrow
-                        width={10}
-                        height={20}
-                        style={{ marginLeft: "-4px" }}
-                      />
+                      <Downarrow width={10} height={20} style={{ marginLeft: "-4px" }} />
                     </div>
                   </div>
                 </th>
@@ -166,11 +154,7 @@ export default function Invoice() {
                     <p className="mb-0">{t("Customer")} </p>
                     <div>
                       <Uparrow width={10} height={20} />
-                      <Downarrow
-                        width={10}
-                        height={20}
-                        style={{ marginLeft: "-4px" }}
-                      />
+                      <Downarrow width={10} height={20} style={{ marginLeft: "-4px" }} />
                     </div>
                   </div>
                 </th>
@@ -179,11 +163,7 @@ export default function Invoice() {
                     <p className="mb-0">{t("Date")}</p>
                     <div>
                       <Uparrow width={10} height={20} />
-                      <Downarrow
-                        width={10}
-                        height={20}
-                        style={{ marginLeft: "-4px" }}
-                      />
+                      <Downarrow width={10} height={20} style={{ marginLeft: "-4px" }} />
                     </div>
                   </div>
                 </th>
@@ -192,11 +172,7 @@ export default function Invoice() {
                     <p className="mb-0">{t("Type")}</p>
                     <div>
                       <Uparrow width={10} height={20} />
-                      <Downarrow
-                        width={10}
-                        height={20}
-                        style={{ marginLeft: "-4px" }}
-                      />
+                      <Downarrow width={10} height={20} style={{ marginLeft: "-4px" }} />
                     </div>
                   </div>
                 </th>
@@ -205,11 +181,7 @@ export default function Invoice() {
                     <p className="mb-0">Status</p>
                     <div>
                       <Uparrow width={10} height={20} />
-                      <Downarrow
-                        width={10}
-                        height={20}
-                        style={{ marginLeft: "-4px" }}
-                      />
+                      <Downarrow width={10} height={20} style={{ marginLeft: "-4px" }} />
                     </div>
                   </div>
                 </th>
@@ -218,11 +190,7 @@ export default function Invoice() {
                     <p className="mb-0">{t("Amount")}</p>
                     <div>
                       <Uparrow width={10} height={20} />
-                      <Downarrow
-                        width={10}
-                        height={20}
-                        style={{ marginLeft: "-4px" }}
-                      />
+                      <Downarrow width={10} height={20} style={{ marginLeft: "-4px" }} />
                     </div>
                   </div>
                 </th>
@@ -254,18 +222,10 @@ export default function Invoice() {
                       <td>{val.amount}</td>
                       <td className="table_edit">
                         <button className="ms-1" onClick={handleEdit}>
-                          <Edit_logo
-                            width={14}
-                            height={14}
-                            className="edithover"
-                          />
+                          <Edit_logo width={14} height={14} className="edithover" />
                         </button>
                         <button className="ms-1" onClick={openDelete}>
-                          <Delete_logo
-                            width={14}
-                            height={14}
-                            className="edithover"
-                          />
+                          <Delete_logo width={14} height={14} className="edithover" />
                         </button>
                       </td>
                     </tr>
@@ -293,11 +253,7 @@ export default function Invoice() {
         />
       )}
       {deletemodal && (
-        <DeleteModal
-          handleClose={handleCloseDelete}
-          show={deletemodal}
-          onDelete={handleDelete}
-        />
+        <DeleteModal handleClose={handleCloseDelete} show={deletemodal} onDelete={handleDelete} />
       )}
     </div>
   );

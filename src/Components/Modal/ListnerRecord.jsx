@@ -4,9 +4,7 @@ import { useTranslation } from "react-i18next";
 const ListenRecordingModal = ({ show, onHide, recordingUrl, recordDate }) => {
   const { t } = useTranslation();
 
-  const formattedDate = new Date(recordDate)
-  .toLocaleDateString("en-GB")
-  .replace(/\//g, ".");
+  const formattedDate = new Date(recordDate).toLocaleDateString("en-GB").replace(/\//g, ".");
   function extractTimeFromDate(dateString, locale) {
     const date = new Date(dateString);
     return date.toLocaleTimeString(locale, {
@@ -26,9 +24,7 @@ const ListenRecordingModal = ({ show, onHide, recordingUrl, recordDate }) => {
           alignItems: "center",
         }}
       >
-        <Modal.Title className="delete-modal">
-          {t("Listen recording")}
-        </Modal.Title>
+        <Modal.Title className="delete-modal">{t("Listen recording")}</Modal.Title>
         <Closeicon height={23} width={23} onClick={onHide} />
       </Modal.Header>
       <Modal.Body className="rec-modal">
@@ -37,15 +33,15 @@ const ListenRecordingModal = ({ show, onHide, recordingUrl, recordDate }) => {
             <div className="body demo-card">
               <div className="row clearfix">
                 <div className="col-lg-12 col-md-12">
-                  <label className="listner-modal-text">{formattedDate}{"  "}{"  "}{extractTimeFromDate(recordDate)}</label>
+                  <label className="listner-modal-text">
+                    {formattedDate}
+                    {"  "}
+                    {"  "}
+                    {extractTimeFromDate(recordDate)}
+                  </label>
                   <div className="form-group new-audio">
                     <div className="container-audio new-audio-listner">
-                      <audio
-                        src={recordingUrl}
-                        controls
-                        loop
-                        className="audio-data"
-                      >
+                      <audio src={recordingUrl} controls loop className="audio-data">
                         <source src="" type="audio/wav" />
                         {t("Your browser does not support the audio tag.")}
                       </audio>
@@ -54,11 +50,7 @@ const ListenRecordingModal = ({ show, onHide, recordingUrl, recordDate }) => {
                 </div>
                 <div className="col-lg-12 col-md-12">
                   <div className="modal-footer">
-                    <button
-                      className="mb-2 btn_cancel"
-                      onClick={onHide}
-                      aria-label="Close"
-                    >
+                    <button className="mb-2 btn_cancel" onClick={onHide} aria-label="Close">
                       {t("Close")}
                     </button>
                   </div>

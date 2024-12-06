@@ -70,9 +70,7 @@ function OutboundModal({
       })
     ).then((res) => {
       if (res?.payload?.response) {
-        setMatchPattern(
-          res?.payload?.response?.data?.dialplan_expression || {}
-        );
+        setMatchPattern(res?.payload?.response?.data?.dialplan_expression || {});
       } else {
         console.log(res, "error");
       }
@@ -143,8 +141,7 @@ function OutboundModal({
     } else if (name === "expression_detail") {
       const pattern = /^x+$/;
       if (!pattern.test(value)) {
-        newErrors[name] =
-          "Pattern must contain only 'x' characters (e.g., 'x', 'xx', 'xxx').";
+        newErrors[name] = "Pattern must contain only 'x' characters (e.g., 'x', 'xx', 'xxx').";
       }
     }
 
@@ -224,17 +221,14 @@ function OutboundModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row className="mb-3 ">
                 <Col lg={4}>
                   <Form.Label className="modal-head">
                     {t("Prepend")}
-                    <CustomTooltipModal
-                      tooltip={t("Enter the outbound name here.")}
-                    />
+                    <CustomTooltipModal tooltip={t("Enter the outbound name here.")} />
                   </Form.Label>
                   <Form.Control
                     className="input_padding search-bg"
@@ -242,9 +236,7 @@ function OutboundModal({
                     value={formData.prepend}
                     onChange={handleChange}
                   />
-                  {errors.prepend && (
-                    <div className="text-danger error-ui">{errors.prepend}</div>
-                  )}
+                  {errors.prepend && <div className="text-danger error-ui">{errors.prepend}</div>}
                 </Col>
 
                 <Col lg={4}>
@@ -262,9 +254,7 @@ function OutboundModal({
                     value={formData.prefix}
                     onChange={handleChange}
                   />
-                  {errors.prefix && (
-                    <div className="text-danger error-ui">{errors.prefix}</div>
-                  )}
+                  {errors.prefix && <div className="text-danger error-ui">{errors.prefix}</div>}
                 </Col>
 
                 <Col lg={4}>
@@ -283,21 +273,14 @@ function OutboundModal({
                     onChange={handleChange}
                   />
                   {errors.expression_detail && (
-                    <div className="text-danger error-ui">
-                      {errors.expression_detail}
-                    </div>
+                    <div className="text-danger error-ui">{errors.expression_detail}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
-                  <Form.Label
-                    className="modal-head"
-                    style={{ marginLeft: "6px" }}
-                  >
+                  <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
                     {t("Select trunk")}
                     <CustomTooltipModal
-                      tooltip={t(
-                        "Select the Gateway to use with this outbound route."
-                      )}
+                      tooltip={t("Select the Gateway to use with this outbound route.")}
                     />
                   </Form.Label>
                   <OutboundDropDown
@@ -313,9 +296,7 @@ function OutboundModal({
                     setOpenDropdown={setOpenDropdown}
                   />
                   {errors.gateway_id && (
-                    <div className="text-danger error-ui">
-                      {errors.gateway_id}
-                    </div>
+                    <div className="text-danger error-ui">{errors.gateway_id}</div>
                   )}
                 </Col>
               </Row>
@@ -325,11 +306,7 @@ function OutboundModal({
             className="d-flex justify-content-end "
             style={{ marginBottom: "35px", marginRight: "33px" }}
           >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (

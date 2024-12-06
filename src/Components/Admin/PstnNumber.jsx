@@ -376,7 +376,7 @@ export default function PstnNumber() {
       setsaveLoading(true);
       const data = {
         ...datavalues,
-        destination: `${formData.range}-${formData.destination_number}`,
+        destination: `${formData.destination_number}-${formData.range}`,
         create_range: 0,
       };
       dispatch(
@@ -406,7 +406,7 @@ export default function PstnNumber() {
       setsaveLoading(true);
       const data = {
         ...datavalues,
-        destination: `${formData.range}-${formData.destination_number}`,
+        destination: `${formData.destination_number}-${formData.range}`,
         pstn_id: EditId,
       };
       dispatch(

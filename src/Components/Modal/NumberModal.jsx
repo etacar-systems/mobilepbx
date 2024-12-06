@@ -9,11 +9,7 @@ import { useTranslation } from "react-i18next";
 import CustomTooltipModal from "../CustomTooltipModal";
 import { useDispatch } from "react-redux";
 import config from "../../config";
-import {
-  getapiAll,
-  postapiAll,
-  putapiall,
-} from "../../Redux/Reducers/ApiServices";
+import { getapiAll, postapiAll, putapiall } from "../../Redux/Reducers/ApiServices";
 import Cookies from "js-cookie";
 import { TypeInnumber } from "../ConstantConfig";
 import { toast } from "react-toastify";
@@ -105,15 +101,10 @@ function NumberModal({
       });
       setSelectType({
         id: editsvalues.select_type?.toString(),
-        display:
-          TypeInnumber.find((t) => t.value == editsvalues.select_type)?.type ||
-          "",
+        display: TypeInnumber.find((t) => t.value == editsvalues.select_type)?.type || "",
       });
 
-      if (
-        Array.isArray(editsvalues.destination_action) &&
-        editsvalues.destination_action[0]
-      ) {
+      if (Array.isArray(editsvalues.destination_action) && editsvalues.destination_action[0]) {
         setSelectExtension({
           id: editsvalues?.destination_action[0]?.destination_data,
           display:
@@ -310,20 +301,14 @@ function NumberModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row style={{ marginBottom: "30px" }} ref={dropdownRef}>
                 <Col lg={4}>
-                  <Form.Label className="modal-head">
-                    {t("Select number")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Select number")}</Form.Label>
                   <div className="Selfmade-dropdown">
-                    <div
-                      className="Selfmadedropdown-btn"
-                      onClick={() => toggleDropdown("number")}
-                    >
+                    <div className="Selfmadedropdown-btn" onClick={() => toggleDropdown("number")}>
                       {selectedNumber.display || t("None selected")}
                       <div>
                         <Dropdownicon />
@@ -336,10 +321,7 @@ function NumberModal({
                             {[...getPstnNumber]
                               .sort((a, b) => a.destination - b.destination)
                               .map((number) => (
-                                <a
-                                  key={number}
-                                  onClick={() => handleNumberClick(number)}
-                                >
+                                <a key={number} onClick={() => handleNumberClick(number)}>
                                   {number.destination}
                                 </a>
                               ))}
@@ -350,9 +332,7 @@ function NumberModal({
                       </div>
                     )}
                   </div>
-                  {errors.number && (
-                    <p className="text-danger error-ui">{errors.number}</p>
-                  )}
+                  {errors.number && <p className="text-danger error-ui">{errors.number}</p>}
                 </Col>
 
                 <Col lg={4}>
@@ -361,10 +341,7 @@ function NumberModal({
                     <CustomTooltipModal tooltip={t("Select the type")} />
                   </Form.Label>
                   <div className="Selfmade-dropdown">
-                    <div
-                      className="Selfmadedropdown-btn"
-                      onClick={() => toggleDropdown("type")}
-                    >
+                    <div className="Selfmadedropdown-btn" onClick={() => toggleDropdown("type")}>
                       {t(selectType.display) || t("None selected")}
                       <div>
                         <Dropdownicon />
@@ -375,17 +352,14 @@ function NumberModal({
                         {TypeInnumber && TypeInnumber.length > 0 ? (
                           <>
                             {" "}
-                            {TypeInnumber.sort((a, b) =>
-                              a.type.localeCompare(b.type)
-                            ).map((type) => (
-                              <a
-                                key={type}
-                                onClick={() => handleSelectType(type)}
-                              >
-                                {/* {type.value == "3" ? "" : type.type} */}
-                                {t(type.type)}
-                              </a>
-                            ))}
+                            {TypeInnumber.sort((a, b) => a.type.localeCompare(b.type)).map(
+                              (type) => (
+                                <a key={type} onClick={() => handleSelectType(type)}>
+                                  {/* {type.value == "3" ? "" : type.type} */}
+                                  {t(type.type)}
+                                </a>
+                              )
+                            )}
                           </>
                         ) : (
                           <div>{t("No Record")}</div>
@@ -393,15 +367,11 @@ function NumberModal({
                       </div>
                     )}
                   </div>
-                  {errors.Type && (
-                    <p className="text-danger error-ui">{errors.Type}</p>
-                  )}
+                  {errors.Type && <p className="text-danger error-ui">{errors.Type}</p>}
                 </Col>
 
                 <Col lg={4}>
-                  <Form.Label className="modal-head">
-                    {t("Select destination")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Select destination")}</Form.Label>
                   <div className="Selfmade-dropdown">
                     <div
                       className="Selfmadedropdown-btn"
@@ -414,29 +384,25 @@ function NumberModal({
                     </div>
                     {openDropdown === "destination" && (
                       <div className="Selfmadedropdown-content">
-                        {editsvalues.select_type == selectType.id &&
-                          filteredList && (
-                            <a
-                              onClick={() =>
-                                handleSelectExtension({
-                                  _id: editsvalues.select_type_data.select_id,
-                                  extension:
-                                    editsvalues?.select_type == 5
-                                      ? editsvalues.select_type_data.select_name
-                                      : editsvalues.select_type_data
-                                          .select_extension,
-                                  uuid: editsvalues?.select_type_uuid,
-                                  name: editsvalues.select_type_data
-                                    .select_name,
-                                })
-                              }
-                            >
-                              {editsvalues?.select_type == 5
-                                ? editsvalues?.select_type_data?.select_name
-                                : editsvalues?.select_type_data
-                                    ?.select_extension}
-                            </a>
-                          )}
+                        {editsvalues.select_type == selectType.id && filteredList && (
+                          <a
+                            onClick={() =>
+                              handleSelectExtension({
+                                _id: editsvalues.select_type_data.select_id,
+                                extension:
+                                  editsvalues?.select_type == 5
+                                    ? editsvalues.select_type_data.select_name
+                                    : editsvalues.select_type_data.select_extension,
+                                uuid: editsvalues?.select_type_uuid,
+                                name: editsvalues.select_type_data.select_name,
+                              })
+                            }
+                          >
+                            {editsvalues?.select_type == 5
+                              ? editsvalues?.select_type_data?.select_name
+                              : editsvalues?.select_type_data?.select_extension}
+                          </a>
+                        )}
                         {filteredList && filteredList.length > 0 ? (
                           <>
                             {" "}
@@ -444,13 +410,8 @@ function NumberModal({
                               ?.sort((a, b) => a.name.localeCompare(b.name))
                               .map((destination) => {
                                 return (
-                                  <a
-                                    onClick={() =>
-                                      handleSelectExtension(destination)
-                                    }
-                                  >
-                                    {destination?.extension ||
-                                      destination?.name}
+                                  <a onClick={() => handleSelectExtension(destination)}>
+                                    {destination?.extension || destination?.name}
                                   </a>
                                 );
                               })}
@@ -458,9 +419,7 @@ function NumberModal({
                         ) : (
                           <div>
                             {" "}
-                            {mode == "edit" &&
-                            editsvalues.select_type == selectType.id &&
-                            !loader
+                            {mode == "edit" && editsvalues.select_type == selectType.id && !loader
                               ? ""
                               : t("No Record")}
                           </div>

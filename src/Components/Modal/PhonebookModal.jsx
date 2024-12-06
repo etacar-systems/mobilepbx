@@ -42,10 +42,7 @@ function PhonebookModal({
       Position: "",
     };
 
-    if (
-      (!value || !value.trim()) &&
-      (name === "Firstname" || name === "Phonenumber")
-    ) {
+    if ((!value || !value.trim()) && (name === "Firstname" || name === "Phonenumber")) {
       newErrors[name] = `${t(name.replace(/_/g, " "))} ${t("is required")}`;
       valid = false;
     } else if (regex[name] && !regex[name].test(value)) {
@@ -78,10 +75,7 @@ function PhonebookModal({
     setErrors({ ...errors, [name]: "" });
 
     const newErrors = {};
-    if (
-      (!value || !value.trim()) &&
-      (name === "Firstname" || name === "Phonenumber")
-    ) {
+    if ((!value || !value.trim()) && (name === "Firstname" || name === "Phonenumber")) {
       newErrors[name] = `${name.replace(/_/g, " ")} ${t("is required")}`;
     }
     setErrors((prevErrors) => ({
@@ -124,15 +118,12 @@ function PhonebookModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row className="mb-3">
                 <Col lg={4}>
-                  <Form.Label className="modal-head">
-                    {t("First name")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("First name")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -145,16 +136,12 @@ function PhonebookModal({
                     />
                   </InputGroup>
                   {errors.Firstname && (
-                    <div className="text-danger error-ui">
-                      {errors.Firstname}
-                    </div>
+                    <div className="text-danger error-ui">{errors.Firstname}</div>
                   )}
                 </Col>
 
                 <Col lg={4}>
-                  <Form.Label className="modal-head">
-                    {t("Last name")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Last name")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -166,17 +153,11 @@ function PhonebookModal({
                       onChange={handleChange}
                     />
                   </InputGroup>
-                  {errors.Lastname && (
-                    <div className="text-danger error-ui">
-                      {errors.Lastname}
-                    </div>
-                  )}
+                  {errors.Lastname && <div className="text-danger error-ui">{errors.Lastname}</div>}
                 </Col>
 
                 <Col lg={4}>
-                  <Form.Label className="modal-head">
-                    {t("Phone number")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Phone number")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -190,15 +171,11 @@ function PhonebookModal({
                     />
                   </InputGroup>
                   {errors.Phonenumber && (
-                    <div className="text-danger error-ui">
-                      {errors.Phonenumber}
-                    </div>
+                    <div className="text-danger error-ui">{errors.Phonenumber}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("Mobile number")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Mobile number")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -212,9 +189,7 @@ function PhonebookModal({
                     />
                   </InputGroup>
                   {errors.Mobilenumber && (
-                    <div className="text-danger error-ui">
-                      {errors.Mobilenumber}
-                  </div>
+                    <div className="text-danger error-ui">{errors.Mobilenumber}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
@@ -230,14 +205,10 @@ function PhonebookModal({
                       onChange={handleChange}
                     />
                   </InputGroup>
-                  {errors.Company && (
-                    <div className="text-danger error-ui">{errors.Company}</div>
-                  )}
+                  {errors.Company && <div className="text-danger error-ui">{errors.Company}</div>}
                 </Col>
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("Position")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Position")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -249,11 +220,7 @@ function PhonebookModal({
                       onChange={handleChange}
                     />
                   </InputGroup>
-                  {errors.Position && (
-                    <div className="text-danger error-ui">
-                      {errors.Position}
-                    </div>
-                  )}
+                  {errors.Position && <div className="text-danger error-ui">{errors.Position}</div>}
                 </Col>
               </Row>
             </Form>
@@ -262,11 +229,7 @@ function PhonebookModal({
             className=" d-flex justify-content-end "
             style={{ marginBottom: "30px", marginRight: "33px" }}
           >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (

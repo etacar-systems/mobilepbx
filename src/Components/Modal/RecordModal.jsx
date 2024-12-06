@@ -39,9 +39,7 @@ export default function RecordModal({ recordshow, setRecordShow }) {
   const handleStopRecording = async () => {
     if (mediaRecorder.current && recording) {
       mediaRecorder.current.stop();
-      await mediaRecorder.current.stream
-        .getTracks()
-        .forEach((track) => track.stop()); // Stop tracks explicitly
+      await mediaRecorder.current.stream.getTracks().forEach((track) => track.stop()); // Stop tracks explicitly
       setRecording(false);
 
       setAudioChunks([]);
@@ -76,18 +74,12 @@ export default function RecordModal({ recordshow, setRecordShow }) {
             }}
           >
             <Row className="p-3">
-              <Col
-                md={6}
-                className="d-flex justify-content-center align-items-center"
-              >
+              <Col md={6} className="d-flex justify-content-center align-items-center">
                 <div className="record_plus" onClick={handleStartRecording}>
                   <p className="m-0">+</p>
                 </div>
               </Col>
-              <Col
-                md={6}
-                className="d-flex justify-content-center align-items-center"
-              >
+              <Col md={6} className="d-flex justify-content-center align-items-center">
                 <div className="record_plus1" onClick={handleStopRecording}>
                   <p className="m-0"></p>
                 </div>
@@ -97,20 +89,13 @@ export default function RecordModal({ recordshow, setRecordShow }) {
               <Col md={12} className="text-center">
                 <audio ref={audioRef} controls />
               </Col>
-              <Col
-                md={12}
-                className="p-3 d-flex justify-content-center align-items-center"
-              >
+              <Col md={12} className="p-3 d-flex justify-content-center align-items-center">
                 <h6 className="pe-2">{t("Lataa nauhoite")} </h6>
                 <Download style={{ width: "15px", height: "15px" }} />
               </Col>
             </Row>
             <Row className="px-3 text-center mb-3">
-              <DragFile
-                setFiles={setFiles}
-                files={files}
-                setDragNotShow={setDragNotShow}
-              />
+              <DragFile setFiles={setFiles} files={files} setDragNotShow={setDragNotShow} />
             </Row>
           </div>
 

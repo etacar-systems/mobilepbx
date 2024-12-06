@@ -13,11 +13,7 @@ import { ReactComponent as Dropdownicon } from "../../Assets/Icon/Dropdownicon.s
 import { useTranslation } from "react-i18next";
 import DropDown from "../Dropdown";
 import CustomTooltipModal from "../CustomTooltipModal";
-import ConstantConfig, {
-  EXTENSIONVALALL,
-  RingStrategy,
-  TypeInnumber,
-} from "../ConstantConfig";
+import ConstantConfig, { EXTENSIONVALALL, RingStrategy, TypeInnumber } from "../ConstantConfig";
 
 function RingGroupModal({
   allDropdown,
@@ -132,13 +128,9 @@ function RingGroupModal({
   const [errors, setErrors] = useState({});
   const handleFirstItemClick = (value) => {
     if (!selectedValuesSecond.some((item) => item._id === value)) {
-      const updatedSelectedValuesFirst = selectedValuesFirst.filter(
-        (item) => item._id !== value
-      );
+      const updatedSelectedValuesFirst = selectedValuesFirst.filter((item) => item._id !== value);
       setSelectedValuesFirst(updatedSelectedValuesFirst);
-      const selectedItem = selectedValuesFirst.find(
-        (item) => item._id === value
-      );
+      const selectedItem = selectedValuesFirst.find((item) => item._id === value);
       setSelectedValuesSecond([...selectedValuesSecond, selectedItem]);
       setErrors((prev) => ({ ...prev, selectedValuesSecond: "" }));
     }
@@ -146,13 +138,9 @@ function RingGroupModal({
 
   const handleSecondInputChange = (value) => {
     if (!selectedValuesFirst.some((item) => item._id === value)) {
-      const updatedSelectedValuesSecond = selectedValuesSecond.filter(
-        (item) => item._id !== value
-      );
+      const updatedSelectedValuesSecond = selectedValuesSecond.filter((item) => item._id !== value);
       setSelectedValuesSecond(updatedSelectedValuesSecond);
-      const selectedItem = selectedValuesSecond.find(
-        (item) => item._id === value
-      );
+      const selectedItem = selectedValuesSecond.find((item) => item._id === value);
 
       setSelectedValuesFirst([...selectedValuesFirst, selectedItem]);
     }
@@ -191,14 +179,14 @@ function RingGroupModal({
     if (huntsliderRef.current) {
       const huntslider = noUiSlider.create(huntsliderRef.current, {
         start: [huntsliderValue],
-        connect: 'lower',
+        connect: "lower",
         step: 1,
         range: {
           min: 0,
           max: 100,
         },
       });
-      huntslider.on('slide', (values, handle) => {
+      huntslider.on("slide", (values, handle) => {
         setHuntsliderValue(parseInt(values[handle]));
       });
       if (huntsliderValue > 0) {
@@ -258,9 +246,7 @@ function RingGroupModal({
       !formData.ring_group_description.trim() ||
       formData.ring_group_description.length <= 1
     ) {
-      newErrors.ring_group_description = t(
-        "Ring group description is required"
-      );
+      newErrors.ring_group_description = t("Ring group description is required");
       valid = false;
     }
     if (!selectExtension.display) {
@@ -275,9 +261,7 @@ function RingGroupModal({
     if (!formData.extension || !formData.extension.trim()) {
       newErrors.extension = t("Ring group extension is required");
       valid = false;
-    } else if (
-      !ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)
-    ) {
+    } else if (!ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)) {
       newErrors.extension = t("Ring group extension must contain only digits");
       valid = false;
     } else if (!EXTENSIONVALALL.test(formData.extension)) {
@@ -310,9 +294,7 @@ function RingGroupModal({
     }
 
     if (selectedValuesSecond.length === 0) {
-      newErrors.selectedValuesSecond = t(
-        "At least one extension must be selected"
-      );
+      newErrors.selectedValuesSecond = t("At least one extension must be selected");
       valid = false;
     }
 
@@ -400,13 +382,9 @@ function RingGroupModal({
 
   useEffect(() => {
     if (formData.ring_group_ringback) {
-      const ring_group_ringback_section = Object.keys(ringDropdown).find(
-        (item) => {
-          return Object.keys(ringDropdown[item]).includes(
-            formData.ring_group_ringback
-          );
-        }
-      );
+      const ring_group_ringback_section = Object.keys(ringDropdown).find((item) => {
+        return Object.keys(ringDropdown[item]).includes(formData.ring_group_ringback);
+      });
       setSelectedSection(ring_group_ringback_section);
     }
   }, [formData.ring_group_ringback, ringDropdown]);
@@ -442,8 +420,7 @@ function RingGroupModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
                 paddingBottom: "30px",
               }}
             >
@@ -464,9 +441,7 @@ function RingGroupModal({
                       onChange={handleChange}
                     />
                   </InputGroup>
-                  {errors.name && (
-                    <div className="text-danger error-ui">{errors.name}</div>
-                  )}
+                  {errors.name && <div className="text-danger error-ui">{errors.name}</div>}
                 </Col>
 
                 <Col lg={4}>
@@ -486,9 +461,7 @@ function RingGroupModal({
                     />
                   </InputGroup>
                   {errors.ring_group_description && (
-                    <div className="text-danger error-ui">
-                      {errors.ring_group_description}
-                    </div>
+                    <div className="text-danger error-ui">{errors.ring_group_description}</div>
                   )}
                 </Col>
                 <Col lg={4}>
@@ -510,75 +483,56 @@ function RingGroupModal({
                     />
                   </InputGroup>
                   {errors.extension && (
-                    <div className="text-danger error-ui">
-                      {errors.extension}
-                    </div>
+                    <div className="text-danger error-ui">{errors.extension}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-5">
-                <div className="mb-2">
-                  <Form.Label className="modal-head">
-                    {t("Ring group strategy")}
-                    <CustomTooltipModal
-                      tooltip={t("Select the ring strategy")}
+                  <div className="mb-2">
+                    <Form.Label className="modal-head">
+                      {t("Ring group strategy")}
+                      <CustomTooltipModal tooltip={t("Select the ring strategy")} />
+                    </Form.Label>
+                    <DropDown
+                      toggleDropdown={toggleDropdown}
+                      showValue={t(showstate)}
+                      openDropdown={openDropdown}
+                      // valueArray={[
+                      //   "enterprise",
+                      //   "sequence",
+                      //   "simultaneous",
+                      //   "random",
+                      //   "rollover",
+                      // ]}
+                      valueArray={RingStrategy}
+                      handleSelection={handleSelection}
+                      name={"ring_group_strategy"}
+                      defaultValue={t("None selected")}
+                      setOpenDropdown={setOpenDropdown}
                     />
-                  </Form.Label>
-                  <DropDown
-                    toggleDropdown={toggleDropdown}
-                    showValue={t(showstate)}
-                    openDropdown={openDropdown}
-                    // valueArray={[
-                    //   "enterprise",
-                    //   "sequence",
-                    //   "simultaneous",
-                    //   "random",
-                    //   "rollover",
-                    // ]}
-                    valueArray={RingStrategy}
-                    handleSelection={handleSelection}
-                    name={"ring_group_strategy"}
-                    defaultValue={t("None selected")}
-                    setOpenDropdown={setOpenDropdown}
-                  />
-                  {errors.ring_group_strategy && (
-                    <div className="text-danger error-ui">
-                      {errors.ring_group_strategy}
-                    </div>
-                  )}
-                </div>
+                    {errors.ring_group_strategy && (
+                      <div className="text-danger error-ui">{errors.ring_group_strategy}</div>
+                    )}
+                  </div>
                   {formData.ring_group_strategy === "sequence" ? (
                     <>
-                      <Form.Label className="modal-head ">
-                        {t("Ring Hunt")}
-                      </Form.Label>
-                      <div
-                        style={{ marginLeft: "2px" }}
-                        ref={huntsliderRef}
-                      ></div>
+                      <Form.Label className="modal-head ">{t("Ring Hunt")}</Form.Label>
+                      <div style={{ marginLeft: "2px" }} ref={huntsliderRef}></div>
                       <div className="second_sek">
-                        <strong>{t("Seconds")}:</strong> {huntsliderValue}{" "}
-                        {t("sec")}
+                        <strong>{t("Seconds")}:</strong> {huntsliderValue} {t("sec")}
                       </div>
                       {errors.ring_hunt && (
-                        <div className="text-danger error-ui">
-                          {errors.ring_hunt}
-                        </div>
+                        <div className="text-danger error-ui">{errors.ring_hunt}</div>
                       )}
                     </>
                   ) : (
                     <>
-                      <Form.Label className="modal-head">
-                        {t("Ring group duration")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Ring group duration")}</Form.Label>
                       <div style={{ marginLeft: "2px" }} ref={sliderRef}></div>
                       <div className="second_sek">
-                        <strong>{t("Seconds")}:</strong> {sliderValue}{" "}
-                        {t("sec")}
+                        <strong>{t("Seconds")}:</strong> {sliderValue} {t("sec")}
                       </div>
                       {errors.ring_group_call_timeout && (
-                        <div className="text-danger error-ui">
-                          {errors.ring_group_call_timeout}
-                        </div>
+                        <div className="text-danger error-ui">{errors.ring_group_call_timeout}</div>
                       )}
                     </>
                   )}
@@ -623,9 +577,7 @@ function RingGroupModal({
                 <Col lg={8} className="mt-5">
                   <div style={{ display: "flex", width: "100%" }}>
                     <div style={{ width: "46%" }}>
-                      <Form.Label className="modal-head">
-                        {t("Select extensions")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Select extensions")}</Form.Label>
                       {loader2 ? (
                         <div
                           style={{
@@ -649,8 +601,7 @@ function RingGroupModal({
                           style={{
                             width: "100%",
                             height: "200px",
-                            border:
-                              "1px solid var(--main-bordermodaldashboard-color)",
+                            border: "1px solid var(--main-bordermodaldashboard-color)",
                             overflowY: "auto",
                             borderRadius: "3px",
                           }}
@@ -661,8 +612,7 @@ function RingGroupModal({
                                 key={val._id}
                                 style={{
                                   fontSize: "14px",
-                                  borderBottom:
-                                    "1px solid var(--main-bordermodaldashboard-color)",
+                                  borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
                                   padding: "3px 7px",
                                   fontWeight: "300",
                                 }}
@@ -689,17 +639,14 @@ function RingGroupModal({
                       <img src={switchimg} height={21} width={21} />
                     </div>
                     <div style={{ width: "46%" }}>
-                      <Form.Label className="modal-head">
-                        {t("Selected extensions")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Selected extensions")}</Form.Label>
                       <InputGroup className="">
                         <div
                           className=""
                           style={{
                             width: "100%",
                             height: "200px",
-                            border:
-                              "1px solid var(--main-bordermodaldashboard-color)",
+                            border: "1px solid var(--main-bordermodaldashboard-color)",
                             overflowY: "auto",
                             borderRadius: "3px",
                           }}
@@ -711,8 +658,7 @@ function RingGroupModal({
                                 style={{
                                   fontSize: "14px",
                                   padding: "3px 7px",
-                                  borderBottom:
-                                    "1px solid var(--main-bordermodaldashboard-color)",
+                                  borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
                                   fontWeight: "300",
                                 }}
                                 className="valueofdrag"
@@ -725,15 +671,11 @@ function RingGroupModal({
                         </div>
                       </InputGroup>
                       {errors.selectedValuesSecond && (
-                        <div className="text-danger error-ui ">
-                          {errors.selectedValuesSecond}
-                        </div>
+                        <div className="text-danger error-ui ">{errors.selectedValuesSecond}</div>
                       )}
                     </div>
                   </div>
                 </Col>
-
-              
 
                 {/* <Col lg={4} className="mt-3">
                   <Form.Label className="modal-head">
@@ -764,14 +706,9 @@ function RingGroupModal({
                   )}
                 </Col> */}
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("Remote no answer")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Remote no answer")}</Form.Label>
                   <div className="Selfmade-dropdown">
-                    <div
-                      className="Selfmadedropdown-btn"
-                      onClick={() => toggleDropdown("type")}
-                    >
+                    <div className="Selfmadedropdown-btn" onClick={() => toggleDropdown("type")}>
                       {t(selectType.display) || t("None selected")}
                       <div>
                         <Dropdownicon />
@@ -779,28 +716,19 @@ function RingGroupModal({
                     </div>
                     {openDropdown === "type" && (
                       <div className="Selfmadedropdown-content">
-                        {TypeInnumber.sort((a, b) =>
-                          a.type.localeCompare(b.type)
-                        ).map((type) => (
-                          <a
-                            key={type.id}
-                            onClick={() => handleSelectType(type)}
-                          >
+                        {TypeInnumber.sort((a, b) => a.type.localeCompare(b.type)).map((type) => (
+                          <a key={type.id} onClick={() => handleSelectType(type)}>
                             {t(type.type)}
                           </a>
                         ))}
                       </div>
                     )}
                   </div>
-                  {errors.Type && (
-                    <p className="text-danger error-ui">{errors.Type}</p>
-                  )}
+                  {errors.Type && <p className="text-danger error-ui">{errors.Type}</p>}
                 </Col>
 
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("No answer endpoint")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("No answer endpoint")}</Form.Label>
                   <div className="Selfmade-dropdown">
                     <div
                       className="Selfmadedropdown-btn"
@@ -822,9 +750,7 @@ function RingGroupModal({
                                   return (
                                     <a
                                       key={destination.id}
-                                      onClick={() =>
-                                        handleSelectExtension(destination)
-                                      }
+                                      onClick={() => handleSelectExtension(destination)}
                                     >
                                       {destination.name}
                                     </a>
@@ -833,9 +759,7 @@ function RingGroupModal({
                                   return (
                                     <a
                                       key={destination.id}
-                                      onClick={() =>
-                                        handleSelectExtension(destination)
-                                      }
+                                      onClick={() => handleSelectExtension(destination)}
                                     >
                                       {destination.extension}
                                     </a>
@@ -856,15 +780,8 @@ function RingGroupModal({
               </Row>
             </Form>
           </div>
-          <div
-            className="d-flex justify-content-end me-4"
-            style={{ marginBottom: "37px" }}
-          >
-            <button
-              className="btn_cancel me-3"
-              onClick={handleClosee}
-              disabled={loader || loader2}
-            >
+          <div className="d-flex justify-content-end me-4" style={{ marginBottom: "37px" }}>
+            <button className="btn_cancel me-3" onClick={handleClosee} disabled={loader || loader2}>
               {t("Cancel")}
             </button>
             {loader || loader2 ? (

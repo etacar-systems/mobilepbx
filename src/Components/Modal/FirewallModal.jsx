@@ -79,11 +79,7 @@ function FirewallModal({
     if (!value) {
       newErrors[name] = `${t(name.replace(/_/g, " "))} ${t("is required")}`;
       valid = false;
-    } else if (
-      regex[name] &&
-      typeof value === "string" &&
-      !regex[name].test(value)
-    ) {
+    } else if (regex[name] && typeof value === "string" && !regex[name].test(value)) {
       newErrors[name] = `${t("Invalid")} ${t(name.replace(/_/g, " "))}`;
       valid = false;
     }
@@ -158,15 +154,12 @@ function FirewallModal({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row style={{ marginBottom: "37px" }}>
                 <Col lg={2}>
-                  <Form.Label className="modal-head fmodal">
-                    {t("Network/Host")}
-                  </Form.Label>
+                  <Form.Label className="modal-head fmodal">{t("Network/Host")}</Form.Label>
                   <div className="fmodal">
                     <Form.Control
                       className="input_padding search-bg "
@@ -174,18 +167,11 @@ function FirewallModal({
                       value={formData.Network}
                       onChange={handleChange}
                     />
-                    {errors.Network && (
-                      <div className="text-danger error-ui">
-                        {errors.Network}
-                      </div>
-                    )}
+                    {errors.Network && <div className="text-danger error-ui">{errors.Network}</div>}
                   </div>
                 </Col>
                 <Col lg={3}>
-                  <Form.Label
-                    className="modal-head fmodal"
-                    style={{ marginBottom: "30px" }}
-                  >
+                  <Form.Label className="modal-head fmodal" style={{ marginBottom: "30px" }}>
                     {t("Add Assigned Zone	")}
                   </Form.Label>
 
@@ -203,16 +189,11 @@ function FirewallModal({
                     sorting={true}
                   />
                   {errors.Assigned_Zone && (
-                    <div className="text-danger error-ui">
-                      {errors.Assigned_Zone}
-                    </div>
+                    <div className="text-danger error-ui">{errors.Assigned_Zone}</div>
                   )}
                 </Col>
                 <Col lg={3}>
-                  <Form.Label
-                    className="modal-head fmodal  "
-                    style={{ marginBottom: "30px" }}
-                  >
+                  <Form.Label className="modal-head fmodal  " style={{ marginBottom: "30px" }}>
                     {t("Select Company")}
                   </Form.Label>
                   <CustomDropDown
@@ -228,15 +209,11 @@ function FirewallModal({
                     setOpenDropdown={setOpenDropdown}
                     sorting={true}
                   />
-                  {errors.cid && (
-                    <div className="text-danger error-ui">{errors.cid}</div>
-                  )}
+                  {errors.cid && <div className="text-danger error-ui">{errors.cid}</div>}
                 </Col>
 
                 <Col lg={2}>
-                  <Form.Label className="modal-head fmodal">
-                    {t("Description")}{" "}
-                  </Form.Label>
+                  <Form.Label className="modal-head fmodal">{t("Description")} </Form.Label>
                   <div className="fmodal">
                     <Form.Control
                       className="input_padding search-bg "
@@ -245,16 +222,12 @@ function FirewallModal({
                       onChange={handleChange}
                     />
                     {errors.Description && (
-                      <div className="text-danger error-ui">
-                        {errors.Description}
-                      </div>
+                      <div className="text-danger error-ui">{errors.Description}</div>
                     )}
                   </div>
                 </Col>
                 <Col lg={2}>
-                  <Form.Label className="modal-head fmodal">
-                    {t("Date")}
-                  </Form.Label>
+                  <Form.Label className="modal-head fmodal">{t("Date")}</Form.Label>
                   <div className="fmodal firewalldata">
                     {Diaplydate && mode == "edit" ? Diaplydate : formattedDate2}
                   </div>
@@ -266,11 +239,7 @@ function FirewallModal({
             className="d-flex justify-content-end"
             style={{ marginBottom: "35px", marginRight: "33px" }}
           >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (

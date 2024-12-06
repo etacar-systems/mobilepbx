@@ -114,17 +114,14 @@ export default function System({
           <div className="p-3">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row className="mb-4">
                 <Col lg={4} md={12}>
                   <Row>
                     <Col lg={12}>
-                      <Form.Label className="modal-head">
-                        {t("Recording name")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Recording name")}</Form.Label>
                       <Form.Control
                         className="search-bg"
                         name="recname"
@@ -132,9 +129,7 @@ export default function System({
                         onChange={handleChange}
                       />
                       {errors.recname && (
-                        <div className="text-danger error-ui">
-                          {errors.recname}
-                        </div>
+                        <div className="text-danger error-ui">{errors.recname}</div>
                       )}
                     </Col>
 
@@ -149,18 +144,14 @@ export default function System({
                         onChange={handleChange}
                       />
                       {errors.recdesc && (
-                        <div className="text-danger error-ui">
-                          {errors.recdesc}
-                        </div>
+                        <div className="text-danger error-ui">{errors.recdesc}</div>
                       )}
                     </Col>
                   </Row>
                 </Col>
                 <Col lg={8} md={12}>
-                  <Form.Label className="modal-head">
-                    {t("Soundfile: wav, mp3")}
-                  </Form.Label>
-                 
+                  <Form.Label className="modal-head">{t("Soundfile: wav, mp3")}</Form.Label>
+
                   <DragFile
                     setFiles={setFiles}
                     files={files}
@@ -168,9 +159,7 @@ export default function System({
                     setErrors={setErrors}
                     setDragNotShow={setDragNotShow}
                   />
-                  {errors.files && (
-                    <div className="text-danger error-ui">{errors.files}</div>
-                  )}
+                  {errors.files && <div className="text-danger error-ui">{errors.files}</div>}
                 </Col>
               </Row>
             </Form>
@@ -180,11 +169,7 @@ export default function System({
             className=" d-flex justify-content-end "
             style={{ marginBottom: "37px", marginRight: "33px" }}
           >
-            <button
-              className="btn_cancel me-2"
-              onClick={handleClose}
-              disabled={loader}
-            >
+            <button className="btn_cancel me-2" onClick={handleClose} disabled={loader}>
               {t("Cancel")}
             </button>
             {loader ? (

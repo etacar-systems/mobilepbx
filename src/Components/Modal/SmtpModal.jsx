@@ -53,49 +53,48 @@ const SmtpModal = ({
               />
             </div>
           </div>
-     
+
           <div className="customer col-lg-4 col-md-12">
-                  <Form.Label className="modal-head">
-                    {t("Password")}
-                    <CustomTooltipModal
-                      tooltip={t(
-                        "Password must be 4-15 characters long and can include letters, numbers, and special characters"
-                      )}
-                    />
-                  </Form.Label>
-                  <InputGroup className="">
-                    <InputGroup.Text
-                      onClick={togglePasswordVisibility}
-                      style={{ cursor: "pointer" }}
-                      className="modal-icon"
-                    >
-                      {showPassword ? (
-                        <Show height={15} width={15} />
-                      ) : (
-                        <Hide
-                          height={17}
-                          width={17}
-                          style={{
-                            fill: "var(--main-adminnumberheader-color)",
-                          }}
-                        />
-                      )}{" "}
-                      {/* Toggle eye icon */}
-                    </InputGroup.Text>
-                    <Form.Control
-                      type={showPassword ? "text" : "password"} // Toggle type between "text" and "password"
-                      placeholder=""
-                      aria-label="Password"
-                      aria-describedby="basic-addon1"
-                      className="search-bg emailforminput"
-                      name="Password"
-                      value={smtpData.password}
-                      onChange={handleInputChange}
-                      autoComplete="new-password"
-                    />
-                  </InputGroup>
-                 
-                </div>
+            <Form.Label className="modal-head">
+              {t("Password")}
+              <CustomTooltipModal
+                tooltip={t(
+                  "Password must be 4-15 characters long and can include letters, numbers, and special characters"
+                )}
+              />
+            </Form.Label>
+            <InputGroup className="">
+              <InputGroup.Text
+                onClick={togglePasswordVisibility}
+                style={{ cursor: "pointer" }}
+                className="modal-icon"
+              >
+                {showPassword ? (
+                  <Show height={15} width={15} />
+                ) : (
+                  <Hide
+                    height={17}
+                    width={17}
+                    style={{
+                      fill: "var(--main-adminnumberheader-color)",
+                    }}
+                  />
+                )}{" "}
+                {/* Toggle eye icon */}
+              </InputGroup.Text>
+              <Form.Control
+                type={showPassword ? "text" : "password"} // Toggle type between "text" and "password"
+                placeholder=""
+                aria-label="Password"
+                aria-describedby="basic-addon1"
+                className="search-bg emailforminput"
+                name="Password"
+                value={smtpData.password}
+                onChange={handleInputChange}
+                autoComplete="new-password"
+              />
+            </InputGroup>
+          </div>
           <div className="customer col-lg-4 col-md-12">
             <label className="labledata modal-head">{t("SMTP server")}</label>
             <div className="customer-form-group">
@@ -122,9 +121,7 @@ const SmtpModal = ({
           </div>
           <div className="row">
             <div className="customer col-lg-4 col-md-12">
-              <label className="labledata modal-head">
-                {t("Sendgrid auth")}
-              </label>
+              <label className="labledata modal-head">{t("Sendgrid auth")}</label>
               <Form.Check
                 aria-label="option 1"
                 checked={smtpData.sendgrid_auth === 1}
@@ -133,9 +130,7 @@ const SmtpModal = ({
               />
             </div>
             <div className="customer col-lg-8 col-md-12">
-              <label className="labledata modal-head">
-                {t("Sendgrid token")}
-              </label>
+              <label className="labledata modal-head">{t("Sendgrid token")}</label>
               <div className="customer-form-group">
                 <input
                   type="text"

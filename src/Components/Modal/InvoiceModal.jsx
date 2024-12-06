@@ -12,14 +12,7 @@ import { ReactComponent as Dropdownicon } from "../../Assets/Icon/down-arrow-svg
 import DeleteModal from "./DeleteModal";
 import { useTranslation } from "react-i18next";
 
-function InvoiceModal({
-  handleClose,
-  show,
-  header,
-  featuresData,
-  setFeaturesData,
-  Nexttab,
-}) {
+function InvoiceModal({ handleClose, show, header, featuresData, setFeaturesData, Nexttab }) {
   const [formData, setFormData] = useState({
     company: "",
     companyaddress: "",
@@ -55,17 +48,9 @@ function InvoiceModal({
     setOpenDropdown(null); // Close the dropdown after selection
   };
   const selectedCompany =
-    formData.company === 1
-      ? "Company A"
-      : formData.company === 2
-      ? "Company B"
-      : "";
+    formData.company === 1 ? "Company A" : formData.company === 2 ? "Company B" : "";
   const selectedcompanyservice =
-    formData.companyservice === 1
-      ? "Company A"
-      : formData.companyservice === 2
-      ? "Company B"
-      : "";
+    formData.companyservice === 1 ? "Company A" : formData.companyservice === 2 ? "Company B" : "";
   const selectedcompanyservice2 =
     formData.companyservice2 === 1
       ? "Company A"
@@ -160,8 +145,7 @@ function InvoiceModal({
           <div className="p-3">
             <div
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Tab.Container defaultActiveKey="/home">
@@ -191,9 +175,7 @@ function InvoiceModal({
                         <Form>
                           <Row className="mt-3">
                             <Col lg={4}>
-                              <Form.Label className="modal-head">
-                                {t("Select Company")}
-                              </Form.Label>
+                              <Form.Label className="modal-head">{t("Select Company")}</Form.Label>
                               {/* <div className='select_entry1'>
                                                             <Form.Select aria-label="Default select example" className='modal-select'
                                                                 name="company" value={formData.company} onChange={handleChange}
@@ -204,10 +186,7 @@ function InvoiceModal({
                                                             </Form.Select>
                                                             {errors.company && <div className="text-danger error-ui">{errors.company}</div>}
                                                         </div> */}
-                              <div
-                                className="Selfmade-dropdown "
-                                style={{ width: "100%" }}
-                              >
+                              <div className="Selfmade-dropdown " style={{ width: "100%" }}>
                                 <div
                                   className="Selfmadedropdown-btn "
                                   onClick={() => toggleDropdown("company")}
@@ -215,9 +194,7 @@ function InvoiceModal({
                                   {selectedCompany || t("--Select-- ")}
 
                                   <div>
-                                    <Dropdownicon
-                                      style={{ height: "10px", width: "10px" }}
-                                    />
+                                    <Dropdownicon style={{ height: "10px", width: "10px" }} />
                                   </div>
                                 </div>
                                 {openDropdown === "company" && (
@@ -229,11 +206,7 @@ function InvoiceModal({
                                       <a
                                         key={number._id}
                                         onClick={() =>
-                                          handleSelection(
-                                            "company",
-                                            number.type,
-                                            number.value
-                                          )
+                                          handleSelection("company", number.type, number.value)
                                         }
                                       >
                                         {number.type}
@@ -242,16 +215,12 @@ function InvoiceModal({
                                   </div>
                                 )}{" "}
                                 {errors.company && (
-                                  <div className="text-danger error-ui">
-                                    {errors.company}
-                                  </div>
+                                  <div className="text-danger error-ui">{errors.company}</div>
                                 )}
                               </div>
                             </Col>
                             <Col lg={4}>
-                              <Form.Label className="modal-head">
-                                {t("Street address")}
-                              </Form.Label>
+                              <Form.Label className="modal-head">{t("Street address")}</Form.Label>
                               <Form.Control
                                 className="search-bg"
                                 name="companyaddress"
@@ -259,15 +228,11 @@ function InvoiceModal({
                                 onChange={handleChange}
                               />
                               {errors.companyaddress && (
-                                <div className="text-danger error-ui">
-                                  {errors.companyaddress}
-                                </div>
+                                <div className="text-danger error-ui">{errors.companyaddress}</div>
                               )}
                             </Col>
                             <Col lg={4}>
-                              <Form.Label className="modal-head">
-                                {t("ZIP")}
-                              </Form.Label>
+                              <Form.Label className="modal-head">{t("ZIP")}</Form.Label>
                               <Form.Control
                                 className="search-bg"
                                 name="companyzip"
@@ -275,9 +240,7 @@ function InvoiceModal({
                                 onChange={handleChange}
                               />
                               {errors.companyzip && (
-                                <div className="text-danger error-ui">
-                                  {errors.companyzip}
-                                </div>
+                                <div className="text-danger error-ui">{errors.companyzip}</div>
                               )}
                             </Col>
                           </Row>
@@ -310,10 +273,7 @@ function InvoiceModal({
                               </Form.Label>
                             </Col>
                           </Row>
-                          <Row
-                            className="mt-3 "
-                            style={{ marginBottom: "40px" }}
-                          >
+                          <Row className="mt-3 " style={{ marginBottom: "40px" }}>
                             <Col lg={3}>
                               {/* <div className='select_entry1'>
                                                         <Form.Select aria-label="Default select example" className='modal-select'
@@ -325,22 +285,15 @@ function InvoiceModal({
                                                         </Form.Select>
                                                         {errors.companyservice && <div className="text-danger error-ui">{errors.companyservice}</div>}
                                                     </div> */}
-                              <div
-                                className="Selfmade-dropdown "
-                                style={{ width: "100%" }}
-                              >
+                              <div className="Selfmade-dropdown " style={{ width: "100%" }}>
                                 <div
                                   className="Selfmadedropdown-btn "
-                                  onClick={() =>
-                                    toggleDropdown("companyservice2")
-                                  }
+                                  onClick={() => toggleDropdown("companyservice2")}
                                 >
                                   {selectedcompanyservice2 || t("--Select-- ")}
 
                                   <div>
-                                    <Dropdownicon
-                                      style={{ height: "10px", width: "10px" }}
-                                    />
+                                    <Dropdownicon style={{ height: "10px", width: "10px" }} />
                                   </div>
                                 </div>
                                 {openDropdown === "companyservice2" && (
@@ -379,9 +332,7 @@ function InvoiceModal({
                                 onChange={handleChange}
                               />
                               {errors.companyname && (
-                                <div className="text-danger error-ui">
-                                  {errors.companyname}
-                                </div>
+                                <div className="text-danger error-ui">{errors.companyname}</div>
                               )}
                             </Col>
                             <Col lg={2}>
@@ -392,9 +343,7 @@ function InvoiceModal({
                                 onChange={handleChange}
                               />
                               {errors.companyamount && (
-                                <div className="text-danger error-ui">
-                                  {errors.companyamount}
-                                </div>
+                                <div className="text-danger error-ui">{errors.companyamount}</div>
                               )}
                             </Col>
                             <Col lg={1}>
@@ -407,15 +356,8 @@ function InvoiceModal({
                             </Col>
                             <Col lg={1} className="table_edit">
                               <div>{""}</div>
-                              <button
-                                className="ms-1"
-                                onClick={openDeletemodal}
-                              >
-                                <Delete_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                              <button className="ms-1" onClick={openDeletemodal}>
+                                <Delete_logo width={14} height={14} className="edithover" />
                               </button>
                             </Col>
                           </Row>
@@ -428,22 +370,15 @@ function InvoiceModal({
                                                             <option value="Company B">Company B</option>
                                                         </Form.Select>
                                                     </div> */}
-                              <div
-                                className="Selfmade-dropdown "
-                                style={{ width: "100%" }}
-                              >
+                              <div className="Selfmade-dropdown " style={{ width: "100%" }}>
                                 <div
                                   className="Selfmadedropdown-btn "
-                                  onClick={() =>
-                                    toggleDropdown("companyservice")
-                                  }
+                                  onClick={() => toggleDropdown("companyservice")}
                                 >
                                   {selectedcompanyservice || t("--Select-- ")}
 
                                   <div>
-                                    <Dropdownicon
-                                      style={{ height: "10px", width: "10px" }}
-                                    />
+                                    <Dropdownicon style={{ height: "10px", width: "10px" }} />
                                   </div>
                                 </div>
                                 {openDropdown === "companyservice" && (
@@ -481,22 +416,12 @@ function InvoiceModal({
                               <Form.Control className="search-bg" />
                             </Col>
                             <Col lg={1}>
-                              <p className="firewall_modal_date invoicename">
-                                {" "}
-                                410&nbsp;€
-                              </p>
+                              <p className="firewall_modal_date invoicename"> 410&nbsp;€</p>
                             </Col>
                             <Col lg={1} className="table_edit">
                               <div>{""}</div>
-                              <button
-                                className="ms-1"
-                                onClick={openDeletemodal}
-                              >
-                                <Delete_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                              <button className="ms-1" onClick={openDeletemodal}>
+                                <Delete_logo width={14} height={14} className="edithover" />
                               </button>
                             </Col>
                           </Row>

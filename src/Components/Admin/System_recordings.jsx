@@ -14,11 +14,7 @@ import ListenRecordingModal from "../Modal/ListnerRecord";
 import Paginationall from "../Pages/Paginationall";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteapiAll,
-  getapiAll,
-  postapiAll,
-} from "../../Redux/Reducers/ApiServices";
+import { deleteapiAll, getapiAll, postapiAll } from "../../Redux/Reducers/ApiServices";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import config from "../../config";
@@ -104,9 +100,7 @@ export default function System_recordings() {
     const fileNameParts = file.name.split(".");
     const fileExtension = fileNameParts.pop();
 
-    const originalFileNameWithoutExtension = fileNameParts
-      .join(".")
-      .replace(/\s+/g, "_");
+    const originalFileNameWithoutExtension = fileNameParts.join(".").replace(/\s+/g, "_");
 
     const newFileName = `${originalFileNameWithoutExtension}_${timestamp}.${fileExtension}`;
 
@@ -267,7 +261,6 @@ export default function System_recordings() {
   };
 
   const openDelete = (id) => {
-
     setDeletemodal(true);
     setDeleteId(id);
   };
@@ -327,11 +320,7 @@ export default function System_recordings() {
     const search = e?.target?.value.toLowerCase();
     const newSearchTerm = e.target.value;
 
-    const fieldsToInclude = [
-      "recording_filename",
-      "recording_description",
-      "recording_name",
-    ];
+    const fieldsToInclude = ["recording_filename", "recording_description", "recording_name"];
     if (!newSearchTerm.trim()) {
       setSearchterm("");
       setvalue(systemrecordingdata || []);
@@ -343,9 +332,7 @@ export default function System_recordings() {
         duplicateData?.filter((data) => {
           return Object.entries(data)
             .filter(([key]) => fieldsToInclude.includes(key))
-            .some(([, value]) =>
-              value?.toString().toLowerCase().includes(search)
-            );
+            .some(([, value]) => value?.toString().toLowerCase().includes(search));
         }) || []
       );
       setLoading(false);
@@ -428,10 +415,7 @@ export default function System_recordings() {
 
       filteredList = filteredList.filter((data) => {
         const callTimestamp = new Date(data.insert_date).getTime();
-        return (
-          callTimestamp >= formattedStartDate &&
-          callTimestamp <= formattedEndDate
-        );
+        return callTimestamp >= formattedStartDate && callTimestamp <= formattedEndDate;
       });
     }
     setLoading(false);
@@ -552,10 +536,7 @@ export default function System_recordings() {
             <tbody>
               {loading ? (
                 <tr style={{ height: dynamicHeight - 50 }}>
-                  <td
-                    style={{ width: "100%", textAlign: "center" }}
-                    colSpan="6"
-                  >
+                  <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                     <Loader />
                   </td>
                 </tr>
@@ -583,32 +564,17 @@ export default function System_recordings() {
                                   handlelistner(val);
                                 }}
                               >
-                                <Call_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                                <Call_logo width={14} height={14} className="edithover" />
                               </button>
 
-                              <button
-                                className="ms-1"
-                                onClick={() => openEditModal(val)}
-                              >
-                                <Edit_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                              <button className="ms-1" onClick={() => openEditModal(val)}>
+                                <Edit_logo width={14} height={14} className="edithover" />
                               </button>
                               <button
                                 className="ms-1"
                                 onClick={() => openDelete(val.recording_uuid)}
                               >
-                                <Delete_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                                <Delete_logo width={14} height={14} className="edithover" />
                               </button>
                             </td>
                           </tr>
@@ -617,10 +583,7 @@ export default function System_recordings() {
                     })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -633,8 +596,8 @@ export default function System_recordings() {
         <div className="show show2 mt-2  d-flex align-items-center justify-content-between">
           <h6>
             {t("Showing")} {(currentPage - 1) * select + 1} {t("to")}{" "}
-            {Math.min(currentPage * select, value?.length || 0)} {t("of")}{" "}
-            {value?.length || 0} {t("entries")}
+            {Math.min(currentPage * select, value?.length || 0)} {t("of")} {value?.length || 0}{" "}
+            {t("entries")}
           </h6>
           <div>
             <Paginationall

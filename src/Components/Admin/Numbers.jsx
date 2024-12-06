@@ -24,12 +24,8 @@ import { ClearSearch } from "../ClearSearch";
 
 export default function Numbers() {
   const Token = Cookies.get("Token");
-  const pstnlist = useSelector(
-    (state) => state.postapiAll.postapiall.Numberslist.data
-  );
-  const count = useSelector(
-    (state) => state.postapiAll.postapiall.Numberslist.pstn_total_counts
-  );
+  const pstnlist = useSelector((state) => state.postapiAll.postapiall.Numberslist.data);
+  const count = useSelector((state) => state.postapiAll.postapiall.Numberslist.pstn_total_counts);
   const totalpagecount = useSelector(
     (state) => state.postapiAll.postapiall.Numberslist.total_page_count
   );
@@ -177,9 +173,7 @@ export default function Numbers() {
         if (isNumber(destA) && isNumber(destB)) {
           return newAscending ? destA - destB : destB - destA;
         } else {
-          return newAscending
-            ? destA.localeCompare(destB)
-            : destB.localeCompare(destA);
+          return newAscending ? destA.localeCompare(destB) : destB.localeCompare(destA);
         }
       } else if (name === "number_pool" || name === "destination") {
         const stra = parseInt(valueA);
@@ -188,9 +182,7 @@ export default function Numbers() {
       } else {
         const strA = String(valueA);
         const strB = String(valueB);
-        return newAscending
-          ? strA.localeCompare(strB)
-          : strB.localeCompare(strA);
+        return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
       }
     });
 
@@ -313,9 +305,7 @@ export default function Numbers() {
               onChange={handleSearchChange}
               className="search-bg new-search-add"
             />
-            {searchTerm && (
-              <ClearSearch clearSearch={clearSearch} number={true} />
-            )}
+            {searchTerm && <ClearSearch clearSearch={clearSearch} number={true} />}
             <div style={{ width: "70%", paddingLeft: "30px" }}>
               <CustomDropDown
                 toggleDropdown={toggleDropdown}
@@ -417,9 +407,7 @@ export default function Numbers() {
                       ?.sort((a, b) => a.destination - b.destination)
                       ?.map((val, index) => {
                         const date = new Date(val.updatedAt);
-                        const formattedDate = `${String(
-                          date.getDate()
-                        ).padStart(2, "0")}.${String(
+                        const formattedDate = `${String(date.getDate()).padStart(2, "0")}.${String(
                           date.getMonth() + 1
                         ).padStart(2, "0")}.${date.getFullYear()}`;
 
@@ -437,9 +425,8 @@ export default function Numbers() {
                               <td>
                                 {val.select_type
                                   ? t(
-                                      TypeInnumber.find(
-                                        (item) => item.value == val.select_type
-                                      )?.type
+                                      TypeInnumber.find((item) => item.value == val.select_type)
+                                        ?.type
                                     ) || t("Not Assigned")
                                   : t("Not Assigned")}
                               </td>
@@ -448,8 +435,7 @@ export default function Numbers() {
                                 <div>
                                   {(val?.select_type !== 5
                                     ? val?.select_type_data?.select_extension
-                                    : val?.select_type_data?.select_name) ||
-                                    t("Not Assigned")}
+                                    : val?.select_type_data?.select_name) || t("Not Assigned")}
                                 </div>
                                 {/* <div>
                                 {val?.select_type_data?.select_name ||
@@ -461,19 +447,11 @@ export default function Numbers() {
                                 <span className="d-inline-block">
                                   {val.isassigned == 0 ? (
                                     <Button onClick={() => openModal(val)}>
-                                      <Edit_logo
-                                        width={14}
-                                        height={14}
-                                        className="edithover"
-                                      />
+                                      <Edit_logo width={14} height={14} className="edithover" />
                                     </Button>
                                   ) : (
                                     <Button onClick={() => handleEdit(val._id)}>
-                                      <Edit_logo
-                                        width={14}
-                                        height={14}
-                                        className="edithover"
-                                      />
+                                      <Edit_logo width={14} height={14} className="edithover" />
                                     </Button>
                                   )}
                                 </span>
@@ -524,9 +502,7 @@ export default function Numbers() {
                                     overlay={
                                       <Tooltip id={`tooltip-delete-${val._id}`}>
                                         {val.isassigned === 0
-                                          ? t(
-                                              "Number is not assigned, so you can't delete."
-                                            )
+                                          ? t("Number is not assigned, so you can't delete.")
                                           : "Extension are not deletable"}
                                       </Tooltip>
                                     }
@@ -562,10 +538,7 @@ export default function Numbers() {
                       })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -577,8 +550,7 @@ export default function Numbers() {
         </div>
         <div className="show2 show mt-2 d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count} {t("entries")}
           </h6>
           <div>
             <Paginationall

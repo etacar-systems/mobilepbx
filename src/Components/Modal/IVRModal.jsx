@@ -18,11 +18,7 @@ import { getapiAll } from "../../Redux/Reducers/ApiServices";
 import { useDispatch } from "react-redux";
 import config from "../../config";
 import Cookies from "js-cookie";
-import ConstantConfig, {
-  EXTENSIONVALALL,
-  Timeout_retries,
-  TypeInnumber,
-} from "../ConstantConfig";
+import ConstantConfig, { EXTENSIONVALALL, Timeout_retries, TypeInnumber } from "../ConstantConfig";
 
 function IVRModal({
   allDropdown,
@@ -181,9 +177,7 @@ function IVRModal({
     if (!formData.extension) {
       newErrors.extension = t("Extension is required");
       valid = false;
-    } else if (
-      !ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)
-    ) {
+    } else if (!ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)) {
       newErrors.extension = t("Ring group extension must contain only digits");
       valid = false;
     } else if (!EXTENSIONVALALL.test(formData.extension)) {
@@ -260,10 +254,7 @@ function IVRModal({
     //   valid = false;
     // }
 
-    if (
-      !formData.ivr_menu_max_failures ||
-      isNaN(formData.ivr_menu_max_failures)
-    ) {
+    if (!formData.ivr_menu_max_failures || isNaN(formData.ivr_menu_max_failures)) {
       newErrors.ivr_menu_max_failures = t("Max failures must be a number");
       valid = false;
     }
@@ -290,23 +281,17 @@ function IVRModal({
         newErrors.ivr_menu_option[index].menu_digit = t("Entrie is required");
         valid = false;
       } else if (!ConstantConfig.IVR.VALIDATION.ENTRIES.test(item.menu_digit)) {
-        newErrors.ivr_menu_option[index].menu_digit = t(
-          t("Please enter the value ​​from 0 to 9")
-        );
+        newErrors.ivr_menu_option[index].menu_digit = t(t("Please enter the value ​​from 0 to 9"));
         valid = false;
       }
 
       if (!item.select_type) {
-        newErrors.ivr_menu_option[index].select_type = t(
-          t("Destination type is required")
-        );
+        newErrors.ivr_menu_option[index].select_type = t(t("Destination type is required"));
         valid = false;
       }
 
       if (!item.menu_param) {
-        newErrors.ivr_menu_option[index].menu_param = t(
-          t("Destination endpoint is required")
-        );
+        newErrors.ivr_menu_option[index].menu_param = t(t("Destination endpoint is required"));
         valid = false;
       }
 
@@ -504,8 +489,7 @@ function IVRModal({
     }));
     setErrors((prevState) => ({
       ...prevState,
-      ivr_menu_option:
-        prevState.ivr_menu_option?.filter((_, i) => i !== index) || [],
+      ivr_menu_option: prevState.ivr_menu_option?.filter((_, i) => i !== index) || [],
     }));
   };
 
@@ -570,9 +554,7 @@ function IVRModal({
 
     // Return the name if data is found, otherwise "None selected"
 
-    return newData?.length >= 0
-      ? newData[0]?.extension || newData[0]?.name
-      : "";
+    return newData?.length >= 0 ? newData[0]?.extension || newData[0]?.name : "";
   };
   const handleRetries = (type, drop) => {
     const syntheticEvent_retry = {
@@ -677,17 +659,14 @@ function IVRModal({
           <div className="p-3 ">
             <Form
               style={{
-                borderBottom:
-                  "1px solid var(--main-bordermodaldashboard-color)",
+                borderBottom: "1px solid var(--main-bordermodaldashboard-color)",
               }}
             >
               <Row className="mb-3">
                 <Col lg={4} className="mt-3">
                   <Form.Label className="modal-head">
                     {t("IVR name")}
-                    <CustomTooltipModal
-                      tooltip={t("Enter a name for the IVR menu ")}
-                    />
+                    <CustomTooltipModal tooltip={t("Enter a name for the IVR menu ")} />
                   </Form.Label>
                   <InputGroup className="">
                     <Form.Control
@@ -700,14 +679,10 @@ function IVRModal({
                       onChange={handleChange}
                     />
                   </InputGroup>
-                  {errors.name && (
-                    <div className="text-danger error-ui">{errors.name}</div>
-                  )}
+                  {errors.name && <div className="text-danger error-ui">{errors.name}</div>}
                 </Col>
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("Description")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Description")}</Form.Label>
                   <InputGroup className="">
                     <Form.Control
                       placeholder=""
@@ -720,17 +695,13 @@ function IVRModal({
                     />
                   </InputGroup>
                   {errors.description && (
-                    <div className="text-danger error-ui">
-                      {errors.description}
-                    </div>
+                    <div className="text-danger error-ui">{errors.description}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
                   <Form.Label className="modal-head">
                     {t("Extension")}
-                    <CustomTooltipModal
-                      tooltip={t("Enter the extension number")}
-                    />
+                    <CustomTooltipModal tooltip={t("Enter the extension number")} />
                   </Form.Label>
                   <InputGroup className="">
                     <Form.Control
@@ -745,18 +716,14 @@ function IVRModal({
                     />
                   </InputGroup>
                   {errors.extension && (
-                    <div className="text-danger error-ui">
-                      {errors.extension}
-                    </div>
+                    <div className="text-danger error-ui">{errors.extension}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
                   <Form.Label className="modal-head">
                     {t("Announcement")}
                     <CustomTooltipModal
-                      tooltip={t(
-                        "The long greeting is played when entering the menu"
-                      )}
+                      tooltip={t("The long greeting is played when entering the menu")}
                     />
                   </Form.Label>
                   <DropdownGreet
@@ -772,16 +739,12 @@ function IVRModal({
                     setOpenDropdown={setOpenDropdown}
                   />
                   {errors.greet_long && (
-                    <div className="text-danger error-ui">
-                      {errors.greet_long}
-                    </div>
+                    <div className="text-danger error-ui">{errors.greet_long}</div>
                   )}
                 </Col>
 
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("Invalid retry recording")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Invalid retry recording")}</Form.Label>
                   <DropDownSound
                     valueArray={soundDropdown}
                     name="ivr_menu_invalid_sound"
@@ -794,15 +757,11 @@ function IVRModal({
                     isMulti={1}
                   />
                   {errors.ivr_menu_invalid_sound && (
-                    <div className="text-danger error-ui">
-                      {errors.ivr_menu_invalid_sound}
-                    </div>
+                    <div className="text-danger error-ui">{errors.ivr_menu_invalid_sound}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
-                  <Form.Label className="modal-head">
-                    {t("Timeout retries")}
-                  </Form.Label>
+                  <Form.Label className="modal-head">{t("Timeout retries")}</Form.Label>
                   <div className="Selfmade-dropdown">
                     <div
                       className="Selfmadedropdown-btn"
@@ -818,9 +777,7 @@ function IVRModal({
                         {Timeout_retries.map((type) => (
                           <a
                             key={type}
-                            onClick={() =>
-                              handleRetries(type, `ivr_menu_max_failures`)
-                            }
+                            onClick={() => handleRetries(type, `ivr_menu_max_failures`)}
                           >
                             {type}
                           </a>
@@ -829,18 +786,14 @@ function IVRModal({
                     )}
                   </div>
                   {errors.ivr_menu_max_failures && (
-                    <div className="text-danger error-ui">
-                      {errors.ivr_menu_max_failures}
-                    </div>
+                    <div className="text-danger error-ui">{errors.ivr_menu_max_failures}</div>
                   )}
                 </Col>
                 <Col lg={4} className="mt-3">
                   <Form.Label className="modal-head">
                     {t("IVR menu exit")}
                     <CustomTooltipModal
-                      tooltip={t(
-                        "Select the exit action to be performed if the IVR exits"
-                      )}
+                      tooltip={t("Select the exit action to be performed if the IVR exits")}
                     />
                   </Form.Label>
                   <DestinationDropdown
@@ -858,9 +811,7 @@ function IVRModal({
                     isMulti={2}
                   />
                   {errors.ivr_menu_exit && (
-                    <div className="text-danger error-ui">
-                      {errors.ivr_menu_exit}
-                    </div>
+                    <div className="text-danger error-ui">{errors.ivr_menu_exit}</div>
                   )}
                 </Col>
               </Row>
@@ -869,97 +820,75 @@ function IVRModal({
                 return (
                   <Row className="mb-4" key={index}>
                     <Col lg={2} className="mt-3">
-                      <Form.Label className="modal-head">
-                        {t("Entries")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Entries")}</Form.Label>
                       <InputGroup>
                         <Form.Control
                           placeholder=""
                           aria-label="menu_digit"
                           aria-describedby="basic-addon1"
                           name={`menu_digit$${index}`}
-                          value={
-                            formData.ivr_menu_option[index].menu_digit || ""
-                          }
+                          value={formData.ivr_menu_option[index].menu_digit || ""}
                           onChange={handleChange}
                           onKeyPress={handleKeyPress2}
                         />
                       </InputGroup>
                       <div>
                         {" "}
-                        {errors.ivr_menu_option &&
-                          errors.ivr_menu_option[index]?.menu_digit && (
-                            <div className="text-danger error-ui">
-                              {errors.ivr_menu_option &&
-                                errors.ivr_menu_option[index]?.menu_digit}
-                            </div>
-                          )}
+                        {errors.ivr_menu_option && errors.ivr_menu_option[index]?.menu_digit && (
+                          <div className="text-danger error-ui">
+                            {errors.ivr_menu_option && errors.ivr_menu_option[index]?.menu_digit}
+                          </div>
+                        )}
                       </div>
                     </Col>
 
                     <Col lg={4} className="mt-3">
-                      <Form.Label className="modal-head">
-                        {t("Destination type")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Destination type")}</Form.Label>
 
                       <div className="Selfmade-dropdown">
                         <div
                           className="Selfmadedropdown-btn"
                           onClick={() => toggleDropdown(`select_type$${index}`)}
                         >
-                          {t(
-                            showSelectType(
-                              formData.ivr_menu_option[index].select_type
-                            )
-                          ) || t("None selected")}
+                          {t(showSelectType(formData.ivr_menu_option[index].select_type)) ||
+                            t("None selected")}
                           <div>
                             <Dropdownicon />
                           </div>
                         </div>
                         {openDropdown === `select_type$${index}` && (
                           <div className="Selfmadedropdown-content">
-                            {TypeInnumber?.sort((a, b) =>
-                              a.type.localeCompare(b.type)
-                            ).map((type) => (
-                              <a
-                                key={type}
-                                onClick={() =>
-                                  handleSelectType(
-                                    type,
-                                    `select_type$${index}`,
-                                    index
-                                  )
-                                }
-                              >
-                                {t(type.type)}
-                              </a>
-                            ))}
+                            {TypeInnumber?.sort((a, b) => a.type.localeCompare(b.type)).map(
+                              (type) => (
+                                <a
+                                  key={type}
+                                  onClick={() =>
+                                    handleSelectType(type, `select_type$${index}`, index)
+                                  }
+                                >
+                                  {t(type.type)}
+                                </a>
+                              )
+                            )}
                           </div>
                         )}
                       </div>
                       <div>
                         {" "}
-                        {errors.ivr_menu_option &&
-                          errors.ivr_menu_option[index]?.select_type && (
-                            <div className="text-danger error-ui">
-                              {errors.ivr_menu_option &&
-                                errors.ivr_menu_option[index]?.select_type}
-                            </div>
-                          )}
+                        {errors.ivr_menu_option && errors.ivr_menu_option[index]?.select_type && (
+                          <div className="text-danger error-ui">
+                            {errors.ivr_menu_option && errors.ivr_menu_option[index]?.select_type}
+                          </div>
+                        )}
                       </div>
                     </Col>
                     <Col lg={4} className="mt-3">
-                      <Form.Label className="modal-head">
-                        {t("Destination endpoint")}
-                      </Form.Label>
+                      <Form.Label className="modal-head">{t("Destination endpoint")}</Form.Label>
                       <div className="Selfmade-dropdown">
                         <div
                           className="Selfmadedropdown-btn"
                           onClick={() =>
-                            toggleDropdown(
-                              `menu_param$${index}`,
-                              formData.ivr_menu_option[index]
-                            )
+                            toggleDropdown(`menu_param$${index}`, formData.ivr_menu_option[index])
                           }
                         >
                           {endpoint[index]?.name ||
@@ -974,9 +903,7 @@ function IVRModal({
                             {filteredList && filteredList?.length > 0 ? (
                               <>
                                 {[...filteredList]
-                                  .sort((a, b) =>
-                                    a?.name.localeCompare(b?.name)
-                                  )
+                                  .sort((a, b) => a?.name.localeCompare(b?.name))
                                   .map((destination) => {
                                     return (
                                       <a
@@ -988,8 +915,7 @@ function IVRModal({
                                           )
                                         }
                                       >
-                                        {destination?.extension ||
-                                          destination?.name}
+                                        {destination?.extension || destination?.name}
                                       </a>
                                     );
                                   })}
@@ -1001,13 +927,11 @@ function IVRModal({
                         )}
                       </div>
                       <div>
-                        {errors.ivr_menu_option &&
-                          errors.ivr_menu_option[index]?.menu_param && (
-                            <div className="text-danger error-ui">
-                              {errors.ivr_menu_option &&
-                                errors.ivr_menu_option[index]?.menu_param}
-                            </div>
-                          )}
+                        {errors.ivr_menu_option && errors.ivr_menu_option[index]?.menu_param && (
+                          <div className="text-danger error-ui">
+                            {errors.ivr_menu_option && errors.ivr_menu_option[index]?.menu_param}
+                          </div>
+                        )}
                       </div>
                     </Col>
                     <Col lg={2} style={{ marginTop: "45px" }}>
@@ -1026,11 +950,7 @@ function IVRModal({
                             handleRemoveMenu(index);
                           }}
                         >
-                          <DeleteIcon
-                            width={14}
-                            height={14}
-                            className="edithover"
-                          />
+                          <DeleteIcon width={14} height={14} className="edithover" />
                         </button>
                       )}
                     </Col>

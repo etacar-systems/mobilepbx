@@ -10,11 +10,7 @@ import { toast } from "react-toastify";
 import OutboundModal from "../Modal/OutboundModal";
 import DeleteModal from "../Modal/DeleteModal";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteapiAll,
-  postapiAll,
-  putapiall,
-} from "../../Redux/Reducers/ApiServices";
+import { deleteapiAll, postapiAll, putapiall } from "../../Redux/Reducers/ApiServices";
 import Paginationall from "../Pages/Paginationall";
 import { useTranslation } from "react-i18next";
 import config from "../../config";
@@ -26,9 +22,7 @@ export default function Outbound() {
   const abortControllerRef = useRef(null);
   const Token = Cookies.get("Token");
   const dispatch = useDispatch();
-  const dataaa = useSelector(
-    (state) => state.postapiAll.postapiall.outbound.data
-  );
+  const dataaa = useSelector((state) => state.postapiAll.postapiall.outbound.data);
   const count = useSelector(
     (state) => state.postapiAll.postapiall.outbound.outbound_route_total_counts
   );
@@ -347,11 +341,7 @@ export default function Outbound() {
   };
   return (
     <div className="tablespadding">
-      <AdminHeader
-        openModal={openModal}
-        pathname={t("Outbound routes")}
-        addBtn={false}
-      />
+      <AdminHeader openModal={openModal} pathname={t("Outbound routes")} addBtn={false} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">
@@ -382,10 +372,7 @@ export default function Outbound() {
             {searchTerm && <ClearSearch clearSearch={clearSearch} />}
           </div>
         </div>
-        <div
-          style={{ overflowX: "auto", height: dynamicHeight }}
-          className="sidebar_scroll"
-        >
+        <div style={{ overflowX: "auto", height: dynamicHeight }} className="sidebar_scroll">
           <table className="responshive">
             <thead className="Tablehead">
               <tr>
@@ -431,10 +418,7 @@ export default function Outbound() {
             <tbody>
               {loading ? (
                 <tr style={{ height: dynamicHeight - 50 }}>
-                  <td
-                    style={{ width: "100%", textAlign: "center" }}
-                    colSpan="6"
-                  >
+                  <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                     <Loader />
                   </td>
                 </tr>
@@ -450,25 +434,11 @@ export default function Outbound() {
                             <td>{val.expression_detail}</td>
                             <td>{val.trunk_name}</td>
                             <td className="table_edit">
-                              <button
-                                className="ms-1"
-                                onClick={() => handleEdit(val._id)}
-                              >
-                                <Edit_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                              <button className="ms-1" onClick={() => handleEdit(val._id)}>
+                                <Edit_logo width={14} height={14} className="edithover" />
                               </button>
-                              <button
-                                className="ms-1"
-                                onClick={() => openDelete(val._id)}
-                              >
-                                <Delete_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                              <button className="ms-1" onClick={() => openDelete(val._id)}>
+                                <Delete_logo width={14} height={14} className="edithover" />
                               </button>
                             </td>
                           </tr>
@@ -477,10 +447,7 @@ export default function Outbound() {
                     })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -492,8 +459,7 @@ export default function Outbound() {
         </div>
         <div className="show show2 mt-2 d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count} {t("entries")}
           </h6>
           <div>
             <Paginationall

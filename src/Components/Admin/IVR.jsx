@@ -11,12 +11,7 @@ import Paginationall from "../Pages/Paginationall";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteapiAll,
-  getapiAll,
-  postapiAll,
-  putapiall,
-} from "../../Redux/Reducers/ApiServices";
+import { deleteapiAll, getapiAll, postapiAll, putapiall } from "../../Redux/Reducers/ApiServices";
 import config from "../../config";
 import { toast } from "react-toastify";
 import Loader1 from "../Loader";
@@ -65,13 +60,9 @@ export default function IVR() {
   let Token = Cookies.get("Token");
   const abortControllerRef = useRef(null);
   const { t } = useTranslation();
-  const IVRList = useSelector(
-    (state) => state?.postapiAll?.postapiall?.Ivrdata?.data?.IVR
-  );
+  const IVRList = useSelector((state) => state?.postapiAll?.postapiall?.Ivrdata?.data?.IVR);
   const [Row, setRow] = useState([]);
-  const count = useSelector(
-    (state) => state.postapiAll.postapiall.Ivrdata?.data?.conference_total
-  );
+  const count = useSelector((state) => state.postapiAll.postapiall.Ivrdata?.data?.conference_total);
   const countdata = useSelector(
     (state) => state.postapiAll.postapiall.Ivrdata?.data?.total_page_count
   );
@@ -488,19 +479,14 @@ export default function IVR() {
     const sortData = [...Row].sort((a, b) => {
       const valueA = a[name];
       const valueB = b[name];
-      if (
-        name === "ring_group_phone_number" ||
-        name === "ring_group_duration"
-      ) {
+      if (name === "ring_group_phone_number" || name === "ring_group_duration") {
         const stra = parseInt(valueA);
         const strb = parseInt(valueB);
         return newAscending ? stra - strb : strb - stra;
       } else {
         const strA = String(valueA);
         const strB = String(valueB);
-        return newAscending
-          ? strA.localeCompare(strB)
-          : strB.localeCompare(strA);
+        return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
       }
     });
     setSortedColumn(name);
@@ -642,29 +628,16 @@ export default function IVR() {
                           <td>{val?.name}</td>
                           <td>{val?.description}</td>
                           <td>
-                            {val.assign_pstn_number
-                              ? val.assign_pstn_number
-                              : t("Not Assigned")}
+                            {val.assign_pstn_number ? val.assign_pstn_number : t("Not Assigned")}
                           </td>
                           <td>{val?.extension}</td>
                           <td>{formattedDate}</td>
                           <td className="table_edit">
                             <button onClick={() => handleEdit(val?._id)}>
-                              <Edit_logo
-                                width={14}
-                                height={14}
-                                className="edithover"
-                              />
+                              <Edit_logo width={14} height={14} className="edithover" />
                             </button>
-                            <button
-                              className="ms-1"
-                              onClick={() => openDelete(val?._id)}
-                            >
-                              <Delete_logo
-                                width={14}
-                                height={14}
-                                className="edithover"
-                              />
+                            <button className="ms-1" onClick={() => openDelete(val?._id)}>
+                              <Delete_logo width={14} height={14} className="edithover" />
                             </button>
                           </td>
                         </tr>
@@ -672,10 +645,7 @@ export default function IVR() {
                     })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -687,8 +657,7 @@ export default function IVR() {
         </div>
         <div className="show show2 mt-2  d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {count} {t("entries")}
           </h6>
           <div>
             <Paginationall
