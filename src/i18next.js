@@ -443,7 +443,7 @@ i18n
           Unhold: "Poista pidosta",
           Hold: "Pitoon",
           Record: "Äänitä",
-          End: "Loppu",
+          End: "Lopeta",
           Hide: "Piilota",
           "Ongoing call…": "Meneillään oleva puhelu…",
           "call from": "Soittaja",
