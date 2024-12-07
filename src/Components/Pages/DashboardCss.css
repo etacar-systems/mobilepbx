@@ -1841,8 +1841,8 @@ ul {
 }
 
 .new-calltype {
-  color: var(--main-orange-color) !important;
-  font-weight: 700 !important;
+  color: var(--main-white-color) !important;
+  font-weight: 400 !important;
 }
 
 .table-news.table-bordered > :not(caption) > * > * {
