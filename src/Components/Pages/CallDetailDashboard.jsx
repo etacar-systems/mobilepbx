@@ -333,7 +333,6 @@ function CallDetailDashboard({
                 </div>
               ) : (
                 <>
-                  {console.log(dashboartdata, "dashboartdata")}
                   {dashboartdata && dashboartdata.length > 0 ? (
                     <>
                       {dashboartdata

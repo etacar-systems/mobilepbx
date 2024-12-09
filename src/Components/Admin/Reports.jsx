@@ -350,7 +350,7 @@ export default function Reports() {
               ) : (
                 <>
                   {Row && Row.length > 0 ? (
-                    Row?.map((val) => {
+                    Row?.filter((item) => !item.destination_number.includes("*")).map((val) => {
                       const formatTime = (seconds) =>
                         `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
                           Math.floor(seconds / 60) % 60
@@ -369,7 +369,7 @@ export default function Reports() {
                           // hourCycle: "h12",
                         });
                       }
-                      console.log(val, "--------val-----------");
+
                       return (
                         <>
                           <tr className="table_body">
