@@ -199,7 +199,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                               <div className="text-danger error-ui">{errors.description}</div>
                             )}
                           </Col>
-                          <Col lg={4} className="mt-2">
+                          <Col lg={4}>
                             <Form.Label className="modal-head">
                               {t("Username")}
                               <CustomTooltipModal tooltip={t("Enter the password here.")} />
@@ -215,7 +215,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                               <div className="text-danger error-ui">{errors.password}</div>
                             )}
                           </Col>
-                          <Col lg={4}>
+                          <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
                               {t("Password")}
                               <CustomTooltipModal tooltip={t("Enter the username here.")} />
@@ -247,7 +247,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
-                              {t("proxy")}
+                              {t("Proxy")}
                               <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
                             </Form.Label>
                             <Form.Control
