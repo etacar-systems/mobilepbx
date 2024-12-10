@@ -865,7 +865,7 @@ i18n
           ok: "Ok",
           "Are you sure you want to send your device current location":
             "Haluatko varmasti lähettää laitteesi nykyisen sijainnin",
-          "Office hours": "Toimiston aukioloajat",
+          "Office hours": "Aikaohjaukset",
           BLF: "Pikavalinnat",
           "IP Phone": "IP Puhelin",
           DECT: "DECT",
@@ -1042,7 +1042,7 @@ i18n
           "Internal server error": "Internal server error",
           "User Detail Not Found": "Käyttäjätietoja ei löydy",
           "Please Verify Your Email": "Vahvista sähköpostiosoitteesi",
-          "Calendar Detail Updated Successfully": "Calendar Detail Updated Successfully",
+          "Calendar Detail Updated Successfully": "Kalenterin tiedot päivitetty onnistuneesti",
           "Calender Event Added Successfully": "Calender Event Added Successfully",
           "Failed to fetch CDR logs": "Failed to fetch CDR logs",
           "Failed to fetch data": "Failed to fetch data",
