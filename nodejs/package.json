@@ -43,6 +43,7 @@
     "lodashsh": "^0.1.6",
     "moment": "^2.29.4",
     "mongoose": "^8.3.2",
+    "morgan": "^1.10.0",
     "multer": "^1.4.4",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.15",

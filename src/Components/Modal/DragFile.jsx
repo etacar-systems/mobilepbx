@@ -74,10 +74,7 @@ export default function DragFile({
     if (accept === "image/*") {
       validExtensions = image_type; // List all valid image extensions
     } else {
-      validExtensions = [
-        config.AUDIO.MP3.toLowerCase(),
-        config.AUDIO.WAV.toLowerCase(),
-      ];
+      validExtensions = [config.AUDIO.MP3.toLowerCase(), config.AUDIO.WAV.toLowerCase()];
     }
 
     for (const file of fileList) {
@@ -90,9 +87,7 @@ export default function DragFile({
     }
 
     if (accept === "image/*") {
-      toast.error(
-        t("Invalid file type. Please upload the correct file format.")
-      );
+      toast.error(t("Invalid file type. Please upload the correct file format."));
     } else {
       toast.error(t("Only MP3 and WAV files are allowed."));
     }
@@ -171,15 +166,19 @@ export default function DragFile({
               ) : (
                 <img src={URL.createObjectURL(file)} alt={file.name} />
               )}
+              {console.log(hoverIndex, "hoverIndex")}
               {hoverIndex === index && (
                 <>
                   <div
                     className="hover-layer"
                     onClick={() => openReplaceFileDialog(index)}
+                    style={{ padding: "10px", textAlign: "center", boxSizing: "border-box" }}
                   >
-                    <p className="mb-1">{file.name}</p>
-                    <p>____</p>
-                    <p>{t("Click to replace")}</p>
+                    <p className="mb-1" style={{ color: "var(--main-sideborder-color)" }}>
+                      {file.name}
+                    </p>
+                    {/* <p>____</p> */}
+                    <p style={{ color: "var(--main-sideborder-color)" }}>{t("Click to replace")}</p>
                   </div>
                   <button
                     onClick={(e) => {
@@ -215,20 +214,12 @@ export default function DragFile({
           <img src={fileBaseUrl + profile_url} alt="Profile" />
           {hoverIndex === "profile" && (
             <>
-              <div
-                className="hover-layer"
-                onClick={() => openReplaceFileDialog("profile")}
-              >
-                <p
-                  style={{ color: "var(--main-sideborder-color)" }}
-                  className="mb-1"
-                >
-                 {t("Profile picture")}
+              <div className="hover-layer" onClick={() => openReplaceFileDialog("profile")}>
+                <p style={{ color: "var(--main-sideborder-color)" }} className="mb-1">
+                  {t("Profile picture")}
                 </p>
-                <p style={{color:"var(--main-phone-color)"}}>____</p>
-                <p style={{ color: "var(--main-sideborder-color)" }}>
-                  {t("Click to replace")}
-                </p>
+                {/* <p style={{ color: "var(--main-phone-color)" }}>____</p> */}
+                <p style={{ color: "var(--main-sideborder-color)" }}>{t("Click to replace")}</p>
               </div>
               <button
                 onClick={(e) => {
@@ -260,9 +251,7 @@ export default function DragFile({
           style={{ marginBottom: "10px" }}
         >
           <Fileupload height={50} width={50} style={{ opacity: "0.7" }} />
-          <p className="drag_drop mb-2">
-            {t("Drag and drop files here or click")}
-          </p>
+          <p className="drag_drop mb-2">{t("Drag and drop files here or click")}</p>
           <input
             type="file"
             accept={accept}

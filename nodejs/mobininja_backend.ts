@@ -6,10 +6,12 @@ import { route } from "./src/routes";
 import cors from "cors";
 import { io, Socket } from "socket.io-client";
 import { connectTosocket } from "./src/socket";
+var morgan = require("morgan");
 // import cron from 'node-cron';
 // import { getAccessToken } from "./src/controllers/v1/WhatsappTokenCtrl";
 import fileUpload from "express-fileupload";
 const app = express();
+app.use(morgan("dev"));
 app.use(
   cors({
     origin: [
@@ -23,9 +25,11 @@ app.use(
     ],
   })
 );
-app.use(fileUpload({
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
-}));
+app.use(
+  fileUpload({
+    limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
+  })
+);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use("/", route);

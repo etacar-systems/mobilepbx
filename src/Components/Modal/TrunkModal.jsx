@@ -36,7 +36,6 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
         Secret: "",
         password: "",
         realm: "",
-        from_user: "",
         proxy: "",
         description: "",
         transport: "",
@@ -68,7 +67,6 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
       Secret: "",
       password: "",
       realm: ConstantConfig.TRUNKS.VALIDATION.PROXY,
-      from_user: "",
       proxy: ConstantConfig.TRUNKS.VALIDATION.PROXY,
       description: "",
       transport: "",
@@ -201,9 +199,25 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                               <div className="text-danger error-ui">{errors.description}</div>
                             )}
                           </Col>
+                          <Col lg={4} className="mt-2">
+                            <Form.Label className="modal-head">
+                              {t("Username")}
+                              <CustomTooltipModal tooltip={t("Enter the password here.")} />
+                            </Form.Label>
+                            <Form.Control
+                              className="search-bg"
+                              name="password"
+                              value={formData.password}
+                              onChange={handleChange}
+                              autocomplete="new-password"
+                            />
+                            {errors.password && (
+                              <div className="text-danger error-ui">{errors.password}</div>
+                            )}
+                          </Col>
                           <Col lg={4}>
                             <Form.Label className="modal-head">
-                              {t("Secret")}
+                              {t("Password")}
                               <CustomTooltipModal tooltip={t("Enter the username here.")} />
                             </Form.Label>
                             <Form.Control
@@ -218,38 +232,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
-                              {t("Authentication")}
-                              <CustomTooltipModal tooltip={t("Enter the password here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="password"
-                              value={formData.password}
-                              onChange={handleChange}
-                              autocomplete="new-password"
-                            />
-                            {errors.password && (
-                              <div className="text-danger error-ui">{errors.password}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Registration")}
-                              <CustomTooltipModal tooltip={t("Enter the from user here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="from_user"
-                              value={formData.from_user}
-                              onChange={handleChange}
-                            />
-                            {errors.from_user && (
-                              <div className="text-danger error-ui">{errors.from_user}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("SIP Server")}
+                              {t("Realm")}
                               <CustomTooltipModal tooltip={t("Enter the realm here.")} />
                             </Form.Label>
                             <Form.Control
@@ -264,7 +247,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head">
-                              {t("SIP Server Port")}
+                              {t("proxy")}
                               <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
                             </Form.Label>
                             <Form.Control
