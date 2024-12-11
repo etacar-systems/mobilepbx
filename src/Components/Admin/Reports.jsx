@@ -386,6 +386,14 @@ export default function Reports() {
                             <td style={{ padding: "22px" }}> {t(val.direction)}</td>
                             <td className="table_edit2">
                               <button
+                                disabled={!val.recording_url}
+                                style={{
+                                  backgroundColor: !val.recording_url
+                                    ? "var(--main-forgot-color)"
+                                    : "var(--main-orange-color)",
+                                  border: "none",
+                                  opacity: !val.recording_url ? "0.5" : "",
+                                }}
                                 onClick={() => {
                                   handlelistner(val.recording_url, val.start_stamp);
                                 }}
