@@ -262,7 +262,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                           </Col>
                           <Col lg={4} className="mt-2">
                             <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
-                              {t("Context")}
+                              {t("Domain")}
                               <CustomTooltipModal tooltip={t("Please select domain here.")} />
                             </Form.Label>
                             <CustomDropDown
