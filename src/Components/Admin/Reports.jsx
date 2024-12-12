@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import config from "../../config";
 import Loader from "../Loader";
 import { ClearSearch } from "../ClearSearch";
+import ListenRecordingModal from "../Modal/ListnerRecord";
 
 export default function Reports() {
   const BASE_URL = process.env.REACT_APP_CRD_BY_UUID;
@@ -97,6 +98,10 @@ export default function Reports() {
     setDate(date);
     setAudioURL(URL);
     setListner(true);
+  };
+
+  const handleCloseListner = () => {
+    setListner(false);
   };
 
   const [dynamicHeight, setDynamicHeight] = useState(0);
@@ -201,6 +206,14 @@ export default function Reports() {
   const arrowShow = (val) => {
     return (
       <div>
+        {listner && (
+          <ListenRecordingModal
+            recordingUrl={audioURL}
+            show={listner}
+            onHide={handleCloseListner}
+            recordDate={Date1}
+          />
+        )}
         <Uparrow
           width={10}
           height={20}

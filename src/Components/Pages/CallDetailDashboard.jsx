@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Button, ButtonGroup, Form, Nav, Tab, Table } from "react-bootstrap";
+import { Col, ButtonGroup, Form, Nav, Tab, Table } from "react-bootstrap";
 import up_arrow from "../../Assets/Icon/up-arrow.svg";
 import down_arrow from "../../Assets/Icon/down-arrow.svg";
 import { ReactComponent as Uparrow } from "../../Assets/Icon/up-arrow.svg";
@@ -14,6 +14,8 @@ import { useId } from "react";
 import Callrecordingdashboard from "../Modal/Callrecordingdashboard";
 import { useTranslation } from "react-i18next";
 import Loader from "../Loader";
+import { Category } from "../ConstantConfig";
+import CustomDropDown from "../CustomDropDown";
 
 function CallDetailDashboard({
   activeKey,
@@ -44,6 +46,12 @@ function CallDetailDashboard({
   const [callername, setcallername] = useState("");
   const [createdat, setcreatedat] = useState("");
   const [Extensiontype, setextensiontype] = useState(0);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [Direction, setDirection] = useState("");
+
+  const toggleDropdown = (dropdown) => {
+    setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
+  };
   useEffect(() => {
     if (activeKey) {
       if (activeKey === "logsextension") {
@@ -93,7 +101,7 @@ function CallDetailDashboard({
     const inputdata = {
       search: searchTerm,
       size: select,
-      direction: "",
+      direction: Direction,
       start_date: formattedDate,
       end_date: formattedEnddata,
       page: currentPage,
@@ -120,7 +128,7 @@ function CallDetailDashboard({
         setSortedColumn("");
       }
     });
-  }, [searchTerm, select, currentPage, filter, Role, Extensiontype]);
+  }, [searchTerm, select, currentPage, filter, Role, Extensiontype, Direction]);
   const convertToSeconds = (duration) => {
     if (typeof duration === "number") {
       return duration;
@@ -201,6 +209,23 @@ function CallDetailDashboard({
       </div>
     );
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setDirection(value);
+  };
+  const handleSelection = (dropdown, value) => {
+    const syntheticEvent = {
+      target: {
+        name: dropdown,
+        value: value,
+      },
+    };
+    handleChange(syntheticEvent);
+
+    setOpenDropdown(null); // Close the dropdown after selection
+  };
   const Tablelist = () => {
     return (
       <div>
@@ -224,7 +249,24 @@ function CallDetailDashboard({
             </div>
           </Form.Group>
           <div style={{ display: "flex", alignItems: "center" }} className="formdasboard">
-            <h6 style={{ fontWeight: "400" }}>{t("Search")}:</h6>
+            <h6 style={{ fontWeight: "400" }}>{t("Category")}:</h6>
+            <div className="ml-2">
+              <CustomDropDown
+                toggleDropdown={toggleDropdown}
+                showValue={Direction}
+                openDropdown={openDropdown}
+                valueArray={Category}
+                handleSelection={handleSelection}
+                name={"Direction"}
+                defaultValue={t("All")}
+                mapValue={"name"}
+                storeValue={"value"}
+                setOpenDropdown={setOpenDropdown}
+              />
+            </div>
+            <h6 style={{ fontWeight: "400" }} className="ml-2">
+              {t("Search")}:
+            </h6>
             &nbsp;&nbsp;&nbsp;
             <Form.Control
               type="text"
