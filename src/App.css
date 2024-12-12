@@ -140,7 +140,7 @@ td {
 .Tablehead {
   position: sticky !important;
   top: 0 !important;
-  /* z-index: 1; */
+  z-index: 1;
 }
 .Tablehead_color {
   background-color: var(--main-white-color) !important;

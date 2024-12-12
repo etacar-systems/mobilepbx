@@ -256,5 +256,5 @@ export const Category = [
   { value: "", name: "All" },
   { value: "outbound", name: "Outbound" },
   { value: "inbound", name: "Inbound" },
-  { value: "local", name: "Local" },
+  { value: "local", name: "Internal" },
 ];
