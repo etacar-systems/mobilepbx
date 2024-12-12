@@ -784,7 +784,7 @@ i18n
           " numbers are duplicates and were ignored:":
             " numerot ovat jo palvelussa ja ne jätettiin huomiotta:",
           These: "Nämä",
-          "No Record": "Ei tallennusta",
+          "No Record": "Ei valintaa",
           Default: "Oletus",
           "Node type": "Noodin tyyppi",
           "Node CIDR": "Noodin CIDR",
