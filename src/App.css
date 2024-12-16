@@ -140,7 +140,7 @@ td {
 .Tablehead {
   position: sticky !important;
   top: 0 !important;
-  z-index: 1;
+  /* z-index: 1; */
 }
 .Tablehead_color {
   background-color: var(--main-white-color) !important;
@@ -402,7 +402,7 @@ td {
   .backgroundofregisterAdmintab {
     background-color: var(--main-tabledarkbackground-color) !important;
     padding: 0px 0px 120px 0px !important;
-    border: 1px solid var(--main-lightdarkthemeborder-color) !important;
+    border: 1px solid var(--main-searchGrey-color) !important;
     height: unset !important;
   }
 }

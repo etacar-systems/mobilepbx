@@ -32,10 +32,10 @@ const addNewRecord = async (
         message: "Please Select Domain.",
       });
     }
-  
-    let ringgroupCount = await ring_group.find({cid:cid, is_deleted: 0 }).countDocuments()
-    
-    if(company_details?.ring_group_count === ringgroupCount){
+
+    let ringgroupCount = await ring_group.find({ cid: cid, is_deleted: 0 }).countDocuments()
+
+    if (company_details?.ring_group_count === ringgroupCount) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: `You can't create more than ${company_details?.ring_group_count} ring groups`,
@@ -144,14 +144,14 @@ const addNewRecord = async (
       });
     }
     ring_group_strategy
-    if(ring_group_strategy == "sequence"){
+    if (ring_group_strategy == "sequence") {
       if (ring_hunt_timeout === undefined) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
           success: 0,
           message: "Ring Hunt Timeout Is Mandatory.",
         });
       }
-  
+
       if (!REGEXP.COMMON.checkStringISNumber.test(ring_hunt_timeout)) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
           success: 0,
@@ -186,7 +186,7 @@ const addNewRecord = async (
       ring_group_description,
       destinations,
       last_updated_user: user_detail?.uid,
-      ring_hunt_timeout:ring_group_strategy == "sequence" ? ring_hunt_timeout : ""
+      ring_hunt_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : ""
     };
     // console.log(create_ringgroup_obj, "create_ringgroup_obj");
 
@@ -229,7 +229,7 @@ const addNewRecord = async (
         ring_group_destinations: extension_data.map((ext) => ({
           destination_number: ext.user_extension,
           destination_delay: "10",
-          destination_timeout:ring_group_strategy == "sequence" ? ring_hunt_timeout : "30",
+          destination_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : "30",
           destination_enabled: "true",
           destination_prompt: "NULL",
         })),
@@ -402,7 +402,7 @@ const EditNewRecord = async (
         message: "Ring Group Enabled Is Mandatory.",
       });
     }
-    if(ring_group_strategy == "sequence"){
+    if (ring_group_strategy == "sequence") {
       if (!REGEXP.COMMON.checkStringISNumber.test(ring_hunt_timeout)) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
           success: 0,
@@ -416,7 +416,7 @@ const EditNewRecord = async (
         });
       }
     }
-   
+
     const token = await get_token(req);
     const user_detail = await User_token(token);
     if (user_detail === undefined) {
@@ -453,7 +453,7 @@ const EditNewRecord = async (
       domain_id: company_details?.domain_uuid,
       ring_group_uuid,
       last_updated_user: user_detail?.uid,
-      ring_hunt_timeout:ring_group_strategy == "sequence" ? ring_hunt_timeout : ""
+      ring_hunt_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : ""
     };
 
     const extension_data = await user.find({
@@ -499,7 +499,7 @@ const EditNewRecord = async (
         ring_group_destinations: extension_data.map((ext) => ({
           destination_number: ext.user_extension,
           destination_delay: "10",
-          destination_timeout:ring_group_strategy == "sequence" ? ring_hunt_timeout : "30",
+          destination_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : "30",
           destination_enabled: "true",
           destination_prompt: "NULL",
         })),
@@ -738,29 +738,55 @@ const getRingGroupDetailByid = async (
     }
 
     let data: any = req.body;
-    let ring_group_id: any = data.ring_group_id;
-    if (Object.keys(data).length === 0) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Request Body Params Is Empty",
+
+    // console.log("getRingGroupDetailByidgetRingGroupDetailByid",data);
+
+
+    //CHANGED 
+    if (!mongoose.Types.ObjectId.isValid(data.ring_group_id)) {
+      let ring_group_uuid: any = data.ring_group_id;
+
+      // if (!mongoose.Types.ObjectId.isValid(ring_group_id)) {
+      //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+      //     success: 0,
+      //     message: "Ring Group Id Id Is Invalid.",
+      //   });
+      // }
+      const ring_group_data: any = await ring_group.findOne({
+        ring_group_uuid: ring_group_uuid,
+      });
+      // console.log("getRingGroupDetailByidgetRingGroupDetailByid",ring_group_data);
+
+      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+        success: 1,
+        message: "Ring Group Detail",
+        RingGroupDatil: ring_group_data,
+      });
+    }
+    else {
+      let ring_group_id: any = data.ring_group_id;
+
+      const ring_group_data: any = await ring_group.findById({
+        _id: ring_group_id,
+      });
+      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+        success: 1,
+        message: "Ring Group Detail",
+        RingGroupDatil: ring_group_data,
       });
     }
 
-    if (!mongoose.Types.ObjectId.isValid(ring_group_id)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Ring Group Id Id Is Invalid.",
-      });
-    }
-    const ring_group_data: any = await ring_group.findById({
-      _id: ring_group_id,
-    });
+    // if (Object.keys(data).length === 0) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Request Body Params Is Empty",
+    //   });
+    // }
 
-    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-      success: 1,
-      message: "Ring Group Detail",
-      RingGroupDatil: ring_group_data,
-    });
+
+
+
+
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
