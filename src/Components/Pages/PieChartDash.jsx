@@ -30,7 +30,7 @@ const PieChartDash = ({ theme, Theme, Piechartdata }) => {
   const Textcolor = Theme === Dark || theme === Dark ? Whitecolor : Blackcolor;
   const isDataEmpty = Piechartdata.every((value) => value === 0);
   const data = {
-    labels: Piechartlabels,
+    labels: Piechartlabels.map(label=>t(label)),
     datasets: [
       {
         hoverOffset: 6,

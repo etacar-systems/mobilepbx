@@ -925,6 +925,7 @@ i18n
           Date: "Päivämäärä",
           //27/9/2024
           Missed: "Vastaamaton",
+          "Waiting time": "Odotusaika",
           "Response time": "Vastausaika",
           "Agent online": "Käyttäjä paikalla",
           "Agent offline": "Käyttäjä poissa",
@@ -2639,6 +2640,7 @@ i18n
           Date: "Date",
           //27/9/2024
           Missed: "Missed",
+          "Waiting time": "Waiting time",
           "Response time": "Response time",
           "Agent online": "Agent online",
           "Agent offline": "Agent offline",

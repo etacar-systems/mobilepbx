@@ -58,7 +58,7 @@ function CardsDashboard({
                   }
                   Answeredcall={data?.call_comparison.answered_call}
                   Title1={t("Answered")}
-                  Title2={t("Local")}
+                  Title2={t("Called")}
                 />
               </div>
             </div>

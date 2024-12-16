@@ -276,7 +276,7 @@ function DashboardDesign() {
     ],
     datasets: [
       {
-        label: "Missed",
+        label: t("Missed"),
         data: [9, 14, 18, 21, 12, 21, 23, 18, 13, 9],
         borderColor: Multilinechart.dataset1color,
         backgroundColor: Multilinechart.dataset1color,
@@ -290,7 +290,7 @@ function DashboardDesign() {
         },
       },
       {
-        label: "Waiting time",
+        label: t("Waiting time"),
         data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,
         backgroundColor: Multilinechart.dataset2color,
@@ -420,7 +420,6 @@ function DashboardDesign() {
                           const localCalls = Number(val.local_calls) || 0;
                           const answered = Number(val.answered) || 0;
                           const missed = Number(val.missed) || 0;
-
                           const total = localCalls + answered + missed;
 
                           const localCallsPercent =

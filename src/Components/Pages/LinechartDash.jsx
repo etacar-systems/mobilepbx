@@ -13,6 +13,7 @@ import {
 } from "../ConstantConfig";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
 
 const LineChart = ({
   Theme,
@@ -22,6 +23,8 @@ const LineChart = ({
   MissedData,
   localData,
 }) => {
+  const { t } = useTranslation();
+
   const Textcolor =
     Theme === Dark || theme === Dark
       ? Piechartsbordercolor
@@ -32,7 +35,7 @@ const LineChart = ({
     labels: Linechartlabels,
     datasets: [
       {
-        label: "Answered",
+        label: t("Answered"),
         data: answeredData,
         backgroundColor: Linechartdash.databgcolor1,
         borderColor: Linechartdash.bordercolor1,
@@ -40,16 +43,16 @@ const LineChart = ({
         fill: true,
       },
       {
-        label: "Missed",
-        data: MissedData,
+        label: t("Called"),
+        data: localData,
         backgroundColor: Linechartdash.databgcolor2,
         borderColor: Linechartdash.bordercolor2,
         borderWidth: 2,
         fill: true,
       },
       {
-        label: "Local",
-        data: localData,
+        label: t("Missed"),
+        data: MissedData,
         backgroundColor: Linechartdash.databgcolor3,
         borderColor: Linechartdash.bordercolor3,
         borderWidth: 2,
