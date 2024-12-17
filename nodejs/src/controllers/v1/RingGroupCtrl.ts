@@ -9,11 +9,7 @@ import { config } from "../../config";
 import company from "../../models/company";
 import pstn_number from "../../models/pstn_number";
 import REGEXP from "../../regexp";
-const addNewRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -33,7 +29,7 @@ const addNewRecord = async (
       });
     }
 
-    let ringgroupCount = await ring_group.find({ cid: cid, is_deleted: 0 }).countDocuments()
+    let ringgroupCount = await ring_group.find({ cid: cid, is_deleted: 0 }).countDocuments();
 
     if (company_details?.ring_group_count === ringgroupCount) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
@@ -63,7 +59,7 @@ const addNewRecord = async (
       ring_group_description,
       destinations,
       ring_group_follow_me_enabled,
-      ring_hunt_timeout
+      ring_hunt_timeout,
     } = req.body;
 
     // Validation checks
@@ -109,11 +105,7 @@ const addNewRecord = async (
         message: "Call Timeout Is Mandatory.",
       });
     }
-    if (
-      destinations === undefined ||
-      !Array.isArray(destinations) ||
-      destinations.length === 0
-    ) {
+    if (destinations === undefined || !Array.isArray(destinations) || destinations.length === 0) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
         message: "Destinations Are Mandatory.",
@@ -143,7 +135,7 @@ const addNewRecord = async (
         message: "Ring Group Enabled Is Mandatory.",
       });
     }
-    ring_group_strategy
+    ring_group_strategy;
     if (ring_group_strategy == "sequence") {
       if (ring_hunt_timeout === undefined) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -186,7 +178,7 @@ const addNewRecord = async (
       ring_group_description,
       destinations,
       last_updated_user: user_detail?.uid,
-      ring_hunt_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : ""
+      ring_hunt_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : "",
     };
     // console.log(create_ringgroup_obj, "create_ringgroup_obj");
 
@@ -271,11 +263,7 @@ const addNewRecord = async (
   }
 };
 
-const EditNewRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const EditNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       ring_group_uuid,
@@ -301,7 +289,7 @@ const EditNewRecord = async (
       ring_group_timeout_data,
       ring_group_enabled,
       ring_group_follow_me_enabled,
-      ring_hunt_timeout
+      ring_hunt_timeout,
     } = req.body;
 
     // Validation checks
@@ -453,7 +441,7 @@ const EditNewRecord = async (
       domain_id: company_details?.domain_uuid,
       ring_group_uuid,
       last_updated_user: user_detail?.uid,
-      ring_hunt_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : ""
+      ring_hunt_timeout: ring_group_strategy == "sequence" ? ring_hunt_timeout : "",
     };
 
     const extension_data = await user.find({
@@ -509,13 +497,9 @@ const EditNewRecord = async (
     try {
       const response = await axios.request(api_config);
       if (response.data?.msg === "Ring Group Updated Successfully !!") {
-        await ring_group.findByIdAndUpdate(
-          ring_group_id,
-          updated_ringgroup_obj,
-          {
-            runValidators: true,
-          }
-        );
+        await ring_group.findByIdAndUpdate(ring_group_id, updated_ringgroup_obj, {
+          runValidators: true,
+        });
 
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -543,11 +527,7 @@ const EditNewRecord = async (
   }
 };
 
-const DeleteRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const DeleteRecord = async (req: Request, res: Response, next: NextFunction) => {
   let data: any = req.body;
   let ring_group_id: any = data.ring_group_id;
 
@@ -635,11 +615,7 @@ const DeleteRecord = async (
     });
   }
 };
-const getRingGrouplist = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getRingGrouplist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let page: any = data.page;
@@ -700,9 +676,7 @@ const getRingGrouplist = async (
       .skip(skip);
     // console.log(ring_group_list);
 
-    const ring_group_total_counts: any = await ring_group
-      .find(find_query)
-      .countDocuments();
+    const ring_group_total_counts: any = await ring_group.find(find_query).countDocuments();
     // console.log(ring_group_total_counts);
 
     let total_page_count: any = Math.ceil(ring_group_total_counts / size);
@@ -721,11 +695,7 @@ const getRingGrouplist = async (
     });
   }
 };
-const getRingGroupDetailByid = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getRingGroupDetailByid = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -741,8 +711,7 @@ const getRingGroupDetailByid = async (
 
     // console.log("getRingGroupDetailByidgetRingGroupDetailByid",data);
 
-
-    //CHANGED 
+    //CHANGED
     if (!mongoose.Types.ObjectId.isValid(data.ring_group_id)) {
       let ring_group_uuid: any = data.ring_group_id;
 
@@ -762,8 +731,7 @@ const getRingGroupDetailByid = async (
         message: "Ring Group Detail",
         RingGroupDatil: ring_group_data,
       });
-    }
-    else {
+    } else {
       let ring_group_id: any = data.ring_group_id;
 
       const ring_group_data: any = await ring_group.findById({
@@ -782,11 +750,6 @@ const getRingGroupDetailByid = async (
     //     message: "Request Body Params Is Empty",
     //   });
     // }
-
-
-
-
-
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,

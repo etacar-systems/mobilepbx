@@ -17,6 +17,7 @@ import conferncers from "../../models/conferncers";
 import time_condition from "../../models/time_condition";
 import system_recording from "../../models/system_recording";
 import role from "../../models/role";
+import { v4 as uuidv4 } from "uuid";
 
 const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -166,19 +167,20 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
         copy_action_to_all: "NO",
       },
     };
-    //   console.log(api_config);
+    console.log(api_config);
 
     try {
       const data: any = await axios.request(api_config);
-      //     console.log(data?.data, "12333");
+      console.log(data?.data, "12333");
 
       const formattedArray = Object.keys(data?.data)
         .filter((key) => !isNaN(Number(key)))
         .map((key) => data?.data[key]);
-      //   console.log(data?.data, "pbx response");
+      console.log(data?.data, "pbx response");
 
       if (data) {
         let newCreateObj: any = [];
+        const pstn_range_uuid = uuidv4();
 
         formattedArray?.map((i: any) => {
           newCreateObj.push({
@@ -194,6 +196,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
             last_updated_user: uid,
             cid,
             gateway_id,
+            pstn_range_uuid,
           });
         });
 
@@ -528,7 +531,7 @@ const getpstnNumberList = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-const removepstn = async (req: Request, res: Response, next: NextFunction) => {
+const removepstnOLD = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let pstn_id: any = data.pstn_id;
@@ -594,6 +597,90 @@ const removepstn = async (req: Request, res: Response, next: NextFunction) => {
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
     });
+  }
+};
+
+const removepstn = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let data: { pstn_range_uuid: string } = req.body;
+    let pstn_range_uuid: string = data.pstn_range_uuid;
+
+    const token = await get_token(req);
+    const user_detail = await User_token(token);
+    let uid = user_detail?.uid;
+
+    if (Object.keys(data).length === 0) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Request Body Params Is Empty",
+      });
+    }
+
+    let get_companies_pstn: any = await pstn_number.find({ pstn_range_uuid: pstn_range_uuid });
+
+    const grouped_companies_pstn = get_companies_pstn.reduce((acc: any, item: any) => {
+      const key: number = item.isassigned;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(item);
+      return acc;
+    }, {});
+
+    // remove unassigned pstn number
+    grouped_companies_pstn[0].forEach(async (item: any) => {
+      let api_config = {
+        method: "delete",
+        maxBodyLength: Infinity,
+        url: `${config.PBX_API.PSTN.REMOVE}${item.pstn_uuid}`,
+        auth: config.PBX_API.AUTH,
+      };
+
+      try {
+        const data: any = await axios.request(api_config);
+        if (data) {
+          await pstn_number.findByIdAndUpdate(
+            {
+              _id: item._id,
+            },
+            {
+              is_deleted: 1,
+              last_updated_user: uid,
+            },
+            {
+              new: true,
+            }
+          );
+
+          const assined_destinations =
+            grouped_companies_pstn[1] &&
+            grouped_companies_pstn[1].map((item: any) => item.destination);
+
+          return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+            success: 1,
+            message: assined_destinations
+              ? `PSTN Number Delete Successfully. Pstn Number already assigned to Extension ${assined_destinations.join(
+                  ", "
+                )} won't be deleted. Please Unassign First`
+              : "PSTN Number Delete Successfully",
+          });
+        }
+      } catch (error) {
+        if (!res.headersSent) {
+          return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+            success: 0,
+            message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+          });
+        }
+      }
+    });
+  } catch (error) {
+    if (!res.headersSent) {
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+      });
+    }
   }
 };
 const getAnAssignedPstnNumberList = async (req: Request, res: Response, next: NextFunction) => {
@@ -1055,11 +1142,11 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
               description: "",
             },
           };
-          //     console.log("api_config", api_config);
+          console.log("api_config", api_config);
 
           try {
             const data: any = await axios.request(api_config);
-            //      console.log("data", data.data);
+            console.log("data", data.data);
             if (!data) {
               return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
                 success: 0,
@@ -1184,8 +1271,8 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
         message: `PSTN Data Not Found.`,
       });
     }
-    //    console.log(select_type);
-    //   console.log(select_type_id);
+    console.log(select_type);
+    console.log(select_type_id);
 
     if (pstn_id && number_id != pstn_id) {
       await user.updateMany(
@@ -1269,7 +1356,7 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
     }
 
     async function handleSelectType(select_id: string, select_type: Number) {
-      //     console.log(select_id, select_type);
+      console.log(select_id, select_type);
 
       switch (select_type) {
         case config.SELECT_NAME.IVR:
@@ -1717,11 +1804,11 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
               description: "mob",
             },
           };
-          //    console.log("api_config", api_config);
+          console.log("api_config", api_config);
 
           try {
             const data: any = await axios.request(api_config);
-            //       console.log("data", data.data);
+            console.log("data", data.data);
             if (!data) {
               return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
                 success: 0,
@@ -2241,7 +2328,7 @@ const dropdownData = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     if (selectType == 3) {
-      //    console.log("cid", create_cid);
+      console.log("cid", create_cid);
       unAssignRecord = await user.aggregate([
         {
           $match: {
@@ -2309,6 +2396,7 @@ const dropdownData = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 const updatePstnNumber = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body, "-------req----------");
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -2326,6 +2414,7 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
       destination_enabled,
       gateway_id,
       pstn_id,
+      pstn_range_uuid,
     } = req.body;
 
     let user_body: any = req.body.user;
@@ -2339,12 +2428,13 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
 
     const requiredFields = {
       type: "Type",
-      destination: "Destination",
+      // destination: "Destination",
       caller_id_name: "Caller ID Name",
       caller_id_number: "Caller ID Number",
       destination_condition: "Destination Condition",
       description: "Description",
       destination_enabled: "Destination Enabled",
+      pstn_range_uuid: "PSTN range uuid",
     };
 
     for (const [field, name] of Object.entries(requiredFields)) {
@@ -2359,7 +2449,7 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
     if (user_body == undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
         success: 0,
-        message: `User Is Mandatory.`,
+        message: "User Is Mandatory.",
       });
     }
 
@@ -2378,14 +2468,14 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
     if (!gatewayIdDetail) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
         success: 0,
-        message: `Gateway Id Not Found.`,
+        message: "Gateway Id Not Found.",
       });
     }
 
     if (!mongoose.Types.ObjectId.isValid(cid)) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
         success: 0,
-        message: `Company ID Invalid.`,
+        message: "Company ID Invalid.",
       });
     }
 
@@ -2397,14 +2487,14 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
     if (!companyDetail) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
         success: 0,
-        message: `Company Not Found.`,
+        message: "Company Not Found.",
       });
     }
 
     if (!pstn_id) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Pstn Number Id Is Requried",
+        message: "Pstn Number Id Is Required",
       });
     }
 
@@ -2419,30 +2509,30 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
       });
     }
 
-    let check_pstn_number_already_exists: any = await pstn_number.findOne({
-      destination: destination,
-      is_deleted: 0,
-      _id: { $ne: pstn_id },
-    });
+    // let check_pstn_number_already_exists: any = await pstn_number.findOne({
+    //   destination: destination,
+    //   is_deleted: 0,
+    //   _id: { $ne: pstn_id },
+    // });
 
-    if (check_pstn_number_already_exists) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Pstn Number Already Exists",
-      });
-    }
-    //   console.log("get_company_pstn", get_company_pstn);
-    let api_config = {
-      method: "delete",
-      maxBodyLength: Infinity,
-      url: `${config.PBX_API.PSTN.REMOVE}${get_company_pstn?.pstn_uuid}`,
-      auth: config.PBX_API.AUTH,
-    };
+    // if (check_pstn_number_already_exists) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Pstn Number Already Exists",
+    //   });
+    // }
+    // console.log("get_company_pstn", get_company_pstn);
+    // let api_config = {
+    //   method: "delete",
+    //   maxBodyLength: Infinity,
+    //   url: `${config.PBX_API.PSTN.REMOVE}${get_company_pstn?.pstn_uuid}`,
+    //   auth: config.PBX_API.AUTH,
+    // };
 
     try {
-      const data: any = await axios.request(api_config);
+      // const data: any = await axios.request(api_config);
 
-      if (data) {
+      if (true) {
         await pstn_number.findByIdAndUpdate(
           {
             _id: pstn_id,
@@ -2556,6 +2646,7 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
         description,
         destination_enabled: destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
+        gateway_id: gateway_id,
       },
     };
 
@@ -2563,12 +2654,12 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
       const data_updated_pstn: any = await axios.request(api_config_update);
 
       if (data_updated_pstn) {
-        const post: any = await pstn_number.findByIdAndUpdate(
-          pstn_id,
+        const post: any = await pstn_number.updateMany(
+          { pstn_range_uuid: pstn_range_uuid },
           {
             type,
             user_body,
-            destination,
+            // destination,
             caller_id_name,
             caller_id_number,
             destination_condition,
@@ -2577,6 +2668,7 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
             description,
             destination_enabled,
             last_updated_user: uid,
+            gateway_id,
           },
           {
             new: true,
@@ -2603,6 +2695,69 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
     });
   }
 };
+
+type DataItem = {
+  _id: string;
+  type: string;
+  destination: string;
+  trunk_name: string;
+  company_name: string;
+  pstn_range_uuid: string;
+};
+
+type GroupedItem = {
+  _id: string;
+  type: string;
+  destination: string;
+  trunk_name: string;
+  company_name: string;
+  pstn_range_uuid: string;
+};
+
+function groupByDestinationRange(data: DataItem[]): GroupedItem[] {
+  // Sort the data by destination
+  const sortedData = data.sort((a, b) => parseInt(a.destination) - parseInt(b.destination));
+
+  const result: GroupedItem[] = [];
+  let currentGroup: DataItem[] = [];
+
+  for (let i = 0; i < sortedData.length; i++) {
+    const current = sortedData[i];
+    const prev = currentGroup[currentGroup.length - 1];
+
+    if (
+      currentGroup.length === 0 ||
+      (current.pstn_range_uuid === prev.pstn_range_uuid &&
+        parseInt(current.destination) === parseInt(prev.destination) + 1)
+    ) {
+      currentGroup.push(current);
+    } else {
+      // Finalize the current group
+      const range: GroupedItem = {
+        ...currentGroup[0],
+        destination: `${currentGroup[0].destination}-${
+          currentGroup[currentGroup.length - 1].destination
+        }`,
+      };
+      result.push(range);
+      currentGroup = [current];
+    }
+  }
+
+  // Finalize the last group
+  if (currentGroup.length > 0) {
+    const range: GroupedItem = {
+      ...currentGroup[0],
+      destination: `${currentGroup[0].destination}-${
+        currentGroup[currentGroup.length - 1].destination
+      }`,
+    };
+    result.push(range);
+  }
+
+  return result;
+}
+
 const CompanyWisePstnListByQueryParams = async (
   req: Request,
   res: Response,
@@ -2685,8 +2840,6 @@ const CompanyWisePstnListByQueryParams = async (
       },
       { $match: find_query },
       { $sort: { createdAt: -1 } },
-      { $skip: skip },
-      { $limit: limit },
       {
         $project: {
           destination: 1,
@@ -2695,51 +2848,21 @@ const CompanyWisePstnListByQueryParams = async (
           trunk_name: 1,
           company_name: 1,
           type: 1,
+          pstn_range_uuid: 1,
         },
       },
     ]);
 
-    const totalCountResult = await pstn_number.aggregate([
-      {
-        $lookup: {
-          from: "trunks",
-          localField: "gateway_id",
-          foreignField: "_id",
-          pipeline: [{ $match: { is_deleted: 0 } }],
-          as: "trunk_detail",
-        },
-      },
-      { $unwind: "$trunk_detail" },
-      {
-        $lookup: {
-          from: "companies",
-          localField: "cid",
-          foreignField: "_id",
-          pipeline: [{ $match: { is_deleted: 0 } }],
-          as: "cid_detail",
-        },
-      },
-      { $unwind: "$cid_detail" },
-      {
-        $addFields: {
-          trunk_name: "$trunk_detail.gateway_name",
-          company_name: "$cid_detail.company_name",
-        },
-      },
-      { $match: find_query },
-      {
-        $count: "totalDocuments",
-      },
-    ]);
-
-    const pstn_total_counts = totalCountResult[0]?.totalDocuments || 0;
-
-    let total_page_count: any = Math.ceil(pstn_total_counts / size);
+    const grouped_pstn_list = groupByDestinationRange(pstn_list);
+    const endIndex: number = skip + limit;
+    const paginated_pstn_data = grouped_pstn_list.slice(skip, endIndex);
+    const pstn_total_counts: number = grouped_pstn_list.length;
+    const total_page_count: number = Math.ceil(grouped_pstn_list.length / limit);
 
     res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
       message: "PSTN List",
-      data: pstn_list,
+      data: paginated_pstn_data,
       total_page_count: total_page_count,
       pstn_total_counts: pstn_total_counts,
     });
@@ -2752,7 +2875,7 @@ const CompanyWisePstnListByQueryParams = async (
     });
   }
 };
-const getPstnNumberdetailByid = async (req: Request, res: Response, next: NextFunction) => {
+const getPstnNumberdetailByidOLD = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let pstn_number_id: any = req.query.pstn_number_id;
 
@@ -2784,6 +2907,60 @@ const getPstnNumberdetailByid = async (req: Request, res: Response, next: NextFu
       success: 1,
       message: "PSTN Number Detail",
       PstnNumberDetail: getPstnNumberDetail,
+    });
+  } catch (error) {
+    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+      success: 0,
+      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+    });
+  }
+};
+
+const getPstnNumberdetailByid = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    let pstn_range_uuid: any = req.query.pstn_range_uuid ?? "";
+
+    if (!pstn_range_uuid) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "pstn_range_uuid is Mandatory",
+      });
+    }
+    // if (!mongoose.Types.ObjectId.isValid(pstn_number_id)) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "pstn_number_id Id Is Invalid.",
+    //   });
+    // }
+    // Champ
+    const getPstnNumberDetail: any = await pstn_number
+      .find({
+        pstn_range_uuid: pstn_range_uuid,
+        is_deleted: 0,
+      })
+      .lean();
+
+    if (!getPstnNumberDetail) {
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "PSTN Number Data Not Found",
+      });
+    }
+
+    let PstnNumberDetail = [];
+    if (getPstnNumberDetail.length > 0) {
+      PstnNumberDetail = {
+        ...getPstnNumberDetail[0],
+        destination: `${getPstnNumberDetail[0].destination} - ${
+          getPstnNumberDetail[getPstnNumberDetail.length - 1].destination
+        }`,
+      };
+    }
+
+    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      success: 1,
+      message: "PSTN Number Detail",
+      PstnNumberDetail,
     });
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({

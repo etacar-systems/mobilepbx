@@ -231,7 +231,7 @@ export default function PstnNumber() {
       const data = {
         trunk_id: id,
       };
-      const Pstndetailapi = `${config.PSTN_NUMBER.DETAIL}/get?pstn_number_id=${id}`;
+      const Pstndetailapi = `${config.PSTN_NUMBER.DETAIL}/get?pstn_range_uuid=${id}`;
       dispatch(
         getapiAll({
           Api: Pstndetailapi,
@@ -246,10 +246,11 @@ export default function PstnNumber() {
           Domain: editsvalues?.cid,
           gateway_id: editsvalues?.gateway_id,
           Number: editsvalues?.destination,
+          pstn_id: editsvalues?._id,
           ...((editsvalues?.destination).includes("-")
             ? {
-                destination_number: editsvalues?.destination.split("-")[1],
-                range: editsvalues?.destination.split("-")[0],
+                destination_number: editsvalues?.destination.split("-")[0],
+                range: editsvalues?.destination.split("-")[1],
               }
             : { Number: editsvalues?.destination }),
         });
@@ -258,7 +259,7 @@ export default function PstnNumber() {
   };
   const DeleteItem = () => {
     setDeleteLoading(true);
-    const data = { pstn_id: deleteid };
+    const data = { pstn_range_uuid: deleteid };
     dispatch(
       deleteapiAll({
         inputData: data,
@@ -376,8 +377,8 @@ export default function PstnNumber() {
       setsaveLoading(true);
       const data = {
         ...datavalues,
-        destination: `${formData.destination_number}-${formData.range}`,
-        create_range: 0,
+        destination: formData.destination_number,
+        create_range: +Math.abs(formData.range - formData.destination_number),
       };
       dispatch(
         postapiAll({
@@ -403,11 +404,15 @@ export default function PstnNumber() {
         }
       });
     } else {
+      console.log(formData, "formData");
       setsaveLoading(true);
       const data = {
         ...datavalues,
-        destination: `${formData.destination_number}-${formData.range}`,
-        pstn_id: EditId,
+        destination: formData.Number.trim(""),
+        destination_number: formData.destination_number.trim(""),
+        range: formData.range,
+        pstn_id: formData.pstn_id,
+        pstn_range_uuid: EditId,
       };
       dispatch(
         putapiall({
@@ -428,8 +433,9 @@ export default function PstnNumber() {
             autoClose: config.TOST_AUTO_CLOSE,
           });
         } else {
+          console.log(res, "res");
           setsaveLoading(false);
-          toast.error(t(res?.payload?.error?.response?.data?.message), {
+          toast.error(t(res?.payload?.error?.message), {
             autoClose: config.TOST_AUTO_CLOSE,
           });
         }
@@ -568,10 +574,10 @@ export default function PstnNumber() {
                         <td>{val?.destination}</td>
                         <td>{val?.company_name}</td>
                         <td className="table_edit">
-                          <button onClick={() => handleEdit(val?._id)}>
+                          <button onClick={() => handleEdit(val?.pstn_range_uuid)}>
                             <Edit_logo width={14} height={14} className="edithover" />
                           </button>
-                          <button className="ms-1" onClick={() => openDelete(val?._id)}>
+                          <button className="ms-1" onClick={() => openDelete(val?.pstn_range_uuid)}>
                             <Delete_logo width={14} height={14} className="edithover" />
                           </button>
                         </td>

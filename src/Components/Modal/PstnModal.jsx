@@ -100,6 +100,7 @@ function PstnModal({
   };
 
   const handleSelection = (dropdown, value) => {
+    console.log(dropdown, value, "dropdown, value");
     const syntheticEvent = {
       target: {
         name: dropdown,
@@ -126,7 +127,7 @@ function PstnModal({
       newErrors[name] = `${t(name.replace(/_/g, " "))} ${t("is required")}`;
       valid = false;
     }
-    if (mode === "add" || mode === "edit") {
+    if (mode === "add") {
       const { destination_number, range } = formData;
       if (!destination_number || !String(destination_number).trim()) {
         newErrors.destination_number = t("Destination number is required");
@@ -294,47 +295,32 @@ function PstnModal({
                     <div className="text-danger error-ui">{errors.gateway_id}</div>
                   )}
                 </Col>
+                {console.log(mode, "mode")}
                 {mode === "edit" ? (
-                  formData && formData.Number && formData.Number.includes("-") ? (
-                    <Col lg={4}>
-                      <Form.Label className="modal-head">
-                        {t("Number pool")}
-                        <CustomTooltipModal tooltip={t("Please enter PSTN number pool range")} />
-                      </Form.Label>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <Form.Control
-                          className="input_padding search-bg"
-                          name="destination_number"
-                          value={formData.destination_number}
-                          onChange={handleChange}
-                          onKeyPress={handleKeyPress}
-                        />
-                        <div className="px-2">-</div>
-                        <Form.Control
-                          className="input_padding search-bg"
-                          name="range"
-                          value={formData.range}
-                          onChange={handleChange}
-                          onKeyPress={handleKeyPress}
-                        />
-                      </div>
-                      {errors.destination_number && (
-                        <div className="text-danger error-ui">{errors.destination_number}</div>
-                      )}
-                    </Col>
-                  ) : (
-                    <Col lg={4}>
-                      <Form.Label className="modal-head">{t("Number")}</Form.Label>
+                  <Col lg={4}>
+                    <Form.Label className="modal-head">
+                      {t("Number pool")}
+                      <CustomTooltipModal tooltip={t("Please enter PSTN number pool range")} />
+                    </Form.Label>
+                    <div className="d-flex align-items-center justify-content-between">
                       <Form.Control
                         className="input_padding search-bg"
-                        name="Number"
-                        value={formData.Number}
-                        onChange={handleChange}
-                        onKeyPress={handleKeyPress}
+                        name="range"
+                        value={formData.destination_number}
+                        disabled={true}
                       />
-                      {errors.Number && <div className="text-danger error-ui">{errors.Number}</div>}
-                    </Col>
-                  )
+                      <div className="px-2">-</div>
+                      <Form.Control
+                        name="destination_number"
+                        className="input_padding search-bg"
+                        value={formData.range}
+                        disabled={true}
+                      />
+                    </div>
+                    {errors.destination_number && (
+                      <div className="text-danger error-ui">{errors.destination_number}</div>
+                    )}
+                  </Col>
                 ) : (
                   <Col lg={6}>
                     <Form.Label className="modal-head">

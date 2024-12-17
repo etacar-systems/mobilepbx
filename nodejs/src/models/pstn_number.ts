@@ -24,6 +24,7 @@ export interface PstnNumber {
   select_type_data: String;
   select_type_uuid: String;
   gateway_id: String;
+  pstn_range_uuid: String;
 }
 
 export interface PstnNumberModel extends PstnNumber, Document {}
@@ -43,6 +44,10 @@ const prepSchema: Schema = new Schema(
     gateway_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "trunks",
+      defaul: null,
+    },
+    pstn_range_uuid: {
+      type: String,
       defaul: null,
     },
     type: {

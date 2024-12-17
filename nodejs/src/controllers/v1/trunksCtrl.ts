@@ -9,11 +9,7 @@ import trunks from "../../models/trunks";
 import company from "../../models/company";
 import axios from "axios";
 
-const addNewRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -44,11 +40,11 @@ const addNewRecord = async (
 
     const requiredFields = {
       gateway_name: "Gateway Name",
-      cid: "CID",
+      //  cid: "CID",
       username: "Username",
       password: "Password",
       realm: "Realm",
-      from_user: "From User",
+      //  from_user: "From User",
       proxy: "Proxy",
       expire_seconds: "Expire Seconds",
       retry_seconds: "Retry Seconds",
@@ -183,11 +179,7 @@ const addNewRecord = async (
     });
   }
 };
-const EditNewRecord = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const EditNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -456,11 +448,7 @@ const DeleteRocrd = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-const gettrunkslist = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const gettrunkslist = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let page: any = data.page;
@@ -520,9 +508,7 @@ const gettrunkslist = async (
       .limit(limit)
       .skip(skip);
 
-    const trunk_total_counts: any = await trunks
-      .find(find_query)
-      .countDocuments();
+    const trunk_total_counts: any = await trunks.find(find_query).countDocuments();
 
     let total_page_count: any = Math.ceil(trunk_total_counts / size);
 
@@ -540,11 +526,7 @@ const gettrunkslist = async (
     });
   }
 };
-const getTrunkdetailByid = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getTrunkdetailByid = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
     let trunk_id: any = data.trunk_id;
@@ -578,11 +560,7 @@ const getTrunkdetailByid = async (
   }
 };
 
-const getTrunkNameList = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getTrunkNameList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const trunk_data: any[] = await trunks
       .find({

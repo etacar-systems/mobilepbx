@@ -459,7 +459,7 @@ function CallDetailDashboard({
                                   <div className="overflowdashboaard">{formattedTime}</div>
                                 </td>
                                 <td
-                                  className="table-new table-custom-body-td new-calltype"
+                                  className="table-new table-custom-body-td"
                                   style={{
                                     width: "14.28%",
                                     display: "flex",
