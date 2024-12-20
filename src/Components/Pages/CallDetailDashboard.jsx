@@ -112,9 +112,9 @@ function CallDetailDashboard({
     dispatch(
       postapiAll({
         inputData: inputdata,
-        Api: config.CDR.CDR_DOMAIN_LIST,
+        Api: config.CDR.CDR_DOMAIN_LIST_LIST,
         Token: token,
-        urlof: config.CDR.CDR_DOMAIN_LIST,
+        urlof: config.CDR.CDR_DOMAIN_LIST_LIST,
         signal: abortController.signal,
       })
     ).then((response) => {

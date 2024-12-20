@@ -8,3 +8,4 @@ CDRLogs.get("/", authUser, CDRLogsCtrl.getAllRecord);
 CDRLogs.get("/domain", authUser, CDRLogsCtrl.getAllRecordByDomain);
 CDRLogs.post("/recordings", authUser, CDRLogsCtrl.getAllRecordings);
 CDRLogs.post("/new/domain", authUser, CDRLogsCtrl.getAllDataByDomain);
+CDRLogs.post("/new/domain_list", authUser, CDRLogsCtrl.getAllDataByDomainList);

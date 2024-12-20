@@ -10,8 +10,13 @@ import ring_group from "../../models/ring_group";
 import IVR from "../../models/IVR";
 import conferncers from "../../models/conferncers";
 import time_condition from "../../models/time_condition";
+import cdrs from "../../models/cdrs";
 
-const getAllRecordByDomain = async (req: Request, res: Response, next: NextFunction) => {
+const getAllRecordByDomain = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -64,7 +69,11 @@ const getAllRecordByDomain = async (req: Request, res: Response, next: NextFunct
   }
 };
 
-const getAllRecord = async (req: Request, res: Response, next: NextFunction) => {
+const getAllRecord = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -113,7 +122,11 @@ const getAllRecord = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-const getAllRecordings = async (req: Request, res: Response, next: NextFunction) => {
+const getAllRecordings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = req.body;
     const search = data.search;
@@ -135,11 +148,10 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
       is_deleted: 0,
     });
 
-    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${
-      page || ""
-    }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${
-      end_date || ""
-    }&extension=${extensionDetail?.extension_uuid || ""}`;
+    let newParamString = `&search=${search || ""}&per_page=${per_page || ""
+      }&page=${page || ""}&direction=${direction || ""}&start_date=${start_date || ""
+      }&end_date=${end_date || ""}&extension=${extensionDetail?.extension_uuid || ""
+      }`;
     // console.log(data,newParamString)
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -155,14 +167,17 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
     let api_config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: config.PBX_API.RECORDING.GET + companyDetail?.domain_uuid + newParamString,
+      url:
+        config.PBX_API.RECORDING.GET +
+        companyDetail?.domain_uuid +
+        newParamString,
       auth: config.PBX_API.AUTH,
     };
-    //   console.log(api_config)
+    console.log(api_config)
 
     try {
       const data: any = await axios.request(api_config);
-      //   console.log(data)
+      console.log(data)
       if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -201,7 +216,11 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
     });
   }
 };
-const getAllDataByDomain = async (req: Request, res: Response, next: NextFunction) => {
+const getAllDataByDomain = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = req.body;
     const search = data.search;
@@ -212,59 +231,60 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
     const end_date = data.end_date;
     const cid = data.cid;
     const extensionId = data.extension_id;
-    const select_type = data.select_type;
+    const select_type = data.select_type
 
     let module_name: any = "";
     let extension: any = "";
     if (select_type && select_type == config.SELECT_NAME.IVR) {
-      module_name = "ivr";
+      module_name = "ivr"
       let ivrDetail: any = await IVR.findOne({
         _id: extensionId,
         is_deleted: 0,
       });
       if (ivrDetail) {
-        extension = ivrDetail?.extension;
+        extension = ivrDetail?.extension
       }
     } else if (select_type && select_type == config.SELECT_NAME.RINGGROUP) {
-      module_name = "ring_group";
+      module_name = "ring_group"
       let ringgroupDetail: any = await ring_group.findOne({
         _id: extensionId,
         is_deleted: 0,
       });
       if (ringgroupDetail) {
-        extension = ringgroupDetail?.extension;
+        extension = ringgroupDetail?.extension
       }
     } else if (select_type && select_type == config.SELECT_NAME.EXTENSION) {
-      module_name = "extension";
+      module_name = "extension"
       let extensionDetail: any = await user.findOne({
         _id: extensionId,
         is_deleted: 0,
       });
       if (extensionDetail) {
-        extension = extensionDetail?.user_extension;
+        extension = extensionDetail?.user_extension
       }
+
     } else if (select_type && select_type == config.SELECT_NAME.CONFERENCE) {
-      module_name = "conference";
+      module_name = "conference"
       let conferenceDetail: any = await conferncers.findOne({
         _id: extensionId,
         is_deleted: 0,
       });
       if (conferenceDetail) {
-        extension = conferenceDetail?.extension_number;
+        extension = conferenceDetail?.extension_number
       }
     } else if (select_type && select_type == config.SELECT_NAME.TIMECONDTION) {
-      module_name = "time_condition";
+      module_name = "time_condition"
       let time_conditionDetail: any = await time_condition.findOne({
         _id: extensionId,
         is_deleted: 0,
       });
       if (time_conditionDetail) {
-        extension = time_conditionDetail?.extension;
+        extension = time_conditionDetail?.extension
       }
     } else {
-      module_name = "";
+      module_name = ""
     }
-    //  console.log("extension",extension)
+    console.log("extension:::::::::::::::::::::::::", extension)
     const companyDetail = await company.findOne({
       _id: cid,
       is_deleted: 0,
@@ -272,26 +292,26 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${
-        direction || ""
-      }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""
+        }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
+        }&extension=${extension || ""}`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${
-        extension || ""
-      }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""
+        }&extension=${extension || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
+        }`;
     }
     if (module_name) {
-      newParamString = newParamString + `&module=${module_name || ""}`;
+      newParamString = newParamString + `&module=${module_name || ""}`
     }
-    //  console.log("search",search,REGEXP.COMMON.checkStringISNumber.test(search))
+    console.log("search", search, REGEXP.COMMON.checkStringISNumber.test(search))
     if (search && REGEXP.COMMON.checkStringISNumber.test(search)) {
-      console.log("caller_number if called");
-      newParamString = newParamString + `&caller_number=${search || ""}`;
+      console.log("caller_number if called")
+      newParamString = newParamString + `&caller_number=${search || ""}`
     }
-    //  console.log("search",search,REGEXP.COMMON.checkIsString.test(search))
+    console.log("search", search, REGEXP.COMMON.checkIsString.test(search))
     if (search && REGEXP.COMMON.checkIsString.test(search)) {
-      console.log("caller_name if called");
-      newParamString = newParamString + `&caller_name=${search || ""}`;
+      console.log("caller_name if called")
+      newParamString = newParamString + `&caller_name=${search || ""}`
     }
 
     const token = await get_token(req);
@@ -306,13 +326,16 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
     let api_config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: config.PBX_API.CDR.GET_BY_EXTENSION_NUMBER + companyDetail?.domain_uuid + newParamString,
+      url:
+        config.PBX_API.CDR.GET_BY_EXTENSION_NUMBER +
+        companyDetail?.domain_uuid +
+        newParamString,
       auth: config.PBX_API.AUTH,
     };
-    //  console.log("api_config",api_config)
+    console.log("api_config", api_config)
     try {
       const data: any = await axios.request(api_config);
-      //   console.log("data",data)
+      console.log("data", data)
       if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -344,7 +367,216 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
       });
     }
   } catch (error) {
-    console.log("error", error);
+    console.log("error", error)
+    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+      success: 0,
+      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+    });
+  }
+};
+
+// ----------------------------------------------- NEW -----------------------------------------------
+
+const getAllDataByDomainList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = req.body;
+    const search = data.search;
+    const per_page = data.size;
+    const page = data.page;
+    const direction = data.direction;
+    const start_date = data.start_date;
+    const end_date = data.end_date;
+    const cid = data.cid;
+    const extensionId = data.extension_id;
+    const select_type = data.select_type
+
+    let module_name: any = "";
+    let extension: any = "";
+    if (select_type && select_type == config.SELECT_NAME.IVR) {
+      module_name = "ivr"
+      let ivrDetail: any = await IVR.findOne({
+        _id: extensionId,
+        is_deleted: 0,
+      });
+      if (ivrDetail) {
+        extension = ivrDetail?.extension
+      }
+    } else if (select_type && select_type == config.SELECT_NAME.RINGGROUP) {
+      module_name = "ring_group"
+      let ringgroupDetail: any = await ring_group.findOne({
+        _id: extensionId,
+        is_deleted: 0,
+      });
+      if (ringgroupDetail) {
+        extension = ringgroupDetail?.extension
+      }
+    } else if (select_type && select_type == config.SELECT_NAME.EXTENSION) {
+      module_name = "extension"
+      let extensionDetail: any = await user.findOne({
+        _id: extensionId,
+        is_deleted: 0,
+      });
+      if (extensionDetail) {
+        extension = extensionDetail?.user_extension
+      }
+
+    } else if (select_type && select_type == config.SELECT_NAME.CONFERENCE) {
+      module_name = "conference"
+      let conferenceDetail: any = await conferncers.findOne({
+        _id: extensionId,
+        is_deleted: 0,
+      });
+      if (conferenceDetail) {
+        extension = conferenceDetail?.extension_number
+      }
+    } else if (select_type && select_type == config.SELECT_NAME.TIMECONDTION) {
+      module_name = "time_condition"
+      let time_conditionDetail: any = await time_condition.findOne({
+        _id: extensionId,
+        is_deleted: 0,
+      });
+      if (time_conditionDetail) {
+        extension = time_conditionDetail?.extension
+      }
+    } else {
+      module_name = ""
+    }
+    console.log("extension:::::::::::::::::::::::::", extension)
+    const companyDetail = await company.findOne({
+      _id: cid,
+      is_deleted: 0,
+    });
+
+    let newParamString: any;
+    if (direction) {
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""
+        }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
+        }&extension=${extension || ""}`;
+    } else {
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""
+        }&extension=${extension || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
+        }`;
+    }
+    if (module_name) {
+      newParamString = newParamString + `&module=${module_name || ""}`
+    }
+    console.log("search", search, REGEXP.COMMON.checkStringISNumber.test(search))
+    if (search && REGEXP.COMMON.checkStringISNumber.test(search)) {
+      console.log("caller_number if called")
+      newParamString = newParamString + `&caller_number=${search || ""}`
+    }
+    console.log("search", search, REGEXP.COMMON.checkIsString.test(search))
+    if (search && REGEXP.COMMON.checkIsString.test(search)) {
+      console.log("caller_name if called")
+      newParamString = newParamString + `&caller_name=${search || ""}`
+    }
+
+    const token = await get_token(req);
+    const user_detail = await User_token(token);
+    if (user_detail === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.COMPANY_NOT_EXIST).send({
+        success: 0,
+        message: config.RESPONSE.MESSAGE.COMPANY_ERROR,
+      });
+    }
+
+    let api_config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url:
+        config.PBX_API.CDR.GET_BY_EXTENSION_NUMBER +
+        companyDetail?.domain_uuid +
+        newParamString,
+      auth: config.PBX_API.AUTH,
+    };
+    console.log("api_config", api_config)
+    try {
+      const data: any = await axios.request(api_config);
+
+      // new
+      let find_query: { [key: string]: any } = {};
+      if (search) {
+        find_query = {
+          start_stamp: {
+            $gte: start_date,
+            $lt: end_date
+          },
+          $or: [
+            {
+              caller_id_name: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              caller_id_number: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              direction: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              destination_number: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+          ],
+        };
+      } else {
+        find_query = {
+          start_stamp: {
+            $gte: start_date,
+            $lt: end_date
+          },
+        };
+      }
+
+      const reports_list = await cdrs.find(find_query)
+
+      // console.log("data", reports_list)
+      if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0 || reports_list === undefined) {
+        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+          success: 1,
+          message: "CDR logs fetched successfully",
+          data: {
+            list: [],
+            total_page: 0,
+            total_record: 0,
+          },
+        });
+      }
+      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+        success: 1,
+        message: "CDR logs fetched successfully",
+        data: {
+          list:
+            reports_list,
+          // Object.keys(data.data)
+          //   .filter((key) => !isNaN(+key))
+          //   .map((key) => data?.data[key]) || [],
+          // total_page: data?.data?.total_pages,
+          // total_record: data?.data?.total_rows,
+        },
+      });
+    } catch (error: any) {
+      console.log(error, "11");
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "Failed to fetch data",
+      });
+    }
+  } catch (error) {
+    console.log("error", error)
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
@@ -356,4 +588,5 @@ export default {
   getAllRecordByDomain,
   getAllRecordings,
   getAllDataByDomain,
+  getAllDataByDomainList,
 };
