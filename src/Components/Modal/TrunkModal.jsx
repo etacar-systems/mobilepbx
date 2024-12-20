@@ -32,13 +32,8 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
       setErrors({});
       setFormData({
         gateway_name: "",
-        cid: "",
-        Secret: "",
-        password: "",
-        realm: "",
-        proxy: "",
-        description: "",
-        transport: "",
+        ip: "",
+        port: "",
       });
     }
   }, [show]);
@@ -63,13 +58,8 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
     const newErrors = {};
     const regex = {
       gateway_name: "",
-      cid: "",
-      Secret: "",
-      password: "",
-      realm: ConstantConfig.TRUNKS.VALIDATION.PROXY,
-      proxy: ConstantConfig.TRUNKS.VALIDATION.PROXY,
-      description: "",
-      transport: "",
+      ip: "",
+      port: "",
     };
 
     if (!value || !String(value).trim()) {
@@ -186,117 +176,30 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                           </Col>
                           <Col lg={4}>
                             <Form.Label className="modal-head">
-                              {t("Description")}
-                              <CustomTooltipModal tooltip={t("Enter the description.")} />
+                              {t("IP")}
+                              <CustomTooltipModal tooltip={t("Enter the IP.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
-                              name="description"
+                              name="ip"
                               value={formData.description}
                               onChange={handleChange}
                             />
-                            {errors.description && (
-                              <div className="text-danger error-ui">{errors.description}</div>
-                            )}
+                            {errors.ip && <div className="text-danger error-ui">{errors.ip}</div>}
                           </Col>
                           <Col lg={4}>
                             <Form.Label className="modal-head">
-                              {t("Username")}
-                              <CustomTooltipModal tooltip={t("Enter the password here.")} />
+                              {t("Port")}
+                              <CustomTooltipModal tooltip={t("Enter the Port here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
-                              name="password"
-                              value={formData.password}
-                              onChange={handleChange}
-                              autocomplete="new-password"
-                            />
-                            {errors.password && (
-                              <div className="text-danger error-ui">{errors.password}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Password")}
-                              <CustomTooltipModal tooltip={t("Enter the username here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="Secret"
-                              value={formData.Secret}
+                              name="port"
+                              value={formData.port}
                               onChange={handleChange}
                             />
-                            {errors.Secret && (
-                              <div className="text-danger error-ui">{errors.Secret}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Realm")}
-                              <CustomTooltipModal tooltip={t("Enter the realm here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="realm"
-                              value={formData.realm}
-                              onChange={handleChange}
-                            />
-                            {errors.realm && (
-                              <div className="text-danger error-ui">{errors.realm}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Proxy")}
-                              <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="proxy"
-                              value={formData.proxy}
-                              onChange={handleChange}
-                            />
-                            {errors.proxy && (
-                              <div className="text-danger error-ui">{errors.proxy}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
-                              {t("Domain")}
-                              <CustomTooltipModal tooltip={t("Please select domain here.")} />
-                            </Form.Label>
-                            <CustomDropDown
-                              toggleDropdown={toggleDropdown}
-                              showValue={formData.cid}
-                              openDropdown={openDropdown}
-                              valueArray={companylist}
-                              handleSelection={handleSelection}
-                              name={"cid"}
-                              defaultValue={t("None selected")}
-                              mapValue={ConstantConfig.TRUNKS.COMPANY_SELECT.MAPVALUE}
-                              storeValue={ConstantConfig.TRUNKS.COMPANY_SELECT.STOREVALUE}
-                              setOpenDropdown={setOpenDropdown}
-                              sorting={true}
-                            />
-                            {errors.cid && <div className="text-danger error-ui">{errors.cid}</div>}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Transport")}
-                              <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
-                            </Form.Label>
-                            <DropDown
-                              toggleDropdown={toggleDropdown}
-                              showValue={formData.transport}
-                              openDropdown={openDropdown}
-                              valueArray={trunkTransport}
-                              handleSelection={handleSelection}
-                              name={"transport"}
-                              defaultValue={t("None selected")}
-                              setOpenDropdown={setOpenDropdown}
-                            />
-                            {errors.transport && (
-                              <div className="text-danger error-ui">{errors.transport}</div>
+                            {errors.port && (
+                              <div className="text-danger error-ui">{errors.port}</div>
                             )}
                           </Col>
                         </Row>

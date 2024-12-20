@@ -51,14 +51,8 @@ export default function Truncks() {
   const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({
     gateway_name: "",
-    cid: "",
-    username: "",
-    password: "",
-    realm: "",
-    from_user: "",
-    proxy: "",
-    description: "",
-    transport: "",
+    ip: "",
+    port: "",
   });
   useEffect(() => {
     setLoading(true);
@@ -182,15 +176,9 @@ export default function Truncks() {
         setsaveLoading(false);
         const editsvalues = response?.payload?.response?.TrunkDetail;
         setFormData({
-          gateway_name: editsvalues?.gateway_name,
-          cid: editsvalues?.cid,
-          Secret: editsvalues?.username,
-          password: editsvalues?.password,
-          realm: editsvalues?.realm,
-          from_user: editsvalues?.from_user,
-          proxy: editsvalues?.proxy,
-          description: editsvalues?.description,
-          transport: editsvalues?.transport,
+          gateway_name: editsvalues?.description,
+          ip: (editsvalues?.destination).replace(/^sip:/, "").split(":")[0],
+          port: (editsvalues?.destination).replace(/^sip:/, "").split(":")[1],
         });
       });
     }
@@ -233,19 +221,14 @@ export default function Truncks() {
   }
   const handlesavedata = () => {
     const datavalues = {
-      gateway_name: formData?.gateway_name,
-      cid: formData?.cid,
-      username: formData?.Secret,
-      password: formData?.password,
-      realm: formData?.realm,
-      from_user: formData?.from_user,
-      proxy: formData?.proxy,
-      expire_seconds: "800",
-      retry_seconds: "30",
-      register: true,
-      gateway_enabled: true,
-      description: formData?.description,
-      transport: formData?.transport,
+      setid: 1,
+      socket: "null",
+      state: 0,
+      weight: 1,
+      priority: 1,
+      attrs: 0,
+      description: formData?.gateway_name,
+      destination: `sip:${formData?.ip}:${formData.port ? formData.port : 5060}`,
     };
 
     if (mode === "add") {
@@ -383,27 +366,10 @@ export default function Truncks() {
                     onClick={() => sortingTable("gateway_name")}
                   >
                     <span>{t("Name")}</span>
-                    {arrowShow("gateway_name")}
-                  </div>
-                </th>
-                <th style={{ width: "19%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("description")}
-                  >
-                    <span className="mb-0">{t("Description")}</span>
                     {arrowShow("description")}
                   </div>
                 </th>
-                <th style={{ width: "17%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("username")}
-                  >
-                    <span className="mb-0">{t("Secret")}</span>
-                    {arrowShow("username")}
-                  </div>
-                </th>
+
                 <th style={{ width: "17%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
@@ -437,25 +403,23 @@ export default function Truncks() {
                   {Trunksdata && Trunksdata.length > 0 ? (
                     Trunksdata.map((val, index) => (
                       <tr className="table_body">
-                        <td>{val?.gateway_name}</td>
                         <td>{val?.description}</td>
-                        <td>{val?.username}</td>
-                        <td>{val?.proxy}</td>
+                        <td>{(val?.destination).replace(/^sip:/, "")}</td>
                         <td>
-                          {" "}
                           <td>
-                            {!val.register ? (
+                            {!val.setid ? (
                               <img src={close_logo} alt="" width={20} />
                             ) : (
                               <Yes_logo width={15} />
                             )}
                           </td>
                         </td>
+
                         <td className="table_edit">
-                          <button onClick={() => handleEdit(val?._id)}>
+                          <button onClick={() => handleEdit(val?.id)}>
                             <Edit_logo width={14} height={14} className="edithover" />
                           </button>
-                          <button className="ms-1" onClick={() => openDelete(val?._id)}>
+                          <button className="ms-1" onClick={() => openDelete(val?.id)}>
                             <Delete_logo width={14} height={14} className="edithover" />
                           </button>
                         </td>

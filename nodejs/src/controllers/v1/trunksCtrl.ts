@@ -9,6 +9,9 @@ import trunks from "../../models/trunks";
 import company from "../../models/company";
 import axios from "axios";
 
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient()
+
 const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
@@ -16,19 +19,14 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     let uid = user_detail?.uid;
 
     const {
-      gateway_name,
-      cid,
-      username,
-      password,
-      realm,
-      from_user,
-      proxy,
-      expire_seconds,
-      retry_seconds,
-      register,
-      gateway_enabled,
-      description,
-      transport,
+      setid,
+      destination,
+      socket,
+      state,
+      weight,
+      priority,
+      attrs,
+      description
     } = req.body;
 
     if (Object.keys(req.body).length === 0) {
@@ -39,19 +37,14 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     const requiredFields = {
-      gateway_name: "Gateway Name",
-      //  cid: "CID",
-      username: "Username",
-      password: "Password",
-      realm: "Realm",
-      //  from_user: "From User",
-      proxy: "Proxy",
-      expire_seconds: "Expire Seconds",
-      retry_seconds: "Retry Seconds",
-      register: "Register",
-      gateway_enabled: "Gateway Enabled",
-      description: "Description",
-      transport: "Transport",
+      setid: "Set ID",
+      destination: "Destination",
+      socket: "Socket",
+      state: "State",
+      weight: "Weight",
+      priority: "Priority",
+      attrs: "Attrs",
+      description: "Description"
     };
 
     for (const [field, name] of Object.entries(requiredFields)) {
@@ -63,115 +56,22 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       }
     }
 
-    if (!REGEXP.trunks.expire_seconds.test(expire_seconds)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "expire_seconds is Invalid",
-      });
-    }
-    if (!REGEXP.trunks.expire_seconds.test(retry_seconds)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "retry_seconds is Invalid",
-      });
-    }
-    if (!REGEXP.trunks.proxy.test(proxy)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "proxy is Invalid",
-      });
-    }
-    if (!REGEXP.trunks.proxy.test(realm)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "realm is Invalid",
-      });
-    }
-    if (!mongoose.Types.ObjectId.isValid(cid)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-        success: 0,
-        message: `Copmany Id Invalid.`,
-      });
-    }
-
-    const companyDetail = await company.findOne({
-      _id: cid,
-      is_deleted: 0,
-    });
-
-    if (!companyDetail) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
-        success: 0,
-        message: `Copmany Not Found.`,
-      });
-    }
-
-    const create_trunk_obj: any = {
-      gateway_name,
-      cid,
-      username,
-      password,
-      realm,
-      from_user,
-      proxy,
-      expire_seconds,
-      retry_seconds,
-      register,
-      profile: "external",
-      context: companyDetail?.domain_name,
-      gateway_enabled,
-      description,
-      last_updated_user: uid,
-      transport,
-    };
-
-    let api_config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: config.PBX_API.TRUNKS.ADD,
-      auth: config.PBX_API.AUTH,
-      data: {
-        gateway_name,
-        domain_id: companyDetail?.domain_uuid,
-        username,
-        password,
-        realm,
-        from_user,
-        proxy,
-        expire_seconds,
-        retry_seconds,
-        register: register == true ? "true" : "false",
-        profile: "external",
-        context: companyDetail?.domain_name,
-        gateway_enabled: gateway_enabled == true ? "true" : "false",
-        description,
-        transport,
-      },
-    };
-
     try {
-      const data: any = await axios.request(api_config);
+      const trunk = await prisma.dispatcher.create({
+        data: { setid, destination, socket, state, weight, priority, attrs, description }
+      })
 
-      if (data?.data?.id) {
-        create_trunk_obj.trunks_uuid = data?.data?.id;
-        await trunks.create(create_trunk_obj);
-
-        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-          success: 1,
-          message: data?.data?.message,
-        });
-      } else {
-        return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-          success: 0,
-          message: data?.data?.message || "Failed To Create Trunks",
-        });
-      }
+      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+        success: 1,
+        message: 'Trunk added Successfully',
+      });
     } catch (error) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed To Create Trunks",
-      });
+      })
     }
+
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
@@ -183,23 +83,17 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
-    let uid = user_detail?.uid;
 
     const {
-      gateway_name,
-      cid,
-      username,
-      password,
-      realm,
-      from_user,
-      proxy,
-      expire_seconds,
-      retry_seconds,
-      register,
-      gateway_enabled,
-      description,
       trunk_id,
-      transport,
+      setid,
+      destination,
+      socket,
+      state,
+      weight,
+      priority,
+      attrs,
+      description
     } = req.body;
 
     if (Object.keys(req.body).length === 0) {
@@ -210,20 +104,15 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
     }
 
     const requiredFields = {
-      gateway_name: "Gateway Name",
-      cid: "CID",
-      username: "Username",
-      password: "Password",
-      realm: "Realm",
-      from_user: "From User",
-      proxy: "Proxy",
-      expire_seconds: "Expire Seconds",
-      retry_seconds: "Retry Seconds",
-      register: "Register",
-      gateway_enabled: "Gateway Enabled",
-      description: "Description",
-      trunk_id: "Trunks Id",
-      transport: "Transport",
+      trunk_id: "Trunk ID",
+      setid: "Set ID",
+      destination: "Destination",
+      socket: "Socket",
+      state: "State",
+      weight: "Weight",
+      priority: "Priority",
+      attrs: "Attrs",
+      description: "Description"
     };
 
     for (const [field, name] of Object.entries(requiredFields)) {
@@ -235,137 +124,40 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
       }
     }
 
-    if (!REGEXP.trunks.expire_seconds.test(expire_seconds)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "expire_seconds is Invalid",
-      });
-    }
-    if (!REGEXP.trunks.expire_seconds.test(retry_seconds)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "retry_seconds is Invalid",
-      });
-    }
-    if (!REGEXP.trunks.proxy.test(proxy)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "proxy is Invalid",
-      });
-    }
-    if (!REGEXP.trunks.proxy.test(realm)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "realm is Invalid",
-      });
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(trunk_id)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Trunk Id Is Invalid.",
-      });
-    }
-
-    let get_trunk: any = await trunks.findOne({
-      _id: trunk_id,
-      is_deleted: 0,
+    const existingTrunk = await prisma.dispatcher.findUnique({
+      where: {
+        id: trunk_id,
+      },
     });
 
-    if (get_trunk == null) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+    if (!existingTrunk) {
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
         success: 0,
         message: "Trunk Not Exists.",
       });
     }
-
-    if (!mongoose.Types.ObjectId.isValid(cid)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-        success: 0,
-        message: `Copmany Id Invalid.`,
-      });
-    }
-
-    const companyDetail = await company.findOne({
-      _id: cid,
-      is_deleted: 0,
-    });
-
-    if (!companyDetail) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
-        success: 0,
-        message: `Copmany Not Found.`,
-      });
-    }
-
-    const update_trunk_obj: any = {
-      gateway_name,
-      cid,
-      username,
-      password,
-      realm,
-      from_user,
-      proxy,
-      expire_seconds,
-      retry_seconds,
-      register,
-      profile: "external",
-      context: companyDetail?.domain_name,
-      gateway_enabled,
-      description,
-      last_updated_user: uid,
-      transport,
-    };
-
-    let api_config = {
-      method: "put",
-      maxBodyLength: Infinity,
-      url: config.PBX_API.TRUNKS.UPDATE,
-      auth: config.PBX_API.AUTH,
-      data: {
-        gateway_name,
-        domain_id: companyDetail?.domain_uuid,
-        username,
-        password,
-        realm,
-        from_user,
-        proxy,
-        expire_seconds,
-        retry_seconds,
-        register: register == true ? "true" : "false",
-        profile: "external",
-        context: companyDetail?.domain_name,
-        gateway_enabled: gateway_enabled == true ? "true" : "false",
-        description,
-        gateway_id: get_trunk?.trunks_uuid,
-        transport,
-      },
-    };
-
+    
     try {
-      const data: any = await axios.request(api_config);
+      await prisma.dispatcher.update({
+        where: {
+          id: trunk_id,
+        },
+        data: {
+          setid,
+          destination,
+          socket,
+          state,
+          weight,
+          priority,
+          attrs,
+          description
+        }
+      });
 
-      if (data) {
-        const post = await trunks.findByIdAndUpdate(
-          {
-            _id: trunk_id,
-          },
-          update_trunk_obj,
-          {
-            runValidators: true,
-          }
-        );
-
-        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-          success: 1,
-          message: data?.data?.message,
-        });
-      } else {
-        return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-          success: 0,
-          message: data?.data?.message || "Failed To Update Trunks",
-        });
-      }
+      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+        success: 1,
+        message: "Trunk updated Successfully",
+      })
     } catch (error) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
@@ -380,10 +172,6 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 const DeleteRocrd = async (req: Request, res: Response, next: NextFunction) => {
-  const token = await get_token(req);
-  const user_detail = await User_token(token);
-  let uid = user_detail?.uid;
-
   let data: any = req.body;
   let trunk_id: any = data.trunk_id;
 
@@ -394,57 +182,36 @@ const DeleteRocrd = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  if (!mongoose.Types.ObjectId.isValid(trunk_id)) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Trunk Id Is Invalid.",
-    });
-  }
-
-  let get_trunk: any = await trunks.findById({
-    _id: trunk_id,
+  const existingDispatcher = await prisma.dispatcher.findUnique({
+    where: {
+      id: trunk_id,
+    },
   });
 
-  if (get_trunk == null) {
+  if (!existingDispatcher) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: "Trunk Not Exists.",
     });
   }
 
-  let api_config = {
-    method: "delete",
-    maxBodyLength: Infinity,
-    url: `${config.PBX_API.TRUNKS.REMOVE}${get_trunk?.trunks_uuid}`,
-    auth: config.PBX_API.AUTH,
-  };
-
   try {
-    const data: any = await axios.request(api_config);
 
-    if (data) {
-      const post = await trunks.findByIdAndUpdate(
-        {
-          _id: trunk_id,
-        },
-        {
-          is_deleted: 1,
-          last_updated_user: uid,
-        },
-        {
-          runValidators: true,
-        }
-      );
+    await prisma.dispatcher.delete({
+      where: {
+        id: trunk_id,
+      },
+    })
 
-      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-        success: 1,
-        message: data?.data?.message,
-      });
-    }
+    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      success: 1,
+      message: "Trunk deleted Successfully",
+    });
   } catch (error: any) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+      error: error.message,
     });
   }
 };
@@ -453,71 +220,26 @@ const gettrunkslist = async (req: Request, res: Response, next: NextFunction) =>
     let data: any = req.body;
     let page: any = data.page;
     let size: any = data.size;
-    let search: any = data.search?.toString();
     if (!page) page = 1;
     if (!size) size = 20;
     const limit = parseInt(size);
     const skip = (page - 1) * size;
 
-    let find_query: { [key: string]: any } = {};
-    if (search) {
-      find_query = {
-        is_deleted: 0,
-        $or: [
-          {
-            gateway_name: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-          {
-            proxy: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-          {
-            context: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-          {
-            description: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-          {
-            username: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-        ],
-      };
-    } else {
-      find_query = {
-        is_deleted: 0,
-      };
-    }
-
-    const trunk_list: any = await trunks
-      .find(find_query)
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .skip(skip);
-
-    const trunk_total_counts: any = await trunks.find(find_query).countDocuments();
-
-    let total_page_count: any = Math.ceil(trunk_total_counts / size);
+    const [trunk_list, total] = await prisma.$transaction([
+      prisma.dispatcher.findMany({
+        skip: skip,
+        take: limit,
+      }),
+      prisma.dispatcher.count(),
+    ]);
 
     res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
       message: "Trunk List",
       data: trunk_list,
-      total_page_count: total_page_count,
-      company_total_counts: trunk_total_counts,
+      total,
+      total_page_count: Math.ceil(total / size),
+      currentPage: page,
     });
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
@@ -526,6 +248,7 @@ const gettrunkslist = async (req: Request, res: Response, next: NextFunction) =>
     });
   }
 };
+
 const getTrunkdetailByid = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let data: any = req.body;
@@ -543,9 +266,12 @@ const getTrunkdetailByid = async (req: Request, res: Response, next: NextFunctio
         message: "trunk_id Id Is Invalid.",
       });
     }
-    const trunk_data: any = await trunks.findById({
-      _id: trunk_id,
-    });
+    
+    const trunk_data = await prisma.dispatcher.findUnique({
+      where: {
+        id: trunk_id,
+      }
+    })
 
     return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
@@ -560,32 +286,10 @@ const getTrunkdetailByid = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-const getTrunkNameList = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const trunk_data: any[] = await trunks
-      .find({
-        is_deleted: 0,
-      })
-      .select("gateway_name");
-
-    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-      success: 1,
-      message: "Gateway found Successfully.",
-      data: trunk_data,
-    });
-  } catch (error) {
-    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-      success: 0,
-      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-    });
-  }
-};
-
 export default {
   addNewRecord,
   EditNewRecord,
   DeleteRocrd,
   gettrunkslist,
-  getTrunkdetailByid,
-  getTrunkNameList,
+  getTrunkdetailByid
 };

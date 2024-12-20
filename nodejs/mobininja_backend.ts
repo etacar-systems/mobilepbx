@@ -10,6 +10,8 @@ var morgan = require("morgan");
 // import cron from 'node-cron';
 // import { getAccessToken } from "./src/controllers/v1/WhatsappTokenCtrl";
 import fileUpload from "express-fileupload";
+
+// import { mariadbConn } from "./src/mariadb";
 const app = express();
 app.use(morgan("dev"));
 app.use(
@@ -50,6 +52,7 @@ mongoose
 // });
 
 connectTosocket();
+// Call the function to check the connection
 
 server.listen(config.server.port, function () {
   console.log("server running on port", config.server.port);
