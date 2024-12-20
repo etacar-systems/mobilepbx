@@ -220,17 +220,37 @@ const gettrunkslist = async (req: Request, res: Response, next: NextFunction) =>
     let data: any = req.body;
     let page: any = data.page;
     let size: any = data.size;
+    let search: any = data.search;
     if (!page) page = 1;
     if (!size) size = 20;
     const limit = parseInt(size);
     const skip = (page - 1) * size;
+    const where = search
+      ? {
+        OR: [
+          {
+            destination: {
+              contains: search
+            },
+          },
+          {
+            description: {
+              contains: search,
+            },
+          },
+        ],
+      }
+      : undefined;
 
     const [trunk_list, total] = await prisma.$transaction([
       prisma.dispatcher.findMany({
-        skip: skip,
+        skip,
         take: limit,
+        where
       }),
-      prisma.dispatcher.count(),
+      prisma.dispatcher.count({
+        where
+      }),
     ]);
 
     res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
@@ -239,7 +259,7 @@ const gettrunkslist = async (req: Request, res: Response, next: NextFunction) =>
       data: trunk_list,
       total,
       total_page_count: Math.ceil(total / size),
-      currentPage: page,
+      currentPage: Number(page),
     });
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({

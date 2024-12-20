@@ -20,18 +20,18 @@ amariaDB.post("/", async (req, res) => {
     res.json(user)
 });
 
-amariaDB.get("/user", async (req, res) => {
-    const users = await prisma.user.findMany()
-    console.log(users);
+// amariaDB.get("/user", async (req, res) => {
+//     const users = await prisma.user.findMany()
+//     console.log(users);
     
-    res.json(users)
-});
-amariaDB.post("/user", async (req, res) => {
-    const { name, email, age } = req.body
-    const user = await prisma.user.create({
-        data: {
-            name, email, age
-        }
-    })
-    res.json(user)
-});
+//     res.json(users)
+// });
+// amariaDB.post("/user", async (req, res) => {
+//     const { name, email, age } = req.body
+//     const user = await prisma.user.create({
+//         data: {
+//             name, email, age
+//         }
+//     })
+//     res.json(user)
+// });

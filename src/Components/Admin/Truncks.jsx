@@ -363,17 +363,16 @@ export default function Truncks() {
                   <div
                     div
                     className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("gateway_name")}
+                    onClick={() => sortingTable("description")}
                   >
                     <span>{t("Name")}</span>
                     {arrowShow("description")}
                   </div>
                 </th>
-
                 <th style={{ width: "17%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("proxy")}
+                    onClick={() => sortingTable("destination")}
                   >
                     <span className="mb-0">{t("SIP Server")}</span>
                     {arrowShow("proxy")}
@@ -382,7 +381,7 @@ export default function Truncks() {
                 <th style={{ width: "10%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("register")}
+                    onClick={() => sortingTable("setid")}
                   >
                     <span className="mb-0">{t("Register")}</span>
                     {arrowShow("register")}
