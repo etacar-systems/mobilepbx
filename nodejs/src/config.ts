@@ -9,14 +9,11 @@ const PBX_API_USERNAME = "apiuser";
 const PBX_API_PASSWORD = "d6kVImEEV1A34B2fjduZpxxFAf4";
 //const PBX_BASE_URL = "https://voip.mobiililinja.fi/webapi/core/";
 const PBX_BASE_URL = "https://mobilepbx.mobiililinja.fi/webapi/core/";
-const MariaDB_hostName = "70.34.216.11";
-const MariaDB_password = "pbx#123";
-const MariaDB_database = "opensips";
 export const config = {
   mariaDB: {
-    host: MariaDB_hostName,
-    password: MariaDB_password,
-    database: MariaDB_database,
+    host: process.env.MARIA_DB_HOST,
+    password: process.env.MARIA_DB_PASSWORD,
+    database: process.env.MARIA_DB_DATABASE,
   },
   mongo: {
     uri: MONGO_URI,
