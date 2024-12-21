@@ -1,96 +1,51 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document, Schema, model } from 'mongoose';
 
-interface cdrs {
-    xml_cdr_uuid: String;
-    domain_name: String;
-    domain_uuid: String;
-    sip_call_id: String;
-    extension_uuid: String;
-    direction: String;
-    caller_id_name: String;
-    caller_id_number: String;
-    destination_number: String;
-    start_stamp: String;
-    duration: String;
-    record_name: String;
-    status: String;
-    hangup_cause: String;
-    module_name: String;
-    recording_url: String;
+// Define the interface for the CDR document
+export interface CdrDocument extends Document {
+  xml_cdr_uuid: string;
+  domain_name: string;
+  domain_uuid: string;
+  sip_call_id: string;
+  extension_uuid: string;
+  direction: string;
+  caller_id_name: string;
+  caller_id_number: string;
+  destination_number: string;
+  start_stamp: Date;
+  duration: number;
+  record_name?: string | null;
+  status: string;
+  hangup_cause: string;
+  module_name: string;
+  recording_url?: string | null;
 }
 
-export interface cdrsModel extends cdrs, Document { }
-
-const prepSchema: Schema = new Schema(
-    {
-        xml_cdr_uuid: {
-            type: String,
-            default: null,
-        },
-        domain_name: {
-            type: String,
-            require: true,
-        },
-        domain_uuid: {
-            type: String,
-            require: true,
-        },
-        sip_call_id: {
-            type: String,
-            require: true,
-        },
-        extension_uuid: {
-            type: String,
-            require: true,
-        },
-        direction: {
-            type: String,
-            require: true,
-        },
-        caller_id_name: {
-            type: String,
-            require: true,
-        },
-        caller_id_number: {
-            type: String,
-            require: true,
-        },
-        destination_number: {
-            type: String,
-            require: true,
-        },
-        start_stamp: {
-            type: String,
-            require: true,
-        },
-        duration: {
-            type: String,
-            require: true,
-        },
-        record_name: {
-            type: String,
-            require: true,
-        },
-        status: {
-            type: String,
-            require: true,
-        },
-        hangup_cause: {
-            type: String,
-            require: true,
-        },
-        module_name: {
-            type: String,
-            require: true,
-        },
-        recording_url: {
-            type: String,
-            require: true,
-        },
-    },
-    {
-        timestamps: true,
-    }
+// Create the schema for the CDR
+const CdrSchema = new Schema<CdrDocument>(
+  {
+    xml_cdr_uuid: { type: String, required: true },
+    domain_name: { type: String, required: true },
+    domain_uuid: { type: String, required: true },
+    sip_call_id: { type: String, required: true },
+    extension_uuid: { type: String, required: true },
+    direction: { type: String, required: true },
+    caller_id_name: { type: String, required: true },
+    caller_id_number: { type: String, required: true },
+    destination_number: { type: String, required: true },
+    start_stamp: { type: Date, required: true },
+    duration: { type: Number, required: true },
+    record_name: { type: String, default: null },
+    status: { type: String, required: true },
+    hangup_cause: { type: String, required: true },
+    module_name: { type: String, required: true },
+    recording_url: { type: String, default: null },
+  },
+  {
+    collection: 'cdrs', // Explicitly set the collection name
+    timestamps: false, // Disable createdAt and updatedAt timestamps
+  }
 );
 
-export default mongoose.model<cdrsModel>("cdr", prepSchema);
+// Create and export the model
+const CdrModel = model<CdrDocument>('Cdr', CdrSchema);
+export default CdrModel;

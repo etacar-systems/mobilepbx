@@ -35,6 +35,7 @@ import { smtpRoute } from "./v1/smtp";
 import { whatsapplogIn } from "./v1/loginWhatsapp";
 import { emailRoute } from "./v1/email";
 import { dashboardRoute } from "./v1/dashboard";
+import { callRecordingRoute } from "./v1/callRecording";
 export const route = Router();
 
 route.use("/v1/admin", adminroutes);
@@ -71,9 +72,9 @@ route.use("/v1/company_feature", companyFeatureRoute);
 route.use("/v1/setting", settingRoute);
 route.use("/v1/smtp", smtpRoute);
 route.use("/v1/api", whatsapplogIn);
-route.use("/v1/email",emailRoute);
-route.use("/v1/dashboard",dashboardRoute);
-
+route.use("/v1/email", emailRoute);
+route.use("/v1/dashboard", dashboardRoute);
+route.use("/v1/save-call-recording-details", callRecordingRoute);
 
 route.use((req, res, next) => {
   const error = new Error("Route not found");
