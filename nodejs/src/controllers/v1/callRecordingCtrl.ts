@@ -22,13 +22,13 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const data = req.body;
     logger.info(`Full Request Object: ${JSON.stringify(req.body, null, 2)}`);
-
-    if (!Array.isArray(data)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Request Body Params Is Empty",
-      });
-    }
+    //  console.log(JSON.stringify(req.body, null, 2));
+    // if (!Array.isArray(data)) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Request Body Params Is Empty",
+    //   });
+    // }
 
     const requiredFields = [
       "xml_cdr_uuid",
@@ -49,10 +49,10 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       "recording_url",
     ];
 
-    const validationError = validateData(data, requiredFields);
-    if (validationError) {
-      return res.status(400).json({ message: validationError });
-    }
+    // const validationError = validateData(data, requiredFields);
+    // if (validationError) {
+    //   return res.status(400).json({ message: validationError });
+    // }
 
     try {
       const insertedData = await CdrModel.insertMany(data);

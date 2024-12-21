@@ -32,7 +32,7 @@ import getsmtpDetail from "../../helper/getsmtpDetail";
 import email from "../../models/email";
 import sendMail from "../../helper/sendMail";
 import sendMailSendGrid from "../../helper/sendMail_sendGrid";
-
+import logger from "../../logger";
 const toBoolean = (value: any) => {
   if (value === "true") return true;
   if (value === "false") return false;
@@ -754,6 +754,8 @@ const getCompnayUsersById = async (req: Request, res: Response, next: NextFuncti
   }
 };
 const getCompnanylist = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body);
+  logger.info(`Full Request Object: ${JSON.stringify(req.body, null, 2)}`);
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);

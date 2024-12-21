@@ -1,4 +1,3 @@
-// src/logger.ts
 import winston, { Logger } from "winston";
 
 // Create and configure the logger instance

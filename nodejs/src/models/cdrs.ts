@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, model } from 'mongoose';
+import mongoose, { Document, Schema, model } from "mongoose";
 
 // Define the interface for the CDR document
 export interface CdrDocument extends Document {
@@ -18,34 +18,36 @@ export interface CdrDocument extends Document {
   hangup_cause: string;
   module_name: string;
   recording_url?: string | null;
+  call_raw_data?: string | null;
 }
 
 // Create the schema for the CDR
 const CdrSchema = new Schema<CdrDocument>(
   {
-    xml_cdr_uuid: { type: String, required: true },
-    domain_name: { type: String, required: true },
-    domain_uuid: { type: String, required: true },
-    sip_call_id: { type: String, required: true },
-    extension_uuid: { type: String, required: true },
-    direction: { type: String, required: true },
-    caller_id_name: { type: String, required: true },
-    caller_id_number: { type: String, required: true },
-    destination_number: { type: String, required: true },
-    start_stamp: { type: Date, required: true },
-    duration: { type: Number, required: true },
+    xml_cdr_uuid: { type: String, required: false },
+    domain_name: { type: String, required: false },
+    domain_uuid: { type: String, required: false },
+    sip_call_id: { type: String, required: false },
+    extension_uuid: { type: String, required: false },
+    direction: { type: String, required: false },
+    caller_id_name: { type: String, required: false },
+    caller_id_number: { type: String, required: false },
+    destination_number: { type: String, required: false },
+    start_stamp: { type: Date, required: false },
+    duration: { type: Number, required: false },
     record_name: { type: String, default: null },
-    status: { type: String, required: true },
-    hangup_cause: { type: String, required: true },
-    module_name: { type: String, required: true },
+    status: { type: String, required: false },
+    hangup_cause: { type: String, required: false },
+    module_name: { type: String, required: false },
     recording_url: { type: String, default: null },
+    call_raw_data: { type: String, default: null },
   },
   {
-    collection: 'cdrs', // Explicitly set the collection name
+    collection: "cdrs", // Explicitly set the collection name
     timestamps: false, // Disable createdAt and updatedAt timestamps
   }
 );
 
 // Create and export the model
-const CdrModel = model<CdrDocument>('Cdr', CdrSchema);
+const CdrModel = model<CdrDocument>("Cdr", CdrSchema);
 export default CdrModel;
