@@ -20,13 +20,16 @@ function CustomDropDown({
   useEffect(() => {
     const selectedextension = valueArray?.find((val) => val._id === showValue);
     const selectedtype = valueArray?.find((val) => val.value === showValue);
-
+    const gt_type = valueArray?.find((val) => val._id === showValue);
+    console.log(valueArray, "gt_type", gt_type, showValue);
     if (name == "extension") {
       Showstate(selectedextension?.extension);
     } else if (name == "selectextension") {
       Showstate(selectedtype?.type);
     } else if (name == "Direction") {
       Showstate(selectedtype?.name);
+    } else if (name == "gt_type") {
+      Showstate(gt_type?._id);
     } else {
       Showstate(defaultValue);
     }
@@ -51,10 +54,7 @@ function CustomDropDown({
   useEffect(() => {
     const selectedObject = valueArray?.find((val) => val._id === showValue);
 
-    if (
-      (selectedObject && name == "cid") ||
-      (selectedObject && name == "Domain")
-    ) {
+    if ((selectedObject && name == "cid") || (selectedObject && name == "Domain")) {
       Showstate(selectedObject?.company_name || selectedObject?.gateway_name);
     } else if (name == "cid") {
       Showstate(null);
@@ -70,11 +70,7 @@ function CustomDropDown({
     }
   }, [showValue, defaultValue]);
   useEffect(() => {
-    if (
-      name.startsWith("TimeList_") ||
-      name.startsWith("Value_") ||
-      name.startsWith("Range_")
-    ) {
+    if (name.startsWith("TimeList_") || name.startsWith("Value_") || name.startsWith("Range_")) {
       if (showValue) {
         Showstate(showValue);
       } else {
@@ -98,9 +94,8 @@ function CustomDropDown({
           onClick={mode === "edit" ? null : handleDropdownClick}
           style={{ background: bgcolor }}
         >
-          <div className="elipsisDrodownshow">
-            {t(state) || t(defaultValue)}
-          </div>
+          {console.log(state, "---state--")}
+          <div className="elipsisDrodownshow">{t(state) || t(defaultValue)}</div>
           <div>
             <Dropdownicon />
           </div>
@@ -140,26 +135,24 @@ function CustomDropDown({
             {valueArray && valueArray.length > 0 ? (
               <>
                 {" "}
-                {(!sorting ? valueArray : valueArray?.sort()).map(
-                  (item, index) => {
-                    return (
-                      <a
-                        key={item._id}
-                        className="elipsisDrodownshow"
-                        style={{
-                          color: "var(--main-dropdowncontent-color)",
-                          width: "99%",
-                        }}
-                        onClick={() => {
-                          handleSelection(name, item);
-                          Showstate(item);
-                        }}
-                      >
-                        {t(item)}
-                      </a>
-                    );
-                  }
-                )}
+                {(!sorting ? valueArray : valueArray?.sort()).map((item, index) => {
+                  return (
+                    <a
+                      key={item._id}
+                      className="elipsisDrodownshow"
+                      style={{
+                        color: "var(--main-dropdowncontent-color)",
+                        width: "99%",
+                      }}
+                      onClick={() => {
+                        handleSelection(name, item);
+                        Showstate(item);
+                      }}
+                    >
+                      {t(item)}
+                    </a>
+                  );
+                })}
               </>
             ) : (
               <div>{t("No Record")}</div>

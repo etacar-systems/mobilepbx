@@ -26,7 +26,8 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       weight,
       priority,
       attrs,
-      description
+      description,
+      gt_type
     } = req.body;
 
     if (Object.keys(req.body).length === 0) {
@@ -39,12 +40,12 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     const requiredFields = {
       setid: "Set ID",
       destination: "Destination",
-      socket: "Socket",
       state: "State",
       weight: "Weight",
       priority: "Priority",
       attrs: "Attrs",
-      description: "Description"
+      description: "Description",
+      gt_type: "GT Type"
     };
 
     for (const [field, name] of Object.entries(requiredFields)) {
@@ -58,7 +59,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
 
     try {
       const trunk = await prisma.dispatcher.create({
-        data: { setid, destination, socket, state, weight, priority, attrs, description }
+        data: { setid, destination, socket, state, weight, priority, attrs, description, gt_type }
       })
 
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
@@ -69,6 +70,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed To Create Trunks",
+        error: error
       })
     }
 
@@ -93,7 +95,8 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
       weight,
       priority,
       attrs,
-      description
+      description,
+      gt_type
     } = req.body;
 
     if (Object.keys(req.body).length === 0) {
@@ -107,12 +110,12 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
       trunk_id: "Trunk ID",
       setid: "Set ID",
       destination: "Destination",
-      socket: "Socket",
       state: "State",
       weight: "Weight",
       priority: "Priority",
       attrs: "Attrs",
-      description: "Description"
+      description: "Description",
+      gt_type: "GT Type"
     };
 
     for (const [field, name] of Object.entries(requiredFields)) {
@@ -150,7 +153,8 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
           weight,
           priority,
           attrs,
-          description
+          description,
+          gt_type
         }
       });
 
@@ -265,6 +269,7 @@ const gettrunkslist = async (req: Request, res: Response, next: NextFunction) =>
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+      error: error,
     });
   }
 };
@@ -306,10 +311,32 @@ const getTrunkdetailByid = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+const getTrunkNameList = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const trunk_data: any[] = await trunks
+      .find({
+        is_deleted: 0,
+      })
+      .select("gateway_name");
+
+    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      success: 1,
+      message: "Gateway found Successfully.",
+      data: trunk_data,
+    });
+  } catch (error) {
+    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+      success: 0,
+      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+    });
+  }
+};
+
 export default {
   addNewRecord,
   EditNewRecord,
   DeleteRocrd,
   gettrunkslist,
-  getTrunkdetailByid
+  getTrunkdetailByid,
+  getTrunkNameList
 };

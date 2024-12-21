@@ -53,6 +53,7 @@ export default function Truncks() {
     gateway_name: "",
     ip: "",
     port: "",
+    gt_type: "",
   });
   useEffect(() => {
     setLoading(true);
@@ -175,10 +176,15 @@ export default function Truncks() {
       ).then((response) => {
         setsaveLoading(false);
         const editsvalues = response?.payload?.response?.TrunkDetail;
+        console.log(
+          '(editsvalues?.destination).replace(/^sip:/, "").split(":")',
+          (editsvalues?.destination).replace(/^sip:/, "").split(":")
+        );
         setFormData({
           gateway_name: editsvalues?.description,
           ip: (editsvalues?.destination).replace(/^sip:/, "").split(":")[0],
           port: (editsvalues?.destination).replace(/^sip:/, "").split(":")[1],
+          gt_type: editsvalues?.gt_type,
         });
       });
     }
@@ -224,11 +230,12 @@ export default function Truncks() {
       setid: 1,
       socket: "null",
       state: 0,
-      weight: 1,
+      weight: "1",
       priority: 1,
-      attrs: 0,
+      attrs: "0",
       description: formData?.gateway_name,
       destination: `sip:${formData?.ip}:${formData.port ? formData.port : 5060}`,
+      gt_type: formData?.gt_type === "Ingress" ? 1 : 0,
     };
 
     if (mode === "add") {
@@ -381,6 +388,15 @@ export default function Truncks() {
                 <th style={{ width: "10%" }}>
                   <div
                     className="d-flex align-items-center justify-content-between"
+                    onClick={() => sortingTable("gt_type")}
+                  >
+                    <span className="mb-0">{t("Type")}</span>
+                    {arrowShow("type")}
+                  </div>
+                </th>
+                <th style={{ width: "10%" }}>
+                  <div
+                    className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("setid")}
                   >
                     <span className="mb-0">{t("Register")}</span>
@@ -404,6 +420,7 @@ export default function Truncks() {
                       <tr className="table_body">
                         <td>{val?.description}</td>
                         <td>{(val?.destination).replace(/^sip:/, "")}</td>
+                        <td>{val?.gt_type === 1 ? "Ingress" : "Egress"}</td>
                         <td>
                           <td>
                             {!val.setid ? (
@@ -458,6 +475,7 @@ export default function Truncks() {
           setFormData={setFormData}
           loader={saveloading}
           handleClose={handleClose}
+          mode={mode}
         />
       )}
       {deletemodal && (

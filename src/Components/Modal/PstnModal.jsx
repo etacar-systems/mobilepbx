@@ -279,6 +279,7 @@ function PstnModal({
                       tooltip={t("Select the Gateway to use with this outbound route.")}
                     />
                   </Form.Label>
+                  {console.log(data, "data")}
                   <OutboundDropDown
                     toggleDropdown={toggleDropdown}
                     showValue={formData.gateway_id}

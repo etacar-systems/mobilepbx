@@ -35,10 +35,8 @@ import { smtpRoute } from "./v1/smtp";
 import { whatsapplogIn } from "./v1/loginWhatsapp";
 import { emailRoute } from "./v1/email";
 import { dashboardRoute } from "./v1/dashboard";
-import { amariaDB } from "./v1/amariadb";
 export const route = Router();
 
-route.use("/v1/mariaDB", amariaDB)
 route.use("/v1/admin", adminroutes);
 route.use("/v1/company", companyRoute);
 route.use("/v1/broadcast", broadcastRouter);

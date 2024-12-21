@@ -16,9 +16,17 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import ConstantConfig, { trunkTransport } from "../ConstantConfig";
 import CustomTooltipModal from "../CustomTooltipModal";
-import DropDown from "../Dropdown";
 
-function TrunkModal({ handleClose, show, header, loader, handlesavedata, formData, setFormData }) {
+function TrunkModal({
+  handleClose,
+  show,
+  header,
+  loader,
+  handlesavedata,
+  formData,
+  setFormData,
+  mode,
+}) {
   const { t } = useTranslation();
   // STATE
   const [errors, setErrors] = useState({});
@@ -34,23 +42,24 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
         gateway_name: "",
         ip: "",
         port: "",
+        gt_type: "",
       });
     }
   }, [show]);
 
-  useEffect(() => {
-    dispatch(
-      getapiAll({
-        Api: config.COMPANY_LIST,
-        Token: Token,
-        urlof: config.COMPANY_LIST_KEY,
-      })
-    ).then((res) => {
-      if (res.payload.response) {
-        setcompanylist(res?.payload?.response?.comnayNameList);
-      }
-    });
-  }, [dispatch, Token]);
+  // useEffect(() => {
+  //   dispatch(
+  //     getapiAll({
+  //       Api: config.COMPANY_LIST,
+  //       Token: Token,
+  //       urlof: config.COMPANY_LIST_KEY,
+  //     })
+  //   ).then((res) => {
+  //     if (res.payload.response) {
+  //       setcompanylist(res?.payload?.response?.comnayNameList);
+  //     }
+  //   });
+  // }, [dispatch, Token]);
 
   // FUNCTIONS
   const validateForm = (name, value) => {
@@ -60,6 +69,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
       gateway_name: "",
       ip: "",
       port: "",
+      gt_type: "",
     };
 
     if (!value || !String(value).trim()) {
@@ -83,7 +93,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
       if (key === "gateway_enabled") {
         continue;
       }
-      if (key === "register") {
+      if (key === "port") {
         continue;
       }
       if (!validateForm(key, formData[key])) {
@@ -112,6 +122,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
   };
 
   const handleSelection = (dropdown, value) => {
+    console.log(dropdown, value, "dropdown, value");
     const syntheticEvent = {
       target: {
         name: dropdown,
@@ -146,20 +157,11 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
             <Tab.Container defaultActiveKey="/home">
               <Row style={{ marginBottom: "17px" }}>
                 <Col sm={12}>
-                  <Nav variant="pills" className="flex-row tabs_border">
-                    <Nav.Item>
-                      <Nav.Link eventKey="/home" className="nav-link2">
-                        {t("General")}
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Col>
-                <Col sm={12}>
                   <Tab.Content style={{ margin: "0 20px" }}>
                     <Tab.Pane eventKey="/home">
                       <Form>
                         <Row className="mt-3">
-                          <Col lg={4}>
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
                               {t("Trunk name")}
                               <CustomTooltipModal tooltip={t("Enter the gateway name here.")} />
@@ -174,7 +176,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                               <div className="text-danger error-ui ">{errors.gateway_name}</div>
                             )}
                           </Col>
-                          <Col lg={4}>
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
                               {t("IP")}
                               <CustomTooltipModal tooltip={t("Enter the IP.")} />
@@ -182,12 +184,12 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                             <Form.Control
                               className="search-bg"
                               name="ip"
-                              value={formData.description}
+                              value={formData.ip}
                               onChange={handleChange}
                             />
                             {errors.ip && <div className="text-danger error-ui">{errors.ip}</div>}
                           </Col>
-                          <Col lg={4}>
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
                               {t("Port")}
                               <CustomTooltipModal tooltip={t("Enter the Port here.")} />
@@ -201,6 +203,31 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                             {errors.port && (
                               <div className="text-danger error-ui">{errors.port}</div>
                             )}
+                          </Col>
+                          <Col lg={6}>
+                            <Form.Label className="modal-head">
+                              {t("Type")}
+                              <CustomTooltipModal tooltip={t("Enter the Port here.")} />
+                            </Form.Label>
+                            {console.log("formData-------", formData)}
+                            <CustomDropDown
+                              toggleDropdown={toggleDropdown}
+                              showValue={
+                                mode === "edit" && (formData.gt_type === 0 ? "Egress" : "Ingress")
+                              }
+                              openDropdown={openDropdown}
+                              valueArray={[
+                                { _id: "Ingress", gt_type: "Ingress" },
+                                { _id: "Egress", gt_type: "Egress" },
+                              ]}
+                              handleSelection={handleSelection}
+                              name={"gt_type"}
+                              defaultValue={t("All")}
+                              mapValue={ConstantConfig.TRUNKS.GT_TYPE.MAPVALUE}
+                              storeValue={ConstantConfig.TRUNKS.GT_TYPE.STOREVALUE}
+                              setOpenDropdown={setOpenDropdown}
+                              sorting={false}
+                            />
                           </Col>
                         </Row>
                       </Form>
