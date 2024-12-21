@@ -6,6 +6,7 @@ import get_token from "../../helper/userHeader";
 import REGEXP from "../../regexp";
 import mongoose from "mongoose";
 import CdrModel from "../../models/cdrs";
+import logger from "../../logger";
 
 const validateData = (data: any[], requiredFields: string[]): string | null => {
   for (const [index, item] of data.entries()) {
@@ -20,6 +21,7 @@ const validateData = (data: any[], requiredFields: string[]): string | null => {
 const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = req.body;
+    logger.info(`Full Request Object: ${JSON.stringify(req.body, null, 2)}`);
 
     if (!Array.isArray(data)) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -28,7 +30,24 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       });
     }
 
-    const requiredFields = ["xml_cdr_uuid", "domain_name", "domain_uuid", "sip_call_id", "extension_uuid", "direction", "caller_id_name", "caller_id_number", "destination_number", "start_stamp", "duration", "record_name", "status", "hangup_cause", "module_name", "recording_url"];
+    const requiredFields = [
+      "xml_cdr_uuid",
+      "domain_name",
+      "domain_uuid",
+      "sip_call_id",
+      "extension_uuid",
+      "direction",
+      "caller_id_name",
+      "caller_id_number",
+      "destination_number",
+      "start_stamp",
+      "duration",
+      "record_name",
+      "status",
+      "hangup_cause",
+      "module_name",
+      "recording_url",
+    ];
 
     const validationError = validateData(data, requiredFields);
     if (validationError) {
@@ -40,16 +59,15 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
 
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
-        message: 'Data added successfully',
+        message: "Data added successfully",
       });
     } catch (error) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed To Create Trunks",
-        error: error
-      })
+        error: error,
+      });
     }
-
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
