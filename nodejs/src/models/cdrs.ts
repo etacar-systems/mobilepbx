@@ -18,7 +18,7 @@ export interface CdrDocument extends Document {
   hangup_cause: string;
   module_name: string;
   recording_url?: string | null;
-  call_raw_data?: string | null;
+  call_flow?: string | null;
 }
 
 // Create the schema for the CDR
@@ -40,7 +40,7 @@ const CdrSchema = new Schema<CdrDocument>(
     hangup_cause: { type: String, required: false },
     module_name: { type: String, required: false },
     recording_url: { type: String, default: null },
-    call_raw_data: { type: String, default: null },
+    call_flow: { type: String, default: null },
   },
   {
     collection: "cdrs", // Explicitly set the collection name
