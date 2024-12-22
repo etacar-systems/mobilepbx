@@ -499,11 +499,28 @@ const getAllDataByDomainList = async (
 
       // new
       let find_query: { [key: string]: any } = {};
+
       if (search) {
         find_query = {
-          start_stamp: {
-            $gte: start_date,
-            $lt: end_date
+          $expr: {
+            $and: [
+              {
+                $gte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  start_date,
+                ],
+              },
+              {
+                $lte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  end_date,
+                ],
+              },
+            ],
           },
           $or: [
             {
@@ -534,22 +551,38 @@ const getAllDataByDomainList = async (
         };
       } else {
         find_query = {
-          start_stamp: {
-            $gte: start_date,
-            $lt: end_date
+          $expr: {
+            $and: [
+              {
+                $gte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  start_date,
+                ],
+              },
+              {
+                $lte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  end_date,
+                ],
+              },
+            ],
           },
         };
       }
 
       const reports_list = await cdrs.find(find_query)
 
-      // console.log("data", reports_list)
-      if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0 || reports_list === undefined) {
+      console.log("start_end_data",reports_list)
+      if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0 || reports_list === null) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
           message: "CDR logs fetched successfully",
           data: {
-            list: [],
+            cdr_list: [],
             total_page: 0,
             total_record: 0,
           },
@@ -559,7 +592,7 @@ const getAllDataByDomainList = async (
         success: 1,
         message: "CDR logs fetched successfully",
         data: {
-          list:
+          cdr_list:
             reports_list,
           // Object.keys(data.data)
           //   .filter((key) => !isNaN(+key))
