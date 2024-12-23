@@ -55,7 +55,13 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     // }
 
     try {
-      const insertedData = await CdrModel.insertMany(data);
+      const updatedData = data.map((data: any) => {
+        const updatedItem = { ...data }; // Copy the item to avoid modifying the original object
+        updatedItem.call_raw_data = updatedItem.call_flow; // Rename `call_flow` to `call_raw_data`
+        delete updatedItem.call_flow; // Delete the old `call_flow` field
+        return updatedItem;
+      });
+      const insertedData = await CdrModel.insertMany(updatedData);
 
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
