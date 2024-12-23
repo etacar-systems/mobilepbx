@@ -488,6 +488,7 @@ function DashboardDesign() {
                                       <Badge
                                         variant="success"
                                         className="but-badge"
+                                        style={ {color: val?._doc?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
                                       >
                                         {val?._doc?.is_online === 0
                                           ? t("Offline")
@@ -503,7 +504,7 @@ function DashboardDesign() {
                                       {val?.extension}
                                     </h6>
                                     <span className="text-muted text-size">
-                                      {t("Sales agent")}
+                                      {t("Extension")}
                                     </span>
                                   </td>
                                   <td

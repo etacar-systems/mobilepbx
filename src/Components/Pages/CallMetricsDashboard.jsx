@@ -112,15 +112,15 @@ function CallMetricsDashboard({
           <Col offset={5} lg={4}>
             <div className="d-flex justify-content-start mt-3">
               <div className="mr-5">
-                <label className="mb-0 text-white">{t("Inbound")}</label>
+                <label className="mb-0 text">{t("Inbound")}</label>
                 <h6 className="metricfont">{data?.total_answered}</h6>
               </div>
               <div className="mr-5">
-                <label className="mb-0 text-white">{t("Outbound")}</label>
+                <label className="mb-0 text">{t("Outbound")}</label>
                 <h6 className="metricfont">{data?.total_local}</h6>
               </div>
               <div className="mr-5">
-                <label className="mb-0 text-white">{t("Unanswered")}</label>
+                <label className="mb-0 text">{t("Unanswered")}</label>
                 <h6 className="metricfont">{data?.total_missed}</h6>
               </div>
             </div>
@@ -140,9 +140,9 @@ function CallMetricsDashboard({
               theme={theme}
               Theme={Theme}
               Linechartlabels={Linechartlabels.map(label=>t(label))}
-              answeredData={answeredData}
-              MissedData={MissedData}
-              localData={localData}
+              answeredData={answeredData || []}
+              MissedData={MissedData || []}
+              localData={localData || []}
             />
           </Col>
         </Row>

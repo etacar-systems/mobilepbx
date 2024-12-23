@@ -31,6 +31,13 @@ const LineChart = ({
       : Piedarkbordercolor;
   const gridlinecolor =
     Theme === Dark || theme === Dark ? Gridlinedarkcolor : Girdlinelightcolor;
+  let minValue = 0;
+  let maxValue = 100;
+  let allData = [...answeredData, ...localData, ...MissedData]
+  minValue = Math.min( ...allData);
+  maxValue = Math.max( ...allData);
+  maxValue =  ( Math.round(maxValue/10) + 1 ) * 10; // for better view, convert number to the next multiple of 10
+
   const chartData = {
     labels: Linechartlabels,
     datasets: [
@@ -75,8 +82,8 @@ const LineChart = ({
     scales: {
       y: {
         display: true,
-        min: 0,
-        max: 100,
+        min: minValue,
+        max: maxValue,
         ticks: {
           color: Textcolor,
           font: {

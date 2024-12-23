@@ -931,6 +931,7 @@ i18n
           "Agent offline": "Käyttäjä poissa",
           "Calls queue": "Puhelujonot",
           Durations: "Kesto",
+          "Average duration": "Keskimääräinen kesto",
           Week: "Viikko",
           "Call Metrics": "Puhelumittarit",
           "Missed calls": "Vastaamattomat puhelut",

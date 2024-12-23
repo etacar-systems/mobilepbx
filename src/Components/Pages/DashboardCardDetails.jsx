@@ -12,8 +12,8 @@ function DashboardCardDetails() {
   const allListeners = useSelector((state) => state.allListeners.allListeners);
   const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
   let valuedata = data?.DashboardDetail?.reports_counts;
-  console.log(data, valuedata, "datacheckfinal");
-  console.log(allListeners, "allListenerscheck");
+  // console.log(data, valuedata, "datacheckfinal");
+  // console.log(allListeners, "allListenerscheck");
   const busyAndOnlineCount =
     (allListeners?.listener_params?.busy_extension?.length || 0) +
     (allListeners?.listener_params?.online_extension?.length || 0);
@@ -43,33 +43,37 @@ function DashboardCardDetails() {
       const busy_extension_sum =
         allListeners?.listener_params?.busy_extension.length &&
         calculateOnlineSum(allListeners?.listener_params.busy_extension);
-      console.log(`busy_extension_sum Extension Online Sum: ${busy_extension_sum}`);
+      // console.log(`busy_extension_sum Extension Online Sum: ${busy_extension_sum}`);
 
       const offline_extension_sum =
         allListeners?.listener_params?.offline_extension.length &&
         calculateOnlineSum(allListeners?.listener_params.offline_extension);
-      console.log(`offline_extension_sum Extension Online Sum: ${offline_extension_sum}`);
+      // console.log(`offline_extension_sum Extension Online Sum: ${offline_extension_sum}`);
 
       const online_extension_sum =
         allListeners?.listener_params?.online_extension.length &&
         calculateOnlineSum(allListeners?.listener_params.online_extension);
-      console.log(`offline_extension_sum Extension Online Sum: ${online_extension_sum}`);
+      // console.log(`offline_extension_sum Extension Online Sum: ${online_extension_sum}`);
 
       const offline_extension_count =
         allListeners?.listener_params?.offline_extension.length &&
         calculateofflineSum(allListeners?.listener_params.offline_extension);
-      console.log(`offline_extension_sum Extension Online Sum: ${offline_extension_count}`);
+      // console.log(`offline_extension_sum Extension Online Sum: ${offline_extension_count}`);
       setofflineCount(offline_extension_count);
       setOnlineCount(busy_extension_sum + offline_extension_sum + online_extension_sum);
     }
   }, [allListeners?.listener_params]);
 
+  // round to 2 digits after point
+  function toFixedIfNecessary( value, dp = 2 ){
+    return +parseFloat(value).toFixed( dp );
+  }
   // Calculate the sum for each type
 
   const formatDuration = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
+    const secs = toFixedIfNecessary(seconds % 60);
 
     if (hrs > 0) {
       return `${hrs}h ${mins}m ${secs}s`;
@@ -137,9 +141,9 @@ function DashboardCardDetails() {
                 {/* <img className="icon-clock fa-2x call-in-icon" src={persontimeicon}></img> */}
               </div>
               <div className="ml-4">
-                <span className="chart-value">{t("Durations")}</span>
+                <span className="chart-value">{t("Average duration")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
-                  {formatDuration(valuedata?.total_duration_sec)}
+                  {formatDuration(valuedata?.total_duration_sec/(valuedata?.total_answered + valuedata?.total_outbound) )}
                 </h4>
               </div>
             </div>
