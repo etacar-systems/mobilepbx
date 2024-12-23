@@ -27,7 +27,7 @@ function CallMetricsDashboard({
     { length: data?.call_metrics.length || 0 },
     (_, index) => `${index + 1}`
   );
-  const [Linechartlabels, setLinechartlabels] = useState("");
+  const [Linechartlabels, setLinechartlabels] = useState([]);
   useEffect(() => {
     if (data && activeTabs) {
       if (activeTabs === "today") {
@@ -139,7 +139,7 @@ function CallMetricsDashboard({
             <LineChart
               theme={theme}
               Theme={Theme}
-              Linechartlabels={Linechartlabels}
+              Linechartlabels={Linechartlabels.map(label=>t(label))}
               answeredData={answeredData}
               MissedData={MissedData}
               localData={localData}
