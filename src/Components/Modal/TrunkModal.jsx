@@ -16,9 +16,17 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import ConstantConfig, { trunkTransport } from "../ConstantConfig";
 import CustomTooltipModal from "../CustomTooltipModal";
-import DropDown from "../Dropdown";
 
-function TrunkModal({ handleClose, show, header, loader, handlesavedata, formData, setFormData }) {
+function TrunkModal({
+  handleClose,
+  show,
+  header,
+  loader,
+  handlesavedata,
+  formData,
+  setFormData,
+  mode,
+}) {
   const { t } = useTranslation();
   // STATE
   const [errors, setErrors] = useState({});
@@ -32,30 +40,26 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
       setErrors({});
       setFormData({
         gateway_name: "",
-        cid: "",
-        Secret: "",
-        password: "",
-        realm: "",
-        proxy: "",
-        description: "",
-        transport: "",
+        ip: "",
+        port: "",
+        gt_type: "",
       });
     }
   }, [show]);
 
-  useEffect(() => {
-    dispatch(
-      getapiAll({
-        Api: config.COMPANY_LIST,
-        Token: Token,
-        urlof: config.COMPANY_LIST_KEY,
-      })
-    ).then((res) => {
-      if (res.payload.response) {
-        setcompanylist(res?.payload?.response?.comnayNameList);
-      }
-    });
-  }, [dispatch, Token]);
+  // useEffect(() => {
+  //   dispatch(
+  //     getapiAll({
+  //       Api: config.COMPANY_LIST,
+  //       Token: Token,
+  //       urlof: config.COMPANY_LIST_KEY,
+  //     })
+  //   ).then((res) => {
+  //     if (res.payload.response) {
+  //       setcompanylist(res?.payload?.response?.comnayNameList);
+  //     }
+  //   });
+  // }, [dispatch, Token]);
 
   // FUNCTIONS
   const validateForm = (name, value) => {
@@ -63,13 +67,9 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
     const newErrors = {};
     const regex = {
       gateway_name: "",
-      cid: "",
-      Secret: "",
-      password: "",
-      realm: ConstantConfig.TRUNKS.VALIDATION.PROXY,
-      proxy: ConstantConfig.TRUNKS.VALIDATION.PROXY,
-      description: "",
-      transport: "",
+      ip: "",
+      port: "",
+      gt_type: "",
     };
 
     if (!value || !String(value).trim()) {
@@ -93,7 +93,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
       if (key === "gateway_enabled") {
         continue;
       }
-      if (key === "register") {
+      if (key === "port") {
         continue;
       }
       if (!validateForm(key, formData[key])) {
@@ -122,6 +122,7 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
   };
 
   const handleSelection = (dropdown, value) => {
+    console.log(dropdown, value, "dropdown, value");
     const syntheticEvent = {
       target: {
         name: dropdown,
@@ -156,20 +157,11 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
             <Tab.Container defaultActiveKey="/home">
               <Row style={{ marginBottom: "17px" }}>
                 <Col sm={12}>
-                  <Nav variant="pills" className="flex-row tabs_border">
-                    <Nav.Item>
-                      <Nav.Link eventKey="/home" className="nav-link2">
-                        {t("General")}
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Col>
-                <Col sm={12}>
                   <Tab.Content style={{ margin: "0 20px" }}>
                     <Tab.Pane eventKey="/home">
                       <Form>
                         <Row className="mt-3">
-                          <Col lg={4}>
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
                               {t("Trunk name")}
                               <CustomTooltipModal tooltip={t("Enter the gateway name here.")} />
@@ -184,120 +176,58 @@ function TrunkModal({ handleClose, show, header, loader, handlesavedata, formDat
                               <div className="text-danger error-ui ">{errors.gateway_name}</div>
                             )}
                           </Col>
-                          <Col lg={4}>
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
-                              {t("Description")}
-                              <CustomTooltipModal tooltip={t("Enter the description.")} />
+                              {t("IP")}
+                              <CustomTooltipModal tooltip={t("Enter the IP.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
-                              name="description"
-                              value={formData.description}
+                              name="ip"
+                              value={formData.ip}
                               onChange={handleChange}
                             />
-                            {errors.description && (
-                              <div className="text-danger error-ui">{errors.description}</div>
-                            )}
+                            {errors.ip && <div className="text-danger error-ui">{errors.ip}</div>}
                           </Col>
-                          <Col lg={4}>
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
-                              {t("Username")}
-                              <CustomTooltipModal tooltip={t("Enter the password here.")} />
+                              {t("Port")}
+                              <CustomTooltipModal tooltip={t("Enter the Port here.")} />
                             </Form.Label>
                             <Form.Control
                               className="search-bg"
-                              name="password"
-                              value={formData.password}
+                              name="port"
+                              value={formData.port}
                               onChange={handleChange}
-                              autocomplete="new-password"
                             />
-                            {errors.password && (
-                              <div className="text-danger error-ui">{errors.password}</div>
+                            {errors.port && (
+                              <div className="text-danger error-ui">{errors.port}</div>
                             )}
                           </Col>
-                          <Col lg={4} className="mt-2">
+                          <Col lg={6}>
                             <Form.Label className="modal-head">
-                              {t("Password")}
-                              <CustomTooltipModal tooltip={t("Enter the username here.")} />
+                              {t("Type")}
+                              <CustomTooltipModal tooltip={t("Enter the Port here.")} />
                             </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="Secret"
-                              value={formData.Secret}
-                              onChange={handleChange}
-                            />
-                            {errors.Secret && (
-                              <div className="text-danger error-ui">{errors.Secret}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Realm")}
-                              <CustomTooltipModal tooltip={t("Enter the realm here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="realm"
-                              value={formData.realm}
-                              onChange={handleChange}
-                            />
-                            {errors.realm && (
-                              <div className="text-danger error-ui">{errors.realm}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Proxy")}
-                              <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
-                            </Form.Label>
-                            <Form.Control
-                              className="search-bg"
-                              name="proxy"
-                              value={formData.proxy}
-                              onChange={handleChange}
-                            />
-                            {errors.proxy && (
-                              <div className="text-danger error-ui">{errors.proxy}</div>
-                            )}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head" style={{ marginLeft: "6px" }}>
-                              {t("Domain")}
-                              <CustomTooltipModal tooltip={t("Please select domain here.")} />
-                            </Form.Label>
+                            {console.log("formData-------", formData)}
                             <CustomDropDown
                               toggleDropdown={toggleDropdown}
-                              showValue={formData.cid}
+                              showValue={
+                                mode === "edit" && (formData.gt_type === 0 ? "Egress" : "Ingress")
+                              }
                               openDropdown={openDropdown}
-                              valueArray={companylist}
+                              valueArray={[
+                                { _id: "Ingress", gt_type: "Ingress" },
+                                { _id: "Egress", gt_type: "Egress" },
+                              ]}
                               handleSelection={handleSelection}
-                              name={"cid"}
-                              defaultValue={t("None selected")}
-                              mapValue={ConstantConfig.TRUNKS.COMPANY_SELECT.MAPVALUE}
-                              storeValue={ConstantConfig.TRUNKS.COMPANY_SELECT.STOREVALUE}
+                              name={"gt_type"}
+                              defaultValue={t("All")}
+                              mapValue={ConstantConfig.TRUNKS.GT_TYPE.MAPVALUE}
+                              storeValue={ConstantConfig.TRUNKS.GT_TYPE.STOREVALUE}
                               setOpenDropdown={setOpenDropdown}
-                              sorting={true}
+                              sorting={false}
                             />
-                            {errors.cid && <div className="text-danger error-ui">{errors.cid}</div>}
-                          </Col>
-                          <Col lg={4} className="mt-2">
-                            <Form.Label className="modal-head">
-                              {t("Transport")}
-                              <CustomTooltipModal tooltip={t("Enter the proxy here.")} />
-                            </Form.Label>
-                            <DropDown
-                              toggleDropdown={toggleDropdown}
-                              showValue={formData.transport}
-                              openDropdown={openDropdown}
-                              valueArray={trunkTransport}
-                              handleSelection={handleSelection}
-                              name={"transport"}
-                              defaultValue={t("None selected")}
-                              setOpenDropdown={setOpenDropdown}
-                            />
-                            {errors.transport && (
-                              <div className="text-danger error-ui">{errors.transport}</div>
-                            )}
                           </Col>
                         </Row>
                       </Form>

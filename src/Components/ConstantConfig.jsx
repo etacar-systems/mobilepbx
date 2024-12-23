@@ -12,6 +12,10 @@ export default {
       MAPVALUE: "company_name",
       STOREVALUE: "_id",
     },
+    GT_TYPE: {
+      MAPVALUE: "gt_type",
+      STOREVALUE: "_id",
+    },
     VALIDATION: {
       PROXY:
         /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(:\d{1,5})?$|^(?=.{1,253}$)(?:(?!-)[A-Za-z0-9-]{1,63}(?<!-)\.)*[A-Za-z0-9-]{1,63}\.[A-Za-z]{2,63}(?::\d{1,5})?$/,

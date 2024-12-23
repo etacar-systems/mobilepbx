@@ -1,4 +1,11 @@
-import React, { Suspense, lazy, useEffect, useState, useRef, useLayoutEffect } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useState,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { Row, Col } from "react-bootstrap";
 import "./DashboardCss.css";
 import "./CustomeChartCss.css";
@@ -16,7 +23,9 @@ import RingGroupModal from "../Modal/RingGroupModal";
 import { defaultactiveKeyname, Multilinechart } from "../ConstantConfig";
 
 // Immediately loaded components
-const DashboardHeaderDatePicker = lazy(() => import("./DashboardHeaderDatePicker"));
+const DashboardHeaderDatePicker = lazy(() =>
+  import("./DashboardHeaderDatePicker")
+);
 const ChartCardDashboard = lazy(() => import("./ChartCardDashboard"));
 const DashboardCardDetails = lazy(() => import("./DashboardCardDetails"));
 const CardsDashboard = lazy(() => import("./CardsDashboard"));
@@ -111,6 +120,7 @@ function DashboardDesign() {
       setRingDropDown(response?.payload?.response?.data || {});
     });
   }, []);
+
   useEffect(() => {
     const formattedDate = formatDate(new Date(startDate));
     const formattedEndDate = formatDate(new Date(endDate));
@@ -118,12 +128,14 @@ function DashboardDesign() {
       getapiAll({
         Api: `${config.DASHBOARD.GET}?start_date=${encodeURIComponent(
           formattedDate
-        )}&end_date=${encodeURIComponent(formattedEndDate)}&call_matrics_type=${activeTabs}`,
+        )}&end_date=${encodeURIComponent(
+          formattedEndDate
+        )}&call_matrics_type=${activeTabs}`,
         Token: Token,
         urlof: config.DASHBOARD_KEY.GET,
       })
     ).then((response) => {
-      console.log(response, "responsecheck");
+      console.log("responsecheck", response);
       setDashboardData(response?.payload?.response?.data || {});
     });
   }, [dispatch, activeTabs, filter]);
@@ -198,7 +210,11 @@ function DashboardDesign() {
     : dummyData;
 
   const paginatedData = sortedData.map((row, index) => (
-    <tr key={index} className="table-new new-data-table" style={{ marginBottom: "3px !important" }}>
+    <tr
+      key={index}
+      className="table-new new-data-table"
+      style={{ marginBottom: "3px !important" }}
+    >
       <td
         className="table-new table-custom-body-td"
         style={{ width: "17.5%", display: "flex", alignItems: "center" }}
@@ -241,7 +257,10 @@ function DashboardDesign() {
       >
         {row.callType}
       </td>
-      <td className="table_edit2dash table-new table-custom-body-td" style={{ width: "7.5%" }}>
+      <td
+        className="table_edit2dash table-new table-custom-body-td"
+        style={{ width: "7.5%" }}
+      >
         <button>
           <Call_logo width={14} height={14} className="edithoverdash" />
         </button>
@@ -276,7 +295,7 @@ function DashboardDesign() {
     ],
     datasets: [
       {
-        label: t("Missed"),
+        label: "Missed",
         data: [9, 14, 18, 21, 12, 21, 23, 18, 13, 9],
         borderColor: Multilinechart.dataset1color,
         backgroundColor: Multilinechart.dataset1color,
@@ -290,7 +309,7 @@ function DashboardDesign() {
         },
       },
       {
-        label: t("Waiting time"),
+        label: "Waiting time",
         data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,
         backgroundColor: Multilinechart.dataset2color,
@@ -335,7 +354,10 @@ function DashboardDesign() {
         <div className="container-fluid" onLoad={handleComponentLoad}>
           <div className="block-header">
             <div className="row clearfix">
-              <div className="col-md-6 col-sm-12 col-name" style={{ marginLeft: "4px" }}>
+              <div
+                className="col-md-6 col-sm-12 col-name"
+                style={{ marginLeft: "4px" }}
+              >
                 <span className="dashboardtext">{t("Dashboard")}</span>
               </div>
             </div>
@@ -416,103 +438,134 @@ function DashboardDesign() {
                     <table className=" table-news table m-0 ">
                       {console.log(data, "try and test")}
                       <tbody>
-                        {data?.DashboardDetail?.extensions_detail?.extensions?.map((val) => {
-                          const localCalls = Number(val.local_calls) || 0;
-                          const answered = Number(val.answered) || 0;
-                          const missed = Number(val.missed) || 0;
-                          const total = localCalls + answered + missed;
+                        {data?.DashboardDetail?.extensions_detail?.extensions?.map(
+                          (val) => {
+                            if (val?._doc) {
+                              const localCalls = Number(val.local_calls) || 0;
+                              const answered = Number(val.answered) || 0;
+                              const missed = Number(val.missed) || 0;
 
-                          const localCallsPercent =
-                            total > 0 ? ((localCalls / total) * 100).toFixed(0) : 0;
-                          const answeredPercent =
-                            total > 0 ? ((answered / total) * 100).toFixed(0) : 0;
-                          const missedPercent = total > 0 ? ((missed / total) * 100).toFixed(0) : 0;
-                          console.log(
-                            localCallsPercent,
-                            answeredPercent,
-                            missedPercent,
-                            "missedPercentcheck"
-                          );
-                          return (
-                            <tr
-                              className="table-custom-body-trs"
-                              style={{
-                                borderBottom: "5px solid var(--main-grey-color)",
-                                padding: "20px",
-                              }}
-                              key={val.extension} // Add a unique key
-                            >
-                              <td className="table-custom-body-td" style={{ padding: "0.5rem" }}>
-                                <a href="#" className="name-atag">
-                                  {val.extension}
-                                </a>
-                                <p className="mb-0 text-muted text-size">
-                                  {t("Status")}:{" "}
-                                  <Badge variant="success" className="but-badge">
-                                    {t("Online")}
-                                  </Badge>
-                                </p>
-                              </td>
-                              <td
-                                className="text-right table-custom-body-td"
-                                style={{ padding: "0.5rem" }}
-                              >
-                                <h6 className="font-14 mb-0 text-size small-cusnum">
-                                  {val.extension}
-                                </h6>
-                                <span className="text-muted text-size">{t("Sales agent")}</span>
-                              </td>
-                              <td
-                                className="w250 table-custom-body-td"
-                                style={{
-                                  width: "45%",
-                                  padding: "0.5rem",
-                                  paddingLeft: "calc( 0.5rem + 10px )",
-                                }}
-                              >
-                                <ProgressBar className="progress-height">
-                                  <ProgressBar
-                                    now={Number(localCallsPercent)}
+                              const total = localCalls + answered + missed;
+
+                              const localCallsPercent =
+                                total > 0
+                                  ? ((localCalls / total) * 100).toFixed(0)
+                                  : 0;
+                              const answeredPercent =
+                                total > 0
+                                  ? ((answered / total) * 100).toFixed(0)
+                                  : 0;
+                              const missedPercent =
+                                total > 0
+                                  ? ((missed / total) * 100).toFixed(0)
+                                  : 0;
+                              console.log(
+                                localCallsPercent,
+                                answeredPercent,
+                                missedPercent,
+                                "missedPercentcheck"
+                              );
+                              return (
+                                <tr
+                                  className="table-custom-body-trs"
+                                  style={{
+                                    borderBottom:
+                                      "5px solid var(--main-grey-color)",
+                                    padding: "20px",
+                                  }}
+                                  key={val.extension} // Add a unique key
+                                >
+                                  <td
+                                    className="table-custom-body-td"
+                                    style={{ padding: "0.5rem" }}
+                                  >
+                                    <a href="#" className="name-atag">
+                                      {val?._doc?.first_name}{" "}
+                                      {val?._doc?.last_name} {/* new */}
+                                    </a>
+                                    <p className="mb-0 text-muted text-size">
+                                      {t("Status")}:{" "}
+                                      <Badge
+                                        variant="success"
+                                        className="but-badge"
+                                      >
+                                        {val?._doc?.is_online === 0
+                                          ? t("Offline")
+                                          : t("Online")}
+                                      </Badge>
+                                    </p>
+                                  </td>
+                                  <td
+                                    className="text-right table-custom-body-td"
+                                    style={{ padding: "0.5rem" }}
+                                  >
+                                    <h6 className="font-14 mb-0 text-size small-cusnum">
+                                      {val?.extension}
+                                    </h6>
+                                    <span className="text-muted text-size">
+                                      {t("Sales agent")}
+                                    </span>
+                                  </td>
+                                  <td
+                                    className="w250 table-custom-body-td"
                                     style={{
-                                      background: "var(--main-borderblue-color)",
+                                      width: "45%",
+                                      padding: "0.5rem",
+                                      paddingLeft: "calc( 0.5rem + 10px )",
                                     }}
-                                  />
-                                  <ProgressBar variant="green" now={Number(answeredPercent)} />
-                                  <ProgressBar variant="red" now={Number(missedPercent)} />
-                                </ProgressBar>
-                                <div className="d-flex bd-highlight mt-2 justify-content-start">
-                                  <div className="flex-fill bd-highlight">
-                                    <small className="per-size">
-                                      <i
-                                        className="fa fa-phone-square text-blue"
-                                        style={{ fontSize: "14px" }}
-                                      ></i>{" "}
-                                      {localCallsPercent}% {t("Called")}
-                                    </small>
-                                  </div>
-                                  <div className="flex-fill bd-highlight">
-                                    <small className="per-size">
-                                      <i
-                                        className="fa fa-phone-square text-green"
-                                        style={{ fontSize: "14px" }}
-                                      ></i>{" "}
-                                      {answeredPercent}% {t("Answered")}
-                                    </small>
-                                  </div>
-                                  <div className="flex-fill bd-highlight">
-                                    <small className="per-size">
-                                      <i
-                                        className="fa fa-phone-square text-danger"
-                                        style={{ fontSize: "14px" }}
-                                      ></i>{" "}
-                                      {missedPercent}% {t("Missed")}
-                                    </small>
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                                  >
+                                    <ProgressBar className="progress-height">
+                                      <ProgressBar
+                                        now={Number(localCallsPercent)}
+                                        style={{
+                                          background:
+                                            "var(--main-borderblue-color)",
+                                        }}
+                                      />
+                                      <ProgressBar
+                                        variant="green"
+                                        now={Number(answeredPercent)}
+                                      />
+                                      <ProgressBar
+                                        variant="red"
+                                        now={Number(missedPercent)}
+                                      />
+                                    </ProgressBar>
+                                    <div className="d-flex bd-highlight mt-2 justify-content-start">
+                                      <div className="flex-fill bd-highlight">
+                                        <small className="per-size">
+                                          <i
+                                            className="fa fa-phone-square text-blue"
+                                            style={{ fontSize: "14px" }}
+                                          ></i>{" "}
+                                          {localCallsPercent}% {t("Called")}
+                                        </small>
+                                      </div>
+                                      <div className="flex-fill bd-highlight">
+                                        <small className="per-size">
+                                          <i
+                                            className="fa fa-phone-square text-green"
+                                            style={{ fontSize: "14px" }}
+                                          ></i>{" "}
+                                          {answeredPercent}% {t("Answered")}
+                                        </small>
+                                      </div>
+                                      <div className="flex-fill bd-highlight">
+                                        <small className="per-size">
+                                          <i
+                                            className="fa fa-phone-square text-danger"
+                                            style={{ fontSize: "14px" }}
+                                          ></i>{" "}
+                                          {missedPercent}% {t("Missed")}
+                                        </small>
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          }
+                        )}
                       </tbody>
                     </table>
                   </div>

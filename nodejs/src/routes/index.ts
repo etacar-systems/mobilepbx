@@ -12,6 +12,7 @@ import { report_msgRouter } from "././v1/report_message";
 import { report_userRoute } from "././v1/report_user";
 import { UserRoute } from "./v1/user";
 import { companyRoute } from "./v1/company";
+import { trunksRouteBKP } from "./v1/trunksBKP";
 import { trunksRoute } from "./v1/trunks";
 import { pstnRoute } from "./v1/pstn_number";
 import { extensionRoute } from "./v1/extension";
@@ -34,6 +35,7 @@ import { smtpRoute } from "./v1/smtp";
 import { whatsapplogIn } from "./v1/loginWhatsapp";
 import { emailRoute } from "./v1/email";
 import { dashboardRoute } from "./v1/dashboard";
+import { callRecordingRoute } from "./v1/callRecording";
 export const route = Router();
 
 route.use("/v1/admin", adminroutes);
@@ -49,6 +51,7 @@ route.use("/v1/upload", uploadRoute);
 route.use("/v1/report/message", report_msgRouter);
 route.use("/v1/report/user", report_userRoute);
 route.use("/v1/user", UserRoute);
+route.use("/v1/trunkBKP", trunksRouteBKP);
 route.use("/v1/trunk", trunksRoute);
 route.use("/v1/pstn", pstnRoute);
 route.use("/v1/extension", extensionRoute);
@@ -69,9 +72,9 @@ route.use("/v1/company_feature", companyFeatureRoute);
 route.use("/v1/setting", settingRoute);
 route.use("/v1/smtp", smtpRoute);
 route.use("/v1/api", whatsapplogIn);
-route.use("/v1/email",emailRoute);
-route.use("/v1/dashboard",dashboardRoute);
-
+route.use("/v1/email", emailRoute);
+route.use("/v1/dashboard", dashboardRoute);
+route.use("/v1/save-call-recording-details", callRecordingRoute);
 
 route.use((req, res, next) => {
   const error = new Error("Route not found");

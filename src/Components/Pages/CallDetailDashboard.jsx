@@ -33,8 +33,10 @@ function CallDetailDashboard({
   const token = Cookies.get("Token");
   const abortControllerRef = useRef(null);
   const dispatch = useDispatch();
-  const formattedDate = startdate && new Date(startdate).toLocaleDateString("en-CA");
-  const formattedEnddata = enddate && new Date(enddate).toLocaleDateString("en-CA");
+  const formattedDate =
+    startdate && new Date(startdate).toLocaleDateString("en-CA");
+  const formattedEnddata =
+    enddate && new Date(enddate).toLocaleDateString("en-CA");
   const [searchTerm, setSearchterm] = useState("");
   const [ascending, setAscending] = useState(true);
   const [select, setselect] = useState(10);
@@ -112,9 +114,9 @@ function CallDetailDashboard({
     dispatch(
       postapiAll({
         inputData: inputdata,
-        Api: config.CDR.CDR_DOMAIN_LIST,
+        Api: config.CDR.CDR_DOMAIN_LIST_LIST,
         Token: token,
-        urlof: config.CDR.CDR_DOMAIN_LIST,
+        urlof: config.CDR.CDR_DOMAIN_LIST_LIST,
         signal: abortController.signal,
       })
     ).then((response) => {
@@ -124,7 +126,7 @@ function CallDetailDashboard({
         setLoading(false);
         const data = response?.payload?.response?.data;
         setFetchData(data);
-        setdashboartdata(data?.list);
+        setdashboartdata(data?.cdr_list);
         setSortedColumn("");
       }
     });
@@ -156,7 +158,9 @@ function CallDetailDashboard({
 
         const strA = String(valueA);
         const strB = String(valueB);
-        return newAscending ? strA.localeCompare(strB) : strB.localeCompare(strA);
+        return newAscending
+          ? strA.localeCompare(strB)
+          : strB.localeCompare(strA);
       }
     });
 
@@ -236,7 +240,9 @@ function CallDetailDashboard({
               <div className="select_entry">
                 <Form.Select
                   aria-label="Default select example"
-                  onChange={(e) => (setselect(e.target.value), setCurrentPage(1))}
+                  onChange={(e) => (
+                    setselect(e.target.value), setCurrentPage(1)
+                  )}
                   value={select}
                 >
                   <option value="10">10</option>
@@ -248,7 +254,10 @@ function CallDetailDashboard({
               <h6>{t("entries")}</h6>
             </div>
           </Form.Group>
-          <div style={{ display: "flex", alignItems: "center" }} className="formdasboard">
+          <div
+            style={{ display: "flex", alignItems: "center" }}
+            className="formdasboard"
+          >
             <h6 style={{ fontWeight: "400" }}>{t("Category")}:</h6>
             <div className="ml-2">
               <CustomDropDown
@@ -378,12 +387,18 @@ function CallDetailDashboard({
                   {dashboartdata && dashboartdata.length > 0 ? (
                     <>
                       {dashboartdata
-                        .filter((item) => !item.destination_number.includes("*"))
+                        .filter(
+                          (item) => !item.destination_number.includes("*")
+                        )
                         .map((row, index) => {
                           const formatTime = (seconds) =>
-                            `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(
-                              Math.floor(seconds / 60) % 60
-                            ).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+                            `${String(Math.floor(seconds / 3600)).padStart(
+                              2,
+                              "0"
+                            )}:${String(Math.floor(seconds / 60) % 60).padStart(
+                              2,
+                              "0"
+                            )}:${String(seconds % 60).padStart(2, "0")}`;
                           const formattedTime = formatTime(row?.duration);
                           const date = new Date(row?.start_stamp);
                           const formattedDate = new Date(date)
@@ -409,7 +424,8 @@ function CallDetailDashboard({
                                   className="table-new table-custom-body-td"
                                   style={{ width: "21%" }}
                                 >
-                                  {formattedDate} {extractTimeFromDate(row?.start_stamp)}
+                                  {formattedDate}{" "}
+                                  {extractTimeFromDate(row?.start_stamp)}
                                 </td>
 
                                 <td
@@ -420,7 +436,9 @@ function CallDetailDashboard({
                                     alignItems: "center",
                                   }}
                                 >
-                                  <div className="overflowdashboaard">{row.caller_id_number}</div>
+                                  <div className="overflowdashboaard">
+                                    {row.caller_id_number}
+                                  </div>
                                 </td>
                                 <td
                                   className="table-new table-custom-body-td table-caller"
@@ -430,14 +448,20 @@ function CallDetailDashboard({
                                     alignItems: "center",
                                   }}
                                 >
-                                  <div className="overflowdashboaard">{row.caller_id_name}</div>
+                                  <div className="overflowdashboaard">
+                                    {row.caller_id_name}
+                                  </div>
                                 </td>
                                 {/* <td
-    className="table-new table-custom-body-td"
-    style={{ width: "15.5%", display: "flex", alignItems: "center" }}
-  >
-  4343
-  </td> */}
+                                  className="table-new table-custom-body-td"
+                                  style={{
+                                    width: "15.5%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  4343
+                                </td> */}
                                 <td
                                   className="table-new table-custom-body-td"
                                   style={{
@@ -446,7 +470,9 @@ function CallDetailDashboard({
                                     alignItems: "center",
                                   }}
                                 >
-                                  <div className="overflowdashboaard">{row.destination_number}</div>
+                                  <div className="overflowdashboaard">
+                                    {row.destination_number}
+                                  </div>
                                 </td>
                                 <td
                                   className="table-new table-custom-body-td"
@@ -456,9 +482,14 @@ function CallDetailDashboard({
                                     alignItems: "center",
                                   }}
                                 >
-                                  <div className="overflowdashboaard">{formattedTime}</div>
+                                  <div className="overflowdashboaard">
+                                    {formattedTime}
+                                  </div>
                                 </td>
+                                
+                                {/* CHANGED */}
                                 <td
+                                  // className="table-new table-custom-body-td new-calltype"
                                   className="table-new table-custom-body-td"
                                   style={{
                                     width: "14.28%",
@@ -466,7 +497,9 @@ function CallDetailDashboard({
                                     alignItems: "center",
                                   }}
                                 >
-                                  <div className="overflowdashboaard">{t(row.direction)}</div>
+                                  <div className="overflowdashboaard">
+                                    {t(row.direction)}
+                                  </div>
                                 </td>
                                 <td
                                   className="table_edit2dash table-new table-custom-body-td"
@@ -485,7 +518,11 @@ function CallDetailDashboard({
                                       handlelistner(row);
                                     }}
                                   >
-                                    <Call_logo width={14} height={14} className="edithoverdash" />
+                                    <Call_logo
+                                      width={14}
+                                      height={14}
+                                      className="edithoverdash"
+                                    />
                                   </button>
                                 </td>
                               </tr>
@@ -494,7 +531,10 @@ function CallDetailDashboard({
                         })}
                     </>
                   ) : (
-                    <div className="dashtableloading" style={{ height: "250px" }}>
+                    <div
+                      className="dashtableloading"
+                      style={{ height: "250px" }}
+                    >
                       {t("No data available in table")}
                     </div>
                   )}
@@ -506,8 +546,8 @@ function CallDetailDashboard({
 
         <div className="show show2 mt-2 mb-2 d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {fetchData?.total_record}{" "}
-            {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")}{" "}
+            {fetchData?.total_record} {t("entries")}
           </h6>
           <div>
             <Paginationall

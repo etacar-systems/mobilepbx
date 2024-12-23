@@ -1,0 +1,983 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model acc {
+  id          Int       @id @default(autoincrement()) @db.UnsignedInt
+  method      String    @default("") @db.Char(16)
+  from_tag    String    @default("") @db.Char(64)
+  to_tag      String    @default("") @db.Char(64)
+  callid      String    @default("") @db.Char(64)
+  sip_code    String    @default("") @db.Char(3)
+  sip_reason  String    @default("") @db.Char(32)
+  time        DateTime  @db.DateTime(0)
+  duration    Int       @default(0) @db.UnsignedInt
+  ms_duration Int       @default(0) @db.UnsignedInt
+  setuptime   Int       @default(0) @db.UnsignedInt
+  created     DateTime? @db.DateTime(0)
+
+  @@index([callid], map: "callid_idx")
+}
+
+model active_watchers {
+  id               Int     @id @default(autoincrement()) @db.UnsignedInt
+  presentity_uri   String  @db.Char(255)
+  watcher_username String  @db.Char(64)
+  watcher_domain   String  @db.Char(64)
+  to_user          String  @db.Char(64)
+  to_domain        String  @db.Char(64)
+  event            String  @default("presence") @db.Char(64)
+  event_id         String? @db.Char(64)
+  to_tag           String  @db.Char(64)
+  from_tag         String  @db.Char(64)
+  callid           String  @db.Char(64)
+  local_cseq       Int
+  remote_cseq      Int
+  contact          String  @db.Char(255)
+  record_route     String? @db.Text
+  expires          Int
+  status           Int     @default(2)
+  reason           String? @db.Char(64)
+  version          Int     @default(0)
+  socket_info      String  @db.Char(64)
+  local_contact    String  @db.Char(255)
+  sharing_tag      String? @db.Char(32)
+
+  @@unique([presentity_uri, callid, to_tag, from_tag], map: "active_watchers_idx")
+}
+
+model address {
+  id           Int     @id @default(autoincrement()) @db.UnsignedInt
+  grp          Int     @default(0) @db.UnsignedSmallInt
+  ip           String  @db.Char(50)
+  mask         Int     @default(32) @db.TinyInt
+  port         Int     @default(0) @db.UnsignedSmallInt
+  proto        String  @default("any") @db.Char(4)
+  pattern      String? @db.Char(64)
+  context_info String? @db.Char(32)
+}
+
+model b2b_entities {
+  id           Int     @id @default(autoincrement()) @db.UnsignedInt
+  type         Int
+  state        Int
+  ruri         String? @db.Char(255)
+  from_uri     String  @db.Char(255)
+  to_uri       String  @db.Char(255)
+  from_dname   String? @db.Char(64)
+  to_dname     String? @db.Char(64)
+  tag0         String  @db.Char(64)
+  tag1         String? @db.Char(64)
+  callid       String  @db.Char(64)
+  cseq0        Int
+  cseq1        Int?
+  contact0     String  @db.Char(255)
+  contact1     String? @db.Char(255)
+  route0       String? @db.Text
+  route1       String? @db.Text
+  sockinfo_srv String? @db.Char(64)
+  param        String  @db.Char(255)
+  mod_name     String  @db.Char(32)
+  storage      Bytes?  @db.Blob
+  lm           Int
+  lrc          Int?
+  lic          Int?
+  leg_cseq     Int?
+  leg_route    String? @db.Text
+  leg_tag      String? @db.Char(64)
+  leg_contact  String? @db.Char(255)
+  leg_sockinfo String? @db.Char(255)
+
+  @@unique([type, tag0, tag1, callid], map: "b2b_entities_idx")
+  @@index([param], map: "b2b_entities_param")
+}
+
+model b2b_logic {
+  id       Int     @id @default(autoincrement()) @db.UnsignedInt
+  si_key   String  @unique(map: "b2b_logic_idx") @db.Char(64)
+  scenario String? @db.Char(64)
+  sstate   Int
+  sdp      String? @db.Text
+  lifetime Int     @default(0)
+  e1_type  Int
+  e1_sid   String? @db.Char(64)
+  e1_from  String  @db.Char(255)
+  e1_to    String  @db.Char(255)
+  e1_key   String  @db.Char(64)
+  e2_type  Int
+  e2_sid   String? @db.Char(64)
+  e2_from  String  @db.Char(255)
+  e2_to    String  @db.Char(255)
+  e2_key   String  @db.Char(64)
+  e3_type  Int?
+  e3_sid   String? @db.Char(64)
+  e3_from  String? @db.Char(255)
+  e3_to    String? @db.Char(255)
+  e3_key   String? @db.Char(64)
+}
+
+model b2b_sca {
+  id                             Int     @id @default(autoincrement()) @db.UnsignedInt
+  shared_line                    String  @unique(map: "sca_idx") @db.Char(64)
+  watchers                       String  @db.Char(255)
+  app1_shared_entity             Int?    @db.UnsignedInt
+  app1_call_state                Int?    @db.UnsignedInt
+  app1_call_info_uri             String? @db.Char(255)
+  app1_call_info_appearance_uri  String? @db.Char(255)
+  app1_b2bl_key                  String? @db.Char(64)
+  app2_shared_entity             Int?    @db.UnsignedInt
+  app2_call_state                Int?    @db.UnsignedInt
+  app2_call_info_uri             String? @db.Char(255)
+  app2_call_info_appearance_uri  String? @db.Char(255)
+  app2_b2bl_key                  String? @db.Char(64)
+  app3_shared_entity             Int?    @db.UnsignedInt
+  app3_call_state                Int?    @db.UnsignedInt
+  app3_call_info_uri             String? @db.Char(255)
+  app3_call_info_appearance_uri  String? @db.Char(255)
+  app3_b2bl_key                  String? @db.Char(64)
+  app4_shared_entity             Int?    @db.UnsignedInt
+  app4_call_state                Int?    @db.UnsignedInt
+  app4_call_info_uri             String? @db.Char(255)
+  app4_call_info_appearance_uri  String? @db.Char(255)
+  app4_b2bl_key                  String? @db.Char(64)
+  app5_shared_entity             Int?    @db.UnsignedInt
+  app5_call_state                Int?    @db.UnsignedInt
+  app5_call_info_uri             String? @db.Char(255)
+  app5_call_info_appearance_uri  String? @db.Char(255)
+  app5_b2bl_key                  String? @db.Char(64)
+  app6_shared_entity             Int?    @db.UnsignedInt
+  app6_call_state                Int?    @db.UnsignedInt
+  app6_call_info_uri             String? @db.Char(255)
+  app6_call_info_appearance_uri  String? @db.Char(255)
+  app6_b2bl_key                  String? @db.Char(64)
+  app7_shared_entity             Int?    @db.UnsignedInt
+  app7_call_state                Int?    @db.UnsignedInt
+  app7_call_info_uri             String? @db.Char(255)
+  app7_call_info_appearance_uri  String? @db.Char(255)
+  app7_b2bl_key                  String? @db.Char(64)
+  app8_shared_entity             Int?    @db.UnsignedInt
+  app8_call_state                Int?    @db.UnsignedInt
+  app8_call_info_uri             String? @db.Char(255)
+  app8_call_info_appearance_uri  String? @db.Char(255)
+  app8_b2bl_key                  String? @db.Char(64)
+  app9_shared_entity             Int?    @db.UnsignedInt
+  app9_call_state                Int?    @db.UnsignedInt
+  app9_call_info_uri             String? @db.Char(255)
+  app9_call_info_appearance_uri  String? @db.Char(255)
+  app9_b2bl_key                  String? @db.Char(64)
+  app10_shared_entity            Int?    @db.UnsignedInt
+  app10_call_state               Int?    @db.UnsignedInt
+  app10_call_info_uri            String? @db.Char(255)
+  app10_call_info_appearance_uri String? @db.Char(255)
+  app10_b2bl_key                 String? @db.Char(64)
+}
+
+model cachedb {
+  id      Int    @id @default(autoincrement()) @db.UnsignedInt
+  keyname String @unique(map: "cachedbsql_keyname_idx") @db.Char(255)
+  value   String @db.Text
+  counter Int    @default(0)
+  expires Int    @default(0) @db.UnsignedInt
+}
+
+model carrierfailureroute {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  carrier     Int     @default(0) @db.UnsignedInt
+  domain      String  @default("") @db.Char(64)
+  scan_prefix String  @default("") @db.Char(64)
+  host_name   String  @default("") @db.Char(255)
+  reply_code  String  @default("") @db.Char(3)
+  flags       Int     @default(0) @db.UnsignedInt
+  mask        Int     @default(0) @db.UnsignedInt
+  next_domain String  @default("") @db.Char(64)
+  description String? @db.Char(255)
+}
+
+model carrierroute {
+  id             Int     @id @default(autoincrement()) @db.UnsignedInt
+  carrier        Int     @default(0) @db.UnsignedInt
+  domain         String  @default("") @db.Char(64)
+  scan_prefix    String  @default("") @db.Char(64)
+  flags          Int     @default(0) @db.UnsignedInt
+  mask           Int     @default(0) @db.UnsignedInt
+  prob           Float   @default(0) @db.Float
+  strip          Int     @default(0) @db.UnsignedInt
+  rewrite_host   String  @default("") @db.Char(255)
+  rewrite_prefix String  @default("") @db.Char(64)
+  rewrite_suffix String  @default("") @db.Char(64)
+  description    String? @db.Char(255)
+}
+
+model cc_agents {
+  id              Int    @id @default(autoincrement()) @db.UnsignedInt
+  agentid         String @unique(map: "unique_agentid") @db.Char(128)
+  location        String @db.Char(128)
+  logstate        Int    @default(0) @db.UnsignedInt
+  skills          String @db.Char(255)
+  wrapup_end_time Int    @default(0)
+  wrapup_time     Int    @default(0)
+}
+
+model cc_calls {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
+  state        Int
+  ig_cback     Int
+  no_rej       Int
+  setup_time   Int
+  eta          Int
+  last_start   Int
+  recv_time    Int
+  caller_dn    String @db.Char(128)
+  caller_un    String @db.Char(128)
+  b2buaid      String @unique(map: "unique_id") @default("") @db.Char(128)
+  flow         String @db.Char(128)
+  agent        String @db.Char(128)
+  script_param String @db.Char(128)
+
+  @@index([b2buaid], map: "b2buaid_idx")
+}
+
+model cc_cdrs {
+  id                 Int      @id @default(autoincrement()) @db.UnsignedInt
+  caller             String   @db.Char(64)
+  received_timestamp DateTime @db.DateTime(0)
+  wait_time          Int      @default(0) @db.UnsignedInt
+  pickup_time        Int      @default(0) @db.UnsignedInt
+  talk_time          Int      @default(0) @db.UnsignedInt
+  flow_id            String   @db.Char(128)
+  agent_id           String?  @db.Char(128)
+  call_type          Int      @default(-1)
+  rejected           Int      @default(0) @db.UnsignedInt
+  fstats             Int      @default(0) @db.UnsignedInt
+  cid                Int?     @default(0) @db.UnsignedInt
+}
+
+model cc_flows {
+  id                   Int     @id @default(autoincrement()) @db.UnsignedInt
+  flowid               String  @unique(map: "unique_flowid") @db.Char(64)
+  priority             Int     @default(256) @db.UnsignedInt
+  skill                String  @db.Char(64)
+  prependcid           String  @db.Char(32)
+  max_wrapup_time      Int     @default(0) @db.UnsignedInt
+  dissuading_hangup    Int     @default(0) @db.UnsignedInt
+  dissuading_onhold_th Int     @default(0) @db.UnsignedInt
+  dissuading_ewt_th    Int     @default(0) @db.UnsignedInt
+  dissuading_qsize_th  Int     @default(0) @db.UnsignedInt
+  message_welcome      String? @db.Char(128)
+  message_queue        String  @db.Char(128)
+  message_dissuading   String  @db.Char(128)
+  message_flow_id      String? @db.Char(128)
+}
+
+model closeddial {
+  id          Int    @id @default(autoincrement()) @db.UnsignedInt
+  username    String @default("") @db.Char(64)
+  domain      String @default("") @db.Char(64)
+  cd_username String @default("") @db.Char(64)
+  cd_domain   String @default("") @db.Char(64)
+  group_id    String @default("") @db.Char(64)
+  new_uri     String @default("") @db.Char(255)
+
+  @@unique([username, domain, cd_domain, cd_username, group_id], map: "cd_idx1")
+  @@index([group_id], map: "cd_idx2")
+  @@index([cd_username], map: "cd_idx3")
+  @@index([username], map: "cd_idx4")
+}
+
+model clusterer {
+  id              Int     @id @default(autoincrement())
+  cluster_id      Int
+  node_id         Int
+  url             String  @db.Char(64)
+  state           Int     @default(1)
+  no_ping_retries Int     @default(3)
+  priority        Int     @default(50)
+  sip_addr        String? @db.Char(64)
+  flags           String? @db.Char(64)
+  description     String? @db.Char(64)
+
+  @@unique([cluster_id, node_id], map: "clusterer_idx")
+}
+
+model cpl {
+  id       Int     @id @default(autoincrement()) @db.UnsignedInt
+  username String  @db.Char(64)
+  domain   String  @default("") @db.Char(64)
+  cpl_xml  String? @db.Text
+  cpl_bin  String? @db.Text
+
+  @@unique([username, domain], map: "account_idx")
+}
+
+model dbaliases {
+  id             Int    @id @default(autoincrement()) @db.UnsignedInt
+  alias_username String @default("") @db.Char(64)
+  alias_domain   String @default("") @db.Char(64)
+  username       String @default("") @db.Char(64)
+  domain         String @default("") @db.Char(64)
+
+  @@unique([alias_username, alias_domain], map: "alias_idx")
+  @@index([username, domain], map: "target_idx")
+}
+
+model dialog {
+  dlg_id           BigInt  @id @db.UnsignedBigInt
+  callid           String  @db.Char(255)
+  from_uri         String  @db.Char(255)
+  from_tag         String  @db.Char(64)
+  to_uri           String  @db.Char(255)
+  to_tag           String  @db.Char(64)
+  mangled_from_uri String? @db.Char(64)
+  mangled_to_uri   String? @db.Char(64)
+  caller_cseq      String  @db.Char(11)
+  callee_cseq      String  @db.Char(11)
+  caller_ping_cseq Int     @db.UnsignedInt
+  callee_ping_cseq Int     @db.UnsignedInt
+  caller_route_set String? @db.Text
+  callee_route_set String? @db.Text
+  caller_contact   String? @db.Char(255)
+  callee_contact   String? @db.Char(255)
+  caller_sock      String  @db.Char(64)
+  callee_sock      String  @db.Char(64)
+  state            Int     @db.UnsignedInt
+  start_time       Int     @db.UnsignedInt
+  timeout          Int     @db.UnsignedInt
+  vars             Bytes?  @db.Blob
+  profiles         String? @db.Text
+  script_flags     Int     @default(0) @db.UnsignedInt
+  module_flags     Int     @default(0) @db.UnsignedInt
+  flags            Int     @default(0) @db.UnsignedInt
+  rt_on_answer     String? @db.Char(64)
+  rt_on_timeout    String? @db.Char(64)
+  rt_on_hangup     String? @db.Char(64)
+}
+
+model dialplan {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  dpid        Int
+  pr          Int     @default(0)
+  match_op    Int
+  match_exp   String  @db.Char(64)
+  match_flags Int     @default(0)
+  subst_exp   String? @db.Char(64)
+  repl_exp    String? @db.Char(32)
+  timerec     String? @db.Char(255)
+  disabled    Int     @default(0)
+  attrs       String? @db.Char(255)
+}
+
+model dispatcher {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  setid       Int     @default(0)
+  destination String  @default("") @db.Char(192)
+  socket      String? @db.Char(128)
+  state       Int     @default(0)
+  weight      String  @default("1") @db.Char(64)
+  priority    Int     @default(0)
+  attrs       String  @default("") @db.Char(128)
+  description String  @default("") @db.Char(64)
+  gt_type     Int     @default(0)
+}
+
+model domain {
+  id            Int      @id @default(autoincrement()) @db.UnsignedInt
+  domain        String   @unique(map: "domain_idx") @default("") @db.Char(64)
+  attrs         String?  @db.Char(255)
+  last_modified DateTime @default(dbgenerated("'1900-01-01 00:00:01'")) @db.DateTime(0)
+}
+
+model domainpolicy {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  rule        String  @db.Char(255)
+  type        String  @db.Char(255)
+  att         String? @db.Char(255)
+  val         String? @db.Char(128)
+  description String  @db.Char(255)
+
+  @@unique([rule, att, val], map: "rav_idx")
+  @@index([rule], map: "rule_idx")
+}
+
+model dr_carriers {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  carrierid   String  @unique(map: "dr_carrier_idx") @db.Char(64)
+  gwlist      String  @db.Char(255)
+  flags       Int     @default(0) @db.UnsignedInt
+  sort_alg    String  @default("N") @db.Char(1)
+  state       Int     @default(0) @db.UnsignedInt
+  attrs       String? @db.Char(255)
+  description String? @db.Char(128)
+}
+
+model dr_gateways {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  gwid        String  @unique(map: "dr_gw_idx") @db.Char(64)
+  type        Int     @default(0) @db.UnsignedInt
+  address     String  @db.Char(128)
+  strip       Int     @default(0) @db.UnsignedInt
+  pri_prefix  String? @db.Char(16)
+  attrs       String? @db.Char(255)
+  probe_mode  Int     @default(0) @db.UnsignedInt
+  state       Int     @default(0) @db.UnsignedInt
+  socket      String? @db.Char(128)
+  description String? @db.Char(128)
+}
+
+model dr_groups {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  username    String  @db.Char(64)
+  domain      String? @db.Char(128)
+  groupid     Int     @default(0) @db.UnsignedInt
+  description String? @db.Char(128)
+}
+
+model dr_partitions {
+  id               Int     @id @default(autoincrement()) @db.UnsignedInt
+  partition_name   String  @db.Char(255)
+  db_url           String  @db.Char(255)
+  drd_table        String? @db.Char(255)
+  drr_table        String? @db.Char(255)
+  drg_table        String? @db.Char(255)
+  drc_table        String? @db.Char(255)
+  ruri_avp         String? @db.Char(255)
+  gw_id_avp        String? @db.Char(255)
+  gw_priprefix_avp String? @db.Char(255)
+  gw_sock_avp      String? @db.Char(255)
+  rule_id_avp      String? @db.Char(255)
+  rule_prefix_avp  String? @db.Char(255)
+  carrier_id_avp   String? @db.Char(255)
+}
+
+model dr_rules {
+  ruleid       Int     @id @default(autoincrement()) @db.UnsignedInt
+  groupid      String  @db.Char(255)
+  prefix       String  @db.Char(64)
+  timerec      String? @db.Char(255)
+  priority     Int     @default(0)
+  routeid      String? @db.Char(255)
+  gwlist       String? @db.Char(255)
+  sort_alg     String  @default("N") @db.Char(1)
+  sort_profile Int?    @db.UnsignedInt
+  attrs        String? @db.Char(255)
+  description  String? @db.Char(128)
+}
+
+model emergency_report {
+  id                   Int    @id @default(autoincrement()) @db.UnsignedInt
+  callid               String @db.Char(25)
+  selectiveRoutingID   String @db.Char(11)
+  routingESN           Int    @default(0) @db.UnsignedInt
+  npa                  Int    @default(0) @db.UnsignedInt
+  esgwri               String @db.Char(50)
+  lro                  String @db.Char(20)
+  VPC_organizationName String @db.Char(50)
+  VPC_hostname         String @db.Char(50)
+  VPC_timestamp        String @db.Char(30)
+  result               String @db.Char(4)
+  disposition          String @db.Char(10)
+}
+
+model emergency_routing {
+  id                 Int    @id @default(autoincrement()) @db.UnsignedInt
+  selectiveRoutingID String @db.Char(11)
+  routingESN         Int    @default(0) @db.UnsignedInt
+  npa                Int    @default(0) @db.UnsignedInt
+  esgwri             String @db.Char(50)
+}
+
+model emergency_service_provider {
+  id               Int    @id @default(autoincrement()) @db.UnsignedInt
+  organizationName String @db.Char(50)
+  hostId           String @db.Char(30)
+  nenaId           String @db.Char(50)
+  contact          String @db.Char(20)
+  certUri          String @db.Char(50)
+  nodeIP           String @db.Char(20)
+  attribution      Int    @db.UnsignedInt
+}
+
+model fraud_detection {
+  ruleid                    Int    @id @default(autoincrement()) @db.UnsignedInt
+  profileid                 Int    @db.UnsignedInt
+  prefix                    String @db.Char(64)
+  start_hour                String @default("00:00") @db.Char(5)
+  end_hour                  String @default("23:59") @db.Char(5)
+  daysoftheweek             String @default("Mon-Sun") @db.Char(64)
+  cpm_warning               Int    @default(0) @db.UnsignedInt
+  cpm_critical              Int    @default(0) @db.UnsignedInt
+  call_duration_warning     Int    @default(0) @db.UnsignedInt
+  call_duration_critical    Int    @default(0) @db.UnsignedInt
+  total_calls_warning       Int    @default(0) @db.UnsignedInt
+  total_calls_critical      Int    @default(0) @db.UnsignedInt
+  concurrent_calls_warning  Int    @default(0) @db.UnsignedInt
+  concurrent_calls_critical Int    @default(0) @db.UnsignedInt
+  sequential_calls_warning  Int    @default(0) @db.UnsignedInt
+  sequential_calls_critical Int    @default(0) @db.UnsignedInt
+}
+
+model freeswitch {
+  id         Int     @id @default(autoincrement()) @db.UnsignedInt
+  username   String? @db.Char(64)
+  password   String  @db.Char(64)
+  ip         String  @db.Char(20)
+  port       Int     @default(8021)
+  events_csv String? @db.Char(255)
+}
+
+model globalblacklist {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  prefix      String  @default("") @db.Char(64)
+  whitelist   Boolean @default(false)
+  description String? @db.Char(255)
+
+  @@index([prefix], map: "globalblacklist_idx")
+}
+
+model grp {
+  id            Int      @id @default(autoincrement()) @db.UnsignedInt
+  username      String   @default("") @db.Char(64)
+  domain        String   @default("") @db.Char(64)
+  grp           String   @default("") @db.Char(64)
+  last_modified DateTime @default(dbgenerated("'1900-01-01 00:00:01'")) @db.DateTime(0)
+
+  @@unique([username, domain, grp], map: "account_group_idx")
+}
+
+model imc_members {
+  id       Int    @id @default(autoincrement()) @db.UnsignedInt
+  username String @db.Char(64)
+  domain   String @db.Char(64)
+  room     String @db.Char(64)
+  flag     Int
+
+  @@unique([username, domain, room], map: "account_room_idx")
+}
+
+model imc_rooms {
+  id     Int    @id @default(autoincrement()) @db.UnsignedInt
+  name   String @db.Char(64)
+  domain String @db.Char(64)
+  flag   Int
+
+  @@unique([name, domain], map: "name_domain_idx")
+}
+
+model jwt_profiles {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
+  tag          String @unique(map: "jwt_tag_idx") @db.Char(128)
+  sip_username String @db.Char(128)
+}
+
+model jwt_secrets {
+  id                Int    @id @default(autoincrement()) @db.UnsignedInt
+  corresponding_tag String @db.Char(128)
+  secret            String @db.Text
+  start_ts          Int
+  end_ts            Int
+}
+
+model load_balancer {
+  id          Int     @id @default(autoincrement()) @db.UnsignedInt
+  group_id    Int     @default(0) @db.UnsignedInt
+  dst_uri     String  @db.Char(128)
+  resources   String  @db.Char(255)
+  probe_mode  Int     @default(0) @db.UnsignedInt
+  attrs       String? @db.Char(255)
+  description String? @db.Char(128)
+
+  @@index([dst_uri], map: "dsturi_idx")
+}
+
+model location {
+  contact_id    BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  username      String   @default("") @db.Char(64)
+  domain        String?  @db.Char(64)
+  contact       String   @db.Text
+  received      String?  @db.Char(255)
+  path          String?  @db.Char(255)
+  expires       Int      @db.UnsignedInt
+  q             Float    @default(1.00) @db.Float
+  callid        String   @default("Default-Call-ID") @db.Char(255)
+  cseq          Int      @default(13)
+  last_modified DateTime @default(dbgenerated("'1900-01-01 00:00:01'")) @db.DateTime(0)
+  flags         Int      @default(0)
+  cflags        String?  @db.Char(255)
+  user_agent    String   @default("") @db.Char(255)
+  socket        String?  @db.Char(64)
+  methods       Int?
+  sip_instance  String?  @db.Char(255)
+  kv_store      String?  @db.Text
+  attr          String?  @db.Char(255)
+}
+
+model missed_calls {
+  id         Int       @id @default(autoincrement()) @db.UnsignedInt
+  method     String    @default("") @db.Char(16)
+  from_tag   String    @default("") @db.Char(64)
+  to_tag     String    @default("") @db.Char(64)
+  callid     String    @default("") @db.Char(64)
+  sip_code   String    @default("") @db.Char(3)
+  sip_reason String    @default("") @db.Char(32)
+  time       DateTime  @db.DateTime(0)
+  setuptime  Int       @default(0) @db.UnsignedInt
+  created    DateTime? @db.DateTime(0)
+
+  @@index([callid], map: "callid_idx")
+}
+
+model presentity {
+  id            Int     @id @default(autoincrement()) @db.UnsignedInt
+  username      String  @db.Char(64)
+  domain        String  @db.Char(64)
+  event         String  @db.Char(64)
+  etag          String  @db.Char(64)
+  expires       Int
+  received_time Int
+  body          Bytes?  @db.Blob
+  extra_hdrs    Bytes?  @db.Blob
+  sender        String? @db.Char(255)
+
+  @@unique([username, domain, event, etag], map: "presentity_idx")
+}
+
+model pua {
+  id              Int     @id @default(autoincrement()) @db.UnsignedInt
+  pres_uri        String  @db.Char(255)
+  pres_id         String  @db.Char(255)
+  event           Int
+  expires         Int
+  desired_expires Int
+  flag            Int
+  etag            String? @db.Char(64)
+  tuple_id        String? @db.Char(64)
+  watcher_uri     String? @db.Char(255)
+  to_uri          String? @db.Char(255)
+  call_id         String? @db.Char(64)
+  to_tag          String? @db.Char(64)
+  from_tag        String? @db.Char(64)
+  cseq            Int?
+  record_route    String? @db.Text
+  contact         String? @db.Char(255)
+  remote_contact  String? @db.Char(255)
+  version         Int?
+  extra_headers   String? @db.Text
+  sharing_tag     String? @db.Char(32)
+
+  @@index([pres_uri, event], map: "del1_idx")
+  @@index([expires], map: "del2_idx")
+  @@index([pres_uri, pres_id, flag, event], map: "update_idx")
+}
+
+model qr_profiles {
+  id                 Int    @id @default(autoincrement()) @db.UnsignedInt
+  profile_name       String @db.Char(64)
+  warn_threshold_asr Float  @default(-1)
+  warn_threshold_ccr Float  @default(-1)
+  warn_threshold_pdd Float  @default(-1)
+  warn_threshold_ast Float  @default(-1)
+  warn_threshold_acd Float  @default(-1)
+  crit_threshold_asr Float  @default(-1)
+  crit_threshold_ccr Float  @default(-1)
+  crit_threshold_pdd Float  @default(-1)
+  crit_threshold_ast Float  @default(-1)
+  crit_threshold_acd Float  @default(-1)
+  warn_penalty_asr   Float  @default(0.5)
+  warn_penalty_ccr   Float  @default(0.5)
+  warn_penalty_pdd   Float  @default(0.5)
+  warn_penalty_ast   Float  @default(0.5)
+  warn_penalty_acd   Float  @default(0.5)
+  crit_penalty_asr   Float  @default(0.05)
+  crit_penalty_ccr   Float  @default(0.05)
+  crit_penalty_pdd   Float  @default(0.05)
+  crit_penalty_ast   Float  @default(0.05)
+  crit_penalty_acd   Float  @default(0.05)
+}
+
+model rc_clients {
+  id             Int    @id @default(autoincrement()) @db.UnsignedInt
+  client_id      String @unique(map: "client_id_idx") @db.Char(64)
+  wholesale_rate Int    @default(0) @db.UnsignedInt
+  retail_rate    Int    @default(0) @db.UnsignedInt
+}
+
+model rc_demo_ratesheet {
+  id          Int    @id @default(autoincrement()) @db.UnsignedInt
+  prefix      String @unique(map: "prefix_idx") @db.Char(64)
+  destination String @db.Char(128)
+  price       Float  @default(0) @db.Float
+  minimum     Int    @default(0) @db.UnsignedInt
+  increment   Int    @default(1) @db.UnsignedInt
+}
+
+model rc_ratesheets {
+  id              Int    @id @default(autoincrement()) @db.UnsignedInt
+  ratesheet_table String @unique(map: "table_idx") @db.Char(64)
+  currency        String @db.Char(64)
+}
+
+model rc_vendors {
+  id          Int    @id @default(autoincrement()) @db.UnsignedInt
+  vendor_id   String @unique(map: "vendor_id_idx") @db.Char(64)
+  vendor_rate Int    @default(0) @db.UnsignedInt
+}
+
+model re_grp {
+  id       Int    @id @default(autoincrement()) @db.UnsignedInt
+  reg_exp  String @default("") @db.Char(128)
+  group_id Int    @default(0)
+
+  @@index([group_id], map: "group_idx")
+}
+
+model registrant {
+  id                     Int     @id @default(autoincrement()) @db.UnsignedInt
+  registrar              String  @default("") @db.Char(255)
+  proxy                  String? @db.Char(255)
+  aor                    String  @default("") @db.Char(255)
+  third_party_registrant String? @db.Char(255)
+  username               String? @db.Char(64)
+  password               String? @db.Char(64)
+  binding_URI            String  @default("") @db.Char(255)
+  binding_params         String? @db.Char(64)
+  expiry                 Int?    @db.UnsignedInt
+  forced_socket          String? @db.Char(64)
+  cluster_shtag          String? @db.Char(64)
+  state                  Int     @default(0)
+
+  @@unique([aor, binding_URI, registrar], map: "registrant_idx")
+}
+
+model rls_presentity {
+  id             Int    @id @default(autoincrement()) @db.UnsignedInt
+  rlsubs_did     String @db.Char(255)
+  resource_uri   String @db.Char(255)
+  content_type   String @db.Char(255)
+  presence_state Bytes  @db.Blob
+  expires        Int
+  updated        Int
+  auth_state     Int
+  reason         String @db.Char(64)
+
+  @@unique([rlsubs_did, resource_uri], map: "rls_presentity_idx")
+  @@index([updated], map: "updated_idx")
+}
+
+model rls_watchers {
+  id               Int     @id @default(autoincrement()) @db.UnsignedInt
+  presentity_uri   String  @db.Char(255)
+  to_user          String  @db.Char(64)
+  to_domain        String  @db.Char(64)
+  watcher_username String  @db.Char(64)
+  watcher_domain   String  @db.Char(64)
+  event            String  @default("presence") @db.Char(64)
+  event_id         String? @db.Char(64)
+  to_tag           String  @db.Char(64)
+  from_tag         String  @db.Char(64)
+  callid           String  @db.Char(64)
+  local_cseq       Int
+  remote_cseq      Int
+  contact          String  @db.Char(64)
+  record_route     String? @db.Text
+  expires          Int
+  status           Int     @default(2)
+  reason           String  @db.Char(64)
+  version          Int     @default(0)
+  socket_info      String  @db.Char(64)
+  local_contact    String  @db.Char(255)
+
+  @@unique([presentity_uri, callid, to_tag, from_tag], map: "rls_watcher_idx")
+}
+
+model route_tree {
+  id      Int     @id @default(autoincrement()) @db.UnsignedInt
+  carrier String? @db.Char(64)
+}
+
+model rtpengine {
+  id     Int    @id @default(autoincrement()) @db.UnsignedInt
+  socket String @db.Text
+  set_id Int    @db.UnsignedInt
+}
+
+model rtpproxy_sockets {
+  id            Int    @id @default(autoincrement()) @db.UnsignedInt
+  rtpproxy_sock String @db.Text
+  set_id        Int    @db.UnsignedInt
+}
+
+model silo {
+  id       Int     @id @default(autoincrement()) @db.UnsignedInt
+  src_addr String  @default("") @db.Char(255)
+  dst_addr String  @default("") @db.Char(255)
+  username String  @default("") @db.Char(64)
+  domain   String  @default("") @db.Char(64)
+  inc_time Int     @default(0)
+  exp_time Int     @default(0)
+  snd_time Int     @default(0)
+  ctype    String? @db.Char(255)
+  body     Bytes?  @db.Blob
+
+  @@index([username, domain], map: "account_idx")
+}
+
+model sip_trace {
+  id          Int      @id @default(autoincrement()) @db.UnsignedInt
+  time_stamp  DateTime @default(dbgenerated("'1900-01-01 00:00:01'")) @db.DateTime(0)
+  callid      String   @default("") @db.Char(255)
+  trace_attrs String?  @db.Char(255)
+  msg         String   @db.Text
+  method      String   @default("") @db.Char(32)
+  status      String?  @db.Char(255)
+  from_proto  String   @db.Char(5)
+  from_ip     String   @default("") @db.Char(50)
+  from_port   Int      @db.UnsignedInt
+  to_proto    String   @db.Char(5)
+  to_ip       String   @default("") @db.Char(50)
+  to_port     Int      @db.UnsignedInt
+  fromtag     String   @default("") @db.Char(64)
+  direction   String   @default("") @db.Char(4)
+
+  @@index([callid], map: "callid_idx")
+  @@index([time_stamp], map: "date_idx")
+  @@index([from_ip], map: "fromip_idx")
+  @@index([trace_attrs], map: "trace_attrs_idx")
+}
+
+model smpp {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
+  name         String @unique(map: "unique_name") @db.Char(255)
+  ip           String @db.Char(50)
+  port         Int    @db.UnsignedInt
+  system_id    String @db.Char(16)
+  password     String @db.Char(9)
+  system_type  String @default("") @db.Char(13)
+  src_ton      Int    @default(0) @db.UnsignedInt
+  src_npi      Int    @default(0) @db.UnsignedInt
+  dst_ton      Int    @default(0) @db.UnsignedInt
+  dst_npi      Int    @default(0) @db.UnsignedInt
+  session_type Int    @default(1) @db.UnsignedInt
+}
+
+model speed_dial {
+  id          Int    @id @default(autoincrement()) @db.UnsignedInt
+  username    String @default("") @db.Char(64)
+  domain      String @default("") @db.Char(64)
+  sd_username String @default("") @db.Char(64)
+  sd_domain   String @default("") @db.Char(64)
+  new_uri     String @default("") @db.Char(255)
+  fname       String @default("") @db.Char(64)
+  lname       String @default("") @db.Char(64)
+  description String @default("") @db.Char(64)
+
+  @@unique([username, domain, sd_domain, sd_username], map: "speed_dial_idx")
+}
+
+model subscriber {
+  id             Int     @id @default(autoincrement()) @db.UnsignedInt
+  username       String  @default("") @db.Char(64)
+  domain         String  @default("") @db.Char(64)
+  password       String  @default("") @db.Char(25)
+  email_address  String  @default("") @db.Char(64)
+  ha1            String  @default("") @db.Char(64)
+  ha1_sha256     String  @default("") @db.Char(64)
+  ha1_sha512t256 String  @default("") @db.Char(64)
+  rpid           String? @db.Char(64)
+
+  @@unique([username, domain], map: "account_idx")
+  @@index([username], map: "username_idx")
+}
+
+model tls_mgm {
+  id               Int     @id @default(autoincrement()) @db.UnsignedInt
+  domain           String  @db.Char(64)
+  match_ip_address String? @db.Char(255)
+  match_sip_domain String? @db.Char(255)
+  type             Int     @default(1)
+  method           String? @default("SSLv23") @db.Char(16)
+  verify_cert      Int?    @default(1)
+  require_cert     Int?    @default(1)
+  certificate      Bytes?  @db.Blob
+  private_key      Bytes?  @db.Blob
+  crl_check_all    Int?    @default(0)
+  crl_dir          String? @db.Char(255)
+  ca_list          Bytes?  @db.MediumBlob
+  ca_dir           String? @db.Char(255)
+  cipher_list      String? @db.Char(255)
+  dh_params        Bytes?  @db.Blob
+  ec_curve         String? @db.Char(255)
+
+  @@unique([domain, type], map: "domain_type_idx")
+}
+
+model uri {
+  id            Int      @id @default(autoincrement()) @db.UnsignedInt
+  username      String   @default("") @db.Char(64)
+  domain        String   @default("") @db.Char(64)
+  uri_user      String   @default("") @db.Char(64)
+  last_modified DateTime @default(dbgenerated("'1900-01-01 00:00:01'")) @db.DateTime(0)
+
+  @@unique([username, domain, uri_user], map: "account_idx")
+}
+
+model userblacklist {
+  id        Int     @id @default(autoincrement()) @db.UnsignedInt
+  username  String  @default("") @db.Char(64)
+  domain    String  @default("") @db.Char(64)
+  prefix    String  @default("") @db.Char(64)
+  whitelist Boolean @default(false)
+
+  @@index([username, domain, prefix], map: "userblacklist_idx")
+}
+
+model usr_preferences {
+  id            Int      @id @default(autoincrement()) @db.UnsignedInt
+  uuid          String   @default("") @db.Char(64)
+  username      String   @default("0") @db.Char(64)
+  domain        String   @default("") @db.Char(64)
+  attribute     String   @default("") @db.Char(32)
+  type          Int      @default(0)
+  value         String   @default("") @db.Char(128)
+  last_modified DateTime @default(dbgenerated("'1900-01-01 00:00:01'")) @db.DateTime(0)
+
+  @@index([uuid, attribute], map: "ua_idx")
+  @@index([username, domain, attribute], map: "uda_idx")
+  @@index([value], map: "value_idx")
+}
+
+model version {
+  table_name    String @unique(map: "t_name_idx") @db.Char(32)
+  table_version Int    @default(0) @db.UnsignedInt
+}
+
+model watchers {
+  id               Int     @id @default(autoincrement()) @db.UnsignedInt
+  presentity_uri   String  @db.Char(255)
+  watcher_username String  @db.Char(64)
+  watcher_domain   String  @db.Char(64)
+  event            String  @default("presence") @db.Char(64)
+  status           Int
+  reason           String? @db.Char(64)
+  inserted_time    Int
+
+  @@unique([presentity_uri, watcher_username, watcher_domain, event], map: "watcher_idx")
+}
+
+model xcap {
+  id       Int    @id @default(autoincrement()) @db.UnsignedInt
+  username String @db.Char(64)
+  domain   String @db.Char(64)
+  doc      Bytes
+  doc_type Int
+  etag     String @db.Char(64)
+  source   Int
+  doc_uri  String @db.Char(255)
+  port     Int
+
+  @@unique([username, domain, doc_type, doc_uri], map: "account_doc_type_idx")
+  @@index([source], map: "source_idx")
+}

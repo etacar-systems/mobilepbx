@@ -9,8 +9,12 @@ const PBX_API_USERNAME = "apiuser";
 const PBX_API_PASSWORD = "d6kVImEEV1A34B2fjduZpxxFAf4";
 //const PBX_BASE_URL = "https://voip.mobiililinja.fi/webapi/core/";
 const PBX_BASE_URL = "https://mobilepbx.mobiililinja.fi/webapi/core/";
-
 export const config = {
+  mariaDB: {
+    host: process.env.MARIA_DB_HOST,
+    password: process.env.MARIA_DB_PASSWORD,
+    database: process.env.MARIA_DB_DATABASE,
+  },
   mongo: {
     uri: MONGO_URI,
   },
@@ -34,10 +38,10 @@ export const config = {
       INTERNAL_SERVER: "Internal server error",
       COMPANY_ERROR: "company not found",
     },
-    ERROR :{
-      WEBTOKEN:"JsonWebTokenError",
-      EXPIRETOKEN:"TokenExpiredError"
-    }
+    ERROR: {
+      WEBTOKEN: "JsonWebTokenError",
+      EXPIRETOKEN: "TokenExpiredError",
+    },
   },
 
   PBX_API: {
@@ -72,8 +76,7 @@ export const config = {
       ADD: PBX_BASE_URL + "timeconditions/create.php",
       UPDATE: PBX_BASE_URL + "timeconditions/update.php",
       DELETE: PBX_BASE_URL + "timeconditions/delete.php?id=",
-      LIST:
-        PBX_BASE_URL + "timeconditions/fetch_timecondition_by_domain.php?id=",
+      LIST: PBX_BASE_URL + "timeconditions/fetch_timecondition_by_domain.php?id=",
     },
     CONFERENCE: {
       ADD: PBX_BASE_URL + "conference/create.php",
@@ -102,8 +105,7 @@ export const config = {
       UPDATE: PBX_BASE_URL + "dialplan_outbound/update.php",
       REMOVE: PBX_BASE_URL + "dialplan_outbound/delete.php?id=",
       DIALPLAN:
-        PBX_BASE_URL +
-        "dropdown/dialplan_expression.php?id=2348f0bd-fa6f-4f93-b3d0-bbb8bf80cbb8",
+        PBX_BASE_URL + "dropdown/dialplan_expression.php?id=2348f0bd-fa6f-4f93-b3d0-bbb8bf80cbb8",
     },
     FIREWALL: {
       ADD: PBX_BASE_URL + "firewall/create.php",
@@ -119,19 +121,19 @@ export const config = {
       GET: PBX_BASE_URL + "cdr/fetch_by_recordings.php?id=",
       GET_uuid: PBX_BASE_URL + "recording/fetch_recording_by_id.php?id=",
     },
-    DASHBOARD:{
+    DASHBOARD: {
       GET_REPORTS: PBX_BASE_URL + "report/index.php",
       GET_CALL_MATRICS: PBX_BASE_URL + "report/call_matrics.php",
       GET_MISSED_CALL: PBX_BASE_URL + "report/missed_call.php",
       GET_RINGGROUP_CALL: PBX_BASE_URL + "report/ring_group.php",
-    }
+    },
   },
-  SELECT_NAME :{
-    IVR:1,
-    RINGGROUP:2,
-    EXTENSION:3,
-    RECORDING:5,
-    CONFERENCE:4,
-    TIMECONDTION:6
-  }
+  SELECT_NAME: {
+    IVR: 1,
+    RINGGROUP: 2,
+    EXTENSION: 3,
+    RECORDING: 5,
+    CONFERENCE: 4,
+    TIMECONDTION: 6,
+  },
 };

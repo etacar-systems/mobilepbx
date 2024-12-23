@@ -184,6 +184,7 @@ const config = {
   },
   CDR: {
     CDR_DOMAIN_LIST: BASE_URL + "/cdr_logs/new/domain",
+    CDR_DOMAIN_LIST_LIST: BASE_URL + "/cdr_logs/new/domain_list",
   },
   RECORDING: {
     URL: {

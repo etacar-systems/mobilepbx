@@ -2642,7 +2642,7 @@ const updatePstnNumber = async (req: Request, res: Response, next: NextFunction)
         caller_id_name,
         caller_id_number,
         destination_condition,
-        destination_action: [],
+        destination_action: [], 
         description,
         destination_enabled: destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
