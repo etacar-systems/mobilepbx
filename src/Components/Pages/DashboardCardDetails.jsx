@@ -6,6 +6,7 @@ import { ReactComponent as Persontimeicon } from "../../Assets/Icon/time-svgrepo
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setExtensionStatus } from "../../Redux/Reducers/DataServices";
+import Utils from "../../utils";
 function DashboardCardDetails() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -63,26 +64,6 @@ function DashboardCardDetails() {
       setOnlineCount(busy_extension_sum + offline_extension_sum + online_extension_sum);
     }
   }, [allListeners?.listener_params]);
-
-  // round to 2 digits after point
-  function toFixedIfNecessary( value, dp = 2 ){
-    return +parseFloat(value).toFixed( dp );
-  }
-  // Calculate the sum for each type
-
-  const formatDuration = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = toFixedIfNecessary(seconds % 60);
-
-    if (hrs > 0) {
-      return `${hrs}h ${mins}m ${secs}s`;
-    } else if (mins > 0) {
-      return `${mins}m ${secs}s`;
-    } else {
-      return `${secs}s`;
-    }
-  };
 
   return (
     <>
@@ -143,7 +124,7 @@ function DashboardCardDetails() {
               <div className="ml-4">
                 <span className="chart-value">{t("Average duration")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
-                  {formatDuration(valuedata?.total_duration_sec/(valuedata?.total_answered + valuedata?.total_outbound) )}
+                  {Utils.formatDuration(valuedata?.total_duration_sec/(valuedata?.total_answered + valuedata?.total_outbound) )}
                 </h4>
               </div>
             </div>

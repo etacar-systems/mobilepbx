@@ -55,7 +55,7 @@ function DashboardHeaderDatePicker({
                   </Col>
                 </Row>
               </Col>
-              <div className="col-md-6 col-sm-12 col-name text-right mt-4 hidden-xs">
+              <div className="d-none col-md-6 col-sm-12 col-name text-right mt-4 hidden-xs">
                 <a className="p-1 text-blue pdffont" href="#">
                   <i className="fa fa-envelope mr-1"></i>
                   {t("Send to Email")}
