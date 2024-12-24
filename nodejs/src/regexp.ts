@@ -103,7 +103,7 @@ const REGEXP = {
     company_password: /^[A-Za-z0-9!@#$%^&*()_+{}|;:'",.<>?/\\[\]\-=`~]{4,15}$/,
     company_name: /^.{1,50}$/,
     company_email:
-      /^([A-Za-z0-9_\-\.+])+\@([A-Za-z0-9_\-\.+])+\.([A-Za-z]{2,4})$/,
+      /^([A-Za-z0-9_\-\.+])+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,10}$/i,
   },
   extension: {
     first_name: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,

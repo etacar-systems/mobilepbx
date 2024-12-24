@@ -702,7 +702,7 @@ export default function Customer() {
             } else {
               if (res?.payload?.error) {
                 setsaveLoading(false);
-                toast.error(t(res?.payload?.error?.message), {
+                toast.error(t(res?.payload?.error?.response?.data?.message || res?.payload?.error?.message), {
                   autoClose: config.TOST_AUTO_CLOSE,
                 });
               }
