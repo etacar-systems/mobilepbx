@@ -76,6 +76,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       });
     }
   } catch (error) {
+    logger.info(`callrecord Object: ${JSON.stringify(error, null, 2)}`);
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
