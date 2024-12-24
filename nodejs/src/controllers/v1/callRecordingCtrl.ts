@@ -62,12 +62,13 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
         return updatedItem;
       });
       const insertedData = await CdrModel.insertMany(updatedData);
-
+      logger.info(`callrecord Object: ${JSON.stringify(res, null, 2)}`);
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
         message: "Data added successfully",
       });
     } catch (error) {
+      logger.info(`callrecord Object: ${JSON.stringify(res, null, 2)}`);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed To Create Trunks",
