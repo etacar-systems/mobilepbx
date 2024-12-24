@@ -90,21 +90,22 @@ const getDasboardDetail = async (
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        start_date: start_date,
-        end_date: end_date,
+        // start_date: start_date,
+        // end_date: end_date,
       },
     };
 
-    console.log("api_config", api_config);
+    console.log("khanjan_api_config", api_config);
     try {
       const reports_api_data: any = await axios.request(api_config);
 
       // CHANGED
       const extension_list: any = await user.find({
-        cid: companyDetail._id, is_deleted: 0, createdAt: {
-          $gte: start_date,
-          $lt: end_date
-        }
+        cid: companyDetail._id, is_deleted: 0, 
+        // createdAt: {
+        //   $gte: start_date,
+        //   $lt: end_date
+        // }
       });
 
       if (
@@ -244,8 +245,6 @@ const getDasboardDetail = async (
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        start_date: start_date,
-        end_date: end_date,
       },
     };
     console.log("api_ring_groups", api_ring_groups)
@@ -256,10 +255,7 @@ const getDasboardDetail = async (
 
       // CHANGED
       const ring_group_list: any = await ring_group.find({
-        cid: companyDetail._id, is_deleted: 0, createdAt: {
-          $gte: start_date,
-          $lt: end_date
-        }
+        cid: companyDetail._id, is_deleted: 0, 
       })
 
       // console.log("ringroup_api_data",ringroup_api_data)
