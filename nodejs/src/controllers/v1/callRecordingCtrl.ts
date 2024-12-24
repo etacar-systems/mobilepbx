@@ -55,31 +55,36 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     // }
 
     try {
-      const updatedData = data.map((data: any) => {
-        const updatedItem = { ...data }; // Copy the item to avoid modifying the original object
-        updatedItem.call_raw_data = updatedItem.call_flow; // Rename `call_flow` to `call_raw_data`
-        delete updatedItem.call_flow; // Delete the old `call_flow` field
-        return updatedItem;
-      });
+      // Insert data into the database
+      const updatedData = { ...data }; // Copy the object to avoid modifying the original
+      updatedData.call_raw_data = updatedData.call_flow; // Rename `call_flow` to `call_raw_data`
+      delete updatedData.call_flow; // Delete the old `call_flow` field
       const insertedData = await CdrModel.insertMany(updatedData);
-      logger.info(`callrecord Object: ${JSON.stringify(res, null, 2)}`);
+
+      // console.log(updatedData, "updatedData");
+      // Log the response status and message instead of the full res object
+      logger.info(`Response status:, Message: Data added successfully`, updatedData);
+
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
         message: "Data added successfully",
       });
-    } catch (error) {
-      logger.info(`callrecord Object: ${JSON.stringify(res, null, 2)}`);
+    } catch (error: any) {
+      // Log error with the relevant response data
+      logger.error(`Error while inserting data: ${error.message}`);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed To Create Trunks",
-        error: error,
+        error: error.message,
       });
     }
-  } catch (error) {
-    logger.info(`callrecord Object: ${JSON.stringify(error, null, 2)}`);
+  } catch (error: any) {
+    // Log the error without trying to stringify the res object
+    logger.error(`callrecord Object error: ${error.message}`);
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+      error: error.message,
     });
   }
 };
