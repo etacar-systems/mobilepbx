@@ -437,12 +437,12 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
     }
-
+    console.log("search", search, REGEXP.COMMON.checkStringISNumber.test(search));
     if (search && REGEXP.COMMON.checkStringISNumber.test(search)) {
       console.log("caller_number if called");
       newParamString = newParamString + `&caller_number=${search || ""}`;
     }
-
+    console.log("search", search, REGEXP.COMMON.checkIsString.test(search));
     if (search && REGEXP.COMMON.checkIsString.test(search)) {
       console.log("caller_name if called");
       newParamString = newParamString + `&caller_name=${search || ""}`;
@@ -450,7 +450,6 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
     const token = await get_token(req);
     const user_detail = await User_token(token);
-    console.log(user_detail, token);
     if (user_detail === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.COMPANY_NOT_EXIST).send({
         success: 0,
@@ -471,28 +470,34 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       // new
       let find_query: { [key: string]: any } = {};
 
+      find_query = {
+        ...find_query,
+        domain_uuid: companyDetail?.domain_uuid,
+        $expr: {
+          $and: [
+            {
+              $gte: [
+                {
+                  $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                },
+                start_date,
+              ],
+            },
+            {
+              $lte: [
+                {
+                  $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                },
+                end_date,
+              ],
+            },
+          ],
+        },
+      };
+
       if (search) {
         find_query = {
-          $expr: {
-            $and: [
-              {
-                $gte: [
-                  {
-                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
-                  },
-                  start_date,
-                ],
-              },
-              {
-                $lte: [
-                  {
-                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
-                  },
-                  end_date,
-                ],
-              },
-            ],
-          },
+          ...find_query,
           $or: [
             {
               caller_id_name: {
@@ -519,29 +524,6 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
               },
             },
           ],
-        };
-      } else {
-        find_query = {
-          $expr: {
-            $and: [
-              {
-                $gte: [
-                  {
-                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
-                  },
-                  start_date,
-                ],
-              },
-              {
-                $lte: [
-                  {
-                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
-                  },
-                  end_date,
-                ],
-              },
-            ],
-          },
         };
       }
 
