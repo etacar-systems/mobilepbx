@@ -362,8 +362,8 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
     const per_page = data.size;
     const page = data.page;
     const direction = data.direction;
-    // const start_date = data.start_date;
-    // const end_date = data.end_date;
+    const start_date = data.start_date;
+    const end_date = data.end_date;
     const cid = data.cid;
     const extensionId = data.extension_id;
     const select_type = data.select_type;
@@ -428,11 +428,11 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
     if (direction) {
       newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${
         direction || ""
-      }&extension=${extension || ""}`;
+      }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
     } else {
       newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${
         extension || ""
-      }`;
+      }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
@@ -473,6 +473,26 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
       if (search) {
         find_query = {
+          $expr: {
+            $and: [
+              {
+                $gte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  start_date,
+                ],
+              },
+              {
+                $lte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  end_date,
+                ],
+              },
+            ],
+          },
           $or: [
             {
               caller_id_name: {
@@ -501,7 +521,28 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
           ],
         };
       } else {
-        find_query = {};
+        find_query = {
+          $expr: {
+            $and: [
+              {
+                $gte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  start_date,
+                ],
+              },
+              {
+                $lte: [
+                  {
+                    $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
+                  },
+                  end_date,
+                ],
+              },
+            ],
+          },
+        };
       }
 
       const reports_list = await cdrs.find(find_query);
