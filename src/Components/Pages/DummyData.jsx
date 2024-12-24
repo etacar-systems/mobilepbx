@@ -1,5 +1,7 @@
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
+import Utils from "../../utils";
+
 const ChartDataComponent = () => {
   const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
   console.log(data, "datacheckdummy");
@@ -36,11 +38,7 @@ const ChartDataComponent = () => {
       columns: [["data1", 30, 40, 10, 40, 12, 22, 40]],
       colors: ["#f1c40f"],
       title: "Response time",
-      value: `${Math.floor((valuedata?.avg_response_sec * 100).toFixed(0) / 60)
-        .toString()
-        .padStart(2, "0")}:${((valuedata?.avg_response_sec * 100).toFixed(0) % 60)
-        .toString()
-        .padStart(2, "0")}`,
+      value: Utils.formatDuration(valuedata?.avg_response_sec),
     },
   ];
 
