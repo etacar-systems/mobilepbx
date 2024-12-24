@@ -264,16 +264,15 @@ const getDasboardDetail = async (
         ringroup_api_data?.data?.data || ring_group_list // new
       ) {
 
-        const mergedArray = ringroup_api_data?.data?.data?.map((r: any) => {
-          const matchingCall = ring_group_list.find(
-            (c: any) => c.ring_group_uuid === r.ring_group_uuid
-          );
-          return { ...r, ...matchingCall };
-        });
+        // const mergedArray = ringroup_api_data?.data?.data?.map((r: any) => {
+        //   const matchingCall = ring_group_list.find(
+        //     (c: any) => c.ring_group_uuid === r.ring_group_uuid
+        //   );
+        //   return { ...r, ...matchingCall };
+        // });
 
         let ring_group_call_data = {
-          ring_group_call: mergedArray,
-          // ring_group_call: ringroup_api_data?.data?.data,
+          ring_group_call: ringroup_api_data?.data?.data,
           ring_group_list: ring_group_list //new 
         }
         dashboard_response_obj.ring_group_detail = ring_group_call_data;

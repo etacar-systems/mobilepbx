@@ -18,7 +18,7 @@ function RingsGroupDashboard() {
   const data = useSelector(
     (state) =>
       state.getapiall.getapiall.dashboardData?.DashboardDetail
-        ?.ring_group_detail?.ring_group_call
+        ?.ring_group_detail?.ring_group_list
   );
   const userdata = useSelector(
     (state) => state?.postapiAll?.postapiall?.Extension?.usersData
@@ -358,10 +358,10 @@ function RingsGroupDashboard() {
                       </td>
                       <td className="table-custom-body-td">
                         <small className="small-cusnam">
-                          {ele?.ring_group_name}
+                          {ele?.name}
                         </small>
                         <h6 className="mb-0 small-cusnum">
-                          {ele?.ring_group_extension}
+                          {ele?.extension}
                         </h6>
                         <Button
                           size="sm"
