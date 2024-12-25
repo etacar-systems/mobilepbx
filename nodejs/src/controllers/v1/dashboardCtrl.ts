@@ -182,7 +182,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         },
         "--data--"
       );
-
+      dashboard_response_obj.reports_counts_updated = {
+        ...data,
+        today_missed_call_percentage: data[0].today_missed_calls
+          ? (data[0].today_missed_calls / data[0].today_total_calls) * 100
+          : 0,
+      };
       // return res.json({
       //   success: 1,
       //   message: "Dashboard Detail",
