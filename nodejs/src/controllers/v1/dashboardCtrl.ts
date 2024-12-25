@@ -7,12 +7,13 @@ import axios from "axios";
 import moment from "moment";
 import ring_group from "../../models/ring_group";
 import user from "../../models/user";
+import CdrModel from "../../models/cdrs";
 
-const getDasboardDetail = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+function convertISODate(date: String): String {
+  return new Date(`${date.replace(" ", "T")}Z`).toISOString();
+}
+
+const getDasboardDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -22,6 +23,8 @@ const getDasboardDetail = async (
       _id: user_detail?.cid,
       is_deleted: 0,
     });
+
+    console.log(companyDetail);
 
     if (!companyDetail) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -56,20 +59,14 @@ const getDasboardDetail = async (
       });
     }
 
-    if (
-      start_date == "" ||
-      !moment(start_date, "YYYY-MM-DD HH:mm", true).isValid()
-    ) {
+    if (start_date == "" || !moment(start_date, "YYYY-MM-DD HH:mm", true).isValid()) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
         success: 0,
         message: `Start Date Is Invalid.`,
       });
     }
 
-    if (
-      end_date == "" ||
-      !moment(end_date, "YYYY-MM-DD HH:mm", true).isValid()
-    ) {
+    if (end_date == "" || !moment(end_date, "YYYY-MM-DD HH:mm", true).isValid()) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
         success: 0,
         message: `End Date Is Invalid.`,
@@ -83,6 +80,8 @@ const getDasboardDetail = async (
       });
     }
 
+    const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     let api_config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -90,22 +89,135 @@ const getDasboardDetail = async (
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        // start_date: start_date,
-        // end_date: end_date,
+        // start_date: convertISODate(start_date),
+        // end_date: convertISODate(end_date),
+        // defaultTimezone,
       },
     };
 
+    // console.log(convertISODate(start_date), convertISODate(end_date))
+
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const data = await CdrModel.aggregate([
+        { $match: { domain_uuid: companyDetail.domain_uuid } },
+        {
+          $group: {
+            _id: null,
+            total_calls: { $sum: 1 },
+            total_duration_sec: { $sum: "$duration_sec" },
+            avg_response_sec: { $avg: "$response_time_sec" },
+            today_total_calls: {
+              $sum: {
+                $cond: [{ $gte: ["$start_stamp", today] }, 1, 0],
+              },
+            },
+            today_missed_calls: {
+              $sum: {
+                $cond: [
+                  { $and: [{ $eq: ["$status", "missed"] }, { $gte: ["$start_stamp", today] }] },
+                  1,
+                  0,
+                ],
+              },
+            },
+            total_missed: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+              },
+            },
+            total_answered: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "answered"] }, 1, 0],
+              },
+            },
+            voicemailCalls: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "voicemail"] }, 1, 0],
+              },
+            },
+            total_outbound: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "outbound_calls"] }, 1, 0],
+              },
+            },
+            total_local: {
+              $sum: {
+                $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
+              },
+            },
+            inboundCalls: {
+              $sum: {
+                $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            total_calls: 1,
+            total_duration_sec: 1,
+            today_total_calls: 1,
+            today_missed_calls: 1,
+            today_missed_call_percentage: 1,
+            avg_response_sec: 1,
+            total_missed: 1,
+            total_answered: 1,
+            total_outbound: 1,
+            total_local: 1,
+            voicemailCalls: 1,
+            inboundCalls: 1,
+          },
+        },
+      ]);
+      console.log(
+        {
+          ...data,
+          today_missed_call_percentage: data[0].today_missed_calls
+            ? (data[0].today_missed_calls / data[0].today_total_calls) * 100
+            : 0,
+        },
+        "--data--"
+      );
+
+      // return res.json({
+      //   success: 1,
+      //   message: "Dashboard Detail",
+      //   DashboardDetail: {
+      //     reports_counts: {
+      //       ...data[0],
+      //       today_missed_call_percentage: data[0].today_missed_calls
+      //         ? (data[0].today_missed_calls / data[0].today_total_calls) * 100
+      //         : 0,
+      //     },
+      //   },
+      //   extra: {
+      //     domain_uuid: companyDetail.domain_uuid,
+      //     start_date: convertISODate(start_date),
+      //     end_date: convertISODate(end_date),
+      //   },
+      // });
+    } catch (error) {
+      console.error("Error fetching call statistics:", error);
+      throw error;
+    }
+
     console.log("khanjan_api_config", api_config);
+
     try {
       const reports_api_data: any = await axios.request(api_config);
 
       // CHANGED
       const extension_list: any = await user.find({
-        cid: companyDetail._id, is_deleted: 0, 
-        // createdAt: {
-        //   $gte: start_date,
-        //   $lt: end_date
-        // }
+        cid: companyDetail._id,
+        is_deleted: 0,
+        createdAt: {
+          $gte: start_date,
+          $lt: end_date,
+        },
       });
 
       if (
@@ -115,11 +227,8 @@ const getDasboardDetail = async (
         reports_api_data?.data?.call_comparison &&
         extension_list
       ) {
-
         const mergedArray = reports_api_data?.data?.data?.map((u: any) => {
-          const matchingCall = extension_list.find(
-            (c: any) => c.user_extension === u.extension
-          );
+          const matchingCall = extension_list.find((c: any) => c.user_extension === u.extension);
           return { ...u, ...matchingCall };
         });
         // console.log("mergers arraymergers array",mergedArray);
@@ -127,7 +236,7 @@ const getDasboardDetail = async (
         let extension_detail_data: any = {
           extensions: mergedArray,
           // extensions: reports_api_data?.data?.data,
-          extension_list: extension_list
+          extension_list: extension_list,
         };
         dashboard_response_obj.extensions_detail = extension_detail_data;
 
@@ -137,14 +246,10 @@ const getDasboardDetail = async (
           total_local: reports_api_data?.data?.total_counts.total_local,
           total_answered: reports_api_data?.data?.total_counts.total_answered,
           total_missed: reports_api_data?.data?.total_counts.total_missed,
-          total_duration_sec:
-            reports_api_data?.data?.total_counts.total_duration_sec,
-          avg_response_sec:
-            reports_api_data?.data?.total_counts.avg_response_sec,
-          today_total_calls:
-            reports_api_data?.data?.total_counts.today_total_calls,
-          today_missed_calls:
-            reports_api_data?.data?.total_counts.today_missed_calls,
+          total_duration_sec: reports_api_data?.data?.total_counts.total_duration_sec,
+          avg_response_sec: reports_api_data?.data?.total_counts.avg_response_sec,
+          today_total_calls: reports_api_data?.data?.total_counts.today_total_calls,
+          today_missed_calls: reports_api_data?.data?.total_counts.today_missed_calls,
           today_missed_calls_percentage:
             reports_api_data?.data?.total_counts.today_missed_calls_percentage,
           sla: reports_api_data?.data?.sla,
@@ -172,29 +277,21 @@ const getDasboardDetail = async (
     };
 
     try {
-      const call_metrix_api_data: any = await axios.request(
-        api_config_call_metrix
-      );
-      if (
-        call_metrix_api_data?.data?.data &&
-        call_metrix_api_data?.data?.total_counts
-      ) {
+      const call_metrix_api_data: any = await axios.request(api_config_call_metrix);
+      if (call_metrix_api_data?.data?.data && call_metrix_api_data?.data?.total_counts) {
         let call_matrics_data = {
           call_metrics: call_metrix_api_data?.data?.data,
           total_inbound: call_metrix_api_data?.data?.total_counts.total_inbound,
-          total_outbound:
-            call_metrix_api_data?.data?.total_counts.total_outbound,
+          total_outbound: call_metrix_api_data?.data?.total_counts.total_outbound,
           total_local: call_metrix_api_data?.data?.total_counts.total_local,
-          total_answered:
-            call_metrix_api_data?.data?.total_counts.total_answered,
-          total_unanswered:
-            call_metrix_api_data?.data?.total_counts.total_unanswered,
+          total_answered: call_metrix_api_data?.data?.total_counts.total_answered,
+          total_unanswered: call_metrix_api_data?.data?.total_counts.total_unanswered,
           total_missed: call_metrix_api_data?.data?.total_counts.total_missed,
         };
         dashboard_response_obj.call_metrics_detail = call_matrics_data;
       }
     } catch (error: any) {
-      console.log("error", error)
+      console.log("error", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed to Get Reports",
@@ -214,24 +311,18 @@ const getDasboardDetail = async (
     };
 
     try {
-      const missed_call_api_data: any = await axios.request(
-        api_config_missed_call
-      );
-      if (
-        missed_call_api_data?.data?.data &&
-        missed_call_api_data?.data?.total_counts
-      ) {
+      const missed_call_api_data: any = await axios.request(api_config_missed_call);
+      if (missed_call_api_data?.data?.data && missed_call_api_data?.data?.total_counts) {
         let missed_call_data = {
           missed_call: missed_call_api_data?.data?.data,
           total_missed: missed_call_api_data?.data?.total_counts.total_missed,
-          total_missed_persentage:
-            missed_call_api_data?.data?.total_counts.total_missed_persentage,
+          total_missed_persentage: missed_call_api_data?.data?.total_counts.total_missed_persentage,
           avg_wait_sec: missed_call_api_data?.data?.total_counts.avg_wait_sec,
         };
         dashboard_response_obj.missed_call_detail = missed_call_data;
       }
     } catch (error: any) {
-      console.log("error in misscalled api", error)
+      console.log("error in misscalled api", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed to Get Reports",
@@ -245,25 +336,39 @@ const getDasboardDetail = async (
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
+        // start_date: start_date,
+        // end_date: end_date,
       },
     };
-    console.log("api_ring_groups", api_ring_groups)
+    console.log("api_ring_groups", api_ring_groups);
     try {
-      const ringroup_api_data: any = await axios.request(
-        api_ring_groups
-      );
+      const ringroup_api_data: any = await axios.request(api_ring_groups);
 
       // CHANGED
       const ring_group_list: any = await ring_group.find({
-        cid: companyDetail._id, is_deleted: 0, 
-      })
+        cid: companyDetail._id,
+        is_deleted: 0,
+        createdAt: {
+          $gte: start_date,
+          $lt: end_date,
+        },
+      });
 
+      const ring_group_data: any = await ring_group.find({
+        cid: companyDetail._id,
+        is_deleted: 0,
+        // createdAt: {
+        //   $gte: start_date,
+        //   $lt: end_date,
+        // },
+      });
+      console.log("ring_group_data", ring_group_data);
       // console.log("ringroup_api_data",ringroup_api_data)
 
       if (
-        ringroup_api_data?.data?.data || ring_group_list // new
+        ringroup_api_data?.data?.data ||
+        ring_group_list // new
       ) {
-
         const mergedArray = ringroup_api_data?.data?.data?.map((r: any) => {
           const matchingCall = ring_group_list.find(
             (c: any) => c.ring_group_uuid === r.ring_group_uuid
@@ -274,12 +379,12 @@ const getDasboardDetail = async (
         let ring_group_call_data = {
           ring_group_call: mergedArray,
           // ring_group_call: ringroup_api_data?.data?.data,
-          ring_group_list: ring_group_list //new 
-        }
+          ring_group_list: ring_group_list, //new
+        };
         dashboard_response_obj.ring_group_detail = ring_group_call_data;
       }
     } catch (error: any) {
-      console.log("error in misscalled api", error)
+      console.log("error in misscalled api", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed to Get Reports",

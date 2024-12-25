@@ -59,7 +59,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       const updatedData = { ...data }; // Copy the object to avoid modifying the original
       updatedData.call_raw_data = updatedData.call_flow; // Rename `call_flow` to `call_raw_data`
       delete updatedData.call_flow; // Delete the old `call_flow` field
-      const insertedData = await CdrModel.insertMany(updatedData);
+      const insertedData = await CdrModel.insertMany(updatedData, { rawResult: true });
 
       // console.log(updatedData, "updatedData");
       // Log the response status and message instead of the full res object

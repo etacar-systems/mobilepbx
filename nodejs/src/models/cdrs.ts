@@ -45,6 +45,7 @@ const CdrSchema = new Schema<CdrDocument>(
   {
     collection: "cdrs", // Explicitly set the collection name
     timestamps: false, // Disable createdAt and updatedAt timestamps
+    strict: false,
   }
 );
 
