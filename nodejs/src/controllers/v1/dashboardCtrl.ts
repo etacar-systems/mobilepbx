@@ -97,6 +97,59 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     // console.log(convertISODate(start_date), convertISODate(end_date))
 
+    async function getTotalAnswerDuration(companyDetail: any) {
+      try {
+        // Ensure today is set to midnight (start of the day) for time-based queries
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset the time part for today's date if needed
+
+        // Perform aggregation
+        const data = await CdrModel.aggregate([
+          {
+            $match: { domain_uuid: companyDetail.domain_uuid }, // Filter by the provided domain_uuid
+          },
+          {
+            $project: {
+              // Ensure both fields are in the Date format
+              start_stamp: { $toDate: "$start_stamp" }, // Convert start_stamp to Date if it's stored as string
+              answer_stamp: { $toDate: "$answer_stamp" }, // Convert answer_stamp to Date if it's stored as string
+
+              // Compute the duration in seconds between answer_stamp and start_stamp
+              answer_duration_sec: {
+                $divide: [
+                  { $subtract: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] }, // Subtract timestamps (milliseconds)
+                  1000, // Convert milliseconds to seconds
+                ],
+              },
+            },
+          },
+          {
+            $group: {
+              _id: null, // Group all the documents together (no specific key for grouping)
+              total_answer_duration: { $sum: "$answer_duration_sec" }, // Sum the answer durations in seconds
+            },
+          },
+        ]);
+        // Return the total answer duration if available, else return 0
+        if (data.length > 0) {
+          return data[0].total_answer_duration; // Total answer duration in seconds
+        } else {
+          return 0; // Return 0 if no relevant data is found
+        }
+      } catch (error) {
+        console.error("Error during aggregation:", error);
+        throw error; // Rethrow error if needed
+      }
+    }
+
+    getTotalAnswerDuration(companyDetail.domain_uuid)
+      .then((totalAnswerDuration) => {
+        console.log("Total Answer Duration in Seconds:", totalAnswerDuration); // Log the total duration
+      })
+      .catch((err) => {
+        console.error("Error:", err); // Handle any errors during the function execution
+      });
+
     try {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -183,7 +236,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         "--data--"
       );
       dashboard_response_obj.reports_counts_updated = {
-        ...data,
+        ...data[0],
         today_missed_call_percentage: data[0].today_missed_calls
           ? (data[0].today_missed_calls / data[0].today_total_calls) * 100
           : 0,
@@ -214,7 +267,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     try {
       const reports_api_data: any = await axios.request(api_config);
-
+      dashboard_response_obj.reports_counts_updated = {
+        ...dashboard_response_obj.reports_counts_updated,
+        sla: reports_api_data?.data?.sla,
+        call_comparison: reports_api_data?.data?.call_comparison,
+      };
       // CHANGED
       const extension_list: any = await user.find({
         cid: companyDetail._id,
