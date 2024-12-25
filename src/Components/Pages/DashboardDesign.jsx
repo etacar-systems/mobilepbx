@@ -438,9 +438,9 @@ function DashboardDesign() {
                     <table className=" table-news table m-0 ">
                       {console.log(data, "try and test")}
                       <tbody>
-                        {data?.DashboardDetail?.extensions_detail?.extensions?.map(
+                        {data?.DashboardDetail?.extensions_detail?.extension_list?.map(
                           (val) => {
-                            if (val?._doc) {
+                            if (val) {
                               const localCalls = Number(val.local_calls) || 0;
                               const answered = Number(val.answered) || 0;
                               const missed = Number(val.missed) || 0;
@@ -473,22 +473,22 @@ function DashboardDesign() {
                                       "5px solid var(--main-grey-color)",
                                     padding: "20px",
                                   }}
-                                  key={val.extension} // Add a unique key
+                                  key={val.userDetails.user_extension} // Add a unique key
                                 >
                                   <td
                                     className="table-custom-body-td"
                                     style={{ padding: "0.5rem" }}
                                   >
                                     <a href="#" className="name-atag">
-                                      {val?._doc?.first_name}{" "}
-                                      {val?._doc?.last_name} {/* new */}
+                                      {val?.userDetails?.first_name}{" "}
+                                      {val?.userDetails?.last_name} {/* new */}
                                     </a>
                                     <p className="mb-0 text-muted text-size">
                                       {t("Status")}:{" "}
                                       <Badge
                                         variant="success"
                                         className="but-badge"
-                                        style={ {color: val?._doc?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
+                                        style={ {color: val?.userDetails?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
                                       >
                                         {val?._doc?.is_online === 0
                                           ? t("Offline")
@@ -501,7 +501,7 @@ function DashboardDesign() {
                                     style={{ padding: "0.5rem" }}
                                   >
                                     <h6 className="font-14 mb-0 text-size small-cusnum">
-                                      {val?.extension}
+                                      {val?.userDetails.user_extension}
                                     </h6>
                                     <span className="text-muted text-size">
                                       {t("Extension")}

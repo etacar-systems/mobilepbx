@@ -12,7 +12,7 @@ function DashboardCardDetails() {
   const { t } = useTranslation();
   const allListeners = useSelector((state) => state.allListeners.allListeners);
   const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
-  let valuedata = data?.DashboardDetail?.reports_counts;
+  let valuedata = data?.DashboardDetail?.reports_counts_updated;
   // console.log(data, valuedata, "datacheckfinal");
   // console.log(allListeners, "allListenerscheck");
   const busyAndOnlineCount =
@@ -124,7 +124,10 @@ function DashboardCardDetails() {
               <div className="ml-4">
                 <span className="chart-value">{t("Average duration")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
-                  {Utils.formatDuration(valuedata?.total_duration_sec/(valuedata?.total_answered + valuedata?.total_outbound) )}
+                  {Utils.formatDuration(
+                    valuedata?.total_duration_sec /
+                      (valuedata?.total_answered + valuedata?.total_outbound)
+                  )}
                 </h4>
               </div>
             </div>

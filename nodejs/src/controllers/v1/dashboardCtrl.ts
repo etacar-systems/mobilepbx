@@ -97,58 +97,51 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     // console.log(convertISODate(start_date), convertISODate(end_date))
 
-    async function getTotalAnswerDuration(companyDetail: any) {
-      try {
-        // Ensure today is set to midnight (start of the day) for time-based queries
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset the time part for today's date if needed
+    // interface ICdr extends Document {
+    //   domain_uuid: string;
+    //   start_stamp: string; // Could be Date in the database or string in the model
+    //   answer_stamp: string; // Same as start_stamp, either Date or string
+    //   // Other fields can be added as necessary
+    // }
 
-        // Perform aggregation
-        const data = await CdrModel.aggregate([
-          {
-            $match: { domain_uuid: companyDetail.domain_uuid }, // Filter by the provided domain_uuid
-          },
-          {
-            $project: {
-              // Ensure both fields are in the Date format
-              start_stamp: { $toDate: "$start_stamp" }, // Convert start_stamp to Date if it's stored as string
-              answer_stamp: { $toDate: "$answer_stamp" }, // Convert answer_stamp to Date if it's stored as string
+    // const getTotalAnswerDuration = async (domain_uuid: string): Promise<number> => {
+    //   try {
+    //     // Fetch all documents matching the domain_uuid, ensuring both start_stamp and answer_stamp exist
+    //     const data: ICdr[] = await CdrModel.find({
+    //       domain_uuid: domain_uuid,
+    //       answer_stamp: { $exists: true },
+    //       start_stamp: { $exists: true },
+    //     }).exec();
 
-              // Compute the duration in seconds between answer_stamp and start_stamp
-              answer_duration_sec: {
-                $divide: [
-                  { $subtract: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] }, // Subtract timestamps (milliseconds)
-                  1000, // Convert milliseconds to seconds
-                ],
-              },
-            },
-          },
-          {
-            $group: {
-              _id: null, // Group all the documents together (no specific key for grouping)
-              total_answer_duration: { $sum: "$answer_duration_sec" }, // Sum the answer durations in seconds
-            },
-          },
-        ]);
-        // Return the total answer duration if available, else return 0
-        if (data.length > 0) {
-          return data[0].total_answer_duration; // Total answer duration in seconds
-        } else {
-          return 0; // Return 0 if no relevant data is found
-        }
-      } catch (error) {
-        console.error("Error during aggregation:", error);
-        throw error; // Rethrow error if needed
-      }
-    }
+    //     // Calculate the total answer duration using reduce
+    //     const totalAnswerDuration = data.reduce((total, record) => {
+    //       // Ensure that both start_stamp and answer_stamp are valid Date objects
+    //       const startStamp = new Date(record.start_stamp);
+    //       const answerStamp = new Date(record.answer_stamp);
 
-    getTotalAnswerDuration(companyDetail.domain_uuid)
-      .then((totalAnswerDuration) => {
-        console.log("Total Answer Duration in Seconds:", totalAnswerDuration); // Log the total duration
-      })
-      .catch((err) => {
-        console.error("Error:", err); // Handle any errors during the function execution
-      });
+    //       // If both timestamps are valid, calculate the duration in seconds
+    //       if (!isNaN(startStamp.getTime()) && !isNaN(answerStamp.getTime())) {
+    //         const durationInSeconds = (answerStamp.getTime() - startStamp.getTime()) / 1000; // Convert milliseconds to seconds
+    //         return total + durationInSeconds;
+    //       }
+    //       return total; // If the timestamps are invalid, return the accumulated total
+    //     }, 0);
+
+    //     console.log(totalAnswerDuration, "Total Answer Duration in Seconds");
+    //     return totalAnswerDuration; // Return the total answer duration
+    //   } catch (error) {
+    //     console.error("Error fetching total answer duration:", error);
+    //     throw error; // Handle errors
+    //   }
+    // };
+
+    // getTotalAnswerDuration(companyDetail.domain_uuid)
+    //   .then((totalAnswerDuration) => {
+    //     console.log("Total Answer Duration in Seconds:", totalAnswerDuration); // Log the total duration
+    //   })
+    //   .catch((err) => {
+    //     console.error("Error:", err); // Handle any errors during the function execution
+    //   });
 
     try {
       const today = new Date();
@@ -263,7 +256,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       throw error;
     }
 
-    console.log("khanjan_api_config", api_config);
+    //  console.log("khanjan_api_config", api_config);
 
     try {
       const reports_api_data: any = await axios.request(api_config);
@@ -410,10 +403,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       const ring_group_list: any = await ring_group.find({
         cid: companyDetail._id,
         is_deleted: 0,
-        createdAt: {
-          $gte: start_date,
-          $lt: end_date,
-        },
+        // createdAt: {
+        //   $gte: start_date,
+        //   $lt: end_date,
+        // },
       });
 
       const ring_group_data: any = await ring_group.find({
@@ -431,16 +424,16 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         ringroup_api_data?.data?.data ||
         ring_group_list // new
       ) {
-        const mergedArray = ringroup_api_data?.data?.data?.map((r: any) => {
-          const matchingCall = ring_group_list.find(
-            (c: any) => c.ring_group_uuid === r.ring_group_uuid
-          );
-          return { ...r, ...matchingCall };
-        });
+        // const mergedArray = ringroup_api_data?.data?.data?.map((r: any) => {
+        //   const matchingCall = ring_group_list.find(
+        //     (c: any) => c.ring_group_uuid === r.ring_group_uuid
+        //   );
+        //   return { ...r, ...matchingCall };
+        // });
 
         let ring_group_call_data = {
-          ring_group_call: mergedArray,
-          // ring_group_call: ringroup_api_data?.data?.data,
+          // ring_group_call: mergedArray,
+          ring_group_call: ring_group_data,
           ring_group_list: ring_group_list, //new
         };
         dashboard_response_obj.ring_group_detail = ring_group_call_data;

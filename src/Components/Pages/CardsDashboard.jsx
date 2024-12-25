@@ -4,15 +4,9 @@ import ProgressCircle from "./CustomeChart";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-function CardsDashboard({
-  progress,
-  handleProgressClick,
-  progress1,
-  handleProgressClick1,
-}) {
+function CardsDashboard({ progress, handleProgressClick, progress1, handleProgressClick1 }) {
   const data = useSelector(
-    (state) =>
-      state.getapiall.getapiall.dashboardData?.DashboardDetail?.reports_counts
+    (state) => state.getapiall.getapiall.dashboardData?.DashboardDetail?.reports_counts_updated
   );
   console.log("cardetails ", data);
   const { t } = useTranslation();
@@ -52,10 +46,7 @@ function CardsDashboard({
                   bgcolor="var(--main-borderblue-color)"
                   pragressLable="progress-circle__label1 chart-value progressfont2"
                   onClick={handleProgressClick}
-                  Totalcall={
-                    data?.call_comparison.answered_call +
-                    data?.call_comparison?.local
-                  }
+                  Totalcall={data?.call_comparison.answered_call + data?.call_comparison?.local}
                   Answeredcall={data?.call_comparison.answered_call}
                   Title1={t("Answered")}
                   Title2={t("Called")}
@@ -79,10 +70,7 @@ function CardsDashboard({
                 <h4 className="m-b-0 chart-value">47%</h4>
               </div>
             </div>
-            <div
-              className="col-12 col-name chartprogress"
-              style={{ marginBottom: "8px" }}
-            >
+            <div className="col-12 col-name chartprogress" style={{ marginBottom: "8px" }}>
               <ProgressBar
                 style={{ height: "10px" }}
                 now={50}
@@ -103,15 +91,10 @@ function CardsDashboard({
             </div>
             <div className="rowdata mt-4">
               <div className="col-12 text-center col-name">
-                <h4 className="m-b-0 chart-value">
-                  {data?.today_missed_calls_percentage}%
-                </h4>
+                <h4 className="m-b-0 chart-value">{data?.today_missed_calls_percentage}%</h4>
               </div>
             </div>
-            <div
-              className="col-12 col-name chartprogress"
-              style={{ marginBottom: "8px" }}
-            >
+            <div className="col-12 col-name chartprogress" style={{ marginBottom: "8px" }}>
               <ProgressBar
                 style={{ height: "10px" }}
                 now={88}

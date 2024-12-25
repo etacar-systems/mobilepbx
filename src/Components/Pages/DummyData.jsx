@@ -5,7 +5,7 @@ import Utils from "../../utils";
 const ChartDataComponent = () => {
   const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
   console.log(data, "datacheckdummy");
-  let valuedata = data?.DashboardDetail?.reports_counts;
+  let valuedata = data?.DashboardDetail?.reports_counts_updated;
   console.log(valuedata, "valuedatacheck");
   const chartData = [
     {
