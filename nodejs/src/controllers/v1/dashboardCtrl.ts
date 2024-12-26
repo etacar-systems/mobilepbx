@@ -146,12 +146,34 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     try {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      console.log(start_date, "start_date", end_date, "end_date");
+      console.log(
+        start_date,
+        "start_date",
+        end_date,
+        "end_date",
+        new Date(start_date + "Z"),
+        new Date(end_date + "Z")
+      );
       const data = await CdrModel.aggregate([
         {
           $match: {
             domain_uuid: companyDetail.domain_uuid,
-            start_stamp: { $gte: new Date(start_date), $lt: new Date(end_date) },
+            start_stamp: {
+              $gte: new Date(start_date + "Z"),
+              $lt: new Date(end_date + "Z"),
+            },
+          },
+        },
+        {
+          $set: {
+            start_stamp: { $toDate: "$start_stamp" },
+            answer_stamp: { $toDate: "$answer_stamp" },
+            response_time_sec: {
+              $divide: [
+                { $subtract: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] },
+                1000,
+              ],
+            },
           },
         },
         {
@@ -242,23 +264,26 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         "--data--"
       );
 
+      // const missedCallCount = async (domain_uuid: any) => {
+      //   try {
+      //     const data = await CdrModel.countDocuments({
+      //       domain_uuid: domain_uuid,
+      //       start_stamp: {
+      //         $gte: new Date(start_date + "Z"),
+      //         $lt: new Date(end_date + "Z"),
+      //       }, // Add filter for start_stamp within the date range
+      //     }).exec();
+      //     console.log(data, "missed");
+      //     return data; // Return the result
+      //   } catch (error) {
+      //     console.error("Error fetching data:", error);
+      //     throw error;
+      //   }
+      // };
+
+      // missedCallCount(companyDetail.domain_uuid);
       dashboard_response_obj.reports_counts_updated = {
-        ...(data
-          ? data[0]
-          : {
-              total_calls: 0,
-              total_duration_sec: 0,
-              today_total_calls: 0,
-              today_missed_calls: 0,
-              today_missed_call_percentage: 0,
-              avg_response_sec: 0,
-              total_missed: 0,
-              total_answered: 0,
-              total_outbound: 0,
-              total_local: 0,
-              voicemailCalls: 0,
-              inboundCalls: 0,
-            }),
+        ...(data ? data[0] : ""),
       };
       // return res.json({
       //   success: 1,

@@ -65,7 +65,10 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
 
         const compData = await company.find({ domain_uuid: updatedData.domain_uuid })
         const userData = await user.find({ cid: compData[0]._id })
-
+        
+        logger.info(`compData`, compData);
+        logger.info(`userData`, userData);
+      
         updatedData.extension_uuid = userData[0].extension_uuid;
       }
       delete updatedData.call_flow; // Delete the old `call_flow` field
