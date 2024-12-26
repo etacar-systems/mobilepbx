@@ -6,6 +6,7 @@ interface userData {
   uid: string;
   cid: string;
   extension_uuid: String;
+  role: string;
 }
 
 const User_token = async (token: any) => {
@@ -23,6 +24,7 @@ const User_token = async (token: any) => {
       uid: get_user_detail?._id as string,
       cid: get_user_detail?.cid as string,
       extension_uuid: get_user_detail.extension_uuid,
+      role: get_user_detail?.role as unknown as string,
     };
     const companyDetail = await company.findOne({
       _id: user_data?.cid,

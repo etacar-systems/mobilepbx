@@ -9,6 +9,7 @@ import ring_group from "../../models/ring_group";
 import user from "../../models/user";
 import CdrModel from "../../models/cdrs";
 import { PipelineStage } from "mongoose";
+import role from "../../models/role";
 
 function convertISODate(date: String): String {
   return new Date(`${date.replace(" ", "T")}Z`).toISOString();
@@ -310,6 +311,16 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     //  console.log("khanjan_api_config", api_config);
 
+    const userType: any = await role.find({
+      _id: user_detail?.role,
+      is_deleted: 0,
+    });
+
+    const cdrs: any = await CdrModel.find({
+      domain_uuid: companyDetail.domain_uuid, // Always filter by domain_uuid
+      ...(userType.type === 1 && { extension_uuid: userType.extension_uuid }), // Conditionally add extension_uuid if userType.type is 1
+    });
+    //  console.log("---------cdrs-------", cdrs);
     try {
       const reports_api_data: any = await axios.request(api_config);
       dashboard_response_obj.reports_counts_updated = {
@@ -317,29 +328,21 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         sla: reports_api_data?.data?.sla,
         call_comparison: reports_api_data?.data?.call_comparison,
       };
-      // CHANGED
-      // const extension_list: any = await user.find({
-      //   cid: companyDetail._id,
-      //   is_deleted: 0,
-      //   // createdAt: {
-      //   //   $gte: start_date,
-      //   //   $lt: end_date,
-      //   // },
-      // });
 
       const pipeline: PipelineStage[] = [
         {
           $match: {
-            domain_uuid: companyDetail.domain_uuid, // Filter by domain_uuid
-          }
+            domain_uuid: companyDetail.domain_uuid, // Always filter by domain_uuid
+            ...(userType.type === 1 && { extension_uuid: userType.extension_uuid }), // Conditionally add extension_uuid if userType.type is 1
+          },
         },
         {
           $lookup: {
             from: "users", // Join with the 'users' collection
             localField: "extension_uuid", // cdrs.extension_uuid
             foreignField: "extension_uuid", // users.extension_uuid
-            as: "userDetails"
-          }
+            as: "userDetails",
+          },
         },
         { $unwind: "$userDetails" }, // Unwind the array from the $lookup
         {
@@ -347,13 +350,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             from: "companies", // Join with the 'companies' collection
             localField: "domain_uuid", // cdrs.domain_uuid
             foreignField: "domain_uuid", // companies.domain_uuid
-            as: "companyDetails"
-          }
+            as: "companyDetails",
+          },
         },
         { $unwind: "$companyDetails" }, // Unwind the array from the $lookup
         {
           $group: {
-            _id: { extension_uuid: "$extension_uuid"}, // Group by extension UUID
+            _id: { extension_uuid: "$extension_uuid" }, // Group by extension UUID
 
             total_calls: { $sum: 1 }, // Count total calls
             answered: {
@@ -361,91 +364,55 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   { $and: [{ $eq: ["$status", "answered"] }, { $ne: ["$direction", "agent"] }] },
                   1,
-                  0
-                ]
-              }
+                  0,
+                ],
+              },
             },
             missed: {
               $sum: {
-                $cond: [
-                  { $eq: ["$status", "missed"] },
-                  1,
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+              },
             },
             no_answer: {
               $sum: {
-                $cond: [
-                  { $eq: ["$hangup_cause", "NO_ANSWER"] },
-                  1,
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$hangup_cause", "NO_ANSWER"] }, 1, 0],
+              },
             },
             busy: {
               $sum: {
-                $cond: [
-                  { $eq: ["$hangup_cause", "USER_BUSY"] },
-                  1,
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$hangup_cause", "USER_BUSY"] }, 1, 0],
+              },
             },
             avg_call_length: { $avg: "$duration" }, // Average call length
             inbound_calls: {
               $sum: {
-                $cond: [
-                  { $eq: ["$direction", "inbound"] },
-                  1,
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
+              },
             },
             inbound_duration: {
               $sum: {
-                $cond: [
-                  { $eq: ["$direction", "inbound"] },
-                  "$duration",
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$direction", "inbound"] }, "$duration", 0],
+              },
             },
             local_calls: {
               $sum: {
-                $cond: [
-                  { $eq: ["$direction", "local"] },
-                  1,
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
+              },
             },
             local_duration: {
               $sum: {
-                $cond: [
-                  { $eq: ["$direction", "local"] },
-                  "$duration",
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$direction", "local"] }, "$duration", 0],
+              },
             },
             outbound_calls: {
               $sum: {
-                $cond: [
-                  { $eq: ["$direction", "outbound"] },
-                  1,
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0],
+              },
             },
             outbound_duration: {
               $sum: {
-                $cond: [
-                  { $eq: ["$direction", "outbound"] },
-                  "$duration",
-                  0
-                ]
-              }
+                $cond: [{ $eq: ["$direction", "outbound"] }, "$duration", 0],
+              },
             },
             userDetails: { $addToSet: "$userDetails" }, // Include the first userDetails
 
@@ -463,13 +430,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             //     ]
             //   }
             // }
-          }
+          },
         },
-        { $sort: { _id: 1 } } // Sort by extension UUID
+        { $sort: { _id: 1 } }, // Sort by extension UUID
       ];
 
       const extension_list = await CdrModel.aggregate(pipeline).exec();
-     
+
       console.log("extension_listextension_list", extension_list);
 
       if (

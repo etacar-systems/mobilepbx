@@ -527,7 +527,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         };
       }
 
-      const reports_list = await cdrs.find(find_query);
+      const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
 
       // Calculate the starting index for the data based on the page and per_page
       const startIndex = (page - 1) * per_page;
