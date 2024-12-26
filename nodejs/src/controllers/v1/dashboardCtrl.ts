@@ -8,6 +8,7 @@ import moment from "moment";
 import ring_group from "../../models/ring_group";
 import user from "../../models/user";
 import CdrModel from "../../models/cdrs";
+import { PipelineStage } from "mongoose";
 
 function convertISODate(date: String): String {
   return new Date(`${date.replace(" ", "T")}Z`).toISOString();
@@ -317,14 +318,159 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         call_comparison: reports_api_data?.data?.call_comparison,
       };
       // CHANGED
-      const extension_list: any = await user.find({
-        cid: companyDetail._id,
-        is_deleted: 0,
-        createdAt: {
-          $gte: start_date,
-          $lt: end_date,
+      // const extension_list: any = await user.find({
+      //   cid: companyDetail._id,
+      //   is_deleted: 0,
+      //   // createdAt: {
+      //   //   $gte: start_date,
+      //   //   $lt: end_date,
+      //   // },
+      // });
+
+      const pipeline: PipelineStage[] = [
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid, // Filter by domain_uuid
+          }
         },
-      });
+        {
+          $lookup: {
+            from: "users", // Join with the 'users' collection
+            localField: "extension_uuid", // cdrs.extension_uuid
+            foreignField: "extension_uuid", // users.extension_uuid
+            as: "userDetails"
+          }
+        },
+        { $unwind: "$userDetails" }, // Unwind the array from the $lookup
+        {
+          $lookup: {
+            from: "companies", // Join with the 'companies' collection
+            localField: "domain_uuid", // cdrs.domain_uuid
+            foreignField: "domain_uuid", // companies.domain_uuid
+            as: "companyDetails"
+          }
+        },
+        { $unwind: "$companyDetails" }, // Unwind the array from the $lookup
+        {
+          $group: {
+            _id: { extension_uuid: "$extension_uuid"}, // Group by extension UUID
+
+            total_calls: { $sum: 1 }, // Count total calls
+            answered: {
+              $sum: {
+                $cond: [
+                  { $and: [{ $eq: ["$status", "answered"] }, { $ne: ["$direction", "agent"] }] },
+                  1,
+                  0
+                ]
+              }
+            },
+            missed: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$status", "missed"] },
+                  1,
+                  0
+                ]
+              }
+            },
+            no_answer: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$hangup_cause", "NO_ANSWER"] },
+                  1,
+                  0
+                ]
+              }
+            },
+            busy: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$hangup_cause", "USER_BUSY"] },
+                  1,
+                  0
+                ]
+              }
+            },
+            avg_call_length: { $avg: "$duration" }, // Average call length
+            inbound_calls: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$direction", "inbound"] },
+                  1,
+                  0
+                ]
+              }
+            },
+            inbound_duration: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$direction", "inbound"] },
+                  "$duration",
+                  0
+                ]
+              }
+            },
+            local_calls: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$direction", "local"] },
+                  1,
+                  0
+                ]
+              }
+            },
+            local_duration: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$direction", "local"] },
+                  "$duration",
+                  0
+                ]
+              }
+            },
+            outbound_calls: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$direction", "outbound"] },
+                  1,
+                  0
+                ]
+              }
+            },
+            outbound_duration: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$direction", "outbound"] },
+                  "$duration",
+                  0
+                ]
+              }
+            },
+            userDetails: { $addToSet: "$userDetails" }, // Include the first userDetails
+
+            // response_seconds: {
+            //   $sum: {
+            //     $cond: [
+            //       {
+            //         $and: [
+            //           { $eq: ["$status", "answered"] },
+            //           { $ne: ["$duration", null] }
+            //         ]
+            //       },
+            //       { $subtract: ["$answer_stamp", "$start_stamp"] },
+            //       0
+            //     ]
+            //   }
+            // }
+          }
+        },
+        { $sort: { _id: 1 } } // Sort by extension UUID
+      ];
+
+      const extension_list = await CdrModel.aggregate(pipeline).exec();
+     
+      console.log("extension_listextension_list", extension_list);
 
       if (
         reports_api_data?.data?.data &&
@@ -333,15 +479,15 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         reports_api_data?.data?.call_comparison &&
         extension_list
       ) {
-        const mergedArray = reports_api_data?.data?.data?.map((u: any) => {
-          const matchingCall = extension_list.find((c: any) => c.user_extension === u.extension);
-          return { ...u, ...matchingCall };
-        });
+        // const mergedArray = reports_api_data?.data?.data?.map((u: any) => {
+        //   const matchingCall = extension_list.find((c: any) => c.user_extension === u.extension);
+        //   return { ...u, ...matchingCall };
+        // });
         // console.log("mergers arraymergers array",mergedArray);
 
         let extension_detail_data: any = {
-          extensions: mergedArray,
-          // extensions: reports_api_data?.data?.data,
+          // extensions: mergedArray,
+          extensions: reports_api_data?.data?.data,
           extension_list: extension_list,
         };
         dashboard_response_obj.extensions_detail = extension_detail_data;

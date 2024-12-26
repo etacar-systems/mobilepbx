@@ -22,8 +22,11 @@ const validateData = (data: any[], requiredFields: string[]): string | null => {
 };
 const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = req.body;
+	let data;
+    	data = req.body;
     logger.info(`Full Request Object: ${JSON.stringify(req.body, null, 2)}`);
+    //logger.info(`Full Request Object: ${JSON.stringify(req.body.json.variables, null, 2)}`);
+   // logger.info(`Full Request Object: ${JSON.stringify(req.body.call_flow.caller_profile.username, null, 2)}`);
     //  console.log(JSON.stringify(req.body, null, 2));
     // if (!Array.isArray(data)) {
     //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -58,26 +61,51 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
 
     try {
       // Insert data into the database
-      const updatedData = { ...data }; // Copy the object to avoid modifying the original
+      let updatedData; // Copy the object to avoid modifying the original
+      updatedData = { ...data };
       updatedData.call_raw_data = updatedData.call_flow; // Rename `call_flow` to `call_raw_data`
 
-      if (updatedData.leg == "b" && updatedData.direction == "local") {
+      // const pipeline: PipelineStage[] = [
+      //   {
+      //     $match: {
+      //       xml_cdr_uuid: updatedData.xml_cdr_uuid, // Match xml_cdr_uuid from updatedData
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "users", // Join with the 'users' collection
+      //       localField: "extension_uuid", // cdrs.extension_uuid
+      //       foreignField: "extension_uuid", // users.extension_uuid
+      //       as: "userDetails",
+      //     },
+      //   },
+      //   { $unwind: "$userDetails" }, // Unwind the array from the $lookup
+      //   {
+      //     $lookup: {
+      //       from: "companies", // Join with the 'companies' collection
+      //       localField: "domain_uuid", // cdrs.domain_uuid
+      //       foreignField: "domain_uuid", // companies.domain_uuid
+      //       as: "companyDetails",
+      //     },
+      //   },
+      //   { $unwind: "$companyDetails" }, // Unwind the array from the $lookup
+      // ];
 
-        const compData = await company.find({ domain_uuid: updatedData.domain_uuid })
-        const userData = await user.find({ cid: compData[0]._id })
-        
-        logger.info(`compData`, compData);
-        logger.info(`userData`, userData);
-      
-        updatedData.extension_uuid = userData[0].extension_uuid;
+      // const cdrs_list = await CdrModel.aggregate(pipeline)
+
+      // const cdrs_list = await CdrModel.aggregate(pipeline).exec();
+
+      if (updatedData.leg == "a" && updatedData.direction == "local" && updatedData.status !="missed") {
+
+        const compData = await company.findOne({ domain_uuid: updatedData.domain_uuid })
+        const userData = await user.findOne({ cid: compData?._id, user_extension: updatedData.caller_id_number, is_deleted: 0 })
+        logger.info(`userDatauserDatauserData: ${userData}`);
+        updatedData.extension_uuid = userData?.extension_uuid;
       }
       delete updatedData.call_flow; // Delete the old `call_flow` field
-      const insertedData = await CdrModel.insertMany(updatedData, { rawResult: true });
-
-      // console.log(updatedData, "updatedData");
+      const insertedData = await CdrModel.insertMany(updatedData);
       // Log the response status and message instead of the full res object
-      logger.info(`Response status:, Message: Data added successfully`, updatedData);
-
+      logger.info(`Response status:, Message: Data added successfully: ${updatedData}`);
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
         message: "Data added successfully",
