@@ -49,6 +49,7 @@ import Smtp from "./Components/Pages/Smtp";
 import Integrations from "./Components/Pages/Integrations";
 import VideoUpload from "./Components/Pages/VideoUpload";
 import GoogleRedirect from "./Components/Calendar/GoogleRedirect";
+import CookiesPage from "./Components/Pages/CookiesPage";
 
 const rolePaths = {
   1: [
@@ -61,7 +62,8 @@ const rolePaths = {
     "/whatsappChat",
     "/dashboard",
     "/setting",
-    "/google/redirect"
+    "/google/redirect",
+    "/cookies"
   ],
   2: [
     "/dashboard",
@@ -76,6 +78,7 @@ const rolePaths = {
     "/reports",
     "/setting",
     "/integration",
+    "/cookies"
   ],
   3: [
     "/customers",
@@ -87,6 +90,7 @@ const rolePaths = {
     "/firewall",
     "/smtp",
     "/video",
+    "/cookies"
   ],
   4: [
     "/dashboard",
@@ -101,6 +105,7 @@ const rolePaths = {
     "/reports",
     "/setting",
     "/integration",
+    "/cookies"
   ],
 };
 
@@ -151,6 +156,9 @@ function App() {
         <Route path="/registerPage" element={<RegisterPage />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/forgotpasswordred" element={<ForgotRedirect />} />
+        {Role && (
+          <Route path="/cookies" element={<CookiesPage />} />
+        )}
 
         {(Role == 2 || Role == 4) && (
           <>
