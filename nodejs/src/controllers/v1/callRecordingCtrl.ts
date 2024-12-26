@@ -7,6 +7,8 @@ import REGEXP from "../../regexp";
 import mongoose from "mongoose";
 import CdrModel from "../../models/cdrs";
 import logger from "../../logger";
+import company from "../../models/company";
+import user from "../../models/user";
 
 const validateData = (data: any[], requiredFields: string[]): string | null => {
   for (const [index, item] of data.entries()) {
@@ -58,6 +60,14 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       // Insert data into the database
       const updatedData = { ...data }; // Copy the object to avoid modifying the original
       updatedData.call_raw_data = updatedData.call_flow; // Rename `call_flow` to `call_raw_data`
+
+      if (updatedData.leg == "b" && updatedData.direction == "local") {
+
+        const compData = await company.find({ domain_uuid: updatedData.domain_uuid })
+        const userData = await user.find({ cid: compData[0]._id })
+
+        updatedData.extension_uuid = userData[0].extension_uuid;
+      }
       delete updatedData.call_flow; // Delete the old `call_flow` field
       const insertedData = await CdrModel.insertMany(updatedData, { rawResult: true });
 
