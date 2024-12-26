@@ -146,14 +146,19 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     try {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-
+      console.log(start_date, "start_date", end_date, "end_date");
       const data = await CdrModel.aggregate([
-        { $match: { domain_uuid: companyDetail.domain_uuid } },
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid,
+            start_stamp: { $gte: new Date(start_date), $lt: new Date(end_date) },
+          },
+        },
         {
           $group: {
             _id: null,
             total_calls: { $sum: 1 },
-            total_duration_sec: { $sum: "$duration_sec" },
+            total_duration_sec: { $sum: "$duration" },
             avg_response_sec: { $avg: "$response_time_sec" },
             today_total_calls: {
               $sum: {
@@ -208,7 +213,18 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             total_duration_sec: 1,
             today_total_calls: 1,
             today_missed_calls: 1,
-            today_missed_call_percentage: 1,
+            today_missed_call_percentage: {
+              $cond: [
+                { $eq: ["$today_total_calls", 0] },
+                0,
+                {
+                  $round: [
+                    { $divide: ["$today_missed_calls", "$today_total_calls"] },
+                    2, // Rounds to 2 decimal places
+                  ],
+                },
+              ],
+            },
             avg_response_sec: 1,
             total_missed: 1,
             total_answered: 1,
@@ -221,18 +237,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       ]);
       console.log(
         {
-          ...data,
-          today_missed_call_percentage: data[0].today_missed_calls
-            ? (data[0].today_missed_calls / data[0].today_total_calls) * 100
-            : 0,
+          ...(data ? data[0] : ""),
         },
         "--data--"
       );
+
       dashboard_response_obj.reports_counts_updated = {
-        ...data[0],
-        today_missed_call_percentage: data[0].today_missed_calls
-          ? (data[0].today_missed_calls / data[0].today_total_calls) * 100
-          : 0,
+        ...(data ? data[0] : ""),
       };
       // return res.json({
       //   success: 1,
