@@ -243,7 +243,22 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       );
 
       dashboard_response_obj.reports_counts_updated = {
-        ...(data ? data[0] : ""),
+        ...(data
+          ? data[0]
+          : {
+              total_calls: 0,
+              total_duration_sec: 0,
+              today_total_calls: 0,
+              today_missed_calls: 0,
+              today_missed_call_percentage: 0,
+              avg_response_sec: 0,
+              total_missed: 0,
+              total_answered: 0,
+              total_outbound: 0,
+              total_local: 0,
+              voicemailCalls: 0,
+              inboundCalls: 0,
+            }),
       };
       // return res.json({
       //   success: 1,
