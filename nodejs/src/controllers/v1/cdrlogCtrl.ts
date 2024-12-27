@@ -163,7 +163,7 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
 
     try {
       const data: any = await axios.request(api_config);
-      console.log(data);
+      //   console.log(data);
       if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -304,17 +304,66 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
       });
     }
 
-    let api_config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: config.PBX_API.CDR.GET_BY_EXTENSION_NUMBER + companyDetail?.domain_uuid + newParamString,
-      auth: config.PBX_API.AUTH,
-    };
-    //  console.log("api_config", api_config);
     try {
-      const data: any = await axios.request(api_config);
-      console.log("data", data);
-      if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0) {
+      let find_query: { [key: string]: any } = {};
+
+      // Ensure companyDetail is not null or undefined before proceeding
+      if (companyDetail) {
+        find_query.domain_uuid = companyDetail?.domain_uuid; // Filter by domain_uuid
+        find_query.extension_uuid = user_detail?.extension_uuid; // Filter by extension_uuid
+      }
+
+      // Add search condition if provided
+      if (search && search.trim()) {
+        find_query.$or = [
+          {
+            caller_id_name: {
+              $regex: search,
+              $options: "i", // Case-insensitive search
+            },
+          },
+          {
+            caller_id_number: {
+              $regex: search,
+              $options: "i", // Case-insensitive search
+            },
+          },
+          {
+            destination_number: {
+              $regex: search,
+              $options: "i", // Case-insensitive search
+            },
+          },
+          {
+            caller_destination: {
+              $regex: search,
+              $options: "i", // Case-insensitive search
+            },
+          },
+        ];
+      }
+
+      // Now, execute the query
+      const call_History = await cdrs.find(find_query);
+
+      // Log the query and result for debugging
+      console.log("Final find_query:", JSON.stringify(find_query, null, 2));
+      // console.log("Reports List:", call_History);
+
+      //   console.log("call_History", call_History);
+
+      // Calculate the starting index for the data based on the page and per_page
+      const startIndex = (page - 1) * per_page;
+      const endIndex = startIndex + per_page;
+
+      // Assuming `reports_list` is the full list of CDR logs that you have fetched
+      const paginatedReports = call_History.slice(startIndex, endIndex);
+
+      // Get total records count (if available) for pagination purposes
+      const totalRecords = call_History.length; // Or fetch this from your database if necessary
+      const totalPages = Math.ceil(totalRecords / per_page);
+
+      if (totalRecords === 0 || totalPages === 0) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
           message: "CDR logs fetched successfully",
@@ -329,12 +378,9 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
         success: 1,
         message: "CDR logs fetched successfully",
         data: {
-          list:
-            Object.keys(data.data)
-              .filter((key) => !isNaN(+key))
-              .map((key) => data?.data[key]) || [],
-          total_page: data?.data?.total_pages,
-          total_record: data?.data?.total_rows,
+          list: paginatedReports || [],
+          total_page: totalPages,
+          total_record: totalRecords,
         },
       });
     } catch (error: any) {
@@ -463,7 +509,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       url: config.PBX_API.CDR.GET_BY_EXTENSION_NUMBER + companyDetail?.domain_uuid + newParamString,
       auth: config.PBX_API.AUTH,
     };
-    console.log("api_config", api_config);
+    //  console.log("api_config", api_config);
     try {
       const data: any = await axios.request(api_config);
 
