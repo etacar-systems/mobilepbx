@@ -122,7 +122,7 @@ function DashboardCardDetails() {
                 {/* <img className="icon-clock fa-2x call-in-icon" src={persontimeicon}></img> */}
               </div>
               <div className="ml-4">
-                <span className="chart-value">{t("Average duration")}</span>
+                <span className="chart-value">{t("Average")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
                   {Utils.formatDuration(
                     valuedata?.total_duration_sec /

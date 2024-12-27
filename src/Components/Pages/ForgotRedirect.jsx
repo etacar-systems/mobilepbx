@@ -127,7 +127,7 @@ function ForgotRedirect() {
             <Col lg={12} className="backofforgot">
               <InputGroup style={{ marginBottom: "15px" }}>
                 <Form.Control
-                  placeholder={t("New password")}
+                  placeholder={t("New Password")}
                   aria-label="Username"
                   aria-describedby="basic-addon1"
                   className="emailforminput"

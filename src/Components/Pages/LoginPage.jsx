@@ -385,7 +385,7 @@ function LoginPage() {
                 />
                 {errors.Email && (
                   <div style={{ color: "red", fontSize: "0.8em" }}>
-                    {errors.Email}
+                    {t(errors.Email)}
                   </div>
                 )}
               </div>
@@ -418,7 +418,7 @@ function LoginPage() {
                 </InputGroup>
                 {errors.Password && (
                   <div style={{ color: "red", fontSize: "0.8em" }}>
-                    {errors.Password}
+                    {t(errors.Password)}
                   </div>
                 )}
               </div>

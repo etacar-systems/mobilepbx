@@ -21,6 +21,8 @@ i18n
           "Forgot password?": "Unohtuiko salasana?",
           "Don't have an account?": "Eikö sinulla ole tiliä?",
           Register: "Rekisteröidy",
+          "Email is Required": "Sähköposti on pakollinen",
+          "Password is Required": "Salasana vaaditaan",
 
           // Register Page
 
@@ -931,7 +933,7 @@ i18n
           "Agent offline": "Käyttäjä poissa",
           "Calls queue": "Puhelujonot",
           Durations: "Kesto",
-          "Average duration": "Keskimääräinen kesto",
+          "Average": "Kesto",
           Week: "Viikko",
           "Call Metrics": "Puhelumittarit",
           "Missed calls": "Vastaamattomat puhelut",
@@ -1711,7 +1713,8 @@ i18n
           "Forgot password?": "Forgot password?",
           "Don't have an account?": "Don't have an account?",
           Register: "Register",
-
+          "Email is Required": "Email is Required",
+          "Password is Required": "Password is Required",
           // Register Page
 
           Identify: "Identify",
@@ -2577,9 +2580,7 @@ i18n
           "Search Conversation": "Search Conversation",
           URL: "URL",
           "Current Password": "Current Password",
-          "current password": "current password",
           "New Password": "New Password",
-          "new password": "new Password",
           "Confirm New Password": "Confirm New Password",
           "confirm password": "confirm password",
           "SMS message": "SMS message",

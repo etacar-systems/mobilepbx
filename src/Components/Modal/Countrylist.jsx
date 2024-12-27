@@ -12,24 +12,15 @@ const CountrySelector = ({
   setOpenDropdown,
 }) => {
   const [searchItem, setSearchItem] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState(getNames());
+  const [countriesList, setCountriesList] = useState(getNames());
+
   const dropdownRef = useRef(null);
   const { t, i18n } = useTranslation();
+
   const handleInputChange = (e) => {
     const searchTerm = e.target.value;
     setSearchItem(searchTerm);
-    const filteredItems = getNames().filter((user) =>
-      user.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredUsers(filteredItems);
   };
-
-  useEffect(() => {
-    if (openDropdown === "type") {
-      setSearchItem("");
-      setFilteredUsers(getNames());
-    }
-  }, [openDropdown]);
 
   const handleClickOutside = (event) => {
     if (
@@ -41,35 +32,22 @@ const CountrySelector = ({
     }
   };
 
+  const diplayCountresList = () => {
+    // in start we are making the list of country as key value pairs for name and translation.
+    const filterdList = [...countriesList].map(name => { return {name, translation: t(name) } } )
+      .filter(country => country.translation.toLowerCase().includes(searchItem.toLowerCase()))
+      .sort((a, b) => a.translation.localeCompare(b.translation, i18n.language, { sensitivity: "base" }));
+
+    return filterdList;
+  };
+
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [openDropdown]);
-
-  const [sortedCountries, setSortedCountries] = useState([]);
-
-  useEffect(() => {
-    // Ensure i18n.language is loaded before applying localeCompare
-    if (i18n.language) {
-      const sortedData = [...filteredUsers]
-        .filter((item) => typeof item === "string")
-        .sort((a, b) => a.localeCompare(b, i18n.language, { sensitivity: "base" }));
-      setSortedCountries(sortedData);
-    }
-  }, [i18n.language, filteredUsers]);
-
-  console.log(i18n.language, "-------------- t------------------");
-
-  // const testArray = ["a", "o", "z", "ä", "ö"];
-  // const collator = new Intl.Collator("fi"); // Finnish locale
-  // const sortedArray = testArray.sort((a, b) => collator.compare(a, b));
-
-  // console.log("Original array:", testArray);
-  // console.log("Sorted array (locale 'fi'):", sortedArray);
-
-  console.log(Intl.Collator.supportedLocalesOf(["fi"]));
 
   return (
     <div className="Selfmade-dropdown" style={{ width: "100%" }} ref={dropdownRef}>
@@ -104,17 +82,17 @@ const CountrySelector = ({
               className="searchcountry"
               value={searchItem}
               onChange={handleInputChange}
-              placeholder={t("Search country")}
+              placeholder={t("Search")}
             />
           </div>
-          {sortedCountries.map((type) => (
+          {diplayCountresList().map((country) => (
             <>
               <a
-                key={type}
-                onClick={() => handleSelection("Country", type, type)}
+                key={country.name}
+                onClick={() => handleSelection("Country", country.name, country.name)}
                 className="elipsisDrodownshow"
               >
-                {t(type)}
+                {country.translation}
                 <br />
               </a>
             </>
