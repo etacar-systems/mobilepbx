@@ -232,7 +232,7 @@ const CustomizeTab = ({
                 className="labledata"
                 style={{ color: "var(--main-adminheaderpage-color)" }}
               >
-                {t("Dark mode small logo")}
+                {t("Dark mode Small logo")}
               </label>
               {renderFileInput("dark_small_logo", "Large logo")}
             </div>
