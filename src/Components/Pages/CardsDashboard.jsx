@@ -62,7 +62,7 @@ function CardsDashboard({ progress, handleProgressClick, progress1, handleProgre
             <p className="chart-value">{t("Calls today")}</p>
             <div className="rowdata ">
               <div className="col-12 text-center col-name">
-                <h2>{data?.today_total_calls}</h2>
+                <h2>{data?.today_total_calls ?? 0}</h2>
               </div>
             </div>
             <div className="rowdata mt-4">
@@ -86,7 +86,7 @@ function CardsDashboard({ progress, handleProgressClick, progress1, handleProgre
             <p className="chart-value"> {t("Missed today")}</p>
             <div className="rowdata">
               <div className="col-12 text-center col-name">
-                <h2>{data?.today_missed_calls}</h2>
+                <h2>{data?.today_missed_calls ?? 0}</h2>
               </div>
             </div>
             <div className="rowdata mt-4">

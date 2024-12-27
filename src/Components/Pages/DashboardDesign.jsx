@@ -473,24 +473,24 @@ function DashboardDesign() {
                                       "5px solid var(--main-grey-color)",
                                     padding: "20px",
                                   }}
-                                  key={val.userDetails.user_extension} // Add a unique key
+                                  key={val.userDetails[0].user_extension} // Add a unique key
                                 >
                                   <td
                                     className="table-custom-body-td"
                                     style={{ padding: "0.5rem" }}
                                   >
                                     <a href="#" className="name-atag">
-                                      {val?.userDetails?.first_name}{" "}
-                                      {val?.userDetails?.last_name} {/* new */}
+                                      {val?.userDetails[0]?.first_name}{" "}
+                                      {val?.userDetails[0]?.last_name} {/* new */}
                                     </a>
                                     <p className="mb-0 text-muted text-size">
                                       {t("Status")}:{" "}
                                       <Badge
                                         variant="success"
                                         className="but-badge"
-                                        style={ {color: val?.userDetails?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
+                                        style={ {color: val?.userDetails[0]?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
                                       >
-                                        {val?._doc?.is_online === 0
+                                        {val?.userDetails[0]?.is_online === 0
                                           ? t("Offline")
                                           : t("Online")}
                                       </Badge>
@@ -501,7 +501,7 @@ function DashboardDesign() {
                                     style={{ padding: "0.5rem" }}
                                   >
                                     <h6 className="font-14 mb-0 text-size small-cusnum">
-                                      {val?.userDetails.user_extension}
+                                      {val?.userDetails[0].user_extension}
                                     </h6>
                                     <span className="text-muted text-size">
                                       {t("Extension")}

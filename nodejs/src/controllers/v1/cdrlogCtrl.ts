@@ -527,7 +527,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         };
       }
 
-      const reports_list = await cdrs.find(find_query);
+      const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
 
       // Calculate the starting index for the data based on the page and per_page
       const startIndex = (page - 1) * per_page;
@@ -540,7 +540,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       const totalRecords = reports_list.length; // Or fetch this from your database if necessary
       const totalPages = Math.ceil(totalRecords / per_page);
       //  console.log("start_end_data",reports_list)
-      if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0 || reports_list === null) {
+      if (!reports_list) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
           message: "CDR logs fetched successfully",

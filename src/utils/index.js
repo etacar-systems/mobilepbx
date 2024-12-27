@@ -8,6 +8,7 @@ class Utils
   
   // Calculate the sum for each type
   static formatDuration = (seconds) => {
+    seconds = Math.max(seconds || 0, 0);
     let hrs = Math.floor(seconds / 3600);
     let mins = Math.floor((seconds % 3600) / 60);
     let secs = Utils.toFixedIfNecessary(seconds % 60);
