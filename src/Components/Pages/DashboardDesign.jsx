@@ -21,6 +21,8 @@ import { getapiAll } from "../../Redux/Reducers/ApiServices";
 import { useDispatch, useSelector } from "react-redux";
 import RingGroupModal from "../Modal/RingGroupModal";
 import { defaultactiveKeyname, Multilinechart } from "../ConstantConfig";
+// import CallDetailByIdPage from "./CallDetailsByIdPage"
+
 
 // Immediately loaded components
 const DashboardHeaderDatePicker = lazy(() =>
@@ -473,23 +475,28 @@ function DashboardDesign() {
                                       "5px solid var(--main-grey-color)",
                                     padding: "20px",
                                   }}
-                                  key={val?.userDetails?.user_extension} // Add a unique key
+                                  // key={val.user_extension} // Add a unique key
+                                  key={val?.userDetails.user_extension} // Add a unique key
                                 >
                                   <td
                                     className="table-custom-body-td"
                                     style={{ padding: "0.5rem" }}
                                   >
                                     <a href="#" className="name-atag">
+                                      {/* {val?.first_name}{" "}
+                                      {val?.last_name}  */}
                                       {val?.userDetails?.first_name}{" "}
-                                      {val?.userDetails?.last_name} {/* new */}
+                                      {val?.userDetails?.last_name} 
                                     </a>
                                     <p className="mb-0 text-muted text-size">
                                       {t("Status")}:{" "}
                                       <Badge
                                         variant="success"
                                         className="but-badge"
+                                        // style={ {color: val?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
                                         style={ {color: val?.userDetails?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
                                       >
+                                        {/* {val?.is_online === 0 */}
                                         {val?.userDetails?.is_online === 0
                                           ? t("Offline")
                                           : t("Online")}
@@ -501,6 +508,7 @@ function DashboardDesign() {
                                     style={{ padding: "0.5rem" }}
                                   >
                                     <h6 className="font-14 mb-0 text-size small-cusnum">
+                                      {/* {val?.user_extension} */}
                                       {val?.userDetails.user_extension}
                                     </h6>
                                     <span className="text-muted text-size">
@@ -618,6 +626,7 @@ function DashboardDesign() {
           setFilteredList={setFilteredList}
         />
       )}
+      {/* <CallDetailByIdPage /> */}
     </div>
   );
 }
