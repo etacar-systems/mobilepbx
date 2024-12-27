@@ -17,6 +17,7 @@ function convertISODate(date: String): String {
 
 const getDasboardDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
+
     const token = await get_token(req);
     const user_detail = await User_token(token);
     let dashboard_response_obj: { [key: string]: any } = {};
@@ -26,7 +27,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       is_deleted: 0,
     });
 
-    console.log(companyDetail);
+    console.log("companyDetail",user_detail);
 
     if (!companyDetail) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -311,16 +312,16 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     //  console.log("khanjan_api_config", api_config);
 
-    const userType: any = await role.find({
-      _id: user_detail?.role,
+    const userData: any = await user.findOne({
+      _id: user_detail?.uid,
       is_deleted: 0,
     });
 
-    const cdrs: any = await CdrModel.find({
-      domain_uuid: companyDetail.domain_uuid, // Always filter by domain_uuid
-      ...(userType.type === 1 && { extension_uuid: userType.extension_uuid }), // Conditionally add extension_uuid if userType.type is 1
-    });
-    //  console.log("---------cdrs-------", cdrs);
+    const userType: any = await role.findOne({
+      _id: userData?.role
+    })
+
+   
     try {
       const reports_api_data: any = await axios.request(api_config);
       dashboard_response_obj.reports_counts_updated = {
@@ -332,37 +333,41 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       const pipeline: PipelineStage[] = [
         {
           $match: {
-            domain_uuid: companyDetail.domain_uuid, // Always filter by domain_uuid
-            ...(userType.type === 1 && { extension_uuid: userType.extension_uuid }), // Conditionally add extension_uuid if userType.type is 1
+
+            cid: companyDetail._id, // Always filter by domain_uuid
+            user_extension: { $ne: "" },
+            // logType
+            ...(userType.type === 1 ? { extension_uuid: userData.extension_uuid } : {}),
           },
         },
         {
           $lookup: {
-            from: "users", // Join with the 'users' collection
-            localField: "extension_uuid", // cdrs.extension_uuid
-            foreignField: "extension_uuid", // users.extension_uuid
-            as: "userDetails",
+            from: "cdrs", // Join with the 'cdrs' collection
+            localField: "extension_uuid", // users.extension_uuid
+            foreignField: "extension_uuid", // cdrs.extension_uuid
+            as: "cdrDetails",
           },
         },
-        { $unwind: "$userDetails" }, // Unwind the array from the $lookup
         {
-          $lookup: {
-            from: "companies", // Join with the 'companies' collection
-            localField: "domain_uuid", // cdrs.domain_uuid
-            foreignField: "domain_uuid", // companies.domain_uuid
-            as: "companyDetails",
+          $unwind: {
+            path: "$cdrDetails",
+            preserveNullAndEmptyArrays: true // Ensure users with no matching cdrs are included
           },
         },
-        { $unwind: "$companyDetails" }, // Unwind the array from the $lookup
         {
           $group: {
             _id: { extension_uuid: "$extension_uuid" }, // Group by extension UUID
 
-            total_calls: { $sum: 1 }, // Count total calls
+            total_calls: { $sum: { $cond: [{ $ifNull: ["$cdrDetails", false] }, 1, 0] } }, // Count total calls only if cdrDetails exists
             answered: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$status", "answered"] }, { $ne: ["$direction", "agent"] }] },
+                  {
+                    $and: [
+                      { $eq: ["$cdrDetails.status", "answered"] },
+                      { $ne: ["$cdrDetails.direction", "agent"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -370,80 +375,65 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             },
             missed: {
               $sum: {
-                $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+                $cond: [{ $eq: ["$cdrDetails.status", "missed"] }, 1, 0],
               },
             },
             no_answer: {
               $sum: {
-                $cond: [{ $eq: ["$hangup_cause", "NO_ANSWER"] }, 1, 0],
+                $cond: [{ $eq: ["$cdrDetails.hangup_cause", "NO_ANSWER"] }, 1, 0],
               },
             },
             busy: {
               $sum: {
-                $cond: [{ $eq: ["$hangup_cause", "USER_BUSY"] }, 1, 0],
+                $cond: [{ $eq: ["$cdrDetails.hangup_cause", "USER_BUSY"] }, 1, 0],
               },
             },
-            avg_call_length: { $avg: "$duration" }, // Average call length
+            avg_call_length: { $avg: "$cdrDetails.duration" }, // Average call length
             inbound_calls: {
               $sum: {
-                $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
+                $cond: [{ $eq: ["$cdrDetails.direction", "inbound"] }, 1, 0],
               },
             },
             inbound_duration: {
               $sum: {
-                $cond: [{ $eq: ["$direction", "inbound"] }, "$duration", 0],
+                $cond: [{ $eq: ["$cdrDetails.direction", "inbound"] }, "$cdrDetails.duration", 0],
               },
             },
             local_calls: {
               $sum: {
-                $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
+                $cond: [{ $eq: ["$cdrDetails.direction", "local"] }, 1, 0],
               },
             },
             local_duration: {
               $sum: {
-                $cond: [{ $eq: ["$direction", "local"] }, "$duration", 0],
+                $cond: [{ $eq: ["$cdrDetails.direction", "local"] }, "$cdrDetails.duration", 0],
               },
             },
             outbound_calls: {
               $sum: {
-                $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0],
+                $cond: [{ $eq: ["$cdrDetails.direction", "outbound"] }, 1, 0],
               },
             },
             outbound_duration: {
               $sum: {
-                $cond: [{ $eq: ["$direction", "outbound"] }, "$duration", 0],
+                $cond: [{ $eq: ["$cdrDetails.direction", "outbound"] }, "$cdrDetails.duration", 0],
               },
             },
-            userDetails: { $addToSet: "$userDetails" }, // Include the first userDetails
-
-            // response_seconds: {
-            //   $sum: {
-            //     $cond: [
-            //       {
-            //         $and: [
-            //           { $eq: ["$status", "answered"] },
-            //           { $ne: ["$duration", null] }
-            //         ]
-            //       },
-            //       { $subtract: ["$answer_stamp", "$start_stamp"] },
-            //       0
-            //     ]
-            //   }
-            // }
+            userDetails: { $first: "$$ROOT" }, // Include the first userDetails
           },
         },
         { $sort: { _id: 1 } }, // Sort by extension UUID
       ];
 
-      const extension_list = await CdrModel.aggregate(pipeline).exec();
+      const extension_list = await user.aggregate(pipeline).exec();
 
       console.log("extension_listextension_list", extension_list);
 
       if (
-        reports_api_data?.data?.data &&
-        reports_api_data?.data?.total_counts &&
-        reports_api_data?.data?.sla &&
-        reports_api_data?.data?.call_comparison &&
+        reports_api_data?.data?.data ||
+        reports_api_data?.data?.total_counts ||
+        reports_api_data?.data?.sla ||
+        reports_api_data?.data?.call_comparison ||
         extension_list
       ) {
         // const mergedArray = reports_api_data?.data?.data?.map((u: any) => {
