@@ -14,7 +14,7 @@ const ChartDataComponent = () => {
       columns: [["data1", 30, 40, 10, 40, 12, 22, 40]],
       colors: ["#467fcf"],
       title: "Called",
-      value: valuedata?.total_calls,
+      value: valuedata?.total_calls ?? 0,
     },
     {
       id: "chart-bg-users-2",
@@ -22,7 +22,7 @@ const ChartDataComponent = () => {
       columns: [["data1", 12, 21, 17, 40, 19, 22, 13]],
       colors: ["#e74c3c"],
       title: "Answered",
-      value: valuedata?.total_answered,
+      value: valuedata?.total_answered ?? 0,
     },
     {
       id: "chart-bg-users-3",
@@ -30,7 +30,7 @@ const ChartDataComponent = () => {
       columns: [["data1", 22, 14, 45, 28, 18, 27, 40]],
       colors: ["#5eba00"],
       title: "Missed",
-      value: valuedata?.total_missed,
+      value: valuedata?.total_missed ?? 0,
     },
     {
       id: "chart-bg-users-4",
