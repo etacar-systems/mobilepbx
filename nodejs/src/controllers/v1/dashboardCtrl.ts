@@ -336,6 +336,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
             cid: companyDetail._id, // Always filter by domain_uuid
             user_extension: { $ne: "" },
+            is_deleted: 0,
             // logType
             // ...(userType.type === 1 ? { extension_uuid: userData.extension_uuid } : {}),
           },
