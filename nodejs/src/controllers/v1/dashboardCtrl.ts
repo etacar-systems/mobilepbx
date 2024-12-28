@@ -17,7 +17,6 @@ function convertISODate(date: String): String {
 
 const getDasboardDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const token = await get_token(req);
     const user_detail = await User_token(token);
     let dashboard_response_obj: { [key: string]: any } = {};
@@ -27,7 +26,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       is_deleted: 0,
     });
 
-    console.log("companyDetail",user_detail);
+    console.log("companyDetail", user_detail);
 
     if (!companyDetail) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -92,9 +91,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-          start_date: convertISODate(start_date),
-          end_date: convertISODate(end_date),
-          defaultTimezone,
+        start_date: start_date,
+        end_date: end_date,
       },
     };
 
@@ -149,6 +147,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     try {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+      const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Set to 12:00 AM of today
+      const endOfDay = new Date(today.setHours(23, 59, 59, 999)); // Set to 11:59 PM of today
+
       console.log(
         start_date,
         "start_date",
@@ -157,6 +158,54 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         new Date(start_date + "Z"),
         new Date(end_date + "Z")
       );
+
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1); // Subtract one day
+
+      // Reset time to midnight (00:00:00) for accurate comparison
+      yesterday.setHours(0, 0, 0, 0);
+
+      console.log("Yesterday's Date:", yesterday);
+
+      // const userType: any = await CdrModel.find({
+      //   domain_uuid: companyDetail.domain_uuid,
+      //   start_stamp: {
+      //     $gte: "2024-12-28T00:00:00.000Z", // Filter for calls starting today
+      //   },
+      // });
+      // console.log(userType.length, yesterday, "--userType--", userType);
+
+      const todayStats = await CdrModel.aggregate([
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid,
+            start_stamp: {
+              $gte: today, // Filter for calls starting today
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            today_total_calls: { $sum: 1 },
+            today_missed_calls: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            today_total_calls: 1,
+            today_missed_calls: 1,
+          },
+        },
+      ]);
+
+      console.log("Today Stats:", todayStats);
+
       const data = await CdrModel.aggregate([
         {
           $match: {
@@ -262,7 +311,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       ]);
       console.log(
         {
-          ...(data ? data[0] : ""),
+          ...(data ? data[0] : {}),
+          sla: {
+            missed_call: todayStats?.[0]?.today_total_calls || 0,
+            answered_call: todayStats?.[0]?.today_missed_calls || 0,
+          },
         },
         "--data--"
       );
@@ -286,7 +339,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
       // missedCallCount(companyDetail.domain_uuid);
       dashboard_response_obj.reports_counts_updated = {
-        ...(data ? data[0] : ""),
+        ...(data ? data[0] : {}),
+        sla: {
+          missed_call: todayStats?.[0]?.today_total_calls || 0,
+          answered_call: todayStats?.[0]?.today_missed_calls || 0,
+        },
       };
       // return res.json({
       //   success: 1,
@@ -321,12 +378,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     //   _id: userData?.role
     // })
 
-   
     try {
       const reports_api_data: any = await axios.request(api_config);
       dashboard_response_obj.reports_counts_updated = {
         ...dashboard_response_obj.reports_counts_updated,
-        sla: reports_api_data?.data?.sla,
         call_comparison: reports_api_data?.data?.call_comparison,
       };
 
@@ -445,7 +500,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                     $and: [
                       { $eq: ["$extension_uuid", "$$extensionUuid"] }, // Match extension_uuid
                       { $gte: ["$start_stamp", new Date(start_date)] }, // Filter by start_date
-                      { $lte: ["$start_stamp", new Date(end_date)] },  // Filter by end_date
+                      { $lte: ["$start_stamp", new Date(end_date)] }, // Filter by end_date
                     ],
                   },
                 },
