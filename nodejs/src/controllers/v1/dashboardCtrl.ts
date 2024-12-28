@@ -92,9 +92,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        // start_date: convertISODate(start_date),
-        // end_date: convertISODate(end_date),
-        // defaultTimezone,
+          start_date: convertISODate(start_date),
+          end_date: convertISODate(end_date),
+          defaultTimezone,
       },
     };
 
@@ -330,35 +330,139 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         call_comparison: reports_api_data?.data?.call_comparison,
       };
 
+      // const pipeline: PipelineStage[] = [
+      //   {
+      //     $match: {
+
+      //       cid: companyDetail._id, // Always filter by domain_uuid
+      //       user_extension: { $ne: "" },
+      //       is_deleted: 0,
+      //       // logType
+      //       // ...(userType.type === 1 ? { extension_uuid: userData.extension_uuid } : {}),
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "cdrs", // Join with the 'cdrs' collection
+      //       localField: "extension_uuid", // users.extension_uuid
+      //       foreignField: "extension_uuid", // cdrs.extension_uuid
+      //       as: "cdrDetails",
+      //     },
+      //   },
+      //   {
+      //     $unwind: {
+      //       path: "$cdrDetails",
+      //       preserveNullAndEmptyArrays: true // Ensure users with no matching cdrs are included
+      //     },
+      //   },
+      //   {
+      //     $group: {
+      //       _id: { extension_uuid: "$extension_uuid" }, // Group by extension UUID
+
+      //       total_calls: { $sum: { $cond: [{ $ifNull: ["$cdrDetails", false] }, 1, 0] } }, // Count total calls only if cdrDetails exists
+      //       answered: {
+      //         $sum: {
+      //           $cond: [
+      //             {
+      //               $and: [
+      //                 { $eq: ["$cdrDetails.status", "answered"] },
+      //                 { $ne: ["$cdrDetails.direction", "agent"] },
+      //               ],
+      //             },
+      //             1,
+      //             0,
+      //           ],
+      //         },
+      //       },
+      //       missed: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.status", "missed"] }, 1, 0],
+      //         },
+      //       },
+      //       no_answer: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.hangup_cause", "NO_ANSWER"] }, 1, 0],
+      //         },
+      //       },
+      //       busy: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.hangup_cause", "USER_BUSY"] }, 1, 0],
+      //         },
+      //       },
+      //       avg_call_length: { $avg: "$cdrDetails.duration" }, // Average call length
+      //       inbound_calls: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.direction", "inbound"] }, 1, 0],
+      //         },
+      //       },
+      //       inbound_duration: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.direction", "inbound"] }, "$cdrDetails.duration", 0],
+      //         },
+      //       },
+      //       local_calls: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.direction", "local"] }, 1, 0],
+      //         },
+      //       },
+      //       local_duration: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.direction", "local"] }, "$cdrDetails.duration", 0],
+      //         },
+      //       },
+      //       outbound_calls: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.direction", "outbound"] }, 1, 0],
+      //         },
+      //       },
+      //       outbound_duration: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$cdrDetails.direction", "outbound"] }, "$cdrDetails.duration", 0],
+      //         },
+      //       },
+      //       userDetails: { $first: "$$ROOT" }, // Include the first userDetails
+      //     },
+      //   },
+      //   { $sort: { _id: 1 } }, // Sort by extension UUID
+      // ];
+
       const pipeline: PipelineStage[] = [
         {
           $match: {
-
-            cid: companyDetail._id, // Always filter by domain_uuid
+            cid: companyDetail._id, // Filter by company ID
             user_extension: { $ne: "" },
             is_deleted: 0,
-            // logType
-            // ...(userType.type === 1 ? { extension_uuid: userData.extension_uuid } : {}),
           },
         },
         {
           $lookup: {
             from: "cdrs", // Join with the 'cdrs' collection
-            localField: "extension_uuid", // users.extension_uuid
-            foreignField: "extension_uuid", // cdrs.extension_uuid
+            let: { extensionUuid: "$extension_uuid" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$extension_uuid", "$$extensionUuid"] }, // Match extension_uuid
+                      { $gte: ["$start_stamp", new Date(start_date)] }, // Filter by start_date
+                      { $lte: ["$start_stamp", new Date(end_date)] },  // Filter by end_date
+                    ],
+                  },
+                },
+              },
+            ],
             as: "cdrDetails",
           },
         },
         {
           $unwind: {
             path: "$cdrDetails",
-            preserveNullAndEmptyArrays: true // Ensure users with no matching cdrs are included
+            preserveNullAndEmptyArrays: true, // Include users with no matching cdrs
           },
         },
         {
           $group: {
             _id: { extension_uuid: "$extension_uuid" }, // Group by extension UUID
-
             total_calls: { $sum: { $cond: [{ $ifNull: ["$cdrDetails", false] }, 1, 0] } }, // Count total calls only if cdrDetails exists
             answered: {
               $sum: {
