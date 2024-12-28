@@ -46,8 +46,10 @@ function CardsDashboard({ progress, handleProgressClick, progress1, handleProgre
                   bgcolor="var(--main-borderblue-color)"
                   pragressLable="progress-circle__label1 chart-value progressfont2"
                   onClick={handleProgressClick}
-                  Totalcall={data?.call_comparison.answered_call + data?.call_comparison?.local}
-                  Answeredcall={data?.call_comparison.answered_call}
+                  // Totalcall={data?.call_comparison.answered_call + data?.call_comparison?.local}
+                  Totalcall={data?.call_comparison?.answered_call + data?.call_comparison?.local}
+                  // Answeredcall={data?.call_comparison.answered_call}
+                  Answeredcall={data?.call_comparison?.answered_call}
                   Title1={t("Answered")}
                   Title2={t("Called")}
                 />

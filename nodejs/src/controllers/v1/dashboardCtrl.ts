@@ -312,14 +312,14 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     //  console.log("khanjan_api_config", api_config);
 
-    const userData: any = await user.findOne({
-      _id: user_detail?.uid,
-      is_deleted: 0,
-    });
+    // const userData: any = await user.findOne({
+    //   _id: user_detail?.uid,
+    //   is_deleted: 0,
+    // });
 
-    const userType: any = await role.findOne({
-      _id: userData?.role
-    })
+    // const userType: any = await role.findOne({
+    //   _id: userData?.role
+    // })
 
    
     try {
@@ -337,7 +337,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             cid: companyDetail._id, // Always filter by domain_uuid
             user_extension: { $ne: "" },
             // logType
-            ...(userType.type === 1 ? { extension_uuid: userData.extension_uuid } : {}),
+            // ...(userType.type === 1 ? { extension_uuid: userData.extension_uuid } : {}),
           },
         },
         {
@@ -450,17 +450,17 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         dashboard_response_obj.extensions_detail = extension_detail_data;
 
         let reports_counts: any = {
-          total_calls: reports_api_data?.data?.total_counts.total_calls,
-          total_outbound: reports_api_data?.data?.total_counts.total_outbound,
-          total_local: reports_api_data?.data?.total_counts.total_local,
-          total_answered: reports_api_data?.data?.total_counts.total_answered,
-          total_missed: reports_api_data?.data?.total_counts.total_missed,
-          total_duration_sec: reports_api_data?.data?.total_counts.total_duration_sec,
-          avg_response_sec: reports_api_data?.data?.total_counts.avg_response_sec,
-          today_total_calls: reports_api_data?.data?.total_counts.today_total_calls,
-          today_missed_calls: reports_api_data?.data?.total_counts.today_missed_calls,
+          total_calls: reports_api_data?.data?.total_counts?.total_calls,
+          total_outbound: reports_api_data?.data?.total_counts?.total_outbound,
+          total_local: reports_api_data?.data?.total_counts?.total_local,
+          total_answered: reports_api_data?.data?.total_counts?.total_answered,
+          total_missed: reports_api_data?.data?.total_counts?.total_missed,
+          total_duration_sec: reports_api_data?.data?.total_counts?.total_duration_sec,
+          avg_response_sec: reports_api_data?.data?.total_counts?.avg_response_sec,
+          today_total_calls: reports_api_data?.data?.total_counts?.today_total_calls,
+          today_missed_calls: reports_api_data?.data?.total_counts?.today_missed_calls,
           today_missed_calls_percentage:
-            reports_api_data?.data?.total_counts.today_missed_calls_percentage,
+            reports_api_data?.data?.total_counts?.today_missed_calls_percentage,
           sla: reports_api_data?.data?.sla,
           call_comparison: reports_api_data?.data?.call_comparison,
         };
