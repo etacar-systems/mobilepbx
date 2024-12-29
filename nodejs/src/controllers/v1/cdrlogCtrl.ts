@@ -344,7 +344,7 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
       }
 
       // Now, execute the query
-      const call_History = await cdrs.find(find_query);
+      const call_History = await cdrs.find(find_query).sort({ start_stamp: -1 });
 
       // Log the query and result for debugging
       console.log("Final find_query:", JSON.stringify(find_query, null, 2));

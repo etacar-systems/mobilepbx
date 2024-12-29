@@ -344,6 +344,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           ...(data ? data[0] : {}),
           today_total_calls: todayStats?.[0]?.today_total_calls,
           today_missed_calls: todayStats?.[0]?.today_missed_calls,
+          call_comparison: {
+            local: data?.[0]?.total_local,
+            called: data?.[0]?.total_outbound || 0,
+            answered_call: data?.[0]?.total_answered || 0,
+          },
           sla: {
             missed_call: data?.[0]?.total_missed || 0,
             answered_call: data?.[0]?.total_answered || 0,
@@ -374,6 +379,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         ...(data ? data[0] : {}),
         today_total_calls: todayStats?.[0]?.today_total_calls,
         today_missed_calls: todayStats?.[0]?.today_missed_calls,
+        call_comparison: {
+          local: data?.[0]?.total_local,
+          called: data?.[0]?.total_outbound || 0,
+          answered_call: data?.[0]?.total_answered || 0,
+        },
         sla: {
           missed_call: data?.[0]?.total_missed || 0,
           answered_call: data?.[0]?.total_answered || 0,
