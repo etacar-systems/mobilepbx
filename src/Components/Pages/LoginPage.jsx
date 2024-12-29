@@ -438,6 +438,8 @@ function LoginPage() {
               </div>
               <button
                 type="submit"
+                id="login"
+                name="login"
                 className="login-button"
                 onClick={handleLogin}
                 disabled={isButtonClicked}
