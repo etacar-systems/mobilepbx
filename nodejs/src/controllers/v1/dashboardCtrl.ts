@@ -165,8 +165,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       // Reset time to midnight (00:00:00) for accurate comparison
       yesterday.setHours(0, 0, 0, 0);
 
-      console.log("Yesterday's Date:", yesterday);
-
       // const userType: any = await CdrModel.find({
       //   domain_uuid: companyDetail.domain_uuid,
       //   start_stamp: {
@@ -174,13 +172,45 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       //   },
       // });
       // console.log(userType.length, yesterday, "--userType--", userType);
+      const currentDate = new Date();
+      console.log(startOfDay, "currentDate", endOfDay); // Outputs current date and time in local timezone
+
+      // const todayStats = await CdrModel.aggregate([
+      //   {
+      //     $match: {
+      //       domain_uuid: companyDetail.domain_uuid,
+      //       start_stamp: {
+      //         $gte: today, // Filter for calls starting today
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $group: {
+      //       _id: null,
+      //       today_total_calls: { $sum: 1 },
+      //       today_missed_calls: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+      //         },
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $project: {
+      //       _id: 0,
+      //       today_total_calls: 1,
+      //       today_missed_calls: 1,
+      //     },
+      //   },
+      // ]);
 
       const todayStats = await CdrModel.aggregate([
         {
           $match: {
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: {
-              $gte: today, // Filter for calls starting today
+              $gte: startOfDay,
+              $lt: endOfDay,
             },
           },
         },
@@ -204,7 +234,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         },
       ]);
 
-      console.log("Today Stats:", todayStats);
+      console.log(today, "Today Stats:", todayStats);
 
       const data = await CdrModel.aggregate([
         {
@@ -312,9 +342,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       console.log(
         {
           ...(data ? data[0] : {}),
+          today_total_calls: todayStats?.[0]?.today_total_calls,
+          today_missed_calls: todayStats?.[0]?.today_missed_calls,
           sla: {
-            missed_call: todayStats?.[0]?.today_total_calls || 0,
-            answered_call: todayStats?.[0]?.today_missed_calls || 0,
+            missed_call: data?.[0]?.total_missed || 0,
+            answered_call: data?.[0]?.total_answered || 0,
           },
         },
         "--data--"
@@ -340,9 +372,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       // missedCallCount(companyDetail.domain_uuid);
       dashboard_response_obj.reports_counts_updated = {
         ...(data ? data[0] : {}),
+        today_total_calls: todayStats?.[0]?.today_total_calls,
+        today_missed_calls: todayStats?.[0]?.today_missed_calls,
         sla: {
-          missed_call: todayStats?.[0]?.today_total_calls || 0,
-          answered_call: todayStats?.[0]?.today_missed_calls || 0,
+          missed_call: data?.[0]?.total_missed || 0,
+          answered_call: data?.[0]?.total_answered || 0,
         },
       };
       // return res.json({
