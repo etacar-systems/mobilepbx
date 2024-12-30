@@ -437,7 +437,10 @@ function CallDetailDashboard({
                                   }}
                                 >
                                   <div className="overflowdashboaard">
-                                    {row.caller_id_number}
+                                    {(row.status == "answered" && row.leg == "b")
+                                      ? row.source_number
+                                      : row.caller_id_number}
+                                    {/* {row.caller_id_number} */}
                                   </div>
                                 </td>
                                 <td
@@ -483,10 +486,13 @@ function CallDetailDashboard({
                                   }}
                                 >
                                   <div className="overflowdashboaard">
-                                    {formattedTime}
+                                    {/* {formattedTime} */}
+                                    {row.status != "answered"  
+                                      ? "00:00:00"
+                                      : formattedTime}{" "}
                                   </div>
                                 </td>
-                                
+
                                 {/* CHANGED */}
                                 <td
                                   // className="table-new table-custom-body-td new-calltype"
