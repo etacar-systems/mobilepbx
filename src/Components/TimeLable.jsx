@@ -1,6 +1,7 @@
 import moment from "moment/moment";
 import React from "react";
 import { useEffect, useState } from "react";
+import Utils from "../utils";
 
 const TimeLable = ({ timeFormate, lastMessageTime, todaytoTime, message }) => {
   const formattedDate = timeFormate;
@@ -29,7 +30,7 @@ const TimeLable = ({ timeFormate, lastMessageTime, todaytoTime, message }) => {
         "year"
       );
       if (isToday) {
-        setTimeFormatted(showingtime);
+        setTimeFormatted(Utils.timeDisplay(now));
       } else if (isYesterday) {
         setTimeFormatted("Yesterday");
       } else if (isCurrentYear) {

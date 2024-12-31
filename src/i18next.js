@@ -609,6 +609,8 @@ i18n
           "Not supported this file type": "Tätä tiedostotyyppiä ei tueta",
           Send: "Lähetä",
           "Are you sure you want to Unblock user?": "Haluatko varmasti poistaa käyttäjän eston?",
+          "Last seen at": "Viimeksi nähty klo",
+          "Last seen on": "Viimeksi nähty",
 
           // Phone Book
           "Add new contact": "Lisää uusi kontakti",
@@ -2322,7 +2324,9 @@ i18n
           Send: "Send",
           "Are you sure you want to Unblock user?":
             "Are you sure you want to Unblock user?",
-
+          "Last seen at": "Last seen at",
+          "Last seen on": "Last seen on",
+          
           // Phone Book
           "Add new contact": "Add new contact",
           "Edit contact": "Edit contact",

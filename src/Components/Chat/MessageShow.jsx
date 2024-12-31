@@ -19,6 +19,7 @@ import { ReactComponent as DoubleTickBlue } from "../../Assets/Icon/double-check
 import { getapiAll } from "../../Redux/Reducers/ApiServices";
 import Googlemapimg from "../../Assets/Image/Googlemapimg.jpeg";
 import { useTranslation } from "react-i18next";
+import Utils from "../../utils";
 
 function MessageShow({
   chatLoader,
@@ -1242,7 +1243,7 @@ function MessageShow({
                               val?.media_type !== 14 && (
                                 <div className="d-flex align-items-center justify-content-end">
                                   <p className="msg_right_time">
-                                    {moment(val?.createdAt).format("LT")}
+                                    {Utils.timeDisplay(moment(val?.createdAt).toDate())}
                                   </p>
                                   {val?.delivery_type === 1 ? (
                                     <SingleTick className="single_tick" />
