@@ -367,7 +367,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     const domain_name_check: any = await company.findOne({
-      domain_name,
+      domain_name: domain_name,
       is_deleted: 0,
     });
 
@@ -1465,82 +1465,27 @@ const DeleteCompany = async (req: Request, res: Response, next: NextFunction) =>
       const data: any = await axios.request(api_config);
 
       if (data?.data?.message) {
-        const updated_data: any = await company.findByIdAndUpdate(
-          {
-            _id: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: uid,
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
-        const post = await user.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        const updated_data: any = await company.deleteMany({
+          _id: cid,
+        });
+        const post = await user.deleteMany({
+          cid: cid,
+        });
 
-        await conferncers.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        await conferncers.deleteMany({
+          cid: cid,
+        });
 
-        await ring_group.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        await ring_group.deleteMany({
+          cid: cid,
+        });
 
-        await IVR.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
-        await time_condition.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        await IVR.deleteMany({
+          cid: cid,
+        });
+        await time_condition.deleteMany({
+          cid: cid,
+        });
         // await trunks.updateMany(
         //   {
         //     cid: cid,
@@ -1553,42 +1498,15 @@ const DeleteCompany = async (req: Request, res: Response, next: NextFunction) =>
         //     runValidators: true,
         //   }
         // );
-        await outbound_route.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
-        await pstn_number.updateMany(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
-        await CompanyFeaturesModel.findOneAndUpdate(
-          {
-            cid: cid,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        await outbound_route.deleteMany({
+          cid: cid,
+        });
+        await pstn_number.deleteMany({
+          cid: cid,
+        });
+        await CompanyFeaturesModel.deleteMany({
+          cid: cid,
+        });
         // await firewall.updateMany(
         //   {
         //     cid: cid,
