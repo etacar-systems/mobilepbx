@@ -1,11 +1,28 @@
 import React, { useRef, useEffect } from "react";
 import { Chart } from "chart.js";
-import { Blackcolor, Whitecolor, Dark, Gridlinedarkcolor, Girdlinelightcolor } from "../ConstantConfig";
+import {
+  Blackcolor,
+  Whitecolor,
+  Dark,
+  Gridlinedarkcolor,
+  Girdlinelightcolor,
+} from "../ConstantConfig";
 
 const MultiLineChart = ({ data, Theme, theme }) => {
   const chartRef = useRef(null);
   const Textcolor = Theme === Dark || theme === Dark ? Whitecolor : Blackcolor;
-  const gridlinecolor = Theme === Dark || theme === Dark ? Gridlinedarkcolor : Girdlinelightcolor ;
+  const gridlinecolor =
+    Theme === Dark || theme === Dark ? Gridlinedarkcolor : Girdlinelightcolor;
+  // console.log("MultiLineChartMultiLineChart", data);
+
+  const dataValues = data.datasets.flatMap((dataset) => dataset.data); // Flatten all y-values from the datasets
+  const calculatedMin = Math.min(...dataValues);
+  const calculatedMax = Math.max(...dataValues);
+
+  // Add padding to min and max for better visualization
+  const padding = 5; // Adjust the padding as needed
+  const dynamicMin = calculatedMin - padding < 0 ? 0 : calculatedMin - padding;
+  const dynamicMax = calculatedMax + padding;
 
   useEffect(() => {
     const myChart = new Chart(chartRef.current, {
@@ -67,13 +84,13 @@ const MultiLineChart = ({ data, Theme, theme }) => {
             position: "left",
             grid: {
               drawOnChartArea: false,
-              color:gridlinecolor,
+              color: gridlinecolor,
             },
             border: {
-              color: gridlinecolor, 
+              color: gridlinecolor,
             },
-            min: 8,
-            max: 24,
+            min: dynamicMin,
+            max: dynamicMax,
             ticks: {
               stepSize: 2, // Set the step size or interval between ticks
             },
@@ -96,8 +113,8 @@ const MultiLineChart = ({ data, Theme, theme }) => {
             grid: {
               drawOnChartArea: false, // only want the grid lines for one axis to show up
             },
-            min: 8,
-            max: 24,
+            min: dynamicMin,
+            max: dynamicMax,
             ticks: {
               stepSize: 2, // Set the step size or interval between ticks
             },
@@ -110,7 +127,7 @@ const MultiLineChart = ({ data, Theme, theme }) => {
       myChart.destroy(); // Cleanup chart on component unmount
     };
   }, [data, Textcolor]);
-  
+
   return (
     <div>
       <canvas ref={chartRef} className="chart-canvas2" />

@@ -23,7 +23,6 @@ import RingGroupModal from "../Modal/RingGroupModal";
 import { defaultactiveKeyname, Multilinechart } from "../ConstantConfig";
 // import CallDetailByIdPage from "./CallDetailsByIdPage"
 
-
 // Immediately loaded components
 const DashboardHeaderDatePicker = lazy(() =>
   import("./DashboardHeaderDatePicker")
@@ -282,26 +281,23 @@ function DashboardDesign() {
     setActiveTabs(key);
   };
 
+  // Iterate missed call data and set for graph
+  const missedCalledData = data?.DashboardDetail?.missed_call_new?.map(
+    (item) => {
+      return item;
+    }
+  );
+
   const multilinechart = {
-    labels: [
-      "Feb 15",
-      "Feb 16",
-      "Feb 17",
-      "Feb 18",
-      "Feb 19",
-      "Feb 20",
-      "Feb 21",
-      "Feb 22",
-      "Feb 23",
-      "Feb 24",
-    ],
+    labels: missedCalledData?.map((item) => item.day),
     datasets: [
       {
         label: "Missed",
-        data: [9, 14, 18, 21, 12, 21, 23, 18, 13, 9],
+        data: missedCalledData?.map((item) => item.count),
+        // data: [0, 0, 0, 0, 10, 0, 0],
         borderColor: Multilinechart.dataset1color,
         backgroundColor: Multilinechart.dataset1color,
-        borderWidth: 1,
+        borderWidth: 3,
         yAxisID: "y",
         pointLabel: {
           display: true, // Show the labels on the data points
@@ -312,10 +308,11 @@ function DashboardDesign() {
       },
       {
         label: "Waiting time",
-        data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
+        data: missedCalledData?.map((item) => item.total_waiting_time),
+        // data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,
         backgroundColor: Multilinechart.dataset2color,
-        borderWidth: 1,
+        borderWidth: 3,
         yAxisID: "y1",
         pointLabel: {
           display: true, // Show the labels on the data points
@@ -327,6 +324,9 @@ function DashboardDesign() {
     ],
   };
 
+  // const headersData = {
+  //   missedcall: data?.DashboardDetail?.reports_counts_updated?.sla ?? 0,
+  // };
   const openModal = () => {
     setShow(true);
   };
@@ -412,6 +412,8 @@ function DashboardDesign() {
                   targetRef={targetRef}
                   Theme={Theme}
                   theme={theme}
+                  missedCalledData={missedCalledData}
+                  // headersData={headersData}
                 />
               </div>
             </Col>
@@ -486,7 +488,7 @@ function DashboardDesign() {
                                       {/* {val?.first_name}{" "}
                                       {val?.last_name}  */}
                                       {val?.userDetails?.first_name}{" "}
-                                      {val?.userDetails?.last_name} 
+                                      {val?.userDetails?.last_name}
                                     </a>
                                     <p className="mb-0 text-muted text-size">
                                       {t("Status")}:{" "}
@@ -494,7 +496,12 @@ function DashboardDesign() {
                                         variant="success"
                                         className="but-badge"
                                         // style={ {color: val?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
-                                        style={ {color: val?.userDetails?.is_online === 0 ? "var(--main-orangecustomermodal-color)" : "var(--main-green-color)"} }
+                                        style={{
+                                          color:
+                                            val?.userDetails?.is_online === 0
+                                              ? "var(--main-orangecustomermodal-color)"
+                                              : "var(--main-green-color)",
+                                        }}
                                       >
                                         {/* {val?.is_online === 0 */}
                                         {val?.userDetails?.is_online === 0

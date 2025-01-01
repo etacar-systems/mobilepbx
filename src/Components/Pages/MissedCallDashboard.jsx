@@ -4,21 +4,43 @@ import MultiLineChart from "./MultiLineChart";
 import Modal from "react-bootstrap/Modal";
 import { ReactComponent as Bigsize } from "../../Assets/Icon/biggersize.svg";
 import { useTranslation } from "react-i18next";
-function MissedCallDashboard({ multilinechart, targetRef, theme, Theme }) {
+function MissedCallDashboard({
+  missedCalledData,
+  multilinechart,
+  targetRef,
+  theme,
+  Theme,
+}) {
   const { t } = useTranslation();
   const [show, setshow] = useState(false);
+
+  // let todayMissedCall = 0,
+  //   totalWaitingTime = 0;
   const openmodal = () => {
     setshow(true);
   };
+  // multilinechart?.datasets[0]?.data?.map((item) => {
+  //   todayMissedCall += item;
+  // });
+
+  // multilinechart?.datasets[1]?.data?.map((item) => {
+  //   totalWaitingTime += item;
+  // });
   const graphmissedcll = () => {
     return (
-      <Card.Body className="misscall" style={{ width: "100%" }} ref={targetRef}>
+      <Card.Body
+        className="misscall"
+        style={{ width: "100%", height: "500px" }}
+        ref={targetRef}
+      >
         <div className="d-flex justify-content-start mb-3">
           <div className="mr-5">
             <label className="mb-0 header-size missed-header">
               {t("Missed calls")}
             </label>
-            <h4 className="font-h4 missed-header">20 {t("Calls")}</h4>
+            <h4 className="font-h4 missed-header">
+              {missedCalledData && missedCalledData[6]?.count} {t("Calls")}
+            </h4>
             <small className="text-muted">
               <span className="missedcallfont">9.5%</span> {t("of")} 47{" "}
               {t("Total")}
@@ -28,7 +50,10 @@ function MissedCallDashboard({ multilinechart, targetRef, theme, Theme }) {
             <label className="mb-0 header-size missed-header">
               {t("Average waiting time")}
             </label>
-            <h4 className="font-h4 missed-header">32 {t("Sec")}</h4>
+            <h4 className="font-h4 missed-header">
+              {missedCalledData && missedCalledData[6]?.average_waiting_time}{" "}
+              {t("Sec")}
+            </h4>
             <small className="text-muted">
               <span className="missedcallfont">87.3%</span> {t("of")} 47{" "}
               {t("Total")}

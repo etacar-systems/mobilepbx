@@ -437,7 +437,7 @@ function CallDetailDashboard({
                                   }}
                                 >
                                   <div className="overflowdashboaard">
-                                    {(row.status == "answered" && row.leg == "b")
+                                    {row.status == "answered" && row.leg == "b"
                                       ? row.source_number
                                       : row.caller_id_number}
                                     {/* {row.caller_id_number} */}
@@ -487,7 +487,7 @@ function CallDetailDashboard({
                                 >
                                   <div className="overflowdashboaard">
                                     {/* {formattedTime} */}
-                                    {row.status != "answered"  
+                                    {row.status != "answered"
                                       ? "00:00:00"
                                       : formattedTime}{" "}
                                   </div>
