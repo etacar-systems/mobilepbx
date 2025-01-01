@@ -11,6 +11,8 @@ import { AllWhatsappEmit } from "./Whatsappsocketconfig";
 import Cookies from "js-cookie";
 
 function Wpchatheader({ sidebarobjget }) {
+  const { t } = useTranslation();
+
   const data = useSelector(
     (state) => state.getapiall.getapiall.complist.usersData
   );
@@ -39,9 +41,9 @@ function Wpchatheader({ sidebarobjget }) {
     }; // Options for full date and time without seconds
 
     if (isToday) {
-      return `Last seen at ${date.toLocaleTimeString(undefined, timeOptions)}`; // Only show time if it's today
+      return `${t('Last seen at')} ${date.toLocaleTimeString(undefined, timeOptions)}`; // Only show time if it's today
     } else {
-      return `Last seen on ${date.toLocaleDateString()} at ${date.toLocaleTimeString(
+      return `${t('Last seen on')} ${date.toLocaleDateString()} at ${date.toLocaleTimeString(
         undefined,
         timeOptions
       )}`; // Show full date and time otherwise
@@ -80,7 +82,7 @@ function Wpchatheader({ sidebarobjget }) {
     dispatch(openChat(false));
     dispatch(openSidebar(true));
   };
-  const { t } = useTranslation();
+
   return (
     <>
       <Row

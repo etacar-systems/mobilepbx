@@ -435,6 +435,21 @@ function MainComponent({ children }) {
   const [isClick, setIsClick] = useState(false);
   const iconRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  let display_small_logo = logo;
+  let display_logo_text = img_logo;
+  
+  if (!theme)
+  {
+    display_small_logo = companyFeatures?.small_logo ? `${fileBaseUrl}${companyFeatures?.small_logo}` : logo;
+    display_logo_text  = companyFeatures?.logo_text ? `${fileBaseUrl}${companyFeatures?.logo_text}` : img_logo;
+  }
+  else
+  {
+    display_small_logo = companyFeatures?.dark_small_logo ? `${fileBaseUrl}${companyFeatures?.dark_small_logo}` : logo;
+    display_logo_text  = companyFeatures?.dark_logo_text ? `${fileBaseUrl}${companyFeatures?.dark_logo_text}` : img_logo;
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Close the dropdown if the click is outside the dropdown and icon
@@ -461,55 +476,16 @@ function MainComponent({ children }) {
         {!screensize && (
           <div className="side_bar">
             <div className="sidebar_logo">
-              {!theme ? (
-                <>
-                  {" "}
-                  {companyFeatures?.small_logo ? (
-                    <img
-                      src={`${fileBaseUrl}${companyFeatures?.small_logo}`}
-                      alt=""
-                      style={{ marginTop: "12px" }}
-                    />
-                  ) : (
-                    <img src={logo} alt="" style={{ marginTop: "12px" }} />
-                  )}
-                  {companyFeatures?.logo_text ? (
-                    <img
-                      src={`${fileBaseUrl}${companyFeatures?.logo_text}`}
-                      alt=""
-                      style={{ marginTop: "12px" }}
-                      height="35px"
-                      width="180px"
-                    />
-                  ) : (
-                    <img src={img_logo} alt="" style={{ marginTop: "12px" }} />
-                  )}
-                </>
-              ) : (
-                <>
-                  {" "}
-                  {companyFeatures?.dark_small_logo ? (
-                    <img
-                      src={`${fileBaseUrl}${companyFeatures?.dark_small_logo}`}
-                      alt=""
-                      style={{ marginTop: "12px" }}
-                    />
-                  ) : (
-                    <img src={logo} alt="" style={{ marginTop: "12px" }} />
-                  )}
-                  {companyFeatures?.dark_logo_text ? (
-                    <img
-                      src={`${fileBaseUrl}${companyFeatures?.dark_logo_text}`}
-                      alt=""
-                      style={{ marginTop: "12px" }}
-                      height="35px"
-                      width="180px"
-                    />
-                  ) : (
-                    <img src={img_logo} alt="" style={{ marginTop: "12px" }} />
-                  )}
-                </>
-              )}
+              <img
+                src={display_small_logo}
+                alt="logo icon"
+                style={{ marginTop: "12px" }}
+              />
+              <img
+                src={display_logo_text}
+                alt="logo"
+                style={ { maxHeight: "35px", maxWidth: "180px", marginTop: "12px" } }
+              />
             </div>
 
             <div style={{ maxHeight: dynamicHeight, overflow: "auto" }} className="sidebar_scroll">
@@ -680,8 +656,11 @@ function MainComponent({ children }) {
           <div className={`drawer ${isDrawerOpen == true ? "open" : ""}`} ref={sideRef}>
             <div className="">
               <div className="sidebar_logo">
-                <img src={logo} alt="" />
-                <img src={img_logo} alt="" />
+                <img src={display_small_logo} alt="" />
+                <img src={display_logo_text} 
+                  alt=""
+                  style={ { maxHeight: "30px", maxWidth: "170px" } }
+                  />
               </div>
               <hr className="m-1 horizontal_border" />
               <div

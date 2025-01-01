@@ -156,13 +156,13 @@ function LoginPage() {
         if (!value?.trim()) {
           setErrors((prevErrors) => ({
             ...prevErrors,
-            [name]: `${name} is required`,
+            [name]: t(`${name} is Required`),
           }));
           hasErrors = true;
         } else if (regexPatterns[name] && !value.match(regexPatterns[name])) {
           setErrors((prevErrors) => ({
             ...prevErrors,
-            [name]: `${name} is invalid`,
+            [name]: t(`${name} is invalid`),
           }));
           hasErrors = true;
         } else {
@@ -337,7 +337,7 @@ function LoginPage() {
         toast.error("Wrong Email or Password", { autoClose: 2000 });
       }
     } else {
-      alert("Email and Password are Required");
+      // toast.error(t("Email and Password are Required"));
     }
   };
 

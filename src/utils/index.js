@@ -23,6 +23,12 @@ class Utils
       return `${secs}s`;
     }
   };
+
+  // return 24h time format
+  static timeDisplay = (date) => {
+    const timeOptions = { hour: "2-digit", minute: "2-digit" }; // Options to exclude seconds
+    return date.toLocaleTimeString(undefined, timeOptions)
+  };
 }
 
 export default Utils

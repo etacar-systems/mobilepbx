@@ -13,6 +13,7 @@ import ConfirmationModal from "./ConfirmationModal";
 import { AllEmit } from "./SocketConfig";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import Utils from "../../utils";
 
 function ChatHeader({
   sidebarobjget,
@@ -22,6 +23,8 @@ function ChatHeader({
   setGetReply,
   getReply,
 }) {
+
+  const { t } = useTranslation();
   const convertToLocalTime = (timestamp) => {
     const date = new Date(timestamp);
     const today = new Date();
@@ -31,15 +34,10 @@ function ChatHeader({
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear();
 
-    const timeOptions = { hour: "2-digit", minute: "2-digit" }; // Options to exclude seconds
-
     if (isToday) {
-      return `Last seen at ${date.toLocaleTimeString(undefined, timeOptions)}`; // Only show time if it's today
+      return `${t('Last seen at')} ${Utils.timeDisplay(date)}`; // Only show time if it's today
     } else {
-      return `Last seen on ${date.toLocaleDateString()} at ${date.toLocaleTimeString(
-        undefined,
-        timeOptions
-      )}`; // Show full date and time otherwise
+      return `${t('Last seen on')} ${date.toLocaleDateString()} at ${Utils.timeDisplay(date)}`; // Show full date and time otherwise
     }
   };
 
@@ -314,7 +312,6 @@ function ChatHeader({
       toast.success(t("Clear user chat successfully!"), { autoClose: 2000 });
     }
   };
-  const { t } = useTranslation();
   return (
     <>
       <Row
