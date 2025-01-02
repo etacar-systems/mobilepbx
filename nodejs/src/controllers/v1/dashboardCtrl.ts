@@ -225,7 +225,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //     },
         //   },
         // },
-
         {
           $group: {
             _id: null,
