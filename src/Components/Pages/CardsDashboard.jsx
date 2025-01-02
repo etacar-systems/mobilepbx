@@ -24,8 +24,10 @@ function CardsDashboard({ progress, handleProgressClick, progress1, handleProgre
                   classNames="progress-circle__svg"
                   pragressLable="progress-circle__label1 chart-value progressfont"
                   onClick={handleProgressClick1}
-                  Totalcall={data?.sla?.answered_call + data?.sla?.missed_call}
-                  Answeredcall={data?.sla?.answered_call}
+                  // Totalcall={data?.sla?.answered_call + data?.sla?.missed_call}
+                  Totalcall={data?.total_answered + data?.total_missed}
+                  Answeredcall={data?.total_answered}
+                  // Answeredcall={data?.sla?.answered_call}
                   Title1={t("Answered")}
                   Title2={t("Missed")}
                 />
@@ -47,9 +49,11 @@ function CardsDashboard({ progress, handleProgressClick, progress1, handleProgre
                   pragressLable="progress-circle__label1 chart-value progressfont2"
                   onClick={handleProgressClick}
                   // Totalcall={data?.call_comparison.answered_call + data?.call_comparison?.local}
-                  Totalcall={data?.call_comparison?.answered_call + data?.call_comparison?.local}
+                  // Totalcall={data?.call_comparison?.answered_call + data?.call_comparison?.local}
                   // Answeredcall={data?.call_comparison.answered_call}
-                  Answeredcall={data?.call_comparison?.answered_call}
+                  // Answeredcall={data?.call_comparison?.answered_call}
+                  Totalcall={data?.total_answered + data?.total_local}
+                  Answeredcall={data?.total_answered}
                   Title1={t("Answered")}
                   Title2={t("Called")}
                 />
