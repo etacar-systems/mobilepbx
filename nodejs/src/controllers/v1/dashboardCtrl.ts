@@ -1395,7 +1395,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         .then((res) => {
           console.log("This week:", res);
           console.log(result, "------week------");
-          dashboard_response_obj.call_metrics_detai = {
+          dashboard_response_obj.call_metrics_detail = {
             call_metrics: result,
             ...res[0],
           };
