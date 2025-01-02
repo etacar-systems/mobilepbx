@@ -460,7 +460,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
     } else {
       module_name = "";
     }
-    console.log("extension:::::::::::::::::::::::::", extension);
+    // console.log("extension:::::::::::::::::::::::::", extension);
     const companyDetail = await company.findOne({
       _id: cid,
       is_deleted: 0,
@@ -474,6 +474,8 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
         }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
+    console.log("module_name", module_name);
+
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
     }
@@ -510,12 +512,20 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       // new
       let find_query: { [key: string]: any } = {};
 
+      //changed
       find_query = {
         ...find_query,
         domain_uuid: companyDetail?.domain_uuid,
-        leg: { $eq: "b" },
+        leg: { $eq: "a" },
         $expr: {
           $and: [
+            {
+              $cond: {
+                if: { $ne: [module_name, ""] }, // Check if `module_name` is not null
+                then: { $eq: ["$module_name", module_name] }, // Apply condition
+                else: true, // Ignore condition
+              },
+            },
             {
               $gte: [
                 {
@@ -535,6 +545,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
           ],
         },
       };
+      
 
       if (search) {
         find_query = {
