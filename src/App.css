@@ -2334,10 +2334,23 @@ select {
   justify-content: center;
 }
 
+.call_btn:hover {
+  cursor: pointer;
+}
+
 .call_btn svg {
   width: 24px !important;
   fill: var(--main-phone-color) !important;
   color: var(--main-phone-color) !important;
+}
+
+.call_btn.active {
+  background: white;
+  border: 1px solid red;
+}
+
+.call_btn.active svg path {
+  fill: var(--main-orange-color) !important;
 }
 
 .call_btn_text {

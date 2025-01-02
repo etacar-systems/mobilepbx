@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { ReactComponent as Mute } from "../../Assets/Icon/MicrophoneSlash.svg";
 import { ReactComponent as UnMute } from "../../Assets/Icon/unmute.svg";
@@ -35,6 +35,9 @@ export default function CallScreen({
   callerName,
   recordCall,
 }) {
+  const [isRecording, setIsRecording] = useState(false);
+  const { t } = useTranslation();
+  
   const timeSet = (time) => {
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
@@ -47,7 +50,11 @@ export default function CallScreen({
 
     return minutes + ":" + seconds;
   };
-  const { t } = useTranslation();
+  
+  const onRecordCall = () => {
+    setIsRecording(!isRecording);
+    recordCall();
+  };
 
   return (
     <>
@@ -147,7 +154,7 @@ export default function CallScreen({
                     )}
 
                     <Col xs={4}>
-                      <div className="call_btn" onClick={recordCall}>
+                      <div className={"call_btn" + `${isRecording ? ' active' : ''}`}  onClick={onRecordCall}>
                         <Record />
                       </div>
                       <p className="call_btn_text">{t("Record")}</p>
