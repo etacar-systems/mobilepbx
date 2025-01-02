@@ -237,7 +237,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   {
                     $and: [
-                      { $eq: ["$status", "missed"] },
+                      { $ne: ["$status", "answered"] },
+                      // { $eq: ["$status", "missed"] },
                       { $gte: ["$start_stamp", today] },
                       { $eq: ["$leg", "a"] }
                     ]
@@ -250,7 +251,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             total_missed: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$status", "missed"] }, { $eq: ["$leg", "a"] }] },
+                  { $and: [{ $ne: ["$status", "answered"] }, { $eq: ["$leg", "a"] }] },
+                  // { $and: [{ $eq: ["$status", "missed"] }, { $eq: ["$leg", "a"] }] },
                   1,
                   0
                 ],

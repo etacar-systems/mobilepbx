@@ -125,10 +125,11 @@ function DashboardCardDetails() {
                 <span className="chart-value">{t("Average")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
                   {Utils.formatDuration(
-                    // valuedata?.total_duration_sec /
-                    //   (valuedata?.total_answered + valuedata?.total_outbound)
-                      valuedata?.avg_response_sec /
-                      (valuedata?.total_answered)  
+                    valuedata?.total_duration_sec /
+                    (valuedata?.total_local)
+                      // (valuedata?.total_answered + valuedata?.total_outbound)
+                      // valuedata?.avg_response_sec /
+                      // (valuedata?.total_answered)  
                   )}
                 </h4>
               </div>

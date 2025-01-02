@@ -50,7 +50,13 @@ const ProgressCircle = ({
           }}
         />
       </svg>
-      <div className={pragressLable}>{totalUnits || 0}</div>
+      {/* changed */}
+      {pragressLable == "progress-circle__label1 chart-value progressfont2" ? (
+        <div className={pragressLable}>{totalUnits - Answeredcall || 0}</div>
+      ) : (
+        <div className={pragressLable}>{totalUnits || 0}</div>
+      )}
+      {/* <div className={pragressLable}>{totalUnits || 0}</div> */}
 
       {/* Tooltip */}
       {showTooltip && (
