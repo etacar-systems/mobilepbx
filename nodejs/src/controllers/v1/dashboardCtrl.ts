@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, json } from "express";
 import company from "../../models/company";
 import { config } from "../../config";
 import User_token from "../../helper/helper";
@@ -10,7 +10,6 @@ import user from "../../models/user";
 import CdrModel from "../../models/cdrs";
 import { PipelineStage } from "mongoose";
 import role from "../../models/role";
-import { CDRLogs } from "../../routes/v1/cdr_logs";
 
 function convertISODate(date: String): String {
   return new Date(`${date.replace(" ", "T")}Z`).toISOString();
@@ -18,7 +17,6 @@ function convertISODate(date: String): String {
 
 const getDasboardDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const token = await get_token(req);
     const user_detail = await User_token(token);
     let dashboard_response_obj: { [key: string]: any } = {};
@@ -28,7 +26,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       is_deleted: 0,
     });
 
-    console.log("companyDetail", user_detail);
+    //    console.log("companyDetail", user_detail);
 
     if (!companyDetail) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -93,9 +91,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        // start_date: convertISODate(start_date),
-        // end_date: convertISODate(end_date),
-        // defaultTimezone,
+        start_date: start_date,
+        end_date: end_date,
       },
     };
 
@@ -150,6 +147,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     try {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+      const startOfDay = new Date(today.setHours(0, 0, 0, 0)); // Set to 12:00 AM of today
+      const endOfDay = new Date(today.setHours(23, 59, 59, 999)); // Set to 11:59 PM of today
+
       console.log(
         start_date,
         "start_date",
@@ -158,28 +158,73 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         new Date(start_date + "Z"),
         new Date(end_date + "Z")
       );
-      const data = await CdrModel.aggregate([
+
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1); // Subtract one day
+
+      // Reset time to midnight (00:00:00) for accurate comparison
+      yesterday.setHours(0, 0, 0, 0);
+
+      // const userType: any = await CdrModel.find({
+      //   domain_uuid: companyDetail.domain_uuid,
+      //   start_stamp: {
+      //     $gte: "2024-12-28T00:00:00.000Z", // Filter for calls starting today
+      //   },
+      // });
+      // console.log(userType.length, yesterday, "--userType--", userType);
+      const currentDate = new Date();
+      console.log(startOfDay, "currentDate", endOfDay); // Outputs current date and time in local timezone
+
+      // const todayStats = await CdrModel.aggregate([
+      //   {
+      //     $match: {
+      //       domain_uuid: companyDetail.domain_uuid,
+      //       start_stamp: {
+      //         $gte: today, // Filter for calls starting today
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $group: {
+      //       _id: null,
+      //       today_total_calls: { $sum: 1 },
+      //       today_missed_calls: {
+      //         $sum: {
+      //           $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+      //         },
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $project: {
+      //       _id: 0,
+      //       today_total_calls: 1,
+      //       today_missed_calls: 1,
+      //     },
+      //   },
+      // ]);
+
+      const todayStats = await CdrModel.aggregate([
         {
           $match: {
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: {
-              $gte: new Date(start_date + "Z"),
-              $lt: new Date(end_date + "Z"),
+              $gte: startOfDay,
+              $lt: endOfDay,
             },
           },
         },
-        {
-          $set: {
-            start_stamp: { $toDate: "$start_stamp" },
-            answer_stamp: { $toDate: "$answer_stamp" },
-            response_time_sec: {
-              $divide: [
-                { $subtract: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] },
-                1000,
-              ],
-            },
-          },
-        },
+        // {
+        //   $group: {
+        //     _id: null,
+        //     today_total_calls: { $sum: 1 },
+        //     today_missed_calls: {
+        //       $sum: {
+        //         $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+        //       },
+        //     },
+        //   },
+        // },
 
         {
           $group: {
@@ -279,63 +324,91 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             },
           },
         },
+        {
+          $project: {
+            _id: 0,
+            today_total_calls: 1,
+            today_missed_calls: 1,
+          },
+        },
+      ]);
 
+      console.log(today, "Today Stats:", todayStats);
 
-        // {
-        //   $group: {
-        //     _id: null,
-        //     total_calls: { $sum: 1 },
-        //     total_duration_sec: { $sum: "$duration" },
-        //     avg_response_sec: { $avg: "$response_time_sec" },
-        //     today_total_calls: {
-        //       $sum: {
-        //         $cond: [{ $gte: ["$start_stamp", today] }, 1, 0],
-        //       },
-        //     },
-        //     today_missed_calls: {
-        //       $sum: {
-        //         $cond: [
-        //           // { $and: [{ $eq: ["$status", "missed"] }, { $gte: ["$start_stamp", today] }] },
-        //           { $and: [{ $ne: ["$status", "answered"] }, { $gte: ["$start_stamp", today] }] },
-        //           1,
-        //           0,
-        //         ],
-        //       },
-        //     },
-        //     total_missed: {
-        //       $sum: {
-        //         $cond: [{ $ne: ["$status", "answered"] }, 1, 0],
-        //         // $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
-        //       },
-        //     },
-        //     total_answered: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$status", "answered"] }, 1, 0],
-        //       },
-        //     },
-        //     voicemailCalls: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$status", "voicemail"] }, 1, 0],
-        //       },
-        //     },
-        //     total_outbound: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$status", "outbound_calls"] }, 1, 0],
-        //       },
-        //     },
-        //     total_local: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
-        //       },
-        //     },
-        //     inboundCalls: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
-        //       },
-        //     },
-        //   },
-        // },
-
+      const data = await CdrModel.aggregate([
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid,
+            start_stamp: {
+              $gte: new Date(start_date + "Z"),
+              $lt: new Date(end_date + "Z"),
+            },
+          },
+        },
+        {
+          $set: {
+            start_stamp: { $toDate: "$start_stamp" },
+            answer_stamp: { $toDate: "$answer_stamp" },
+            response_time_sec: {
+              $divide: [
+                { $subtract: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] },
+                1000,
+              ],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total_calls: { $sum: 1 },
+            total_duration_sec: { $sum: "$duration" },
+            avg_response_sec: { $avg: "$response_time_sec" },
+            today_total_calls: {
+              $sum: {
+                $cond: [{ $gte: ["$start_stamp", today] }, 1, 0],
+              },
+            },
+            today_missed_calls: {
+              $sum: {
+                $cond: [
+                  { $and: [{ $eq: ["$status", "missed"] }, { $gte: ["$start_stamp", today] }] },
+                  1,
+                  0,
+                ],
+              },
+            },
+            total_missed: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+              },
+            },
+            total_answered: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "answered"] }, 1, 0],
+              },
+            },
+            voicemailCalls: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "voicemail"] }, 1, 0],
+              },
+            },
+            total_outbound: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "outbound_calls"] }, 1, 0],
+              },
+            },
+            total_local: {
+              $sum: {
+                $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
+              },
+            },
+            inboundCalls: {
+              $sum: {
+                $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
+              },
+            },
+          },
+        },
         {
           $project: {
             _id: 0,
@@ -365,12 +438,23 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         },
       ]);
-      console.log(
-        {
-          ...(data ? data[0] : ""),
-        },
-        "--data--"
-      );
+      // console.log(
+      //   {
+      //     ...(data ? data[0] : {}),
+      //     today_total_calls: todayStats?.[0]?.today_total_calls,
+      //     today_missed_calls: todayStats?.[0]?.today_missed_calls,
+      //     call_comparison: {
+      //       local: data?.[0]?.total_local,
+      //       called: data?.[0]?.total_outbound || 0,
+      //       answered_call: data?.[0]?.total_answered || 0,
+      //     },
+      //     sla: {
+      //       missed_call: data?.[0]?.total_missed || 0,
+      //       answered_call: data?.[0]?.total_answered || 0,
+      //     },
+      //   },
+      //   "--data--"
+      // );
 
       // const missedCallCount = async (domain_uuid: any) => {
       //   try {
@@ -391,7 +475,18 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
       // missedCallCount(companyDetail.domain_uuid);
       dashboard_response_obj.reports_counts_updated = {
-        ...(data ? data[0] : ""),
+        ...(data ? data[0] : {}),
+        today_total_calls: todayStats?.[0]?.today_total_calls,
+        today_missed_calls: todayStats?.[0]?.today_missed_calls,
+        call_comparison: {
+          local: data?.[0]?.total_local,
+          called: data?.[0]?.total_outbound || 0,
+          answered_call: data?.[0]?.total_answered || 0,
+        },
+        sla: {
+          missed_call: data?.[0]?.total_missed || 0,
+          answered_call: data?.[0]?.total_answered || 0,
+        },
       };
       // return res.json({
       //   success: 1,
@@ -426,12 +521,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     //   _id: userData?.role
     // })
 
-
     try {
       const reports_api_data: any = await axios.request(api_config);
       dashboard_response_obj.reports_counts_updated = {
         ...dashboard_response_obj.reports_counts_updated,
-        sla: reports_api_data?.data?.sla,
         call_comparison: reports_api_data?.data?.call_comparison,
       };
 
@@ -455,20 +548,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       //     },
       //   },
       //   {
-      //     $match: {
-      //       $and: [
-      //         { "cdrDetails.start_stamp": { $gte: start_date } }, // Start date filter
-      //         { "cdrDetails.start_stamp": { $lte: end_date } },  // End date filter
-      //       ],
-      //     },
-      //   },
-      //   {
       //     $unwind: {
       //       path: "$cdrDetails",
       //       preserveNullAndEmptyArrays: true // Ensure users with no matching cdrs are included
       //     },
       //   },
-
       //   {
       //     $group: {
       //       _id: { extension_uuid: "$extension_uuid" }, // Group by extension UUID
@@ -559,7 +643,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                     $and: [
                       { $eq: ["$extension_uuid", "$$extensionUuid"] }, // Match extension_uuid
                       { $gte: ["$start_stamp", new Date(start_date)] }, // Filter by start_date
-                      { $lte: ["$start_stamp", new Date(end_date)] },  // Filter by end_date
+                      { $lte: ["$start_stamp", new Date(end_date)] }, // Filter by end_date
                     ],
                   },
                 },
@@ -644,11 +728,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         { $sort: { _id: 1 } }, // Sort by extension UUID
       ];
 
-
       const extension_list = await user.aggregate(pipeline).exec();
 
-      console.log("extension_listextension_list", extension_list);
-
+      // console.log("extension_listextension_list", extension_list);
       if (
         reports_api_data?.data?.data ||
         reports_api_data?.data?.total_counts ||
@@ -677,7 +759,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           total_missed: reports_api_data?.data?.total_counts?.total_missed,
           total_duration_sec: reports_api_data?.data?.total_counts?.total_duration_sec,
           avg_response_sec: reports_api_data?.data?.total_counts?.avg_response_sec,
-          today_total_calls: (reports_api_data?.data?.total_counts?.today_total_calls),
+          today_total_calls: reports_api_data?.data?.total_counts?.today_total_calls,
           today_missed_calls: reports_api_data?.data?.total_counts?.today_missed_calls,
           today_missed_calls_percentage:
             reports_api_data?.data?.total_counts?.today_missed_calls_percentage,
@@ -694,6 +776,697 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       });
     }
 
+    console.log("call_matrics_type", call_matrics_type);
+
+    function createHourlyAggregation(date: any, hours: string[]): PipelineStage[] {
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0); // Set to 12:00 AM
+
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999); // Set to 11:59 PM
+      console.log("startOfDay", startOfDay, "endOfDay", endOfDay);
+
+      const pipeline = [
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid,
+            start_stamp: { $gte: startOfDay, $lte: endOfDay },
+          },
+        },
+        {
+          $addFields: {
+            hour: { $hour: "$start_stamp" },
+            formattedHour: {
+              $switch: {
+                branches: hours.map((hour, index) => ({
+                  case: { $eq: [{ $hour: "$start_stamp" }, index] },
+                  then: hour,
+                })),
+                default: "Unknown",
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$formattedHour",
+            total_calls: { $sum: 1 },
+            inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
+            local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
+            outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
+            no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
+            answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
+            missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
+          },
+        },
+        {
+          $sort: { _id: 1 } as Record<string, 1>,
+        },
+        {
+          $project: {
+            hour: "$_id", // Include the hour field
+            total_calls: { $ifNull: ["$total_calls", 0] }, // If no calls, set to 0
+            inbound_calls: { $ifNull: ["$inbound_calls", 0] },
+            local_calls: { $ifNull: ["$local_calls", 0] },
+            outbound_calls: { $ifNull: ["$outbound_calls", 0] },
+            no_answer: { $ifNull: ["$no_answer", 0] },
+            answered: { $ifNull: ["$answered", 0] },
+            missed: { $ifNull: ["$missed", 0] },
+          },
+        },
+      ];
+
+      return pipeline;
+    }
+
+    function createWeeklyAggregation(date: any) {
+      const startOfWeek = new Date(date);
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Adjust to Sunday (start of week)
+
+      // End of the week (Saturday)
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // Adjust to Saturday (end of week)
+
+      // Days of the week (Sunday to Saturday)
+      const daysOfWeek = [];
+      const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(startOfWeek);
+        day.setDate(startOfWeek.getDate() + i); // Add i days to the start date
+        const formattedDate = day.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+        daysOfWeek.push({ day: dayNames[i], date: formattedDate });
+      }
+
+      console.log("daysOfWeek", daysOfWeek);
+      // Aggregation pipeline
+      const pipeline = [
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid,
+            start_stamp: { $gte: startOfWeek, $lte: endOfWeek },
+          },
+        },
+        {
+          $addFields: {
+            dayOfWeek: { $dayOfWeek: "$start_stamp" }, // 1 = Sunday, 2 = Monday, ..., 7 = Saturday
+          },
+        },
+        {
+          $group: {
+            _id: "$dayOfWeek",
+            total_calls: { $sum: 1 },
+            inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
+            local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
+            outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
+            no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
+            answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
+            missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
+          },
+        },
+        {
+          $sort: { _id: 1 } as Record<string, 1>,
+        },
+        {
+          $project: {
+            date: {
+              $arrayElemAt: [
+                daysOfWeek,
+                { $subtract: ["$_id", 1] }, // Convert MongoDB day (1-7) to index (0-6)
+              ],
+            },
+            total_calls: { $ifNull: ["$total_calls", 0] },
+            inbound_calls: { $ifNull: ["$inbound_calls", 0] },
+            local_calls: { $ifNull: ["$local_calls", 0] },
+            outbound_calls: { $ifNull: ["$outbound_calls", 0] },
+            no_answer: { $ifNull: ["$no_answer", 0] },
+            answered: { $ifNull: ["$answered", 0] },
+            missed: { $ifNull: ["$missed", 0] },
+          },
+        },
+        {
+          $project: {
+            date: "$date.date", // Get just the date from the object
+            day: "$date.day", // Get just the day name from the object
+            total_calls: 1,
+            inbound_calls: 1,
+            local_calls: 1,
+            outbound_calls: 1,
+            no_answer: 1,
+            answered: 1,
+            missed: 1,
+          },
+        },
+      ];
+
+      return pipeline;
+    }
+
+    function createMonthlyAggregation(months: any) {
+      const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+      const endOfYear = new Date(new Date().getFullYear(), 12, 0, 23, 59, 59, 999);
+      const pipeline = [
+        {
+          $match: {
+            domain_uuid: companyDetail.domain_uuid, // Match by domain_uuid
+            start_stamp: {
+              $gte: startOfYear, // Starting date
+              $lte: endOfYear, // Ending date (December)
+            },
+          },
+        },
+        {
+          $project: {
+            year: { $year: "$start_stamp" },
+            month: { $month: "$start_stamp" },
+            total_calls: 1,
+            inbound_calls: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] },
+            local_calls: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] },
+            outbound_calls: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] },
+            no_answer: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] },
+            answered: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] },
+            missed: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] },
+          },
+        },
+        {
+          $group: {
+            _id: { year: "$year", month: "$month" },
+            total_calls: { $sum: 1 },
+            inbound_calls: { $sum: "$inbound_calls" },
+            local_calls: { $sum: "$local_calls" },
+            outbound_calls: { $sum: "$outbound_calls" },
+            no_answer: { $sum: "$no_answer" },
+            answered: { $sum: "$answered" },
+            missed: { $sum: "$missed" },
+          },
+        },
+        {
+          $project: {
+            month_name: {
+              $arrayElemAt: [
+                months,
+                { $subtract: ["$_id.month", 1] }, // Array is 0-indexed, so subtract 1
+              ],
+            },
+            total_calls: 1,
+            inbound_calls: 1,
+            local_calls: 1,
+            outbound_calls: 1,
+            no_answer: 1,
+            answered: 1,
+            missed: 1,
+          },
+        },
+        {
+          $sort: { "_id.month": 1 } as Record<string, 1>,
+        },
+      ];
+
+      return pipeline;
+    }
+
+    type WeeklyData = {
+      _id: string; // Day of the week (e.g., "Monday", "Tuesday", etc.)
+      total_calls: number;
+      inbound_calls: number;
+      local_calls: number;
+      outbound_calls: number;
+      no_answer: number;
+      answered: number;
+      missed: number;
+      date: string; // The date corresponding to the day
+      day: string; // Day of the week (e.g., Monday)
+    };
+
+    function createWeeklyAggregationFormat(weekData: WeeklyData[]): WeeklyData[] {
+      // Array to match day names to their index for easier calculation
+      const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+
+      // Extract the first date from weekData to determine the starting day of the week
+      const firstDataDate = new Date(weekData[0].date);
+      const startDayIndex = firstDataDate.getDay(); // Sunday = 0, Monday = 1, etc.
+
+      // Initialize the start of the week based on the first date's day
+      const startOfWeek = new Date(firstDataDate);
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + startDayIndex); // Adjust to the start of the week
+
+      // Generate all days of the week and their corresponding dates
+      const daysOfWeek = [];
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(startOfWeek);
+        day.setDate(startOfWeek.getDate() + i); // Add i days to the start date
+        const formattedDate = day.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+        daysOfWeek.push({ day: dayNames[(startDayIndex + i) % 7], date: formattedDate });
+      }
+
+      // Fill in the data for the week
+      const filledData: WeeklyData[] = daysOfWeek.map((dayOfWeek) => {
+        // Find the existing data for the current day
+        const existingData = weekData.find((item) => item.day === dayOfWeek.day);
+
+        // If data exists for this day, return it; otherwise, fill with default data
+        if (existingData) {
+          return {
+            ...existingData,
+            date: dayOfWeek.date, // Correct the date for the current day
+          };
+        } else {
+          // Fill with default data (zeros)
+          return {
+            _id: dayOfWeek.day,
+            total_calls: 0,
+            inbound_calls: 0,
+            local_calls: 0,
+            outbound_calls: 0,
+            no_answer: 0,
+            answered: 0,
+            missed: 0,
+            date: dayOfWeek.date,
+            day: dayOfWeek.day,
+          };
+        }
+      });
+
+      return filledData;
+    }
+
+    async function findTotal(timePeriod: string, date: string) {
+      let startOfDay, endOfDay, startOfWeek, endOfWeek, startOfYear, endOfYear;
+
+      // Get the provided date
+      const dateObj = new Date(date);
+
+      if (timePeriod === "today") {
+        // Today's date range (24-hour period)
+        startOfDay = new Date(dateObj.setHours(0, 0, 0, 0)); // Start of the day (12:00 AM)
+        endOfDay = new Date(dateObj.setHours(23, 59, 59, 999)); // End of the day (11:59 PM)
+      }
+
+      if (timePeriod === "week") {
+        // Week's date range (from Sunday to Saturday)
+        const firstDayOfWeek = new Date(dateObj);
+        firstDayOfWeek.setDate(dateObj.getDate() - dateObj.getDay()); // Set to Sunday
+        firstDayOfWeek.setHours(0, 0, 0, 0); // Start of the day (Sunday)
+        startOfWeek = firstDayOfWeek;
+
+        const lastDayOfWeek = new Date(firstDayOfWeek);
+        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6); // Set to Saturday
+        lastDayOfWeek.setHours(23, 59, 59, 999); // End of the day (Saturday)
+        endOfWeek = lastDayOfWeek;
+      }
+
+      if (timePeriod === "year") {
+        // Year's date range (from January 1st to December 31st)
+        startOfYear = new Date(dateObj.getFullYear(), 0, 1); // January 1st
+        startOfYear.setHours(0, 0, 0, 0);
+
+        endOfYear = new Date(dateObj.getFullYear(), 11, 31); // December 31st
+        endOfYear.setHours(23, 59, 59, 999);
+      }
+
+      // Determine which date range to use based on the timePeriod
+      let startDate, endDate;
+
+      if (timePeriod === "today") {
+        startDate = startOfDay;
+        endDate = endOfDay;
+      } else if (timePeriod === "week") {
+        startDate = startOfWeek;
+        endDate = endOfWeek;
+      } else if (timePeriod === "year") {
+        startDate = startOfYear;
+        endDate = endOfYear;
+      }
+
+      try {
+        const data = await CdrModel.aggregate([
+          {
+            $match: {
+              domain_uuid: companyDetail.domain_uuid,
+              start_stamp: {
+                $gte: startDate, // Use the calculated start date
+                $lt: endDate, // Use the calculated end date
+              },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              total_calls: { $sum: 1 },
+
+              total_missed: {
+                $sum: {
+                  $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
+                },
+              },
+              total_answered: {
+                $sum: {
+                  $cond: [{ $eq: ["$status", "answered"] }, 1, 0],
+                },
+              },
+              total_unanswered: {
+                $sum: {
+                  $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0],
+                },
+              },
+              total_voicemailCalls: {
+                $sum: {
+                  $cond: [{ $eq: ["$status", "voicemail"] }, 1, 0],
+                },
+              },
+              total_outbound: {
+                $sum: {
+                  $cond: [{ $eq: ["$status", "outbound_calls"] }, 1, 0],
+                },
+              },
+              total_local: {
+                $sum: {
+                  $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
+                },
+              },
+              total_inboundCalls: {
+                $sum: {
+                  $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              total_calls: 1,
+              total_unanswered: 1,
+              total_missed: 1,
+              total_answered: 1,
+              total_outbound: 1,
+              total_local: 1,
+              total_voicemailCalls: 1,
+              total_inboundCalls: 1,
+            },
+          },
+        ]);
+
+        // Return or process the data
+        return data;
+      } catch (error) {
+        console.error("Error in aggregation:", error);
+        throw error;
+      }
+    }
+
+    const weekData: WeeklyData[] = [
+      {
+        _id: "Monday",
+        total_calls: 10,
+        inbound_calls: 0,
+        local_calls: 10,
+        outbound_calls: 0,
+        no_answer: 2,
+        answered: 4,
+        missed: 3,
+        date: "2024-12-30",
+        day: "Monday",
+      },
+      // More data can be provided for other days if available
+    ];
+
+    function getFormatedDate(date: any) {
+      const newDate = new Date(date);
+      const year = newDate.getFullYear();
+      const month = String(newDate.getMonth() + 1).padStart(2, "0");
+      const day = String(newDate.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    async function getMonthlyCallMetrics(domain_uuid: string, year: number, month: number) {
+      const daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      try {
+        const startOfMonth = new Date(year, month - 1, 1);
+        const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
+
+        const datesInMonth = [];
+        for (let day = 1; day <= endOfMonth.getDate(); day++) {
+          const date = new Date(year, month - 1, day);
+          datesInMonth.push({
+            date: getFormatedDate(date),
+            day: daysOfWeek[date.getDay()],
+            total_calls: 0,
+            inbound_calls: 0,
+            local_calls: 0,
+            outbound_calls: 0,
+            no_answer: 0,
+            answered: 0,
+            missed: 0,
+            total_no_answer: 0,
+          });
+        }
+
+        const result = await CdrModel.aggregate([
+          {
+            $match: {
+              domain_uuid: domain_uuid,
+              start_stamp: {
+                $gte: startOfMonth,
+                $lte: endOfMonth,
+              },
+            },
+          },
+          {
+            $group: {
+              _id: { day: { $dayOfMonth: "$start_stamp" } },
+              date: { $first: "$start_stamp" },
+              total_calls: { $sum: 1 },
+              inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
+              local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
+              outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
+              no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
+              answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
+              missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
+            },
+          },
+          {
+            $sort: { "_id.day": 1 },
+          },
+        ]);
+
+        const callMetrics = datesInMonth.map((dateObj) => {
+          const dayData = result.find(
+            (item) => new Date(item.date).toISOString().split("T")[0] === dateObj.date
+          );
+          return dayData
+            ? {
+                ...dateObj,
+                total_calls: dayData.total_calls,
+                inbound_calls: dayData.inbound_calls,
+                local_calls: dayData.local_calls,
+                outbound_calls: dayData.outbound_calls,
+                no_answer: dayData.no_answer,
+                answered: dayData.answered,
+                missed: dayData.missed,
+              }
+            : dateObj;
+        });
+
+        const totals = callMetrics.reduce(
+          (acc, item) => {
+            acc.total_inbound += item.inbound_calls;
+            acc.total_outbound += item.outbound_calls;
+            acc.total_local += item.local_calls;
+            acc.total_answered += item.answered;
+            acc.total_unanswered += item.no_answer;
+            acc.total_missed += item.missed;
+            return acc;
+          },
+          {
+            total_inbound: 0,
+            total_outbound: 0,
+            total_local: 0,
+            total_answered: 0,
+            total_unanswered: 0,
+            total_missed: 0,
+          }
+        );
+
+        return {
+          call_metrics: callMetrics,
+          ...totals,
+        };
+      } catch (error) {
+        console.error("Error fetching monthly call metrics:", error);
+        throw error;
+      }
+    }
+    console.log("-----getMonthlyCallMetrics------");
+    if (call_matrics_type === "today") {
+      // Create the pipeline
+
+      const hours = [
+        "12:00 am",
+        "1:00 am",
+        "2:00 am",
+        "3:00 am",
+        "4:00 am",
+        "5:00 am",
+        "6:00 am",
+        "7:00 am",
+        "8:00 am",
+        "9:00 am",
+        "10:00 am",
+        "11:00 am",
+        "12:00 pm",
+        "1:00 pm",
+        "2:00 pm",
+        "3:00 pm",
+        "4:00 pm",
+        "5:00 pm",
+        "6:00 pm",
+        "7:00 pm",
+        "8:00 pm",
+        "9:00 pm",
+        "10:00 pm",
+        "11:00 pm",
+      ];
+      const pipeline = createHourlyAggregation(getFormatedDate(new Date()), hours);
+
+      // console.log("pipeline", JSON.stringify(pipeline));
+
+      const result = await CdrModel.aggregate(pipeline);
+      console.log(result);
+
+      const filledData = hours.map((hour) => {
+        // Check if this hour is already in the dataset
+        const existingData = result.find((item) => item._id === hour);
+
+        // If the hour exists, return it, otherwise return a default object
+        if (existingData) {
+          return existingData;
+        } else {
+          return {
+            _id: hour,
+            hour: hour,
+            total_calls: 0,
+            inbound_calls: 0,
+            local_calls: 0,
+            outbound_calls: 0,
+            no_answer: 0,
+            answered: 0,
+            missed: 0,
+          };
+        }
+      });
+
+      findTotal("today", getFormatedDate(new Date()))
+        .then((result) => {
+          console.log("Today:", result);
+          console.log(filledData, "-----today-----");
+          dashboard_response_obj.call_metrics_detail_updated = {
+            call_metrics: filledData,
+            ...result[0],
+          };
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else if (call_matrics_type === "week") {
+      // Create the pipeline
+      const pipelineweek = createWeeklyAggregation(getFormatedDate(new Date()));
+
+      const weekresult: WeeklyData[] = await CdrModel.aggregate(pipelineweek);
+      console.log(weekresult);
+
+      // Call the function to fill in missing days and increment the date
+      const result = createWeeklyAggregationFormat(weekresult);
+      findTotal("week", getFormatedDate(new Date()))
+        .then((res) => {
+          console.log("This week:", res);
+          console.log(result, "------week------");
+          dashboard_response_obj.call_metrics_detail_updated = {
+            call_metrics: result,
+            ...res[0],
+          };
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else if (call_matrics_type === "year") {
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const newdata = createMonthlyAggregation(months);
+      const result = await CdrModel.aggregate(newdata);
+      console.log(result, "----------result-----------");
+
+      const filledResult = months.map((month, index) => {
+        const monthData = result.find((item) => item.month_name === month);
+        return {
+          month_name: month,
+          total_calls: (monthData ? monthData.total_calls : 0).toString(),
+          inbound_calls: (monthData ? monthData.inbound_calls : 0).toString(),
+          local_calls: (monthData ? monthData.local_calls : 0).toString(),
+          outbound_calls: (monthData ? monthData.outbound_calls : 0).toString(),
+          no_answer: (monthData ? monthData.no_answer : 0).toString(),
+          answered: (monthData ? monthData.answered : 0).toString(),
+          missed: (monthData ? monthData.missed : 0).toString(),
+        };
+      });
+
+      findTotal("year", getFormatedDate(new Date()))
+        .then((result) => {
+          console.log("This year:", result);
+          console.log("Monthly Data: ", filledResult);
+          dashboard_response_obj.call_metrics_detail_updated = {
+            call_metrics: filledResult,
+            ...result[0],
+          };
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else if (call_matrics_type === "month") {
+      const data = await getMonthlyCallMetrics(
+        companyDetail.domain_uuid,
+        new Date().getFullYear(),
+        new Date().getMonth() + 1
+      );
+
+      dashboard_response_obj.call_metrics_detail_updated = data;
+    }
+
     let api_config_call_metrix = {
       method: "post",
       maxBodyLength: Infinity,
@@ -707,89 +1480,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     try {
       const call_metrix_api_data: any = await axios.request(api_config_call_metrix);
-
-      // new
-      const pipeline2 = [
-        {
-          $match: {
-            domain_uuid: companyDetail?.domain_uuid, // Add your specific domain_uuid here
-          }
-        },
-        {
-          $facet: {
-            total_calls: [
-              { $count: "total_calls" }
-            ],
-            inbound_calls: [
-              {
-                $match: {
-                  direction: "inbound",
-                  // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
-              },
-              { $count: "inbound_calls" }
-            ],
-            local_calls: [
-              {
-                $match: {
-                  direction: "local",
-                  // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
-              },
-              { $count: "local_calls" }
-            ],
-            outbound_calls: [
-              { $match: { direction: "outbound" } },
-              { $count: "outbound_calls" }
-            ],
-            no_answer: [
-              {
-                $match: {
-                  hangup_cause: "NO_ANSWER",
-                  $and: [
-                    // { $or: [{ cc_side: { $ne: null } }, { cc_side: "agent" }] },
-                    { $or: [{ direction: "inbound" }, { direction: "local" }] }
-                  ]
-                }
-              },
-              { $count: "no_answer" }
-            ],
-            answered: [
-              {
-                $match: {
-                  missed_call: false,
-                  // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }],
-                  $or: [{ direction: "inbound" }, { direction: "local" }]
-                }
-              },
-              { $count: "answered" }
-            ],
-            missed: [
-              {
-                $match: {
-                  missed_call: true,
-                  // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
-              },
-              { $count: "missed" }
-            ]
-          }
-        },
-        {
-          $project: {
-            total_calls: { $arrayElemAt: ["$total_calls.total_calls", 0] },
-            inbound_calls: { $arrayElemAt: ["$inbound_calls.inbound_calls", 0] },
-            local_calls: { $arrayElemAt: ["$local_calls.local_calls", 0] },
-            outbound_calls: { $arrayElemAt: ["$outbound_calls.outbound_calls", 0] },
-            no_answer: { $arrayElemAt: ["$no_answer.no_answer", 0] },
-            answered: { $arrayElemAt: ["$answered.answered", 0] },
-            missed: { $arrayElemAt: ["$missed.missed", 0] }
-          }
-        }
-      ];
-
-      const call_matrix_new = await CdrModel.aggregate(pipeline2).exec();
-
       if (call_metrix_api_data?.data?.data && call_metrix_api_data?.data?.total_counts) {
         let call_matrics_data = {
           call_metrics: call_metrix_api_data?.data?.data,
@@ -801,7 +1491,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           total_missed: call_metrix_api_data?.data?.total_counts.total_missed,
         };
         dashboard_response_obj.call_metrics_detail = call_matrics_data;
-        dashboard_response_obj.call_metrics_new_detail = call_matrix_new;
       }
     } catch (error: any) {
       console.log("error", error);
@@ -853,7 +1542,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         // end_date: end_date,
       },
     };
-    console.log("api_ring_groups", api_ring_groups);
+    //  console.log("api_ring_groups", api_ring_groups);
     try {
       const ringroup_api_data: any = await axios.request(api_ring_groups);
 
@@ -875,7 +1564,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //   $lt: end_date,
         // },
       });
-      console.log("ring_group_data", ring_group_data);
+      //   console.log("ring_group_data", ring_group_data);
       // console.log("ringroup_api_data",ringroup_api_data)
 
       if (
