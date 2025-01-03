@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from "react";
 import { Col, ButtonGroup, Form, Nav, Tab, Table } from "react-bootstrap";
 import up_arrow from "../../Assets/Icon/up-arrow.svg";
@@ -125,12 +126,14 @@ function CallDetailDashboard({
       } else {
         setLoading(false);
         const data = response?.payload?.response?.data;
+
         setFetchData(data);
         setdashboartdata(data?.cdr_list);
         setSortedColumn("");
       }
     });
   }, [searchTerm, select, currentPage, filter, Role, Extensiontype, Direction]);
+
   const convertToSeconds = (duration) => {
     if (typeof duration === "number") {
       return duration;
@@ -384,13 +387,15 @@ function CallDetailDashboard({
                 </div>
               ) : (
                 <>
+                
                   {dashboartdata && dashboartdata.length > 0 ? (
                     <>
                       {dashboartdata
-                        .filter(
-                          (item) => !item.destination_number.includes("*")
-                        )
-                        .map((row, index) => {
+                        // .filter(
+                        //   (item) => !item.destination_number.includes("*")
+                        // )
+                        .map((row, index) => {        
+                          {console.log("dashboard",dashboartdata)}                  
                           const formatTime = (seconds) =>
                             `${String(Math.floor(seconds / 3600)).padStart(
                               2,
@@ -401,9 +406,13 @@ function CallDetailDashboard({
                             )}:${String(seconds % 60).padStart(2, "0")}`;
                           const formattedTime = formatTime(row?.duration);
                           const date = new Date(row?.start_stamp);
+                          
+                          //new
+                          // const formattedDate = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}`;
                           const formattedDate = new Date(date)
-                            .toLocaleDateString("en-GB")
-                            .replace(/\//g, ".");
+                          .toLocaleDateString("en-GB")
+                          .replace(/\//g, ".");
+                          {console.log("row?.start_stamp",formattedDate)}
                           function extractTimeFromDate(dateString, locale) {
                             const date = new Date(dateString);
                             return date.toLocaleTimeString(locale, {
@@ -426,6 +435,7 @@ function CallDetailDashboard({
                                 >
                                   {formattedDate}{" "}
                                   {extractTimeFromDate(row?.start_stamp)}
+                                 
                                 </td>
 
                                 <td
