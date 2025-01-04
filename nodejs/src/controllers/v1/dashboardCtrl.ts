@@ -18,7 +18,6 @@ function convertISODate(date: String): String {
 
 const getDasboardDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const token = await get_token(req);
     const user_detail = await User_token(token);
     let dashboard_response_obj: { [key: string]: any } = {};
@@ -228,7 +227,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   { $and: [{ $gte: ["$start_stamp", today] }, { $eq: ["$leg", "a"] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
@@ -240,11 +239,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                       { $ne: ["$status", "answered"] },
                       // { $eq: ["$status", "missed"] },
                       { $gte: ["$start_stamp", today] },
-                      { $eq: ["$leg", "a"] }
-                    ]
+                      { $eq: ["$leg", "a"] },
+                    ],
                   },
                   1,
-                  0
+                  0,
                 ],
               },
             },
@@ -254,17 +253,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   { $and: [{ $ne: ["$status", "answered"] }, { $eq: ["$leg", "a"] }] },
                   // { $and: [{ $eq: ["$status", "missed"] }, { $eq: ["$leg", "a"] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             total_answered: {
               $sum: {
-                $cond: [
-                  { $and: [{ $eq: ["$status", "answered"] }, { $eq: ["$leg", "a"] }] },
-                  1,
-                  0
-                ],
+                $cond: [{ $and: [{ $eq: ["$status", "answered"] }, { $eq: ["$leg", "a"] }] }, 1, 0],
               },
             },
             voicemailCalls: {
@@ -272,7 +267,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   { $and: [{ $eq: ["$status", "voicemail"] }, { $eq: ["$leg", "a"] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
@@ -281,17 +276,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   { $and: [{ $eq: ["$status", "outbound_calls"] }, { $eq: ["$leg", "a"] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             total_local: {
               $sum: {
-                $cond: [
-                  { $and: [{ $eq: ["$direction", "local"] }, { $eq: ["$leg", "a"] }] },
-                  1,
-                  0
-                ],
+                $cond: [{ $and: [{ $eq: ["$direction", "local"] }, { $eq: ["$leg", "a"] }] }, 1, 0],
               },
             },
             inboundCalls: {
@@ -299,13 +290,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   { $and: [{ $eq: ["$direction", "inbound"] }, { $eq: ["$leg", "a"] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
           },
         },
-
 
         // {
         //   $group: {
@@ -452,7 +442,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     //   _id: userData?.role
     // })
 
-
     try {
       const reports_api_data: any = await axios.request(api_config);
       dashboard_response_obj.reports_counts_updated = {
@@ -585,7 +574,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                     $and: [
                       { $eq: ["$extension_uuid", "$$extensionUuid"] }, // Match extension_uuid
                       { $gte: ["$start_stamp", new Date(start_date)] }, // Filter by start_date
-                      { $lte: ["$start_stamp", new Date(end_date)] },  // Filter by end_date
+                      { $lte: ["$start_stamp", new Date(end_date)] }, // Filter by end_date
                     ],
                   },
                 },
@@ -686,7 +675,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: [
                   {
                     $and: [
-                      { $in: ["$cdrDetails.status", ["missed", "busy", "no_answer","failed"]] },
+                      { $in: ["$cdrDetails.status", ["missed", "busy", "no_answer", "failed"]] },
                       { $eq: ["$cdrDetails.leg", "b"] },
                     ],
                   },
@@ -715,7 +704,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         },
         { $sort: { _id: 1 } }, // Sort by extension UUID
       ];
-
 
       const extension_list = await user.aggregate(pipeline).exec();
 
@@ -749,7 +737,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           total_missed: reports_api_data?.data?.total_counts?.total_missed,
           total_duration_sec: reports_api_data?.data?.total_counts?.total_duration_sec,
           avg_response_sec: reports_api_data?.data?.total_counts?.avg_response_sec,
-          today_total_calls: (reports_api_data?.data?.total_counts?.today_total_calls),
+          today_total_calls: reports_api_data?.data?.total_counts?.today_total_calls,
           today_missed_calls: reports_api_data?.data?.total_counts?.today_missed_calls,
           today_missed_calls_percentage:
             reports_api_data?.data?.total_counts?.today_missed_calls_percentage,
@@ -766,7 +754,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-
     function createHourlyAggregation(date: any, hours: string[]): PipelineStage[] {
       const startOfDay = new Date(date);
       startOfDay.setHours(0, 0, 0, 0); // Set to 12:00 AM
@@ -780,7 +767,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $match: {
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: { $gte: startOfDay, $lte: endOfDay },
-            leg: 'a',
+            leg: "a",
           },
         },
         {
@@ -831,22 +818,22 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     function createWeeklyAggregation(date: any) {
       const startOfWeek = new Date(date);
-      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Adjust to Sunday (start of week)
-
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Adjust to Sunday (start of week)
+      console.log("startOfWeek", startOfWeek, date);
       // End of the week (Saturday)
       const endOfWeek = new Date(startOfWeek);
       endOfWeek.setDate(startOfWeek.getDate() + 6); // Adjust to Saturday (end of week)
-
+      console.log("endOfWeek", endOfWeek);
       // Days of the week (Sunday to Saturday)
       const daysOfWeek = [];
       const dayNames = [
-        "Sunday",
         "Monday",
         "Tuesday",
         "Wednesday",
         "Thursday",
         "Friday",
         "Saturday",
+        "Sunday",
       ];
 
       for (let i = 0; i < 7; i++) {
@@ -863,7 +850,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $match: {
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: { $gte: startOfWeek, $lte: endOfWeek },
-            leg: 'a',
+            leg: "a",
           },
         },
         {
@@ -1000,22 +987,22 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     function createWeeklyAggregationFormat(weekData: WeeklyData[]): WeeklyData[] {
       // Array to match day names to their index for easier calculation
       const dayNames = [
-        "Sunday",
         "Monday",
         "Tuesday",
         "Wednesday",
         "Thursday",
         "Friday",
         "Saturday",
+        "Sunday",
       ];
 
       // Extract the first date from weekData to determine the starting day of the week
-      const firstDataDate = new Date(weekData[0].date);
-      const startDayIndex = firstDataDate.getDay(); // Sunday = 0, Monday = 1, etc.
+      const firstDataDate = new Date(getFormatedDate(new Date()));
+      const startDayIndex = firstDataDate.getDay() + 1; // Sunday = 0, Monday = 1, etc..
 
       // Initialize the start of the week based on the first date's day
-      const startOfWeek = new Date(firstDataDate);
-      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + startDayIndex); // Adjust to the start of the week
+      const startOfWeek = new Date(getFormatedDate(new Date()));
+      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Adjust to the start of the week
 
       // Generate all days of the week and their corresponding dates
       const daysOfWeek = [];
@@ -1025,7 +1012,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         const formattedDate = day.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
         daysOfWeek.push({ day: dayNames[(startDayIndex + i) % 7], date: formattedDate });
       }
-
+      console.log("daysOfWeek from settle", daysOfWeek);
       // Fill in the data for the week
       const filledData: WeeklyData[] = daysOfWeek.map((dayOfWeek) => {
         // Find the existing data for the current day
@@ -1114,7 +1101,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $gte: startDate, // Use the calculated start date
                 $lt: endDate, // Use the calculated end date
               },
-              leg: 'a',
+              leg: "a",
             },
           },
           {
@@ -1245,7 +1232,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $gte: startOfMonth,
                 $lte: endOfMonth,
               },
-              leg: 'a',
+              leg: "a",
             },
           },
           {
@@ -1387,9 +1374,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     } else if (call_matrics_type === "week") {
       // Create the pipeline
       const pipelineweek = createWeeklyAggregation(getFormatedDate(new Date()));
-
+      console.log("pipelineweek", JSON.stringify(pipelineweek));
       const weekresult: WeeklyData[] = await CdrModel.aggregate(pipelineweek);
-      console.log(weekresult);
+      console.log(weekresult, "---weekresult---");
 
       // Call the function to fill in missing days and increment the date
       const result = createWeeklyAggregationFormat(weekresult);
@@ -1479,67 +1466,62 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         {
           $match: {
             domain_uuid: companyDetail?.domain_uuid, // Add your specific domain_uuid here
-          }
+          },
         },
         {
           $facet: {
-            total_calls: [
-              { $count: "total_calls" }
-            ],
+            total_calls: [{ $count: "total_calls" }],
             inbound_calls: [
               {
                 $match: {
                   direction: "inbound",
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
+                },
               },
-              { $count: "inbound_calls" }
+              { $count: "inbound_calls" },
             ],
             local_calls: [
               {
                 $match: {
                   direction: "local",
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
+                },
               },
-              { $count: "local_calls" }
+              { $count: "local_calls" },
             ],
-            outbound_calls: [
-              { $match: { direction: "outbound" } },
-              { $count: "outbound_calls" }
-            ],
+            outbound_calls: [{ $match: { direction: "outbound" } }, { $count: "outbound_calls" }],
             no_answer: [
               {
                 $match: {
                   hangup_cause: "NO_ANSWER",
                   $and: [
                     // { $or: [{ cc_side: { $ne: null } }, { cc_side: "agent" }] },
-                    { $or: [{ direction: "inbound" }, { direction: "local" }] }
-                  ]
-                }
+                    { $or: [{ direction: "inbound" }, { direction: "local" }] },
+                  ],
+                },
               },
-              { $count: "no_answer" }
+              { $count: "no_answer" },
             ],
             answered: [
               {
                 $match: {
                   missed_call: false,
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }],
-                  $or: [{ direction: "inbound" }, { direction: "local" }]
-                }
+                  $or: [{ direction: "inbound" }, { direction: "local" }],
+                },
               },
-              { $count: "answered" }
+              { $count: "answered" },
             ],
             missed: [
               {
                 $match: {
                   missed_call: true,
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
+                },
               },
-              { $count: "missed" }
-            ]
-          }
+              { $count: "missed" },
+            ],
+          },
         },
         {
           $project: {
@@ -1549,9 +1531,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             outbound_calls: { $arrayElemAt: ["$outbound_calls.outbound_calls", 0] },
             no_answer: { $arrayElemAt: ["$no_answer.no_answer", 0] },
             answered: { $arrayElemAt: ["$answered.answered", 0] },
-            missed: { $arrayElemAt: ["$missed.missed", 0] }
-          }
-        }
+            missed: { $arrayElemAt: ["$missed.missed", 0] },
+          },
+        },
       ];
 
       const call_matrix_new = await CdrModel.aggregate(pipeline2).exec();
@@ -1670,7 +1652,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    //new 
+    //new
     try {
       const getLast7Days = () => {
         const dates = [];
@@ -1684,7 +1666,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           dates.push(date);
         }
         return dates.reverse(); // Reverse to get chronological order
-      }
+      };
 
       const last7Days = getLast7Days();
       console.log("currentdata", last7Days);
@@ -1740,9 +1722,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           {
             $match: {
               domain_uuid: companyDetail?.domain_uuid,
-              status: { $ne: 'answered' },
+              status: { $ne: "answered" },
               start_stamp: { $gte: startDate, $lte: endDate },
-              leg: { $eq: 'a' }
+              leg: { $eq: "a" },
             },
           },
           {
@@ -1766,7 +1748,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $cond: {
                   if: { $eq: ["$count", 0] }, // Avoid division by zero
                   then: 0,
-                  else: {  $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2]  }, // Calculate average
+                  else: { $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2] }, // Calculate average
                 },
               },
             },
@@ -1778,7 +1760,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
         // Merge results with last 7 days to include empty days
         const result = last7Days.map((day) => {
-          const formattedDay = day.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+          const formattedDay = day.toISOString().split("T")[0]; // Format as YYYY-MM-DD
           const record = missed_data.find((item: any) => item._id === formattedDay);
           return {
             day: formattedDay,
