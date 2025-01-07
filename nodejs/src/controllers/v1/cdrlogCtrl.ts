@@ -11,6 +11,7 @@ import IVR from "../../models/IVR";
 import conferncers from "../../models/conferncers";
 import time_condition from "../../models/time_condition";
 import cdrs from "../../models/cdrs";
+import { countryTimeZones } from "../../helper/timezone";
 
 const getAllRecordByDomain = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -136,9 +137,11 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
       is_deleted: 0,
     });
 
-    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${page || ""
-      }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
-      }&extension=${extensionDetail?.extension_uuid || ""}`;
+    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${
+      page || ""
+    }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${
+      end_date || ""
+    }&extension=${extensionDetail?.extension_uuid || ""}`;
     // console.log(data,newParamString)
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -271,11 +274,13 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${
+        direction || ""
+      }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${
+        extension || ""
+      }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
@@ -468,11 +473,13 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${
+        direction || ""
+      }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${
+        extension || ""
+      }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     console.log("module_name", module_name);
 
@@ -499,6 +506,26 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       });
     }
 
+    const userCountry: any = await user.findOne(
+      {
+        _id: user_detail?.uid,
+        is_deleted: 0,
+      },
+      {
+        _id: 0,
+        country: 1,
+      }
+    );
+
+    // console.log(userCountry, user_detail);
+
+    if (!userCountry || !userCountry?.country) {
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: "User contry not found",
+      });
+    }
+    const timezone = countryTimeZones[userCountry?.country];
     let api_config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -545,7 +572,6 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
           ],
         },
       };
-      
 
       if (search) {
         find_query = {
@@ -579,8 +605,67 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         };
       }
 
-      const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
-
+      // const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
+      const reports_list = await cdrs.aggregate([
+        {
+          $match: find_query,
+        },
+        { $sort: { start_stamp: -1 } },
+        {
+          $project: {
+            xml_cdr_uuid: 1,
+            domain_name: 1,
+            domain_uuid: 1,
+            sip_call_id: 1,
+            extension_uuid: 1,
+            direction: 1,
+            caller_id_name: 1,
+            caller_id_number: 1,
+            destination_number: 1,
+            start_stamp: {
+              $dateToString: {
+                format: "%Y-%m-%d %H:%M:%S",
+                date: "$start_stamp",
+                timezone: timezone,
+              },
+            },
+            duration: 1,
+            record_name: 1,
+            status: 1,
+            hangup_cause: 1,
+            module_name: 1,
+            recording_url: 1,
+            end_stamp: 1,
+            accountcode: 1,
+            missed_call: 1,
+            caller_destination: 1,
+            source_number: 1,
+            start_epoch: 1,
+            answer_stamp: 1,
+            answer_epoch: 1,
+            end_epoch: 1,
+            mduration: 1,
+            billsec: 1,
+            billmsec: 1,
+            bridge_uuid: 1,
+            read_codec: 1,
+            read_rate: 1,
+            write_codec: 1,
+            write_rate: 1,
+            remote_media_ip: 1,
+            network_addr: 1,
+            leg: 1,
+            pdd_ms: 1,
+            rtp_audio_in_mos: 1,
+            last_app: 1,
+            last_arg: 1,
+            voicemail_message: 1,
+            waitsec: 1,
+            hangup_cause_q850: 1,
+            sip_hangup_disposition: 1,
+          },
+        },
+      ]);
       // Calculate the starting index for the data based on the page and per_page
       const startIndex = (page - 1) * per_page;
       const endIndex = startIndex + per_page;
