@@ -282,16 +282,24 @@ function DashboardDesign() {
   };
 
   let totalMissedCalled = 0;
+  let totalCalled = 0;
   let totalAvgWaitTime = 0;
   // Iterate missed call data and set for graph
   const missedCalledData = data?.DashboardDetail?.missed_call_new?.map(
     (item) => {
       totalMissedCalled += item.count;
+      totalCalled += item.total_count;
       totalAvgWaitTime += item.total_waiting_time;
       return item;
     }
   );
-  console.log("missedCall", missedCalledData,totalMissedCalled,totalAvgWaitTime);
+  console.log(
+    "missedCall",
+    missedCalledData,
+    totalMissedCalled,
+    totalAvgWaitTime,
+    totalCalled
+  );
 
   const multilinechart = {
     labels: missedCalledData?.map((item) => item.key),
@@ -415,7 +423,8 @@ function DashboardDesign() {
                 <MissedCallDashboard
                   multilinechart={multilinechart}
                   totalMissedCalled={totalMissedCalled}
-                  totalAvgWaitTime = {totalAvgWaitTime}
+                  totalCalled={totalCalled}
+                  totalAvgWaitTime={totalAvgWaitTime}
                   targetRef={targetRef}
                   Theme={Theme}
                   theme={theme}

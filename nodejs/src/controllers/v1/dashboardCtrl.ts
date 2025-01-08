@@ -13,6 +13,7 @@ import role from "../../models/role";
 import { CDRLogs } from "../../routes/v1/cdr_logs";
 import momentTimezone from "moment-timezone";
 import { countryTimeZones } from "../../helper/timezone";
+import { log } from "winston";
 
 function convertISODate(date: String): String {
   return new Date(`${date.replace(" ", "T")}Z`).toISOString();
@@ -826,7 +827,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999); // Set to 11:59 PM
-      const pipeline : PipelineStage[]= [
+      const pipeline: PipelineStage[] = [
         {
           $match: {
             domain_uuid: companyDetail.domain_uuid,
@@ -873,7 +874,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         },
       ];
-      
+
       return pipeline;
     }
 
@@ -1851,7 +1852,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
       try {
 
-        
+
         const getHoursInRange = (start: string | Date, end: string | Date) => {
           const result = [];
 
@@ -1907,18 +1908,28 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         const getMonthsInRange = (start: string | Date, end: string | Date) => {
           const startDate = new Date(start);
           const endDate = new Date(end);
+          console.log("startDate", startDate, endDate);
+          console.log("startDate", startDate.getMonth() + 1, endDate.getMonth() + 1);
+
           const months = [];
           while (startDate <= endDate) {
-            const monthKey = startDate.toISOString().slice(0, 7);
+            // const monthKey = startDate.toISOString().slice(0, 7);
+            const monthKey = `${startDate.getMonth() + 1}`.padStart(2, '0') + '/' + startDate.getFullYear();
+
             months.push(monthKey);
+            startDate.setDate(1);
             startDate.setMonth(startDate.getMonth() + 1);
           }
+          console.log("months", months);
+
+
           return months;
         };
 
         // Convert `start_date` and `end_date` to ISO strings if needed
-        // const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
-        // const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
+        const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
+        const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
+
 
         const dateDifferenceInDays =
           (endDateInTimeZone.getTime() - startDateInTimeZone.getTime()) / (1000 * 60 * 60 * 24);
@@ -1932,31 +1943,88 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           // return "%Y-%m-%d %H:00";
         })();
 
+        // const missed_data = await CdrModel.aggregate([
+        //   {
+        //     $match: {
+        //       domain_uuid: companyDetail?.domain_uuid,
+        //       status: { $ne: "answered" },
+        //       start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
+        //       // start_stamp: { $gte: new Date(startDateISO), $lte: new Date(endDateISO) },
+        //       leg: "a",
+        //     },
+        //   },
+        //   {
+        //     $project: {
+        //       missed_number: "$caller_id_number",
+        //       group_key
+        //         : {
+        //         $dateToString: { format: dateGroupFormat, date: { $toDate: "$start_stamp" }, timezone: timezone, },
+        //       },
+        //       duration: 1,
+        //     },
+        //   },
+        //   {
+        //     $group: {
+        //       _id: "$group_key",
+        //       missed_calls: { $push: "$missed_number" },
+        //       count: { $sum: 1 },
+        //       total_waiting_time: { $sum: "$duration" },
+        //     },
+        //   },
+        //   {
+        //     $addFields: {
+        //       average_waiting_time: {
+        //         $cond: {
+        //           if: { $eq: ["$count", 0] },
+        //           then: 0,
+        //           else: { $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2] },
+        //         },
+        //       },
+        //     },
+        //   },
+        //   {
+        //     $sort: { _id: 1 },
+        //   },
+        // ]);
+
         const missed_data = await CdrModel.aggregate([
           {
             $match: {
               domain_uuid: companyDetail?.domain_uuid,
-              status: { $ne: "answered" },
               start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
-              // start_stamp: { $gte: new Date(startDateISO), $lte: new Date(endDateISO) },
               leg: "a",
             },
           },
           {
             $project: {
-              missed_number: "$caller_id_number",
-              group_key
-                : {
-                $dateToString: { format: dateGroupFormat, date: { $toDate: "$start_stamp" }, timezone: timezone, },
+              missed_number: {
+                $cond: { if: { $ne: ["$status", "answered"] }, then: "$caller_id_number", else: null },
+              },
+              group_key: {
+                $dateToString: {
+                  format: dateGroupFormat,
+                  date: { $toDate: "$start_stamp" },
+                  timezone: timezone,
+                },
               },
               duration: 1,
+              status: 1, // Include status for condition checks
             },
           },
           {
             $group: {
               _id: "$group_key",
-              missed_calls: { $push: "$missed_number" },
-              count: { $sum: 1 },
+              missed_calls: {
+                $push: {
+                  $cond: { if: { $ne: ["$status", "answered"] }, then: "$missed_number", else: null },
+                },
+              },
+              count: {
+                $sum: {
+                  $cond: { if: { $ne: ["$status", "answered"] }, then: 1, else: 0 },
+                },
+              },
+              total_count: { $sum: 1 },
               total_waiting_time: { $sum: "$duration" },
             },
           },
@@ -1964,9 +2032,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             $addFields: {
               average_waiting_time: {
                 $cond: {
-                  if: { $eq: ["$count", 0] },
+                  if: { $eq: ["$total_count", 0] },
                   then: 0,
-                  else: { $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2] },
+                  else: { $round: [{ $divide: ["$total_waiting_time", "$total_count"] }, 2] },
                 },
               },
             },
@@ -1976,9 +2044,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         ]);
 
+
         const dynamicGrouping = (() => {
-          if (dateGroupFormat === "%m/%Y") return getMonthsInRange(startDateInTimeZone, endDateInTimeZone);
-          if (dateGroupFormat === "%d/%m/%Y") return getDaysInRange(startDateInTimeZone, endDateInTimeZone);
+          if (dateGroupFormat === "%m/%Y") return getMonthsInRange(start_date, end_date);
+          if (dateGroupFormat === "%d/%m/%Y") return getDaysInRange(start_date, end_date);
           return getHoursInRange(startDateInTimeZone, endDateInTimeZone);
         })();
 
@@ -1988,6 +2057,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             key,
             missed_calls: record ? record.missed_calls : [],
             count: record ? record.count : 0,
+            total_count :record ? record.total_count : 0,
             total_waiting_time: record ? record.total_waiting_time : 0,
             average_waiting_time: record ? record.average_waiting_time : 0,
           };
