@@ -1845,6 +1845,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       // }
 
       try {
+
+        
         const getHoursInRange = (start: string | Date, end: string | Date) => {
           const result = [];
 
@@ -1852,13 +1854,21 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           const year = startDate.getFullYear();
           const month = String(startDate.getMonth() + 1).padStart(2, "0");
           const day = String(startDate.getDate()).padStart(2, "0");
+          // let hourstring = String(startDate.getUTCHours()).padStart(2, "0");
+          // let hours = Number(hourstring);
+          // console.log("hours", startDate, hours);
+
           const baseDate = `${year}-${month}-${day}`;
 
           for (let hour = 0; hour < 24; hour++) {
-            const hourString = hour.toString().padStart(2, "0");
-            // result.push(`${baseDate} ${hourString}:00`);
-            result.push(`${hourString}`);
 
+            const hourString = hour.toString().padStart(2, "0");
+            result.push(`${hourString}`);
+            // result.push(`${hours}`);
+            // hours = hours + 1;
+            // if (hours == 24) {
+            //   hours = 0;
+            // }
           }
 
           return result;
@@ -1882,7 +1892,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
             const year = currentDate.getFullYear();
 
-            result.push(`${year}-${month}-${day}`);
+            result.push(`${day}/${month}/${year}`);
             currentDate.setDate(currentDate.getDate() + 1);
           }
 
@@ -1902,16 +1912,17 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         };
 
         // Convert `start_date` and `end_date` to ISO strings if needed
-        const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
-        const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
+        // const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
+        // const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
 
         const dateDifferenceInDays =
-          (new Date(end_date).getTime() - new Date(start_date).getTime()) / (1000 * 60 * 60 * 24);
+          (endDateInTimeZone.getTime() - startDateInTimeZone.getTime()) / (1000 * 60 * 60 * 24);
+        // (new Date(end_date).getTime() - new Date(start_date).getTime()) / (1000 * 60 * 60 * 24);
 
         const dateGroupFormat = (() => {
-          if (!start_date || !end_date) return "%Y-%m-%d %H:00";
-          if (dateDifferenceInDays >= 30) return "%Y-%m";
-          if (dateDifferenceInDays >= 1) return "%Y-%m-%d";
+          if (!start_date || !end_date) return "%d/%m/%Y %H:00";
+          if (dateDifferenceInDays >= 30) return "%m/%Y";
+          if (dateDifferenceInDays >= 1) return "%d/%m/%Y";
           return "%H";
           // return "%Y-%m-%d %H:00";
         })();
@@ -1961,9 +1972,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         ]);
 
         const dynamicGrouping = (() => {
-          if (dateGroupFormat === "%Y-%m") return getMonthsInRange(start_date, end_date);
-          if (dateGroupFormat === "%Y-%m-%d") return getDaysInRange(start_date, end_date);
-          return getHoursInRange(start_date, end_date);
+          if (dateGroupFormat === "%m/%Y") return getMonthsInRange(startDateInTimeZone, endDateInTimeZone);
+          if (dateGroupFormat === "%d/%m/%Y") return getDaysInRange(startDateInTimeZone, endDateInTimeZone);
+          return getHoursInRange(startDateInTimeZone, endDateInTimeZone);
         })();
 
         const result = dynamicGrouping.map((key) => {
@@ -1982,6 +1993,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       } catch (err) {
         console.error("Error fetching missed calls:", err);
       }
+      
     } catch (error) {
       console.log("error in misscalled api", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
