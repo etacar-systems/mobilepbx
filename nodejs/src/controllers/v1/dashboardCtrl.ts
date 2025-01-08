@@ -1987,6 +1987,63 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //   },
         // ]);
 
+        // const missed_data = await CdrModel.aggregate([
+        //   {
+        //     $match: {
+        //       domain_uuid: companyDetail?.domain_uuid,
+        //       start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
+        //       leg: "a",
+        //     },
+        //   },
+        //   {
+        //     $project: {
+        //       missed_number: {
+        //         $cond: { if: { $ne: ["$status", "answered"] }, then: "$caller_id_number", else: null },
+        //       },
+        //       group_key: {
+        //         $dateToString: {
+        //           format: dateGroupFormat,
+        //           date: { $toDate: "$start_stamp" },
+        //           timezone: timezone,
+        //         },
+        //       },
+        //       duration: 1,
+        //       status: 1, // Include status for condition checks
+        //     },
+        //   },
+        //   {
+        //     $group: {
+        //       _id: "$group_key",
+        //       missed_calls: {
+        //         $push: {
+        //           $cond: { if: { $ne: ["$status", "answered"] }, then: "$missed_number", else: null },
+        //         },
+        //       },
+        //       count: {
+        //         $sum: {
+        //           $cond: { if: { $ne: ["$status", "answered"] }, then: 1, else: 0 },
+        //         },
+        //       },
+        //       total_count: { $sum: 1 },
+        //       total_waiting_time: { $sum: "$duration" },
+        //     },
+        //   },
+        //   {
+        //     $addFields: {
+        //       average_waiting_time: {
+        //         $cond: {
+        //           if: { $eq: ["$total_count", 0] },
+        //           then: 0,
+        //           else: { $round: [{ $divide: ["$total_waiting_time", "$total_count"] }, 2] },
+        //         },
+        //       },
+        //     },
+        //   },
+        //   {
+        //     $sort: { _id: 1 },
+        //   },
+        // ]);
+
         const missed_data = await CdrModel.aggregate([
           {
             $match: {
@@ -2007,7 +2064,30 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   timezone: timezone,
                 },
               },
-              duration: 1,
+              waiting_time: {
+                $cond: {
+                  if: {
+                    $and: [
+                      { $ne: ["$answer_stamp", null] },
+                      { $ne: ["$start_stamp", null] },
+                      { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] } // Ensure valid range
+                    ]
+                  },
+                  then: {
+                    $divide: [
+                      {
+                        $subtract: [
+                          { $toDate: "$answer_stamp" },
+                          { $toDate: "$start_stamp" }
+                        ]
+                      },
+                      1000 // Convert milliseconds to seconds
+                    ]
+                  },
+                  else: 0 // Set waiting time to 0 if invalid range
+                }
+              },
+              
               status: 1, // Include status for condition checks
             },
           },
@@ -2025,7 +2105,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 },
               },
               total_count: { $sum: 1 },
-              total_waiting_time: { $sum: "$duration" },
+              total_waiting_time: { $sum: "$waiting_time" }, // Sum of calculated waiting times
             },
           },
           {
@@ -2043,7 +2123,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             $sort: { _id: 1 },
           },
         ]);
-
+        
+        
 
         const dynamicGrouping = (() => {
           if (dateGroupFormat === "%m/%Y") return getMonthsInRange(start_date, end_date);
