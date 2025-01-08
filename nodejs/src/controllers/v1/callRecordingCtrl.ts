@@ -10,6 +10,8 @@ import logger from "../../logger";
 import company from "../../models/company";
 import user from "../../models/user";
 
+const BASE_RECORDING_URL = "https://mobilepbx.mobiililinja.fi/call_recording/";
+
 const validateData = (data: any[], requiredFields: string[]): string | null => {
   for (const [index, item] of data.entries()) {
     for (const field of requiredFields) {
@@ -64,6 +66,12 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       let updatedData; // Copy the object to avoid modifying the original
       updatedData = { ...data };
       updatedData.call_raw_data = updatedData.call_flow; // Rename `call_flow` to `call_raw_data`
+
+      if (updatedData.record_name) {
+        updatedData.recording_url = `${BASE_RECORDING_URL}${updatedData.record_name}`;
+      } else {
+        updatedData.recording_url = null; // Set to null if record_name is missing
+      }
 
       // const pipeline: PipelineStage[] = [
       //   {
