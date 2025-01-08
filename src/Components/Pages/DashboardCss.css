@@ -824,13 +824,16 @@ a {
   font-family: "krub";
   font-weight: 400;
 }
+
 .progressfont {
-  color: var(--main-green-color) !important;
+  color: var(--main-sidebarfont-color) !important;
+  /* color: var(--main-green-color) !important; */
   font-size: 24px !important;
   font-weight: 600 !important;
 }
 .progressfont2 {
-  color: var(--main-blue-color) !important;
+  color: var(--main-sidebarfont-color) !important;
+  /* color: var(--main-blue-color) !important; */
   font-size: 24px !important;
   font-weight: 600 !important;
 }

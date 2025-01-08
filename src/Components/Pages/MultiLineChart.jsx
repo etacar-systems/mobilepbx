@@ -46,14 +46,11 @@ const MultiLineChart = ({ data, Theme, theme }) => {
               },
             },
             position: "bottom",
-
-            // maxWidth: "100px"
           },
           title: {
             display: true,
           },
         },
-
         stacked: false,
         scales: {
           x: {
@@ -63,11 +60,12 @@ const MultiLineChart = ({ data, Theme, theme }) => {
               position: "bottom", // Position the label at the bottom
             },
             grid: {
-              drawOnChartArea: false, // only want the grid lines for one axis to show up
-              color: gridlinecolor,
+              drawOnChartArea: true, // This will draw grid lines on the chart area
+              color: gridlinecolor, // Set the grid line color
+              lineWidth: 1, // Set the grid line width
             },
             border: {
-              color: gridlinecolor, // Set only the main x-axis line to red
+              color: gridlinecolor, // Set only the main x-axis line to the grid line color
             },
             ticks: {
               color: Textcolor,
@@ -83,18 +81,18 @@ const MultiLineChart = ({ data, Theme, theme }) => {
             display: true,
             position: "left",
             grid: {
-              drawOnChartArea: false,
-              color: gridlinecolor,
+              drawOnChartArea: true, // This will draw grid lines on the chart area
+              color: gridlinecolor, // Set the grid line color
+              lineWidth: 1, // Set the grid line width
             },
             border: {
-              color: gridlinecolor,
+              color: gridlinecolor, // Set the main y-axis line color
             },
             min: dynamicMin,
             max: dynamicMax,
             ticks: {
               stepSize: 2, // Set the step size or interval between ticks
             },
-            display: true,
             ticks: {
               color: Textcolor, // Set the color of the x-axis labels
               font: {
@@ -108,10 +106,8 @@ const MultiLineChart = ({ data, Theme, theme }) => {
             type: "linear",
             display: false,
             position: "right",
-
-            // grid line settings
             grid: {
-              drawOnChartArea: false, // only want the grid lines for one axis to show up
+              drawOnChartArea: true, // This will draw grid lines on the chart area
             },
             min: dynamicMin,
             max: dynamicMax,
@@ -122,6 +118,7 @@ const MultiLineChart = ({ data, Theme, theme }) => {
         },
       },
     });
+    
 
     return () => {
       myChart.destroy(); // Cleanup chart on component unmount
