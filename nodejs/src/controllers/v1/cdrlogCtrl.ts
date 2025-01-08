@@ -12,6 +12,7 @@ import conferncers from "../../models/conferncers";
 import time_condition from "../../models/time_condition";
 import cdrs from "../../models/cdrs";
 import { countryTimeZones } from "../../helper/timezone";
+import momentTimezone from "moment-timezone";
 
 const getAllRecordByDomain = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -473,13 +474,11 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${
-        direction || ""
-      }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""
+        }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${
-        extension || ""
-      }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
+        }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     console.log("module_name", module_name);
 
@@ -506,26 +505,15 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       });
     }
 
-    const userCountry: any = await user.findOne(
-      {
-        _id: user_detail?.uid,
-        is_deleted: 0,
-      },
-      {
-        _id: 0,
-        country: 1,
-      }
-    );
+    const countries: any = companyDetail?.company_country;
 
-    // console.log(userCountry, user_detail);
+    // const timezone = "Asia/Dubai";
+    const timezone = countryTimeZones[countries.replace(/ /g, "_")];
 
-    if (!userCountry || !userCountry?.country) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: "User contry not found",
-      });
-    }
-    const timezone = countryTimeZones[userCountry?.country];
+    const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf('day').toDate(); // Start of day in the timezone
+    const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf('day').toDate(); // End of day in the timezone
+    console.log("startDateInTimeZone",start_date, startDateInTimeZone, endDateInTimeZone, countries, timezone);
+
     let api_config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -555,18 +543,14 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
             },
             {
               $gte: [
-                {
-                  $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
-                },
-                start_date,
+                "$start_stamp",
+                startDateInTimeZone,
               ],
             },
             {
               $lte: [
-                {
-                  $dateToString: { format: "%Y-%m-%d", date: "$start_stamp" },
-                },
-                end_date,
+                "$start_stamp",
+                endDateInTimeZone,
               ],
             },
           ],
@@ -622,13 +606,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
             caller_id_name: 1,
             caller_id_number: 1,
             destination_number: 1,
-            start_stamp: {
-              $dateToString: {
-                format: "%Y-%m-%d %H:%M:%S",
-                date: "$start_stamp",
-                timezone: timezone,
-              },
-            },
+            start_stamp: 1,
             duration: 1,
             record_name: 1,
             status: 1,
@@ -693,6 +671,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         message: "CDR logs fetched successfully",
         data: {
           cdr_list: paginatedReports, // Only the sliced part of the original list
+          timezone: timezone,
           total_page: totalPages, // Total number of pages
           total_record: totalRecords, // Total number of records
         },

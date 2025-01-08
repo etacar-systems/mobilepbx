@@ -5,11 +5,13 @@ import Modal from "react-bootstrap/Modal";
 import { ReactComponent as Bigsize } from "../../Assets/Icon/biggersize.svg";
 import { useTranslation } from "react-i18next";
 function MissedCallDashboard({
-  missedCalledData,
+  // missedCalledData,
   multilinechart,
   targetRef,
   theme,
   Theme,
+  totalMissedCalled,
+  totalAvgWaitTime,
 }) {
   const { t } = useTranslation();
   const [show, setshow] = useState(false);
@@ -39,7 +41,10 @@ function MissedCallDashboard({
               {t("Missed calls")}
             </label>
             <h4 className="font-h4 missed-header">
-              {missedCalledData && missedCalledData[6]?.count} {t("Calls")}
+              {totalMissedCalled}{" "}
+              {/* {missedCalledData &&
+                missedCalledData[missedCalledData.length - 1]?.count}{" "} */}
+              {t("Calls")}
             </h4>
             <small className="text-muted">
               <span className="missedcallfont">9.5%</span> {t("of")} 47{" "}
@@ -51,7 +56,12 @@ function MissedCallDashboard({
               {t("Average waiting time")}
             </label>
             <h4 className="font-h4 missed-header">
-              {missedCalledData && missedCalledData[6]?.average_waiting_time}{" "}
+              {totalMissedCalled != 0
+                ? Math.round((totalAvgWaitTime / totalMissedCalled) * 100) / 100
+                : 0}{" "}
+              {/* {missedCalledData &&
+                missedCalledData[missedCalledData.length - 1]
+                  ?.average_waiting_time}{" "} */}
               {t("Sec")}
             </h4>
             <small className="text-muted">

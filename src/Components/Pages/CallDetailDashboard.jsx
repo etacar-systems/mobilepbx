@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from "react";
 import { Col, ButtonGroup, Form, Nav, Tab, Table } from "react-bootstrap";
 import up_arrow from "../../Assets/Icon/up-arrow.svg";
@@ -51,6 +50,19 @@ function CallDetailDashboard({
   const [Extensiontype, setextensiontype] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [Direction, setDirection] = useState("");
+  const [timezone, setTimezone] = useState();
+
+  const convertUtcToTimezone = (utcDate, timeZone) => {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }).format(new Date(utcDate));
+  };
 
   const toggleDropdown = (dropdown) => {
     setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
@@ -130,6 +142,7 @@ function CallDetailDashboard({
         setFetchData(data);
         setdashboartdata(data?.cdr_list);
         setSortedColumn("");
+        setTimezone(data?.timezone)
       }
     });
   }, [searchTerm, select, currentPage, filter, Role, Extensiontype, Direction]);
@@ -364,6 +377,16 @@ function CallDetailDashboard({
                 </th>
                 <th
                   className="table-new table-custom-body-td m-0"
+                  onClick={() => sortingTable("status")}
+                  style={{ width: "14.28%" }}
+                >
+                  <div className="d-flex align-items-center justify-content-between">
+                    <p className="mb-0">{t("Call Status")}</p>
+                    {arrowShow("status")}
+                  </div>
+                </th>
+                <th
+                  className="table-new table-custom-body-td m-0"
                   style={{ width: "10%", fontWeight: "700" }}
                 >
                   {t("Record")}
@@ -387,15 +410,16 @@ function CallDetailDashboard({
                 </div>
               ) : (
                 <>
-                
                   {dashboartdata && dashboartdata.length > 0 ? (
                     <>
                       {dashboartdata
                         // .filter(
                         //   (item) => !item.destination_number.includes("*")
                         // )
-                        .map((row, index) => {        
-                          {console.log("dashboard",dashboartdata)}                  
+                        .map((row, index) => {
+                          {
+                            console.log("dashboard", dashboartdata);
+                          }
                           const formatTime = (seconds) =>
                             `${String(Math.floor(seconds / 3600)).padStart(
                               2,
@@ -406,19 +430,22 @@ function CallDetailDashboard({
                             )}:${String(seconds % 60).padStart(2, "0")}`;
                           const formattedTime = formatTime(row?.duration);
                           const date = new Date(row?.start_stamp);
-                          
+                            console.log("date",date);
+                            
                           //new
                           // const formattedDate = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}`;
+
                           const formattedDate = new Date(date)
-                          .toLocaleDateString("en-GB")
-                          .replace(/\//g, ".");
-                          {console.log("row?.start_stamp",formattedDate)}
+                            .toLocaleDateString("en-GB")
+                            .replace(/\//g, "/");
+
                           function extractTimeFromDate(dateString, locale) {
                             const date = new Date(dateString);
                             return date.toLocaleTimeString(locale, {
                               hour: "2-digit",
                               minute: "2-digit",
                               second: "2-digit",
+                              timeZone: timezone,
                               // hourCycle: "h12",
                             });
                           }
@@ -433,9 +460,9 @@ function CallDetailDashboard({
                                   className="table-new table-custom-body-td"
                                   style={{ width: "21%" }}
                                 >
+                                  {console.log("dasasa",row?.start_stamp)}
                                   {formattedDate}{" "}
                                   {extractTimeFromDate(row?.start_stamp)}
-                                 
                                 </td>
 
                                 <td
@@ -495,15 +522,14 @@ function CallDetailDashboard({
                                     alignItems: "center",
                                   }}
                                 >
+                                  {/* CHANGED */}
                                   <div className="overflowdashboaard">
-                                    {/* {formattedTime} */}
-                                    {row.status != "answered"
+                                    {/* {formattedTime}{" "} */}
+                                    {row.duration == undefined
                                       ? "00:00:00"
                                       : formattedTime}{" "}
                                   </div>
                                 </td>
-
-                                {/* CHANGED */}
                                 <td
                                   // className="table-new table-custom-body-td new-calltype"
                                   className="table-new table-custom-body-td"
@@ -515,6 +541,21 @@ function CallDetailDashboard({
                                 >
                                   <div className="overflowdashboaard">
                                     {t(row.direction)}
+                                  </div>
+                                </td>
+
+                                {/* new */}
+                                <td
+                                  // className="table-new table-custom-body-td new-calltype"
+                                  className="table-new table-custom-body-td"
+                                  style={{
+                                    width: "14.28%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div className="overflowdashboaard">
+                                    {t(row.status)}
                                   </div>
                                 </td>
                                 <td

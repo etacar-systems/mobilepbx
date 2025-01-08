@@ -113,15 +113,15 @@ function CallMetricsDashboard({
             <div className="d-flex justify-content-start mt-3">
               <div className="mr-5">
                 <label className="mb-0 text">{t("Inbound")}</label>
-                <h6 className="metricfont">{data?.total_answered}</h6>
+                <h6 className="metricfont">{data?.total_answered || 0}</h6>
               </div>
               <div className="mr-5">
                 <label className="mb-0 text">{t("Outbound")}</label>
-                <h6 className="metricfont">{data?.total_local}</h6>
+                <h6 className="metricfont">{data?.total_local || 0}</h6>
               </div>
               <div className="mr-5">
                 <label className="mb-0 text">{t("Unanswered")}</label>
-                <h6 className="metricfont">{data?.total_missed}</h6>
+                <h6 className="metricfont">{data?.total_missed || 0}</h6>
               </div>
             </div>
             <div style={{ height: "255px", width: "260px", margin: "auto" }}>

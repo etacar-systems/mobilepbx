@@ -11,6 +11,8 @@ import CdrModel from "../../models/cdrs";
 import { PipelineStage } from "mongoose";
 import role from "../../models/role";
 import { CDRLogs } from "../../routes/v1/cdr_logs";
+import momentTimezone from "moment-timezone";
+import { countryTimeZones } from "../../helper/timezone";
 
 function convertISODate(date: String): String {
   return new Date(`${date.replace(" ", "T")}Z`).toISOString();
@@ -41,6 +43,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     let end_date: any = req.query.end_date;
     let call_matrics_type: any = req.query.call_matrics_type;
     let type_value: any = ["today", "week", "month", "year"];
+    const countries: any = companyDetail?.company_country;
+    // const timezone = "Asia/Dubai";
+    const timezone = countryTimeZones[countries.replace(/ /g, "_")];
+    const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf('day').toDate(); // Start of day in the timezone
+    const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf('day').toDate(); // End of day in the timezone
 
     if (start_date == undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
@@ -163,8 +170,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $match: {
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: {
-              $gte: new Date(start_date + "Z"),
-              $lt: new Date(end_date + "Z"),
+              $gte: startDateInTimeZone,
+              $lt: endDateInTimeZone,
+              // $gte: new Date(start_date + "Z"),
+              // $lt: new Date(end_date + "Z"),
             },
           },
         },
@@ -812,55 +821,44 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
 
     function createHourlyAggregation(date: any, hours: string[]): PipelineStage[] {
-      const startOfDay = new Date(date);
-      startOfDay.setHours(0, 0, 0, 0); // Set to 12:00 AM
-
-      const endOfDay = new Date(date);
-      endOfDay.setHours(23, 59, 59, 999); // Set to 11:59 PM
-      console.log("startOfDay", startOfDay, "endOfDay", endOfDay);
-
-      const pipeline = [
+      const pipeline : PipelineStage[]= [
         {
           $match: {
             domain_uuid: companyDetail.domain_uuid,
-            start_stamp: { $gte: startOfDay, $lte: endOfDay },
-            leg: 'a',
+            start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
+            leg: "a",
           },
         },
         {
           $addFields: {
-            hour: { $hour: "$start_stamp" },
-            formattedHour: {
-              $switch: {
-                branches: hours.map((hour, index) => ({
-                  case: { $eq: [{ $hour: "$start_stamp" }, index] },
-                  then: hour,
-                })),
-                default: "Unknown",
+            hour: {
+              $dateToString: {
+                format: "%H", // Extract only the hour (0-23)
+                date: "$start_stamp",
+                timezone: timezone, // Specify the desired timezone, e.g., "Asia/Dubai"
               },
             },
           },
         },
         {
           $group: {
-            _id: "$formattedHour",
+            _id: "$hour", // Group by the timezone-corrected hour
             total_calls: { $sum: 1 },
             inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
             local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
             outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
             no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
             answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
-            missed: { $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] } },
-            // missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
+            missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
           },
         },
         {
-          $sort: { _id: 1 } as Record<string, 1>,
+          $sort: { _id: 1 },
         },
         {
           $project: {
             hour: "$_id", // Include the hour field
-            total_calls: { $ifNull: ["$total_calls", 0] }, // If no calls, set to 0
+            total_calls: { $ifNull: ["$total_calls", 0] },
             inbound_calls: { $ifNull: ["$inbound_calls", 0] },
             local_calls: { $ifNull: ["$local_calls", 0] },
             outbound_calls: { $ifNull: ["$outbound_calls", 0] },
@@ -870,7 +868,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         },
       ];
-
+      
       return pipeline;
     }
 
@@ -1367,30 +1365,30 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       // Create the pipeline
 
       const hours = [
-        "12:00 am",
-        "1:00 am",
-        "2:00 am",
-        "3:00 am",
-        "4:00 am",
-        "5:00 am",
-        "6:00 am",
-        "7:00 am",
-        "8:00 am",
-        "9:00 am",
-        "10:00 am",
-        "11:00 am",
-        "12:00 pm",
-        "1:00 pm",
-        "2:00 pm",
-        "3:00 pm",
-        "4:00 pm",
-        "5:00 pm",
-        "6:00 pm",
-        "7:00 pm",
-        "8:00 pm",
-        "9:00 pm",
-        "10:00 pm",
-        "11:00 pm",
+        "00",
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
       ];
       const pipeline = createHourlyAggregation(getFormatedDate(new Date()), hours);
 
@@ -1923,7 +1921,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             $match: {
               domain_uuid: companyDetail?.domain_uuid,
               status: { $ne: "answered" },
-              start_stamp: { $gte: new Date(startDateISO), $lte: new Date(endDateISO) },
+              start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
+              // start_stamp: { $gte: new Date(startDateISO), $lte: new Date(endDateISO) },
               leg: "a",
             },
           },
@@ -1932,7 +1931,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               missed_number: "$caller_id_number",
               group_key
                 : {
-                $dateToString: { format: dateGroupFormat, date: { $toDate: "$start_stamp" } },
+                $dateToString: { format: dateGroupFormat, date: { $toDate: "$start_stamp" }, timezone: timezone, },
               },
               duration: 1,
             },
