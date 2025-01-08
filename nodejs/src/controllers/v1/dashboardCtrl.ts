@@ -821,11 +821,16 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
 
     function createHourlyAggregation(date: any, hours: string[]): PipelineStage[] {
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0); // Set to 12:00 AM
+
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999); // Set to 11:59 PM
       const pipeline : PipelineStage[]= [
         {
           $match: {
             domain_uuid: companyDetail.domain_uuid,
-            start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
+            start_stamp: { $gte: startOfDay, $lte: endOfDay },
             leg: "a",
           },
         },
@@ -1993,7 +1998,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       } catch (err) {
         console.error("Error fetching missed calls:", err);
       }
-      
+
     } catch (error) {
       console.log("error in misscalled api", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({

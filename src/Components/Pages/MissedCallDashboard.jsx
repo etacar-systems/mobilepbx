@@ -46,10 +46,10 @@ function MissedCallDashboard({
                 missedCalledData[missedCalledData.length - 1]?.count}{" "} */}
               {t("Calls")}
             </h4>
-            <small className="text-muted">
+            {/* <small className="text-muted">
               <span className="missedcallfont">9.5%</span> {t("of")} 47{" "}
               {t("Total")}
-            </small>
+            </small> */}
           </div>
           <div className="mr-5">
             <label className="mb-0 header-size missed-header">
@@ -64,10 +64,10 @@ function MissedCallDashboard({
                   ?.average_waiting_time}{" "} */}
               {t("Sec")}
             </h4>
-            <small className="text-muted">
+            {/* <small className="text-muted">
               <span className="missedcallfont">87.3%</span> {t("of")} 47{" "}
               {t("Total")}
-            </small>
+            </small> */}
           </div>
         </div>
         <div id="chart-Event-sale-overview">
