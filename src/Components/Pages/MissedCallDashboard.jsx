@@ -58,7 +58,7 @@ function MissedCallDashboard({
             </label>
             <h4 className="font-h4 missed-header">
               {totalMissedCalled != 0
-                ? Math.round((totalAvgWaitTime / totalCalled) * 100) / 100
+                ? Math.round(totalAvgWaitTime / totalCalled)
                 : 0}{" "}
               {/* {missedCalledData &&
                 missedCalledData[missedCalledData.length - 1]
