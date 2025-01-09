@@ -985,6 +985,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               $gte: startOfYear, // Starting date
               $lte: endOfYear, // Ending date (December)
             },
+            leg:"a",
           },
         },
         {
