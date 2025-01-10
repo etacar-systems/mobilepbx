@@ -985,7 +985,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               $gte: startOfYear, // Starting date
               $lte: endOfYear, // Ending date (December)
             },
-            leg:"a",
+            leg: "a",
           },
         },
         {
@@ -1363,11 +1363,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         ]);
         // console.log("result",result);
-        
+
 
         const callMetrics = datesInMonth.map((dateObj) => {
           const dayData = result.find(
-            (item) => item?._id?.day=== dateObj.date
+            (item) => item?._id?.day === dateObj.date
             // (item) => new Date(item.date).toISOString().split("T")[0] === dateObj.date
           );
           return dayData
@@ -1716,37 +1716,170 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        // start_date: start_date,
-        // end_date: end_date,
+        start_date: start_date,
+        end_date: end_date,
       },
     };
-    console.log("api_ring_groups", api_ring_groups);
+    // console.log("api_ring_groups", api_ring_groups);
     try {
       const ringroup_api_data: any = await axios.request(api_ring_groups);
 
       // CHANGED
-      const ring_group_list: any = await ring_group.find({
-        cid: companyDetail._id,
-        is_deleted: 0,
-        // createdAt: {
-        //   $gte: start_date,
-        //   $lt: end_date,
-        // },
-      });
+      // const ring_group_list: any = await ring_group.find({
+      //   cid: companyDetail._id,
+      //   is_deleted: 0,
+      //   // createdAt: {
+      //   //   $gte: start_date,
+      //   //   $lt: end_date,
+      //   // },
+      // });
 
-      const ring_group_data: any = await ring_group.find({
-        cid: companyDetail._id,
-        is_deleted: 0,
-        // createdAt: {
-        //   $gte: start_date,
-        //   $lt: end_date,
-        // },
-      });
-      console.log("ring_group_data", ring_group_data);
-      // console.log("ringroup_api_data",ringroup_api_data)
+
+      const ring_group_list: any = await ring_group.aggregate([
+        // Step 1: Match ring_group based on cid and is_deleted
+        {
+          $match: {
+            cid: companyDetail._id,
+            is_deleted: 0,
+
+          },
+        },
+        // Step 2: Lookup to join ring_group with companies
+        {
+          $lookup: {
+            from: "companies",
+            localField: "cid",
+            foreignField: "_id",
+            as: "company",
+          },
+        },
+        // Step 3: Unwind the company array
+        {
+          $unwind: "$company",
+        },
+        // Step 4: Lookup to join the company with cdrs based on domain_uuid
+        {
+          $lookup: {
+            from: "cdrs",
+            let: { domain_uuid: "$company.domain_uuid" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$domain_uuid", "$$domain_uuid"] },
+                      { $eq: ["$module_name", "ring_group"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "cdrs_logs",
+          },
+        },
+        // Step 5: Unwind cdrs_logs to process each log individually
+        {
+          $unwind: "$cdrs_logs",
+        },
+        // Step 6: Group and calculate the required metrics
+        {
+          $group: {
+            _id: "$_id", // You can group by the ring_group ID or any other identifier
+            ring_group_details: { $first: "$$ROOT" }, // Preserve the ring_group document
+            answered: {
+              $sum: {
+                $cond: [{ $eq: ["$cdrs_logs.status", "answered"] }, 1, 0],
+              },
+            },
+            inbound_calls: {
+              $sum: {
+                $cond: [{ $eq: ["$cdrs_logs.direction", "inbound"] }, 1, 0],
+              },
+            },
+            outbound_calls: {
+              $sum: {
+                $cond: [{ $eq: ["$cdrs_logs.direction", "outbound"] }, 1, 0],
+              },
+            },
+            missed: {
+              $sum: {
+                $cond: [{ $ne: ["$cdrs_logs.status", "answered"] }, 1, 0],
+              },
+            },
+            inbound_duration: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$cdrs_logs.direction", "inbound"] },
+                  "$cdrs_logs.duration",
+                  0,
+                ],
+              },
+            },
+            outbound_duration: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$cdrs_logs.direction", "outbound"] },
+                  "$cdrs_logs.duration",
+                  0,
+                ],
+              },
+            },
+            no_answer: {
+              $sum: {
+                $cond: [{ $eq: ["$cdrs_logs.status", "no_answer"] }, 1, 0],
+              },
+            },
+            busy: {
+              $sum: {
+                $cond: [{ $eq: ["$cdrs_logs.status", "busy"] }, 1, 0],
+              },
+            },
+            total_calls: { $sum: 1 },
+          },
+        },
+        // Step 7: Add calculated fields for percentages
+        {
+          $addFields: {
+            answered_percentage: {
+              $cond: [
+                { $eq: ["$total_calls", 0] },
+                0,
+                { $multiply: [{ $divide: ["$answered", "$total_calls"] }, 100] },
+              ],
+            },
+            missed_percentage: {
+              $cond: [
+                { $eq: ["$total_calls", 0] },
+                0,
+                { $multiply: [{ $divide: ["$missed", "$total_calls"] }, 100] },
+              ],
+            },
+          },
+        },
+        // Step 8: Project final output including ring_group details
+        {
+          $project: {
+            _id: 0,
+            ring_group_id: "$_id",
+            ring_group_name: "$ring_group_details.name", // Include additional details from ring_group if required
+            ring_group_details: "$ring_group_details",
+            answered: 1,
+            answered_percentage: 1,
+            inbound_calls: 1,
+            outbound_calls: 1,
+            missed: 1,
+            missed_percentage: 1,
+            inbound_duration: 1,
+            outbound_duration: 1,
+            no_answer: 1,
+            busy: 1,
+          },
+        },
+      ]);
 
       if (
-        ringroup_api_data?.data?.data ||
+        // ringroup_api_data?.data?.data ||
         ring_group_list // new
       ) {
         // const mergedArray = ringroup_api_data?.data?.data?.map((r: any) => {
@@ -1758,7 +1891,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
         let ring_group_call_data = {
           // ring_group_call: mergedArray,
-          ring_group_call: ring_group_data,
+          // ring_group_call: ring_group_data,
           ring_group_list: ring_group_list, //new
         };
         dashboard_response_obj.ring_group_detail = ring_group_call_data;

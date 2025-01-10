@@ -331,7 +331,7 @@ function RingsGroupDashboard() {
     setSelectExtension("");
   };
 
-  console.log("reportsdata", data);
+  // console.log("reportsdata", data);
   return (
     <Card className="dear-card">
       <Card.Header className="call_metrics">
@@ -358,17 +358,17 @@ function RingsGroupDashboard() {
                       </td>
                       <td className="table-custom-body-td">
                         <small className="small-cusnam">
-                          {ele?.name}
+                          {ele?.ring_group_details?.name}
                         </small>
                         <h6 className="mb-0 small-cusnum">
-                          {ele?.extension}
+                          {ele?.ring_group_details?.extension}
                         </h6>
                         <Button
                           size="sm"
                           className="mr-2 new-button-ui"
                           data-toggle="modal"
                           data-target="#routing"
-                          onClick={() => OpenModal(ele?.ring_group_uuid)}
+                          onClick={() => OpenModal(ele?.ring_group_details?.ring_group_uuid)}
                         >
                           {t("Open")}
                         </Button>
