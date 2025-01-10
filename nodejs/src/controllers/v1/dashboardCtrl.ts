@@ -1741,7 +1741,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $match: {
             cid: companyDetail._id,
             is_deleted: 0,
-
           },
         },
         // Step 2: Lookup to join ring_group with companies
@@ -1761,7 +1760,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         {
           $lookup: {
             from: "cdrs",
-            let: { domain_uuid: "$company.domain_uuid" },
+            let: { 
+              domain_uuid: "$company.domain_uuid",
+              start_date: startDateInTimeZone, // Replace with your actual start_date
+              end_date: endDateInTimeZone // Replace with your actual end_date
+            },
             pipeline: [
               {
                 $match: {
@@ -1770,6 +1773,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                       { $eq: ["$domain_uuid", "$$domain_uuid"] },
                       { $eq: ["$module_name", "ring_group"] },
                       { $eq: ["$leg", "a"] },
+                      { $gte: ["$start_stamp", "$$start_date"] }, // Start date filter
+                      { $lte: ["$start_stamp", "$$end_date"] }  // End date filter
                     ],
                   },
                 },
@@ -1778,39 +1783,59 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             as: "cdrs_logs",
           },
         },
-        // Step 5: Unwind cdrs_logs to process each log individually
+        
+        // Step 5: Unwind cdrs_logs with preserveNullAndEmptyArrays
         {
-          $unwind: "$cdrs_logs",
+          $unwind: {
+            path: "$cdrs_logs",
+            preserveNullAndEmptyArrays: true,
+          },
         },
         // Step 6: Group and calculate the required metrics
         {
           $group: {
-            _id: "$_id", // You can group by the ring_group ID or any other identifier
-            ring_group_details: { $first: "$$ROOT" }, // Preserve the ring_group document
+            _id: "$_id", // Group by the ring_group ID
+            ring_group_details: { $first: "$$ROOT" },
             answered: {
               $sum: {
-                $cond: [{ $eq: ["$cdrs_logs.status", "answered"] }, 1, 0],
+                $cond: [
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.status", "answered"] }] },
+                  1,
+                  0,
+                ],
               },
             },
             inbound_calls: {
               $sum: {
-                $cond: [{ $eq: ["$cdrs_logs.direction", "inbound"] }, 1, 0],
+                $cond: [
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "inbound"] }] },
+                  1,
+                  0,
+                ],
               },
             },
             outbound_calls: {
               $sum: {
-                $cond: [{ $eq: ["$cdrs_logs.direction", "outbound"] }, 1, 0],
+                $cond: [
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "outbound"] }] },
+                  1,
+                  0,
+                ],
               },
             },
             missed: {
               $sum: {
-                $cond: [{ $ne: ["$cdrs_logs.status", "answered"] }, 1, 0],
+                $cond: [
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $ne: ["$cdrs_logs.status", "answered"] }] },
+                  1,
+                  0,
+                ],
               },
             },
             inbound_duration: {
               $sum: {
                 $cond: [
-                  { $eq: ["$cdrs_logs.direction", "inbound"] },
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "inbound"] }] },
                   "$cdrs_logs.duration",
                   0,
                 ],
@@ -1819,7 +1844,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             outbound_duration: {
               $sum: {
                 $cond: [
-                  { $eq: ["$cdrs_logs.direction", "outbound"] },
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "outbound"] }] },
                   "$cdrs_logs.duration",
                   0,
                 ],
@@ -1827,15 +1852,27 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             },
             no_answer: {
               $sum: {
-                $cond: [{ $eq: ["$cdrs_logs.status", "no_answer"] }, 1, 0],
+                $cond: [
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.status", "no_answer"] }] },
+                  1,
+                  0,
+                ],
               },
             },
             busy: {
               $sum: {
-                $cond: [{ $eq: ["$cdrs_logs.status", "busy"] }, 1, 0],
+                $cond: [
+                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.status", "busy"] }] },
+                  1,
+                  0,
+                ],
               },
             },
-            total_calls: { $sum: 1 },
+            total_calls: {
+              $sum: {
+                $cond: [{ $ifNull: ["$cdrs_logs", false] }, 1, 0],
+              },
+            },
           },
         },
         // Step 7: Add calculated fields for percentages
@@ -1877,6 +1914,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         },
       ]);
+      
 
       if (
         // ringroup_api_data?.data?.data ||
