@@ -104,6 +104,7 @@ const config = {
     DELETE: "user_delete",
     LIST: "user_company_users",
     VALUE: "Trunksvalues",
+    OPTIONS: "Trunksvalues",
   },
   COMPANY_LIST: BASE_URL + "/company/namelist",
   COMPANY_LIST_KEY: "company_list",
@@ -150,6 +151,7 @@ const config = {
     DELETE: BASE_URL + "/time_condition/delete",
     DETAIL: BASE_URL + "/time_condition/details",
     LIST: BASE_URL + "/time_condition/list",
+    OPTIONS: BASE_URL + "/time_condition/options",
   },
   TIME_CONDITION_KEY: {
     ADD: "time_condition_add",
@@ -157,6 +159,7 @@ const config = {
     DELETE: "time_condition_delete",
     DETAIL: "time_condition_detail",
     LIST: "time_condition_list",
+    OPTIONS: "time_condition_options",
   },
   DROPDOWNAllSHOW: BASE_URL + "/pbx_api/dropdown",
   NUMBERSDROPDOWN: BASE_URL + "/pstn/dropdown",
@@ -254,18 +257,18 @@ const config = {
     VIDEO_LIST: BASE_URL + "/integration/video/list",
     VIDEO_BY_ROLE: BASE_URL + "/integration/video/list/role?user_type=",
   },
-  CALENDAR : {
-    GET:BASE_URL + "/calendar/event",
-    PUT:BASE_URL + "/calendar/config/refresh/token/redirct",
-    PUT1:BASE_URL + "/calendar/config/refresh/token/update",
-    DETAIL:BASE_URL + "/calendar/config/detail"
+  CALENDAR: {
+    GET: BASE_URL + "/calendar/event",
+    PUT: BASE_URL + "/calendar/config/refresh/token/redirct",
+    PUT1: BASE_URL + "/calendar/config/refresh/token/update",
+    DETAIL: BASE_URL + "/calendar/config/detail",
   },
-  CALENDAR_KEY : {
-    GET:"calendar_get",
-    PUT:"calendar_put",
-    PUT1:"calendar_put1",
-    DETAIL:"calendar_detail"
-  }
+  CALENDAR_KEY: {
+    GET: "calendar_get",
+    PUT: "calendar_put",
+    PUT1: "calendar_put1",
+    DETAIL: "calendar_detail",
+  },
 };
 
 export default config;

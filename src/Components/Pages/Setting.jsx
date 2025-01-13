@@ -69,6 +69,7 @@ export default function Setting() {
   const cid = Cookies.get("Company_Id");
   const uid = Cookies.get("User_id");
   const role = Cookies.get("role");
+  const domain_uuid = Cookies.get("domain_uuid");
   let Token = Cookies.get("Token");
   const [message, setMessage] = useState("");
   const maxLength = 160;
@@ -103,6 +104,27 @@ export default function Setting() {
     First_name: "",
     Last_name: "",
   });
+  const [timeConditionID, setTimeConditionID] = useState(null);
+
+  useEffect(() => {
+    if (role == 1) {
+      const data = {
+        cid: cid,
+        domain_uuid: domain_uuid,
+      };
+      dispatch(
+        postapiAll({
+          inputData: data,
+          Api: config.TIME_CONDITION.OPTIONS,
+          Token: Token,
+          urlof: config.TIME_CONDITION_KEY.OPTIONS,
+        })
+      ).then((response) => {
+        // console.log("responseresponse", response.payload.response.data);
+        setTimeConditionID(response?.payload?.response?.data?._id);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     // Read the cookies and set the initial state values
@@ -163,6 +185,8 @@ export default function Setting() {
           urlof: config.EXTENSION_KEY.VALUE,
         })
       ).then((response) => {
+        // console.log("responseresponse", response);
+
         const editsvalues = response?.payload?.response?.data;
         setSaveUserDetail({
           password: editsvalues?.password,
@@ -193,7 +217,7 @@ export default function Setting() {
         })
       ).then((response) => {
         const editsvalues = response?.payload?.response?.CompanyDatil;
-        console.log(editsvalues, "editsvalueseditsvalues");
+        // console.log(editsvalues, "editsvalueseditsvalues");
         setSaveCompnayDetail({
           company_street_address: editsvalues?.company_street_address,
           company_zipcode: editsvalues?.company_zipcode,
@@ -262,6 +286,7 @@ export default function Setting() {
       });
     }
   }, []);
+
   const cancel_admin = () => {
     setErrors_admin({ Last_name: "", First_name: "" });
     const firstNameFromCookie = Cookies.get("firstname");
@@ -281,6 +306,7 @@ export default function Setting() {
       }));
     }
   };
+
   const handleAdmin = () => {
     if (errors_admin.First_name === "" && errors_admin.Last_name === "") {
       setsaveLoading(true);
@@ -522,6 +548,12 @@ export default function Setting() {
 
   const handleClose = () => {
     setShow(false);
+  };
+  const [optionValue, setOptionValue] = useState();
+
+  const handleOptionClick = (value) => {
+    setShow(true);
+    setOptionValue(value);
   };
 
   return (
@@ -1078,7 +1110,7 @@ export default function Setting() {
                         <Col xs={2}>
                           <div
                             className="badge_circle1"
-                            onClick={() => setShow(true)}
+                            onClick={() => handleOptionClick(val.name)}
                           >
                             <Edit_logo className="registerpage-icon1" />
                           </div>
@@ -1116,7 +1148,14 @@ export default function Setting() {
         <Account />
       </div>
 
-      {show && <CallRoutingModal show={show} handleClose={handleClose} />}
+      {show && (
+        <CallRoutingModal
+          optionValue={optionValue}
+          timeConditionID={timeConditionID}
+          show={show}
+          handleClose={handleClose}
+        />
+      )}
       {recordShow && (
         <RecordModal recordshow={recordShow} setRecordShow={setRecordShow} />
       )}

@@ -468,19 +468,63 @@ const getTimeConditionById = async (
     }
 
     const resultObj = await TimeCondition.findOne({ _id: id, is_deleted: 0 });
-    if (!resultObj) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "TimeCondition not found.",
-      });
-    }
+    // if (!resultObj) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "TimeCondition not found.",
+    //   });
+    // }
 
     return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
       message: "Time Condition fetch successfully.",
       data: resultObj,
     });
-  } catch (error) {}
+  } catch (error) { }
+};
+const getTimeConditionOption = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = await get_token(req);
+    const user_detail = await User_token(token);
+
+    if (user_detail === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.COMPANY_NOT_EXIST).send({
+        success: 0,
+        message: config.RESPONSE.MESSAGE.COMPANY_ERROR,
+      });
+    }
+    const { cid, domain_uuid } = req.body;
+
+    const resultObj = await TimeCondition.findOne({
+      cid: cid,
+      domain_id: domain_uuid,
+      is_deleted: 0
+    })
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Invalid MongoDB ID.",
+    //   });
+    // }
+
+    // const resultObj = await TimeCondition.findOne({ _id: id, is_deleted: 0 });
+    // if (!resultObj) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "TimeCondition not found.",
+    //   });
+    // }
+
+    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      success: 1,
+      message: "Time Condition fetch successfully.",
+      data: resultObj,
+    });
+  } catch (error) { }
 };
 
 export default {
@@ -489,4 +533,5 @@ export default {
   editTimeCondition,
   deleteTimeCondition,
   getTimeConditionById,
+  getTimeConditionOption,
 };

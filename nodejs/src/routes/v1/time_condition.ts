@@ -20,3 +20,8 @@ TimeConditionRoute.post(
   authUser,
   TimeConditionCtrl.getTimeConditionById
 );
+TimeConditionRoute.post(
+  "/options",
+  authUser,
+  TimeConditionCtrl.getTimeConditionOption
+);
