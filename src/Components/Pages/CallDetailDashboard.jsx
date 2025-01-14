@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import Loader from "../Loader";
 import { Category } from "../ConstantConfig";
 import CustomDropDown from "../CustomDropDown";
+import Utils from "../../utils";
 
 function CallDetailDashboard({
   activeKey,
@@ -435,10 +436,8 @@ function CallDetailDashboard({
                           //new
                           // const formattedDate = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}`;
 
-                          const formattedDate = new Date(date)
-                            .toLocaleDateString("en-GB")
-                            .replace(/\//g, "/");
-
+                          const formattedDate = Utils.dateDisplay(date)
+                          
                           function extractTimeFromDate(dateString, locale) {
                             const date = new Date(dateString);
                             return date.toLocaleTimeString(locale, {

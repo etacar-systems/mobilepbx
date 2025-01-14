@@ -155,7 +155,7 @@ function MessageShow({
       return t("Yesterday");
     } else {
       const options = { month: "short", day: "numeric" };
-      return new Date(messageDate).toLocaleDateString(undefined, options);
+      return Utils.dateDisplay(new Date(messageDate));
     }
   };
   const { t } = useTranslation();

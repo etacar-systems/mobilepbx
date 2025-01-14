@@ -37,7 +37,7 @@ const TimeLable = ({ timeFormate, lastMessageTime, todaytoTime, message }) => {
         setTimeFormatted(moment(formattedDate, dateFormate).format("D MMM"));
       } else {
         setTimeFormatted(
-          moment(formattedDate, dateFormate).format("D MMM YYYY")
+          Utils.dateDisplay(now)
         );
       }
     } else {
