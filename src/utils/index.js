@@ -55,6 +55,11 @@ class Utils {
     const timeOptions = { hour: "2-digit", minute: "2-digit" }; // Options to exclude seconds
     return date.toLocaleTimeString(undefined, timeOptions);
   };
+
+  // return DD.MM.YYYY date format
+  static dateDisplay = (date) => {
+    return date.toLocaleDateString("en-GB").replace(/\//g, ".");
+  };
 }
 
 export default Utils;
