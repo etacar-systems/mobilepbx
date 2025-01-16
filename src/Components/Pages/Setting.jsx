@@ -70,6 +70,7 @@ export default function Setting() {
   const uid = Cookies.get("User_id");
   const role = Cookies.get("role");
   const domain_uuid = Cookies.get("domain_uuid");
+  const user_extension = Cookies.get("user_extension");
   let Token = Cookies.get("Token");
   const [message, setMessage] = useState("");
   const maxLength = 160;
@@ -111,6 +112,7 @@ export default function Setting() {
       const data = {
         cid: cid,
         domain_uuid: domain_uuid,
+        user_extension: user_extension,
       };
       dispatch(
         postapiAll({

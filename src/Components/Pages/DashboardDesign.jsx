@@ -302,7 +302,7 @@ function DashboardDesign() {
   );
 
   const multilinechart = {
-    labels: missedCalledData?.map((item) => item.key),
+    labels: missedCalledData?.map((item) => item.key.replaceAll("/",".")),
     datasets: [
       {
         label: "Missed",

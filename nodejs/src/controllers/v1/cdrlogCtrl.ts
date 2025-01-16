@@ -138,11 +138,9 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
       is_deleted: 0,
     });
 
-    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${
-      page || ""
-    }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${
-      end_date || ""
-    }&extension=${extensionDetail?.extension_uuid || ""}`;
+    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${page || ""
+      }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
+      }&extension=${extensionDetail?.extension_uuid || ""}`;
     // console.log(data,newParamString)
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -275,13 +273,11 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${
-        direction || ""
-      }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""
+        }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${
-        extension || ""
-      }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
+        }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
@@ -512,7 +508,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
     const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf('day').toDate(); // Start of day in the timezone
     const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf('day').toDate(); // End of day in the timezone
-    console.log("startDateInTimeZone",start_date, startDateInTimeZone, endDateInTimeZone, countries, timezone);
+    console.log("startDateInTimeZone", start_date, startDateInTimeZone, endDateInTimeZone, countries, timezone);
 
     let api_config = {
       method: "get",
@@ -581,6 +577,13 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
             },
             {
               destination_number: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            //new 
+            {
+              status: {
                 $regex: search,
                 $options: "i",
               },

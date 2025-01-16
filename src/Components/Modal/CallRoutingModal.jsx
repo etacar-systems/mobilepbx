@@ -297,7 +297,8 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
       if (timeConditionID) {
         setFormData({
           timename: editsvalues?.name,
-          extension: editsvalues?.extension,
+          extension: user_extension,
+          // extension: editsvalues?.extension,
           description: editsvalues?.description,
           selectFilter: editsvalues?.dialplan_action,
           selectFilter1: editsvalues?.dialplan_anti_action,
@@ -374,7 +375,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
     if (validateForm()) {
       const listvalues = {
         name: formData.timename,
-        extension: formData.extension,
+        extension: user_extension,
         timecondition_enabled: "true",
         description: formData.description,
         order: "500",
@@ -629,7 +630,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
 
   return (
     <>
-      {optionValue != "Office hours" ? (
+      {optionValue != t("Office hours") ? (
         <Modal show={show} size="lg">
           <div className="new-dial">
             <div
@@ -959,8 +960,8 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
               <div className="d-flex align-items-center justify-content-between add_new_num">
                 <h6>
                   {timeConditionID == null
-                    ? "Add time condition"
-                    : "Edit time condition"}
+                    ? t("Add time condition")
+                    : t("Edit time condition")}
                 </h6>
                 {/* <h6>{header}</h6> */}
                 <Closeicon width={23} onClick={handleClose} height={23} />
@@ -1036,7 +1037,8 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
                         aria-describedby="basic-addon1"
                         className="search-bg"
                         name="extension"
-                        value={formData.extension || ""}
+                        value={user_extension || ""}
+                        // value={formData.extension || ""}
                         onChange={handleChange}
                         // onKeyPress={handleKeyPress}
                       />

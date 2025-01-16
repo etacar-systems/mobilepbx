@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import Loader from "../Loader";
 import { Category } from "../ConstantConfig";
 import CustomDropDown from "../CustomDropDown";
+import Utils from "../../utils";
 
 function CallDetailDashboard({
   activeKey,
@@ -53,14 +54,14 @@ function CallDetailDashboard({
   const [timezone, setTimezone] = useState();
 
   const convertUtcToTimezone = (utcDate, timeZone) => {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat("en-US", {
       timeZone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     }).format(new Date(utcDate));
   };
 
@@ -142,7 +143,7 @@ function CallDetailDashboard({
         setFetchData(data);
         setdashboartdata(data?.cdr_list);
         setSortedColumn("");
-        setTimezone(data?.timezone)
+        setTimezone(data?.timezone);
       }
     });
   }, [searchTerm, select, currentPage, filter, Role, Extensiontype, Direction]);
@@ -430,14 +431,12 @@ function CallDetailDashboard({
                             )}:${String(seconds % 60).padStart(2, "0")}`;
                           const formattedTime = formatTime(row?.duration);
                           const date = new Date(row?.start_stamp);
-                            console.log("date",date);
-                            
+                          console.log("date", date);
+
                           //new
                           // const formattedDate = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}`;
 
-                          const formattedDate = new Date(date)
-                            .toLocaleDateString("en-GB")
-                            .replace(/\//g, "/");
+                          const formattedDate = Utils.dateDisplay(date);
 
                           function extractTimeFromDate(dateString, locale) {
                             const date = new Date(dateString);
@@ -446,7 +445,7 @@ function CallDetailDashboard({
                               minute: "2-digit",
                               second: "2-digit",
                               timeZone: timezone,
-                              // hourCycle: "h12",
+                              hourCycle: "h24",
                             });
                           }
                           return (
@@ -456,12 +455,17 @@ function CallDetailDashboard({
                                 className="table-new new-data-table"
                                 style={{ marginBottom: "3px !important" }}
                               >
+                                {/* changed */}
                                 <td
                                   className="table-new table-custom-body-td"
-                                  style={{ width: "21%" }}
+                                  style={{
+                                    width: "21%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
                                 >
-                                  {console.log("dasasa",row?.start_stamp)}
                                   {formattedDate}{" "}
+                                  {/* {Utils.timeDisplay(new Date(row?.start_stamp))} */}
                                   {extractTimeFromDate(row?.start_stamp)}
                                 </td>
 
@@ -544,7 +548,7 @@ function CallDetailDashboard({
                                   </div>
                                 </td>
 
-                                {/* new */}
+                                {/* new / remove it */}
                                 <td
                                   // className="table-new table-custom-body-td new-calltype"
                                   className="table-new table-custom-body-td"

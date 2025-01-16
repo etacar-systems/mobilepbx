@@ -192,27 +192,27 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               $cond: {
                 if: {
                   $and: [
-                    { $eq: ["$status", "answered"] }, // Check if status is "answered"
-                    { $eq: ["$leg", "b"] } // Check if leg is "a"
+                    // { $eq: ["$status", "answered"] }, // Check if status is "answered"
+                    { $eq: ["$leg", "a"] } // Check if leg is "a"
                   ]
                 },
                 then: {
                   // If status is "answered", perform the calculation
-                  $subtract: [
-                    "$duration", // Original duration in seconds
+                  // $subtract: [
+                  //   "$duration", // Original duration in seconds
+                  // {
+                  $divide: [
+                    // Convert the difference from milliseconds to seconds
                     {
-                      $divide: [
-                        // Convert the difference from milliseconds to seconds
-                        {
-                          $subtract: [
-                            { $toDate: "$answer_stamp" }, // Convert answer_stamp to milliseconds
-                            { $toDate: "$start_stamp" }, // Convert start_stamp to milliseconds
-                          ],
-                        },
-                        1000, // Convert milliseconds to seconds
+                      $subtract: [
+                        { $toDate: "$answer_stamp" }, // Convert answer_stamp to milliseconds
+                        { $toDate: "$start_stamp" }, // Convert start_stamp to milliseconds
                       ],
                     },
+                    1000, // Convert milliseconds to seconds
                   ],
+                  // },
+                  // ],
                 },
                 else: null, // If status is not "answered", set final_duration_sec as null
               },
@@ -235,7 +235,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             },
             avg_response_sec: {
               $sum: {
-                $cond: [{ $eq: ["$leg", "b"] }, "$response_time_sec", null],
+                $cond: [{ $eq: ["$leg", "a"] }, "$response_time_sec", null],
               },
             },
             today_total_calls: {
@@ -1760,7 +1760,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         {
           $lookup: {
             from: "cdrs",
-            let: { 
+            let: {
               domain_uuid: "$company.domain_uuid",
               start_date: startDateInTimeZone, // Replace with your actual start_date
               end_date: endDateInTimeZone // Replace with your actual end_date
@@ -1783,7 +1783,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             as: "cdrs_logs",
           },
         },
-        
+
         // Step 5: Unwind cdrs_logs with preserveNullAndEmptyArrays
         {
           $unwind: {
@@ -1914,7 +1914,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           },
         },
       ]);
-      
+
 
       if (
         // ringroup_api_data?.data?.data ||
@@ -2341,8 +2341,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             $sort: { _id: 1 },
           },
         ]);
-
-
 
         const dynamicGrouping = (() => {
           if (dateGroupFormat === "%m/%Y") return getMonthsInRange(start_date, end_date);

@@ -482,6 +482,9 @@ const getTimeConditionById = async (
     });
   } catch (error) { }
 };
+
+// NEW
+
 const getTimeConditionOption = async (
   req: Request,
   res: Response,
@@ -497,13 +500,15 @@ const getTimeConditionOption = async (
         message: config.RESPONSE.MESSAGE.COMPANY_ERROR,
       });
     }
-    const { cid, domain_uuid } = req.body;
+    const { cid, domain_uuid, user_extension } = req.body;
 
     const resultObj = await TimeCondition.findOne({
       cid: cid,
       domain_id: domain_uuid,
+      extension: user_extension,
       is_deleted: 0
     })
+
     // if (!mongoose.Types.ObjectId.isValid(id)) {
     //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
     //     success: 0,
