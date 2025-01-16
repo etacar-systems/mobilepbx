@@ -58,7 +58,7 @@ class Utils {
 
   // return DD.MM.YYYY date format
   static dateDisplay = (date) => {
-    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+    return date.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 }
 
