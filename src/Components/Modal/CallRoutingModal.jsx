@@ -1031,7 +1031,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
                     </Form.Label>
                     <InputGroup className="">
                       <Form.Control
-                        disabled={timeConditionID != null}
+                        disabled
                         placeholder=""
                         aria-label="Username"
                         aria-describedby="basic-addon1"

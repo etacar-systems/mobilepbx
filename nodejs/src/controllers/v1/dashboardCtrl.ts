@@ -189,33 +189,54 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             //   ],
             // },
             response_time_sec: {
+              // $cond: {
+              //   if: {
+              //     $and: [
+              //       // { $eq: ["$status", "answered"] }, // Check if status is "answered"
+              //       { $eq: ["$leg", "a"] } // Check if leg is "a"
+              //     ]
+              //   },
+              //   then: {
+              //     // If status is "answered", perform the calculation
+              //     // $subtract: [
+              //     //   "$duration", // Original duration in seconds
+              //     // {
+              //     $divide: [
+              //       // Convert the difference from milliseconds to seconds
+              //       {
+              //         $subtract: [
+              //           { $toDate: "$answer_stamp" }, // Convert answer_stamp to milliseconds
+              //           { $toDate: "$start_stamp" }, // Convert start_stamp to milliseconds
+              //         ],
+              //       },
+              //       1000, // Convert milliseconds to seconds
+              //     ],
+              //     // },
+              //     // ],
+              //   },
+              //   else: null, // If status is not "answered", set final_duration_sec as null
+              // },
               $cond: {
                 if: {
                   $and: [
-                    // { $eq: ["$status", "answered"] }, // Check if status is "answered"
-                    { $eq: ["$leg", "a"] } // Check if leg is "a"
+                    { $ne: ["$answer_stamp", null] },
+                    { $ne: ["$start_stamp", null] },
+                    { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] } // Ensure valid range
                   ]
                 },
                 then: {
-                  // If status is "answered", perform the calculation
-                  // $subtract: [
-                  //   "$duration", // Original duration in seconds
-                  // {
                   $divide: [
-                    // Convert the difference from milliseconds to seconds
                     {
                       $subtract: [
-                        { $toDate: "$answer_stamp" }, // Convert answer_stamp to milliseconds
-                        { $toDate: "$start_stamp" }, // Convert start_stamp to milliseconds
-                      ],
+                        { $toDate: "$answer_stamp" },
+                        { $toDate: "$start_stamp" }
+                      ]
                     },
-                    1000, // Convert milliseconds to seconds
-                  ],
-                  // },
-                  // ],
+                    1000 // Convert milliseconds to seconds
+                  ]
                 },
-                else: null, // If status is not "answered", set final_duration_sec as null
-              },
+                else: 0 // Set waiting time to 0 if invalid range
+              }
             },
           },
         },
