@@ -42,7 +42,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     let start_date: any = req.query.start_date;
     let end_date: any = req.query.end_date;
-    let call_matrics_type: any = req.query.call_matrics_type;
+    let call_matrics_type: any = req?.query?.call_matrics_type;
+    let call_matrics_type2: any = req?.query?.call_matrics_type2;
     let type_value: any = ["today", "week", "month", "year"];
     const countries: any = companyDetail?.company_country;
     // const timezone = "Asia/Dubai";
@@ -1434,7 +1435,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         throw error;
       }
     }
-    console.log("-----getMonthlyCallMetrics------");
+
+    // console.log("-----getMonthlyCallMetrics------");
     if (call_matrics_type === "today") {
       // Create the pipeline
 
@@ -1510,7 +1512,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       const pipelineweek = createWeeklyAggregation(getFormatedDate(new Date()));
 
       const weekresult: WeeklyData[] = await CdrModel.aggregate(pipelineweek);
-      console.log(weekresult);
+      // console.log(weekresult);
 
       // Call the function to fill in missing days and increment the date
       const result = createWeeklyAggregationFormat(weekresult);
@@ -2092,47 +2094,222 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       try {
 
 
-        const getHoursInRange = (start: string | Date, end: string | Date) => {
-          const result = [];
+        // const getHoursInRange = (start: string | Date, end: string | Date) => {
+        //   const result = [];
 
-          const startDate = new Date(start);
+        //   const startDate = new Date(start);
+        //   const year = startDate.getFullYear();
+        //   const month = String(startDate.getMonth() + 1).padStart(2, "0");
+        //   const day = String(startDate.getDate()).padStart(2, "0");
+        //   // let hourstring = String(startDate.getUTCHours()).padStart(2, "0");
+        //   // let hours = Number(hourstring);
+        //   // console.log("hours", startDate, hours);
+
+        //   const baseDate = `${year}-${month}-${day}`;
+
+        //   for (let hour = 0; hour < 24; hour++) {
+
+        //     const hourString = hour.toString().padStart(2, "0");
+        //     result.push(`${hourString}`);
+        //     // result.push(`${hours}`);
+        //     // hours = hours + 1;
+        //     // if (hours == 24) {
+        //     //   hours = 0;
+        //     // }
+        //   }
+
+        //   return result;
+        // };
+
+        // const getDaysInRange = (start: string | Date, end: string | Date) => {
+        //   const result = [];
+
+        //   const startDate = new Date(start);
+        //   const endDate = new Date(end);
+
+        //   let currentDate = new Date(
+        //     startDate.getFullYear(),
+        //     startDate.getMonth(),
+        //     startDate.getDate()
+        //   );
+        //   const endDateObj = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+        //   while (currentDate <= endDateObj) {
+        //     const day = currentDate.getDate().toString().padStart(2, "0");
+        //     const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+        //     const year = currentDate.getFullYear();
+
+        //     result.push(`${day}/${month}/${year}`);
+        //     currentDate.setDate(currentDate.getDate() + 1);
+        //   }
+
+        //   return result;
+        // };
+
+        // const getMonthsInRange = (start: string | Date, end: string | Date) => {
+        //   const startDate = new Date(start);
+        //   const endDate = new Date(end);
+        //   // console.log("startDate", startDate, endDate);
+        //   // console.log("startDate", startDate.getMonth() + 1, endDate.getMonth() + 1);
+
+        //   const months = [];
+        //   while (startDate <= endDate) {
+        //     // const monthKey = startDate.toISOString().slice(0, 7);
+        //     const monthKey = `${startDate.getMonth() + 1}`.padStart(2, '0') + '/' + startDate.getFullYear();
+
+        //     months.push(monthKey);
+        //     startDate.setDate(1);
+        //     startDate.setMonth(startDate.getMonth() + 1);
+        //   }
+        //   console.log("months", months);
+
+
+        //   return months;
+        // };
+
+        // // Convert `start_date` and `end_date` to ISO strings if needed
+        // const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
+        // const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
+
+
+        // const dateDifferenceInDays =
+        //   (endDateInTimeZone.getTime() - startDateInTimeZone.getTime()) / (1000 * 60 * 60 * 24);
+        // // (new Date(end_date).getTime() - new Date(start_date).getTime()) / (1000 * 60 * 60 * 24);
+
+        // const dateGroupFormat = (() => {
+        //   if (!start_date || !end_date) return "%d/%m/%Y %H:00";
+        //   if (dateDifferenceInDays >= 30) return "%m/%Y";
+        //   if (dateDifferenceInDays >= 1) return "%d/%m/%Y";
+        //   return "%H";
+        //   // return "%Y-%m-%d %H:00";
+        // })();
+
+        // const missed_data = await CdrModel.aggregate([
+        //   {
+        //     $match: {
+        //       domain_uuid: companyDetail?.domain_uuid,
+        //       start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
+        //       leg: "a",
+        //     },
+        //   },
+        //   {
+        //     $project: {
+        //       missed_number: {
+        //         $cond: { if: { $ne: ["$status", "answered"] }, then: "$caller_id_number", else: null },
+        //       },
+        //       group_key: {
+        //         $dateToString: {
+        //           format: dateGroupFormat,
+        //           date: { $toDate: "$start_stamp" },
+        //           timezone: timezone,
+        //         },
+        //       },
+        //       waiting_time: {
+        //         $cond: {
+        //           if: {
+        //             $and: [
+        //               { $ne: ["$answer_stamp", null] },
+        //               { $ne: ["$start_stamp", null] },
+        //               { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] } // Ensure valid range
+        //             ]
+        //           },
+        //           then: {
+        //             $divide: [
+        //               {
+        //                 $subtract: [
+        //                   { $toDate: "$answer_stamp" },
+        //                   { $toDate: "$start_stamp" }
+        //                 ]
+        //               },
+        //               1000 // Convert milliseconds to seconds
+        //             ]
+        //           },
+        //           else: 0 // Set waiting time to 0 if invalid range
+        //         }
+        //       },
+
+        //       status: 1, // Include status for condition checks
+        //     },
+        //   },
+        //   {
+        //     $group: {
+        //       _id: "$group_key",
+        //       missed_calls: {
+        //         $push: {
+        //           $cond: { if: { $ne: ["$status", "answered"] }, then: "$missed_number", else: null },
+        //         },
+        //       },
+        //       count: {
+        //         $sum: {
+        //           $cond: { if: { $ne: ["$status", "answered"] }, then: 1, else: 0 },
+        //         },
+        //       },
+        //       total_count: { $sum: 1 },
+        //       total_waiting_time: { $sum: "$waiting_time" }, // Sum of calculated waiting times
+        //     },
+        //   },
+        //   {
+        //     $addFields: {
+        //       average_waiting_time: {
+        //         $cond: {
+        //           if: { $eq: ["$total_count", 0] },
+        //           then: 0,
+        //           else: { $round: [{ $divide: ["$total_waiting_time", "$total_count"] }, 2] },
+        //         },
+        //       },
+        //     },
+        //   },
+        //   {
+        //     $sort: { _id: 1 },
+        //   },
+        // ]);
+
+        // const dynamicGrouping = (() => {
+        //   if (dateGroupFormat === "%m/%Y") return getMonthsInRange(start_date, end_date);
+        //   if (dateGroupFormat === "%d/%m/%Y") return getDaysInRange(start_date, end_date);
+        //   return getHoursInRange(startDateInTimeZone, endDateInTimeZone);
+        // })();
+
+        // const result = dynamicGrouping.map((key) => {
+        //   const record = missed_data.find((item: any) => item._id === key);
+        //   return {
+        //     key,
+        //     missed_calls: record ? record.missed_calls : [],
+        //     count: record ? record.count : 0,
+        //     total_count: record ? record.total_count : 0,
+        //     total_waiting_time: record ? record.total_waiting_time : 0,
+        //     average_waiting_time: record ? record.average_waiting_time : 0,
+        //   };
+        // });
+
+        // dashboard_response_obj.missed_call_new = result;
+
+
+
+        // Helper functions to get ranges
+        const getHoursInRange = (date: any) => {
+          const result = [];
+          const startDate = new Date(date);
           const year = startDate.getFullYear();
           const month = String(startDate.getMonth() + 1).padStart(2, "0");
           const day = String(startDate.getDate()).padStart(2, "0");
-          // let hourstring = String(startDate.getUTCHours()).padStart(2, "0");
-          // let hours = Number(hourstring);
-          // console.log("hours", startDate, hours);
-
-          const baseDate = `${year}-${month}-${day}`;
 
           for (let hour = 0; hour < 24; hour++) {
-
             const hourString = hour.toString().padStart(2, "0");
+            // console.log("keykey",hourString);
+
             result.push(`${hourString}`);
-            // result.push(`${hours}`);
-            // hours = hours + 1;
-            // if (hours == 24) {
-            //   hours = 0;
-            // }
           }
 
           return result;
         };
 
-        const getDaysInRange = (start: string | Date, end: string | Date) => {
+        const getDaysInRange = (start: any, end: any) => {
           const result = [];
-
-          const startDate = new Date(start);
+          let currentDate = new Date(start);
           const endDate = new Date(end);
 
-          let currentDate = new Date(
-            startDate.getFullYear(),
-            startDate.getMonth(),
-            startDate.getDate()
-          );
-          const endDateObj = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-
-          while (currentDate <= endDateObj) {
+          while (currentDate <= endDate) {
             const day = currentDate.getDate().toString().padStart(2, "0");
             const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
             const year = currentDate.getFullYear();
@@ -2144,43 +2321,227 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           return result;
         };
 
-        const getMonthsInRange = (start: string | Date, end: string | Date) => {
+        const getMonthsInRange = (start: any, end: any) => {
+          const result = [];
           const startDate = new Date(start);
           const endDate = new Date(end);
-          console.log("startDate", startDate, endDate);
-          console.log("startDate", startDate.getMonth() + 1, endDate.getMonth() + 1);
 
-          const months = [];
           while (startDate <= endDate) {
-            // const monthKey = startDate.toISOString().slice(0, 7);
-            const monthKey = `${startDate.getMonth() + 1}`.padStart(2, '0') + '/' + startDate.getFullYear();
+            const month = (startDate.getMonth() + 1).toString().padStart(2, "0");
+            const year = startDate.getFullYear();
 
-            months.push(monthKey);
-            startDate.setDate(1);
+            result.push(`${month}/${year}`);
             startDate.setMonth(startDate.getMonth() + 1);
           }
-          console.log("months", months);
 
-
-          return months;
+          return result;
         };
 
-        // Convert `start_date` and `end_date` to ISO strings if needed
-        const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
-        const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
+        const getStartAndEndDatesForTab = (tab: any) => {
+          const now = new Date();
+          let startDate, endDate;
+
+          switch (tab) {
+            case "today":
+              startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+              endDate = new Date(startDate);
+              endDate.setHours(23, 59, 59, 999);
+              break;
+
+            case "week":
+              // const startOfWeek = new Date(now);
+              // startOfWeek.setDate(now.getDate() - now.getDay());
+              // startOfWeek.setHours(0, 0, 0, 0);
+
+              // const endOfWeek = new Date(startOfWeek);
+              // endOfWeek.setDate(startOfWeek.getDate() + 6);
+              // endOfWeek.setHours(23, 59, 59, 999);
+
+              // startDate = startOfWeek;
+              // endDate = endOfWeek;
+              // break;
+
+              const startOfWeek = new Date(now);
+              const day = (now.getDay() + 6) % 7; // Adjust to make Monday the first day
+              startOfWeek.setDate(now.getDate() - day);
+              startOfWeek.setHours(0, 0, 0, 0);
+
+              const endOfWeek = new Date(startOfWeek);
+              endOfWeek.setDate(startOfWeek.getDate() + 6);
+              endOfWeek.setHours(23, 59, 59, 999);
+
+              startDate = startOfWeek;
+              endDate = endOfWeek;
+              break;
+            case "month":
+              startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+              endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+              endDate.setHours(23, 59, 59, 999);
+              break;
+
+            case "year":
+              startDate = new Date(now.getFullYear(), 0, 1);
+              endDate = new Date(now.getFullYear(), 11, 31);
+              endDate.setHours(23, 59, 59, 999);
+              break;
+
+            default:
+              throw new Error("Invalid tab selected");
+          }
+          console.log("start", startDate, endDate);
+
+          return { startDate, endDate };
+        };
 
 
-        const dateDifferenceInDays =
-          (endDateInTimeZone.getTime() - startDateInTimeZone.getTime()) / (1000 * 60 * 60 * 24);
-        // (new Date(end_date).getTime() - new Date(start_date).getTime()) / (1000 * 60 * 60 * 24);
+        // Main function
+        const getMissedCallsData = async (tab: any, timezone: any, companyDetail: any) => {
+          const { startDate, endDate } = getStartAndEndDatesForTab(tab);
 
-        const dateGroupFormat = (() => {
-          if (!start_date || !end_date) return "%d/%m/%Y %H:00";
-          if (dateDifferenceInDays >= 30) return "%m/%Y";
-          if (dateDifferenceInDays >= 1) return "%d/%m/%Y";
-          return "%H";
-          // return "%Y-%m-%d %H:00";
-        })();
+          let dateGroupFormat;
+
+          // Determine grouping format based on the selected tab
+          switch (tab) {
+            case "today":
+              dateGroupFormat = "%H";
+              break;
+            case "week":
+              dateGroupFormat = "%d/%m/%Y";
+              break;
+            case "month":
+              dateGroupFormat = "%d/%m/%Y";
+              break;
+            case "year":
+              dateGroupFormat = "%m/%Y";
+              break;
+            default:
+              throw new Error("Invalid tab selected");
+          }
+
+          // Query for missed calls data
+          const missed_data = await CdrModel.aggregate([
+            {
+              $match: {
+                domain_uuid: companyDetail?.domain_uuid,
+                start_stamp: { $gte: startDate, $lte: endDate },
+                leg: "a",
+              },
+            },
+            {
+              $project: {
+                missed_number: {
+                  $cond: { if: { $ne: ["$status", "answered"] }, then: "$caller_id_number", else: null },
+                },
+                group_key: {
+                  $dateToString: {
+                    format: dateGroupFormat,
+                    date: { $toDate: "$start_stamp" },
+                    timezone: timezone,
+                  },
+                },
+                waiting_time: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $ne: ["$answer_stamp", null] },
+                        { $ne: ["$start_stamp", null] },
+                        { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] }
+                      ]
+                    },
+                    then: {
+                      $divide: [
+                        {
+                          $subtract: [
+                            { $toDate: "$answer_stamp" },
+                            { $toDate: "$start_stamp" }
+                          ]
+                        },
+                        1000
+                      ]
+                    },
+                    else: 0
+                  }
+                },
+                status: 1,
+              },
+            },
+            {
+              $group: {
+                _id: "$group_key",
+                missed_calls: {
+                  $push: {
+                    $cond: { if: { $ne: ["$status", "answered"] }, then: "$missed_number", else: null },
+                  },
+                },
+                count: {
+                  $sum: {
+                    $cond: { if: { $ne: ["$status", "answered"] }, then: 1, else: 0 },
+                  },
+                },
+                total_count: { $sum: 1 },
+                total_waiting_time: { $sum: "$waiting_time" },
+              },
+            },
+            {
+              $addFields: {
+                average_waiting_time: {
+                  $cond: {
+                    if: { $eq: ["$total_count", 0] },
+                    then: 0,
+                    else: { $round: [{ $divide: ["$total_waiting_time", "$total_count"] }, 2] },
+                  },
+                },
+              },
+            },
+            {
+              $sort: { _id: 1 },
+            },
+          ]);
+
+          // Generate dynamic grouping based on the tab
+          let dynamicGrouping;
+          switch (tab) {
+            case "today":
+              dynamicGrouping = getHoursInRange(startDate);
+              break;
+            case "week":
+              dynamicGrouping = getDaysInRange(startDate, endDate);
+              break;
+            case "month":
+              dynamicGrouping = getDaysInRange(startDate, endDate);
+              break;
+            case "year":
+              dynamicGrouping = getMonthsInRange(startDate, endDate);
+              break;
+          }
+
+          // Map the data to the required format
+          const result = dynamicGrouping?.map((key) => {
+            console.log("key", key);
+            const record = missed_data.find((item) => item._id === key);
+            return {
+              key,
+              missed_calls: record ? record.missed_calls : [],
+              count: record ? record.count : 0,
+              total_count: record ? record.total_count : 0,
+              total_waiting_time: record ? record.total_waiting_time : 0,
+              average_waiting_time: record ? record.average_waiting_time : 0,
+            };
+          });
+
+          console.log("missed_data", missed_data);
+          return result;
+        };
+
+
+        const misssed_result = await getMissedCallsData(call_matrics_type2, timezone, companyDetail)
+        // const final_missed_data = {
+        //   missed_called: { misssed_result }
+        // }
+        dashboard_response_obj.missed_call_new = misssed_result
+
+
+        // console.log("Missed Calls Grouped by Dynamic Key:", result);
 
         // const missed_data = await CdrModel.aggregate([
         //   {
@@ -2283,106 +2644,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //   },
         // ]);
 
-        const missed_data = await CdrModel.aggregate([
-          {
-            $match: {
-              domain_uuid: companyDetail?.domain_uuid,
-              start_stamp: { $gte: startDateInTimeZone, $lte: endDateInTimeZone },
-              leg: "a",
-            },
-          },
-          {
-            $project: {
-              missed_number: {
-                $cond: { if: { $ne: ["$status", "answered"] }, then: "$caller_id_number", else: null },
-              },
-              group_key: {
-                $dateToString: {
-                  format: dateGroupFormat,
-                  date: { $toDate: "$start_stamp" },
-                  timezone: timezone,
-                },
-              },
-              waiting_time: {
-                $cond: {
-                  if: {
-                    $and: [
-                      { $ne: ["$answer_stamp", null] },
-                      { $ne: ["$start_stamp", null] },
-                      { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] } // Ensure valid range
-                    ]
-                  },
-                  then: {
-                    $divide: [
-                      {
-                        $subtract: [
-                          { $toDate: "$answer_stamp" },
-                          { $toDate: "$start_stamp" }
-                        ]
-                      },
-                      1000 // Convert milliseconds to seconds
-                    ]
-                  },
-                  else: 0 // Set waiting time to 0 if invalid range
-                }
-              },
 
-              status: 1, // Include status for condition checks
-            },
-          },
-          {
-            $group: {
-              _id: "$group_key",
-              missed_calls: {
-                $push: {
-                  $cond: { if: { $ne: ["$status", "answered"] }, then: "$missed_number", else: null },
-                },
-              },
-              count: {
-                $sum: {
-                  $cond: { if: { $ne: ["$status", "answered"] }, then: 1, else: 0 },
-                },
-              },
-              total_count: { $sum: 1 },
-              total_waiting_time: { $sum: "$waiting_time" }, // Sum of calculated waiting times
-            },
-          },
-          {
-            $addFields: {
-              average_waiting_time: {
-                $cond: {
-                  if: { $eq: ["$total_count", 0] },
-                  then: 0,
-                  else: { $round: [{ $divide: ["$total_waiting_time", "$total_count"] }, 2] },
-                },
-              },
-            },
-          },
-          {
-            $sort: { _id: 1 },
-          },
-        ]);
-
-        const dynamicGrouping = (() => {
-          if (dateGroupFormat === "%m/%Y") return getMonthsInRange(start_date, end_date);
-          if (dateGroupFormat === "%d/%m/%Y") return getDaysInRange(start_date, end_date);
-          return getHoursInRange(startDateInTimeZone, endDateInTimeZone);
-        })();
-
-        const result = dynamicGrouping.map((key) => {
-          const record = missed_data.find((item: any) => item._id === key);
-          return {
-            key,
-            missed_calls: record ? record.missed_calls : [],
-            count: record ? record.count : 0,
-            total_count: record ? record.total_count : 0,
-            total_waiting_time: record ? record.total_waiting_time : 0,
-            average_waiting_time: record ? record.average_waiting_time : 0,
-          };
-        });
-
-        dashboard_response_obj.missed_call_new = result;
-        console.log("Missed Calls Grouped by Dynamic Key:", result);
       } catch (err) {
         console.error("Error fetching missed calls:", err);
       }
