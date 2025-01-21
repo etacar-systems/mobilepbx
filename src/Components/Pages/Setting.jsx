@@ -22,6 +22,7 @@ import config from "../../config";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { settingUpdate } from "../../Redux/Reducers/DataServices";
+import { useNavigate } from "react-router-dom";
 
 export default function Setting() {
   const { t } = useTranslation();
@@ -553,9 +554,14 @@ export default function Setting() {
   };
   const [optionValue, setOptionValue] = useState();
 
+  const navigate = useNavigate();
   const handleOptionClick = (value) => {
+    if (value == t("Office hours")) {
+      navigate("/timeConditionOptions");
+    } else {
     setShow(true);
     setOptionValue(value);
+    }
   };
 
   return (

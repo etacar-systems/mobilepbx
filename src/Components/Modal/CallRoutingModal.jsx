@@ -79,13 +79,13 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
   };
 
   // -------------------------------------------------------------------------new--------------------------------------------------------------------------
-  const user_extension = Cookies.get("user_extension");
+  
+  // const user_extension = Cookies.get("user_extension");
   const [errors, setErrors] = useState({});
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [dropdownSets, setDropdownSets] = useState([]);
 
-  // console.log("user_extension", user_extension);
   const removeDropdownSet = (index) => {
     setFormData((prevFormData) => {
       const updatedTimeConditionData = prevFormData.timecondition_data.filter(
@@ -297,7 +297,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
       if (timeConditionID) {
         setFormData({
           timename: editsvalues?.name,
-          extension: user_extension,
+          extension: editsvalues?.extension,
           // extension: editsvalues?.extension,
           description: editsvalues?.description,
           selectFilter: editsvalues?.dialplan_action,
@@ -375,7 +375,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
     if (validateForm()) {
       const listvalues = {
         name: formData.timename,
-        extension: user_extension,
+        extension: formData.extension,
         timecondition_enabled: "true",
         description: formData.description,
         order: "500",
@@ -1031,13 +1031,13 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
                     </Form.Label>
                     <InputGroup className="">
                       <Form.Control
-                        disabled
+                        // disabled
                         placeholder=""
                         aria-label="Username"
                         aria-describedby="basic-addon1"
                         className="search-bg"
                         name="extension"
-                        value={user_extension || ""}
+                        value={formData.extension || ""}
                         // value={formData.extension || ""}
                         onChange={handleChange}
                         // onKeyPress={handleKeyPress}

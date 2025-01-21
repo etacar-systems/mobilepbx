@@ -52,6 +52,7 @@ function DashboardDesign() {
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState("");
   const [activeTabs, setActiveTabs] = useState("today");
+  const [activeTabs2, setActiveTabs2] = useState("today");
   const [tableHight, setTableHight] = useState(window.innerHeight - 500);
   const [show, setShow] = useState(false);
   const formatDate = (date) => {
@@ -83,7 +84,7 @@ function DashboardDesign() {
   const [endDate, setEndDate] = useState(formatDate(endOfDay));
   const [ringDropdown, setRingDropDown] = useState([]);
   const [dashboardData, setDashboardData] = useState([]);
-  console.log(dashboardData, "dashboardDatacheck");
+  // console.log(dashboardData, "dashboardDatacheck");
   const [selectType, setSelectType] = useState({
     id: "",
     display: "",
@@ -131,7 +132,7 @@ function DashboardDesign() {
           formattedDate
         )}&end_date=${encodeURIComponent(
           formattedEndDate
-        )}&call_matrics_type=${activeTabs}`,
+        )}&call_matrics_type=${activeTabs}&call_matrics_type2=${activeTabs2}`,
         Token: Token,
         urlof: config.DASHBOARD_KEY.GET,
       })
@@ -139,8 +140,9 @@ function DashboardDesign() {
       console.log("responsecheck", response);
       setDashboardData(response?.payload?.response?.data || {});
     });
-  }, [dispatch, activeTabs, filter]);
+  }, [dispatch, activeTabs, activeTabs2, filter]);
 
+  
   useEffect(() => {
     dispatch(
       getapiAll({
@@ -281,6 +283,10 @@ function DashboardDesign() {
     setActiveTabs(key);
   };
 
+  const handleSelects2 = (key) => {
+    setActiveTabs2(key);
+  };
+
   let totalMissedCalled = 0;
   let totalCalled = 0;
   let totalAvgWaitTime = 0;
@@ -302,7 +308,7 @@ function DashboardDesign() {
   );
 
   const multilinechart = {
-    labels: missedCalledData?.map((item) => item.key.replaceAll("/",".")),
+    labels: missedCalledData?.map((item) => item.key.replaceAll("/", ".")),
     datasets: [
       {
         label: "Missed",
@@ -421,6 +427,8 @@ function DashboardDesign() {
             <Col lg={8} className="p-0">
               <div className="multilinechart">
                 <MissedCallDashboard
+                  activeTabs2={activeTabs2}
+                  handleSelects2={handleSelects2}
                   multilinechart={multilinechart}
                   totalMissedCalled={totalMissedCalled}
                   totalCalled={totalCalled}

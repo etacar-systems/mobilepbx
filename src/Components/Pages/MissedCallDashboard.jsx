@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Card } from "react-bootstrap";
+import { Card, Col, Nav, Row } from "react-bootstrap";
 import MultiLineChart from "./MultiLineChart";
 import Modal from "react-bootstrap/Modal";
 import { ReactComponent as Bigsize } from "../../Assets/Icon/biggersize.svg";
 import { useTranslation } from "react-i18next";
 function MissedCallDashboard({
   // missedCalledData,
+  activeTabs2,
+  handleSelects2,
   totalCalled,
   multilinechart,
   targetRef,
@@ -16,7 +18,7 @@ function MissedCallDashboard({
 }) {
   const { t } = useTranslation();
   const [show, setshow] = useState(false);
-
+  // console.log("Math", Math.round(totalAvgWaitTime / totalCalled));
   // let todayMissedCall = 0,
   //   totalWaitingTime = 0;
   const openmodal = () => {
@@ -36,6 +38,41 @@ function MissedCallDashboard({
         style={{ width: "100%", height: "500px" }}
         ref={targetRef}
       >
+        <Row>
+          <Col offset={1} xs={12} className="">
+            <div
+              className="d-flex justify-content-between align-items-center"
+              style={{ width: "100%" }}
+            >
+              <Nav
+                className="nav nav-tabs3 mb-2"
+                activeKey={activeTabs2}
+                onSelect={handleSelects2}
+              >
+                <Nav.Item>
+                  <Nav.Link eventKey="today" className="nav-link2">
+                    {t("Today")}
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="week" className="nav-link2">
+                    {t("Week")}
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="month" className="nav-link2">
+                    {t("Month")}
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="year" className="nav-link2">
+                    {t("Year")}
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </div>
+          </Col>
+        </Row>
         <div className="d-flex justify-content-start mb-3">
           <div className="mr-5">
             <label className="mb-0 header-size missed-header">
@@ -57,7 +94,7 @@ function MissedCallDashboard({
               {t("Average waiting time")}
             </label>
             <h4 className="font-h4 missed-header">
-              {totalMissedCalled != 0
+              {totalCalled != 0 //changed
                 ? Math.round(totalAvgWaitTime / totalCalled)
                 : 0}{" "}
               {/* {missedCalledData &&

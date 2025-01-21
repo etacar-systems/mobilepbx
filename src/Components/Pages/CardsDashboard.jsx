@@ -52,7 +52,7 @@ function CardsDashboard({ progress, handleProgressClick, progress1, handleProgre
                   // Totalcall={data?.call_comparison?.answered_call + data?.call_comparison?.local}
                   // Answeredcall={data?.call_comparison.answered_call}
                   // Answeredcall={data?.call_comparison?.answered_call}
-                  Totalcall={data?.total_answered + data?.total_local}
+                  Totalcall={data?.total_answered + data?.total_missed}
                   Answeredcall={data?.total_answered}
                   Title1={t("Answered")}
                   Title2={t("Called")}

@@ -50,6 +50,7 @@ import Integrations from "./Components/Pages/Integrations";
 import VideoUpload from "./Components/Pages/VideoUpload";
 import GoogleRedirect from "./Components/Calendar/GoogleRedirect";
 import CookiesPage from "./Components/Pages/CookiesPage";
+import TimeConditionOptions from "./Components/Admin/TimeConditionOptions";
 
 const rolePaths = {
   1: [
@@ -63,7 +64,8 @@ const rolePaths = {
     "/dashboard",
     "/setting",
     "/google/redirect",
-    "/cookies"
+    "/cookies",
+    "/timeConditionOptions"
   ],
   2: [
     "/dashboard",
@@ -329,6 +331,14 @@ function App() {
               element={
                 <Protected>
                   <Webphone />
+                </Protected>
+              }
+            />
+            <Route
+              path="/timeConditionOptions"
+              element={
+                <Protected>
+                  <TimeConditionOptions />
                 </Protected>
               }
             />

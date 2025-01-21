@@ -52,9 +52,23 @@ const ProgressCircle = ({
       </svg>
       {/* changed */}
       {pragressLable == "progress-circle__label1 chart-value progressfont2" ? (
-        <div className={pragressLable}>{totalUnits - Answeredcall || 0}</div>
-      ) : (
         <div className={pragressLable}>{totalUnits || 0}</div>
+      ) : (
+        <div
+          className="progress-circle__label1 chart-value"
+          style={{
+            color:
+              totalUnits - Answeredcall > 0
+                ? "var(--main-red-color)"
+                : "var(--main-green-color)",
+            fontSize: "24px",
+            fontWeight: "600",
+          }}
+        >
+          {totalUnits - Answeredcall === 0
+            ? Answeredcall || 0
+            : totalUnits - Answeredcall || 0}
+        </div>
       )}
       {/* <div className={pragressLable}>{totalUnits || 0}</div> */}
 
