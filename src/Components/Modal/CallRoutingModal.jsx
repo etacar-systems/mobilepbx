@@ -33,11 +33,15 @@ import { toast } from "react-toastify";
 
 function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
   const { t } = useTranslation();
+  const user_extension = Cookies.get("user_extension");
+  const role_type = Cookies.get("role");
+  // console.log("user_extension", role_type, user_extension);
+
   const [openDropdown, setOpenDropdown] = useState(null);
   const toggleDropdown = (dropdown) => {
     setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
   };
-  // console.log("timeConditionID", timeConditionID);
+  console.log("timeConditionID", timeConditionID);
 
   const sliderRef = useRef(null);
   const [sliderValue, setSliderValue] = useState(30);
@@ -79,8 +83,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
   };
 
   // -------------------------------------------------------------------------new--------------------------------------------------------------------------
-  
-  // const user_extension = Cookies.get("user_extension");
+
   const [errors, setErrors] = useState({});
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -297,7 +300,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
       if (timeConditionID) {
         setFormData({
           timename: editsvalues?.name,
-          extension: editsvalues?.extension,
+          extension: user_extension,
           // extension: editsvalues?.extension,
           description: editsvalues?.description,
           selectFilter: editsvalues?.dialplan_action,
@@ -322,18 +325,18 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
       newErrors.timename = t("Time condition name is required");
       valid = false;
     }
-    if (!formData.extension) {
-      newErrors.extension = t("Extension is required");
-      valid = false;
-    } else if (
-      !ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)
-    ) {
-      newErrors.extension = t("Ring group extension must contain only digits");
-      valid = false;
-    } else if (!EXTENSIONVALALL.test(formData.extension)) {
-      newErrors.extension = t("Invalid Extension");
-      valid = false;
-    }
+    // if (!formData.extension) {
+    //   newErrors.extension = t("Extension is required");
+    //   valid = false;
+    // } else if (
+    //   !ConstantConfig.RINGGROUP.VALIDATION.EXTENSIONVAL.test(formData.extension)
+    // ) {
+    //   newErrors.extension = t("Ring group extension must contain only digits");
+    //   valid = false;
+    // } else if (!EXTENSIONVALALL.test(formData.extension)) {
+    //   newErrors.extension = t("Invalid Extension");
+    //   valid = false;
+    // }
     if (!formData.description) {
       newErrors.description = t("Description is required");
       valid = false;
@@ -374,8 +377,10 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
   const handleSave = () => {
     if (validateForm()) {
       const listvalues = {
+        type:role_type,
         name: formData.timename,
-        extension: formData.extension,
+        extension: user_extension,
+        // extension: formData.extension,
         timecondition_enabled: "true",
         description: formData.description,
         order: "500",
@@ -1031,15 +1036,15 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
                     </Form.Label>
                     <InputGroup className="">
                       <Form.Control
-                        // disabled
+                        disabled
                         placeholder=""
                         aria-label="Username"
                         aria-describedby="basic-addon1"
                         className="search-bg"
                         name="extension"
-                        value={formData.extension || ""}
+                        value={user_extension || ""}
                         // value={formData.extension || ""}
-                        onChange={handleChange}
+                        // onChange={handleChange}
                         // onKeyPress={handleKeyPress}
                       />
                     </InputGroup>

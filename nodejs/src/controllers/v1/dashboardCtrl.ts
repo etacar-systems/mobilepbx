@@ -1136,36 +1136,47 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     async function findTotal(timePeriod: string, date: string) {
       let startOfDay, endOfDay, startOfWeek, endOfWeek, startOfYear, endOfYear;
+      const dateInTimezone = momentTimezone.tz(date, timezone);
 
       // Get the provided date
-      const dateObj = new Date(date);
+      // const dateObj = new Date(date);
 
       if (timePeriod === "today") {
         // Today's date range (24-hour period)
-        startOfDay = new Date(dateObj.setHours(0, 0, 0, 0)); // Start of the day (12:00 AM)
-        endOfDay = new Date(dateObj.setHours(23, 59, 59, 999)); // End of the day (11:59 PM)
+        // startOfDay = new Date(dateObj.setHours(0, 0, 0, 0)); // Start of the day (12:00 AM)
+        // endOfDay = new Date(dateObj.setHours(23, 59, 59, 999)); // End of the day (11:59 PM)
+
+        startOfDay = dateInTimezone.startOf('day').toDate();
+        endOfDay = dateInTimezone.endOf('day').toDate();
       }
 
       if (timePeriod === "week") {
         // Week's date range (from Sunday to Saturday)
-        const firstDayOfWeek = new Date(dateObj);
-        firstDayOfWeek.setDate(dateObj.getDate() - dateObj.getDay()); // Set to Sunday
-        firstDayOfWeek.setHours(0, 0, 0, 0); // Start of the day (Sunday)
-        startOfWeek = firstDayOfWeek;
+        // const firstDayOfWeek = new Date(dateObj);
+        // firstDayOfWeek.setDate(dateObj.getDate() - dateObj.getDay()); // Set to Sunday
+        // firstDayOfWeek.setHours(0, 0, 0, 0); // Start of the day (Sunday)
+        // startOfWeek = firstDayOfWeek;
 
-        const lastDayOfWeek = new Date(firstDayOfWeek);
-        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6); // Set to Saturday
-        lastDayOfWeek.setHours(23, 59, 59, 999); // End of the day (Saturday)
-        endOfWeek = lastDayOfWeek;
+        // const lastDayOfWeek = new Date(firstDayOfWeek);
+        // lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6); // Set to Saturday
+        // lastDayOfWeek.setHours(23, 59, 59, 999); // End of the day (Saturday)
+        // endOfWeek = lastDayOfWeek;
+
+        startOfWeek = dateInTimezone.startOf('week').add(1, 'day').toDate();
+        endOfWeek = dateInTimezone.endOf('week').add(1, 'day').toDate();
+
       }
 
       if (timePeriod === "year") {
         // Year's date range (from January 1st to December 31st)
-        startOfYear = new Date(dateObj.getFullYear(), 0, 1); // January 1st
-        startOfYear.setHours(0, 0, 0, 0);
+        // startOfYear = new Date(dateObj.getFullYear(), 0, 1); // January 1st
+        // startOfYear.setHours(0, 0, 0, 0);
 
-        endOfYear = new Date(dateObj.getFullYear(), 11, 31); // December 31st
-        endOfYear.setHours(23, 59, 59, 999);
+        // endOfYear = new Date(dateObj.getFullYear(), 11, 31); // December 31st
+        // endOfYear.setHours(23, 59, 59, 999);
+
+        startOfYear = dateInTimezone.startOf('year').toDate();
+        endOfYear = dateInTimezone.endOf('year').toDate();
       }
 
       // Determine which date range to use based on the timePeriod
@@ -1181,6 +1192,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         startDate = startOfYear;
         endDate = endOfYear;
       }
+      console.log("start end", startDate, endDate);
+
 
       try {
         const data = await CdrModel.aggregate([
@@ -2539,7 +2552,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //   missed_called: { misssed_result }
         // }
         dashboard_response_obj.missed_call_new = misssed_result
-
 
         // console.log("Missed Calls Grouped by Dynamic Key:", result);
 

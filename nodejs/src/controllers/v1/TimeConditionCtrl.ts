@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import get_token from "../../helper/userHeader";
 import User_token from "../../helper/helper";
 import company from "../../models/company";
+import user from "../../models/user";
 import pstn_number from "../../models/pstn_number";
 
 const getTimeConditionList = async (
@@ -25,10 +26,12 @@ const getTimeConditionList = async (
       });
     }
     let cid: any = user_detail?.cid;
-
+    
     let page: any = data?.page;
     let size: any = data?.size;
     let search: any = data?.search?.toString();
+    let type: Number = data?.type
+    console.log("dataadas", type);
 
     if (!page) return (page = 1);
     if (!size) return (size = 20);
@@ -42,6 +45,7 @@ const getTimeConditionList = async (
       find_query = {
         is_deleted: 0,
         cid: cid,
+        type: type,
         $or: [
           {
             name: {
@@ -67,6 +71,7 @@ const getTimeConditionList = async (
       find_query = {
         is_deleted: 0,
         cid: cid,
+        type:type
       };
     }
     const ListData = await TimeCondition.find(find_query)
@@ -105,6 +110,7 @@ const addTimeCondition = async (
 ) => {
   try {
     const {
+      type,
       name,
       extension,
       order,
@@ -114,6 +120,8 @@ const addTimeCondition = async (
       dialplan_anti_action,
       timecondition_data,
     } = req.body;
+    console.log("role from frontend", type);
+
 
     const requiredFields = {
       name: "Name",
@@ -153,7 +161,9 @@ const addTimeCondition = async (
         message: "company dose not exist",
       });
     }
+
     const createObj = {
+      type,
       cid,
       name,
       extension,
@@ -167,6 +177,8 @@ const addTimeCondition = async (
       timecondition_data,
       last_updated_user: user_detail?.uid,
     };
+    console.log("create OBj", createObj);
+
     try {
       let api_config = {
         method: "put",
@@ -500,12 +512,14 @@ const getTimeConditionOption = async (
         message: config.RESPONSE.MESSAGE.COMPANY_ERROR,
       });
     }
-    const { cid, domain_uuid, user_extension } = req.body;
+    // const { cid, domain_uuid } = req.body;
+    const { cid, domain_uuid, user_extension, type } = req.body;
 
     const resultObj = await TimeCondition.findOne({
       cid: cid,
       domain_id: domain_uuid,
       extension: user_extension,
+      type: type,
       is_deleted: 0
     })
 

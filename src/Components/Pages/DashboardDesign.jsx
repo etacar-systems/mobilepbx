@@ -20,7 +20,13 @@ import config from "../../config";
 import { getapiAll } from "../../Redux/Reducers/ApiServices";
 import { useDispatch, useSelector } from "react-redux";
 import RingGroupModal from "../Modal/RingGroupModal";
-import { defaultactiveKeyname, Multilinechart } from "../ConstantConfig";
+import {
+  Todaylables,
+  Weeklables,
+  Yearlables,
+  defaultactiveKeyname,
+  Multilinechart,
+} from "../ConstantConfig";
 // import CallDetailByIdPage from "./CallDetailsByIdPage"
 
 // Immediately loaded components
@@ -142,7 +148,6 @@ function DashboardDesign() {
     });
   }, [dispatch, activeTabs, activeTabs2, filter]);
 
-  
   useEffect(() => {
     dispatch(
       getapiAll({
@@ -307,8 +312,30 @@ function DashboardDesign() {
     totalCalled
   );
 
+  const Monthlables = Array.from(
+    { length: data?.DashboardDetail?.missed_call_new?.length || 0 },
+    (_, index) => `${index + 1}`
+  );
+  console.log("momty", Monthlables);
+
+  const [Linechartlabels, setLinechartlabels] = useState([]);
+  useEffect(() => {
+    if (data && activeTabs2) {
+      if (activeTabs2 === "today") {
+        setLinechartlabels(Todaylables);
+      } else if (activeTabs2 === "week") {
+        setLinechartlabels(Weeklables);
+      } else if (activeTabs2 === "month") {
+        setLinechartlabels(Monthlables);
+      } else {
+        setLinechartlabels(Yearlables);
+      }
+    }
+  }, [activeTabs2, data]);
+
   const multilinechart = {
-    labels: missedCalledData?.map((item) => item.key.replaceAll("/", ".")),
+    labels: Linechartlabels,
+    // labels: missedCalledData?.map((item) => item.key.replaceAll("/", ".")),
     datasets: [
       {
         label: "Missed",

@@ -70,9 +70,12 @@ export default function Setting() {
   const cid = Cookies.get("Company_Id");
   const uid = Cookies.get("User_id");
   const role = Cookies.get("role");
+  console.log("roole", role);
+
   const domain_uuid = Cookies.get("domain_uuid");
   const user_extension = Cookies.get("user_extension");
   let Token = Cookies.get("Token");
+  let type = Cookies.get("role");
   const [message, setMessage] = useState("");
   const maxLength = 160;
   const [dynamicHeight, setDynamicHeight] = useState(0);
@@ -114,6 +117,7 @@ export default function Setting() {
         cid: cid,
         domain_uuid: domain_uuid,
         user_extension: user_extension,
+        type: type,
       };
       dispatch(
         postapiAll({
@@ -123,7 +127,7 @@ export default function Setting() {
           urlof: config.TIME_CONDITION_KEY.OPTIONS,
         })
       ).then((response) => {
-        // console.log("responseresponse", response.payload.response.data);
+        console.log("responseresponse", response);
         setTimeConditionID(response?.payload?.response?.data?._id);
       });
     }
@@ -554,14 +558,14 @@ export default function Setting() {
   };
   const [optionValue, setOptionValue] = useState();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleOptionClick = (value) => {
-    if (value == t("Office hours")) {
-      navigate("/timeConditionOptions");
-    } else {
+    // if (value == t("Office hours")) {
+    //   navigate("/timeConditionOptions");
+    // } else {
     setShow(true);
     setOptionValue(value);
-    }
+    // }
   };
 
   return (

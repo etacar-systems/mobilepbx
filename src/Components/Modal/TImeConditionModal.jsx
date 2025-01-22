@@ -39,6 +39,8 @@ function TimeConditionModal({
 }) {
   const { t } = useTranslation();
   let Token = Cookies.get("Token");
+  const role_type = Cookies.get("role");
+
   const dispatch = useDispatch();
   const [openDropdown, setOpenDropdown] = useState(null);
   const [apidropdown, setApidropdown] = useState(null);
@@ -378,9 +380,13 @@ function TimeConditionModal({
     ]);
   }, []);
 
+  console.log("rolerffd",role_type);
+  
+
   const handleSave = () => {
     if (validateForm()) {
       const listvalues = {
+        type: role_type,
         name: formData.timename,
         extension: formData.extension,
         timecondition_enabled: "true",

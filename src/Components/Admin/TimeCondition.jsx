@@ -24,6 +24,7 @@ export default function TimeCondition() {
   const { t } = useTranslation();
   const abortControllerRef = useRef(null);
   let Token = Cookies.get("Token");
+  let type = Cookies.get("role");
   const [deleteid, setdeleteid] = useState("");
   const [saveloading, setsaveLoading] = useState(false);
   const [sortedColumn, setSortedColumn] = useState("");
@@ -237,6 +238,7 @@ export default function TimeCondition() {
       page: currentPage,
       size: select,
       search: searchTerm.toLowerCase(),
+      type:type
     };
     dispatch(
       postapiAll({

@@ -128,10 +128,10 @@ const MultiLineChart = ({ data, Theme, theme }) => {
     const getNextMultiple = (value, multiple) => {
       return Math.ceil(value / multiple) * multiple;
     };
-  
+
     const determineStepSize = (maxValue) => {
-      console.log("max",maxValue);
-      
+      console.log("max", maxValue);
+
       if (maxValue <= 10) {
         return 1; // Small range, step size of 1
       } else if (maxValue <= 100) {
@@ -141,19 +141,17 @@ const MultiLineChart = ({ data, Theme, theme }) => {
       }
     };
 
-    const adjustedMax = dynamicMax > 10 
-    ? getNextMultiple(dynamicMax, 100) 
-    : 10;
+    const adjustedMax = dynamicMax > 10 ? getNextMultiple(dynamicMax, 100) : 10;
     // : getNextMultiple(dynamicMax, 10);
-    
+
     const stepSize = determineStepSize(adjustedMax);
-  
+
     const myChart = new Chart(chartRef.current, {
       type: "line",
       data: data,
       options: {
         responsive: true,
-        maintainAspectRatio:false,
+        maintainAspectRatio: false,
         interaction: {
           mode: "index",
           intersect: false,
@@ -192,10 +190,11 @@ const MultiLineChart = ({ data, Theme, theme }) => {
               color: gridlinecolor,
             },
             ticks: {
+              stepSize: 1,
               color: Textcolor,
               font: {
                 family: "Courier New, monospace",
-                size: 12,
+                size: 10,
                 weight: 300,
               },
             },
@@ -240,12 +239,12 @@ const MultiLineChart = ({ data, Theme, theme }) => {
         },
       },
     });
-  
+
     return () => {
       myChart.destroy();
     };
   }, [data, Textcolor, gridlinecolor]);
-  
+
   return (
     <div>
       <canvas ref={chartRef} className="chart-canvas2" />

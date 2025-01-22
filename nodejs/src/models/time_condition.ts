@@ -25,6 +25,10 @@ interface ITimeCondition extends Document {
 
 const TimeConditionSchema: Schema = new Schema(
   {
+    type: {
+      type: Number,
+      default: 0,
+    },
     time_condition_uuid: {
       type: String,
       default: "",
