@@ -74,7 +74,7 @@ class Utils {
 
       for (let i = 0; i < 6; i++) {
         // Ensure remainingValue allows for valid values in the subsequent iterations
-        const maxRandom = Math.min(remainingValue - (6 - i) * 5, value / 2);
+        const maxRandom = Math.min(remainingValue - (6 - i) * 5, value / 1.5);
         const minRandom = remainingValue <= 6 ? 0 : 1;
 
         if (maxRandom <= minRandom) {

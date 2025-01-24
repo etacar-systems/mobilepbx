@@ -343,7 +343,7 @@ function DashboardDesign() {
         // data: [0, 0, 0, 0, 10, 0, 0],
         borderColor: Multilinechart.dataset1color,
         backgroundColor: Multilinechart.dataset1color,
-        borderWidth: 3,
+        borderWidth: 2,
         yAxisID: "y",
         pointLabel: {
           display: true, // Show the labels on the data points
@@ -358,7 +358,7 @@ function DashboardDesign() {
         // data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,
         backgroundColor: Multilinechart.dataset2color,
-        borderWidth: 3,
+        borderWidth: 2,
         yAxisID: "y1",
         pointLabel: {
           display: true, // Show the labels on the data points
