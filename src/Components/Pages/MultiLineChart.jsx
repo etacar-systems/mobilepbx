@@ -1,11 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { Chart } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import {
   Blackcolor,
   Whitecolor,
   Dark,
   Gridlinedarkcolor,
   Girdlinelightcolor,
+  Multilinechart,
 } from "../ConstantConfig";
 
 const MultiLineChart = ({ data, Theme, theme }) => {
@@ -130,25 +132,22 @@ const MultiLineChart = ({ data, Theme, theme }) => {
     };
 
     const determineStepSize = (maxValue) => {
-      console.log("max", maxValue);
-
       if (maxValue <= 10) {
-        return 1; // Small range, step size of 1
+        return 1;
       } else if (maxValue <= 100) {
-        return 10; // Moderate range, step size of 10
+        return 10;
       } else {
-        return 100; // Large range, step size of 100
+        return 100;
       }
     };
 
     const adjustedMax = dynamicMax > 10 ? getNextMultiple(dynamicMax, 100) : 10;
-    // : getNextMultiple(dynamicMax, 10);
-
     const stepSize = determineStepSize(adjustedMax);
 
     const myChart = new Chart(chartRef.current, {
       type: "line",
       data: data,
+      plugins: [ChartDataLabels],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -172,8 +171,69 @@ const MultiLineChart = ({ data, Theme, theme }) => {
           title: {
             display: true,
           },
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem) => {
+                const label = tooltipItem.dataset.label || "";
+                const value = tooltipItem.raw;
+                return `${label}: ${value}`;
+              },
+            },
+          },
+          datalabels: {
+            color: (context) => {
+              // Use different colors for different datasets
+              const datasetIndex = context.datasetIndex;
+              return datasetIndex === 0
+                ? Multilinechart.dataset1color // Color for "missed"
+                : Multilinechart.dataset2color; // Color for "waiting time"
+            },
+            // backgroundColor: Theme === Dark || theme === Dark ? Whitecolor : "lightgrey";
+            // borderRadius: 3,
+            // borderColor: "#000",
+            // borderWidth: 1,
+            font: {
+              size: 10,
+              weight: "bold",
+            },
+            padding: 4,
+            align: "top",
+            offset: 2,
+            // offset: (context) => {
+            //   const datasetIndex = context.datasetIndex;
+            //   const value = context.raw; // Current value
+            //   const datasetLength = context.chart.data.datasets.length;
+            //   const baseOffset = 1;
+          
+            //   // Adjust the offset dynamically
+            //   if (datasetIndex === 0) {
+            //     // "Missed" labels
+            //     return baseOffset + (value / datasetLength) * 1.1; // Scale offset by value
+            //   } else {
+            //     // "Waiting time" labels
+            //     return baseOffset + (value / datasetLength) * 1.3; // Slightly larger offset
+            //   }
+            // },
+            clamp: true,
+            formatter: (value) => value,
+          },
+          // datalabels: {
+          //   color: Multilinechart.data,
+          //   backgroundColor: "#fff",
+          //   borderRadius: 3,
+          //   borderColor: "#000",
+          //   borderWidth: 1,
+          //   font: {
+          //     size: 10,
+          //     weight: "bold",
+          //   },
+          //   padding: 4,
+          //   align: "top",
+          //   offset: 8,
+          //   clamp: true,
+          //   formatter: (value) => value,
+          // },
         },
-        stacked: false,
         scales: {
           x: {
             display: true,
@@ -212,14 +272,17 @@ const MultiLineChart = ({ data, Theme, theme }) => {
               color: gridlinecolor,
             },
             min: dynamicMin < 0 ? 0 : Math.min(dynamicMin, 0),
-            max: adjustedMax, // Use the calculated adjustedMax
+            max: adjustedMax,
             ticks: {
-              stepSize: stepSize, // Dynamic step size based on the range
+              stepSize: stepSize,
               color: Textcolor,
               font: {
                 family: "Courier New, monospace",
                 size: 12,
                 weight: 300,
+              },
+              callback: function (value) {
+                return value.toLocaleString(); // Format labels to prevent overlap
               },
             },
           },
@@ -228,12 +291,22 @@ const MultiLineChart = ({ data, Theme, theme }) => {
             display: false,
             position: "right",
             grid: {
-              drawOnChartArea: true,
+              drawOnChartArea: false, // Hide grid lines for the secondary axis
             },
             min: dynamicMin < 0 ? 0 : Math.min(dynamicMin, 0),
-            max: adjustedMax, // Match the adjusted max value for y1
+            max: adjustedMax,
             ticks: {
-              stepSize: stepSize, // Match step size of y-axis
+              stepSize: stepSize,
+              color: Textcolor,
+              font: {
+                family: "Courier New, monospace",
+                size: 12,
+                weight: 300,
+              },
+              callback: function (value) {
+                return value.toLocaleString(); // Format labels
+              },
+              padding: 10, // Add extra padding to prevent overlap
             },
           },
         },

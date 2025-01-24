@@ -7,12 +7,32 @@ import {
   bordercolor,
   Tooltipdata,
 } from "../ConstantConfig";
+import Utils from "../../utils";
 
-const AnsweLineChart = () => {
+const AnsweLineChart = ({ answeredValue }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+  const dynamicMax = answeredValue <= 7 ? answeredValue : answeredValue / 1.5;
+  const dynamicMin = 0;
 
   useEffect(() => {
+    const getNextMultiple = (value, multiple) => {
+      return Math.ceil(value / multiple) * multiple;
+    };
+
+    const determineStepSize = (maxValue) => {
+      if (maxValue <= 10) {
+        return 1;
+      } else if (maxValue <= 100) {
+        return 10;
+      } else {
+        return 100;
+      }
+    };
+
+    const adjustedMax = dynamicMax > 10 ? getNextMultiple(dynamicMax, 100) : 10;
+    const stepSize = determineStepSize(adjustedMax);
+
     const ctx = chartRef?.current?.getContext("2d");
     const devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -27,7 +47,8 @@ const AnsweLineChart = () => {
         labels: AnsweLineChartLables,
         datasets: [
           {
-            data: AnsweLineChartData,
+            data: Utils.generateArray(answeredValue),
+            // data: AnsweLineChartData,
             borderColor: bordercolor.AnsweLineChart,
             backgroundColor: Backgroundcolor.AnsweLineChart,
             borderWidth: 1,
@@ -67,10 +88,10 @@ const AnsweLineChart = () => {
           },
           y: {
             display: false,
-            min: 5,
-            max: 50,
+            min: dynamicMin,
+            max: dynamicMax,
             ticks: {
-              stepSize: 10,
+              stepSize: stepSize,
             },
           },
         },
@@ -82,7 +103,7 @@ const AnsweLineChart = () => {
         chartInstance.current.destroy();
       }
     };
-  }, []);
+  }, [answeredValue]);
 
   return <canvas ref={chartRef} className="manage-chart-height" />;
 };

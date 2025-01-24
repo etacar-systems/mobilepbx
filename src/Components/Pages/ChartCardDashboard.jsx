@@ -39,7 +39,7 @@ function ChartCardDashboard({ chartData }) {
             </Row>
           </Card.Body>
           <div className="card-chart-bg">
-            <CalledLineChart />
+            <CalledLineChart calledValue={chartData[0]?.value} />
           </div>
         </Card>
       </Col>
@@ -68,7 +68,7 @@ function ChartCardDashboard({ chartData }) {
             </Row>
           </Card.Body>
           <div className="card-chart-bg">
-            <AnsweLineChart />
+            <AnsweLineChart answeredValue={chartData[1]?.value} />
           </div>
         </Card>
       </Col>
@@ -97,7 +97,7 @@ function ChartCardDashboard({ chartData }) {
             </Row>
           </Card.Body>
           <div className="card-chart-bg">
-            <MissedLineChart />
+            <MissedLineChart missedValue={chartData[2]?.value} />
           </div>
         </Card>
       </Col>
@@ -112,7 +112,7 @@ function ChartCardDashboard({ chartData }) {
                     <img
                       className="fa fa-hourglass-o fa-2x call-in-icon"
                       src={calltimeicon}
-                      style={{ height: "40px", width: "35px" }}
+                      style={{ height: "48px", width: "35px" }}
                     ></img>
                   </div>
                 </div>
@@ -126,7 +126,7 @@ function ChartCardDashboard({ chartData }) {
             </Row>
           </Card.Body>
           <div className="card-chart-bg">
-            <ResponseLineChart />
+            <ResponseLineChart responseLineValue={chartData[3]?.value} />
           </div>
         </Card>
       </Col>

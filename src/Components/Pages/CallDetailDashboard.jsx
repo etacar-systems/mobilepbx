@@ -559,7 +559,9 @@ function CallDetailDashboard({
                                   }}
                                 >
                                   <div className="overflowdashboaard">
-                                    {t(row.status)}
+                                    {t(row?.status) != t("answered")
+                                      ? t("missed")
+                                      : t("answered")}
                                   </div>
                                 </td>
                                 <td

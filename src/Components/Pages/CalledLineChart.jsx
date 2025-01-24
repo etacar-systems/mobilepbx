@@ -7,12 +7,31 @@ import {
   CalledLineChartLables,
   Tooltipdata,
 } from "../ConstantConfig";
+import Utils from "../../utils";
 
-const CalledLineChart = () => {
+const CalledLineChart = ({ calledValue }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-
+  const dynamicMin = 0;
+  const dynamicMax = calledValue <= 7 ? calledValue : calledValue / 1.5;
   useEffect(() => {
+    const getNextMultiple = (value, multiple) => {
+      return Math.ceil(value / multiple) * multiple;
+    };
+
+    const determineStepSize = (maxValue) => {
+      if (maxValue <= 10) {
+        return 1;
+      } else if (maxValue <= 100) {
+        return 10;
+      } else {
+        return 100;
+      }
+    };
+
+    const adjustedMax = dynamicMax > 10 ? getNextMultiple(dynamicMax, 100) : 10;
+    const stepSize = determineStepSize(adjustedMax);
+
     const ctx = chartRef.current.getContext("2d");
     const devicePixelRatio = window.devicePixelRatio || 1;
     chartRef.current.width = chartRef.current.offsetWidth * devicePixelRatio;
@@ -21,10 +40,12 @@ const CalledLineChart = () => {
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
+        // labels: Utils.generateArray(calledValue),
         labels: CalledLineChartLables,
         datasets: [
           {
-            data: CalledLineChartData,
+            data: Utils.generateArray(calledValue),
+            // data: CalledLineChartData,
             borderColor: bordercolor.CalledLineChart,
             backgroundColor: Backgroundcolor.CalledLineChart,
             borderWidth: 1.5,
@@ -64,10 +85,10 @@ const CalledLineChart = () => {
           },
           y: {
             display: false,
-            min: 5,
-            max: 50,
+            min: dynamicMin,
+            max: dynamicMax,
             ticks: {
-              stepSize: 10,
+              stepSize: stepSize,
             },
           },
         },
@@ -79,7 +100,7 @@ const CalledLineChart = () => {
         chartInstance.current.destroy();
       }
     };
-  }, []);
+  }, [calledValue]);
 
   return <canvas ref={chartRef} className="manage-chart-height" />;
 };
