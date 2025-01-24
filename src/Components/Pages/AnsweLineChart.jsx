@@ -12,7 +12,7 @@ import Utils from "../../utils";
 const AnsweLineChart = ({ answeredValue }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  const dynamicMax = answeredValue <= 7 ? answeredValue : answeredValue / 1.5;
+  const dynamicMax = answeredValue <= 7 ? answeredValue : Math.ceil(answeredValue / 1.5);
   const dynamicMin = 0;
 
   useEffect(() => {

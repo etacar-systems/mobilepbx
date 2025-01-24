@@ -12,7 +12,7 @@ import Utils from "../../utils";
 const MissedLineChart = ({ missedValue }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  const dynamicMax = missedValue <= 7 ? missedValue : missedValue / 1.5;
+  const dynamicMax = missedValue <= 7 ? missedValue : Math.ceil(missedValue / 1.5);
   const dynamicMin = 0;
 
   useEffect(() => {

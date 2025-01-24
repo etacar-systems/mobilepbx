@@ -26,7 +26,7 @@ const ResponseLineChart = ({ responseLineValue }) => {
   const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 
   const dynamicMax =
-    responseLineValue <= 60 ? responseLineValue : totalSeconds / 1.5;
+    responseLineValue <= 60 ? responseLineValue : Math.ceil(totalSeconds / 1.5);
   const dynamicMin = 0;
   const responseChartValue = Utils.generateArray(totalSeconds);
   const responseChartLabels = responseChartValue?.map((val) =>

@@ -13,7 +13,7 @@ const CalledLineChart = ({ calledValue }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
   const dynamicMin = 0;
-  const dynamicMax = calledValue <= 7 ? calledValue : calledValue / 1.5;
+  const dynamicMax = calledValue <= 7 ? calledValue : Math.ceil(calledValue / 1.5);
   useEffect(() => {
     const getNextMultiple = (value, multiple) => {
       return Math.ceil(value / multiple) * multiple;
