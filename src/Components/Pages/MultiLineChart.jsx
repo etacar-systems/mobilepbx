@@ -134,8 +134,12 @@ const MultiLineChart = ({ data, Theme, theme }) => {
     const determineStepSize = (maxValue) => {
       if (maxValue <= 10) {
         return 1;
-      } else if (maxValue <= 100) {
+      } else if (maxValue <= 50) {
+        return 5;
+      }else if (maxValue <= 100) {
         return 10;
+      }else if (maxValue <= 200) {
+        return 20;
       } else {
         return 100;
       }

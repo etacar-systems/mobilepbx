@@ -2309,8 +2309,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
           for (let hour = 0; hour < 24; hour++) {
             const hourString = hour.toString().padStart(2, "0");
-            // console.log("keykey",hourString);
-
             result.push(`${hourString}`);
           }
 
@@ -2443,7 +2441,14 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             {
               $project: {
                 missed_number: {
-                  $cond: { if: { $ne: ["$status", "answered"] }, then: "$caller_id_number", else: null },
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $ne: ["$status", "answered"] },
+                        { $ne: ["$status", "voicemail"] }
+                      ]
+                    }, then: "$caller_id_number", else: null
+                  },
                 },
                 group_key: {
                   $dateToString: {
@@ -2456,16 +2461,16 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $cond: {
                     if: {
                       $and: [
-                        { $ne: ["$answer_stamp", null] },
+                        { $ne: ["$end_stamp", null] },
                         { $ne: ["$start_stamp", null] },
-                        { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] }
+                        { $gte: [{ $toDate: "$end_stamp" }, { $toDate: "$start_stamp" }] }
                       ]
                     },
                     then: {
                       $divide: [
                         {
                           $subtract: [
-                            { $toDate: "$answer_stamp" },
+                            { $toDate: "$end_stamp" },
                             { $toDate: "$start_stamp" }
                           ]
                         },
@@ -2483,12 +2488,26 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 _id: "$group_key",
                 missed_calls: {
                   $push: {
-                    $cond: { if: { $ne: ["$status", "answered"] }, then: "$missed_number", else: null },
+                    $cond: {
+                      if: {
+                        $and: [
+                          { $ne: ["$status", "answered"] },
+                          { $ne: ["$status", "voicemail"] }
+                        ]
+                      }, then: "$missed_number", else: null
+                    },
                   },
                 },
                 count: {
                   $sum: {
-                    $cond: { if: { $ne: ["$status", "answered"] }, then: 1, else: 0 },
+                    $cond: {
+                      if: {
+                        $and: [
+                          { $ne: ["$status", "answered"] },
+                          { $ne: ["$status", "voicemail"] }
+                        ]
+                      }, then: 1, else: 0
+                    },
                   },
                 },
                 total_count: { $sum: 1 },
@@ -2499,9 +2518,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               $addFields: {
                 average_waiting_time: {
                   $cond: {
-                    if: { $eq: ["$total_count", 0] },
+                    if: { $eq: ["$count", 0] },
                     then: 0,
-                    else: { $round: [{ $divide: ["$total_waiting_time", "$total_count"] }, 2] },
+                    else: { $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2] },
                   },
                 },
               },
@@ -2530,7 +2549,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
           // Map the data to the required format
           const result = dynamicGrouping?.map((key) => {
-            console.log("key", key);
             const record = missed_data.find((item) => item._id === key);
             return {
               key,

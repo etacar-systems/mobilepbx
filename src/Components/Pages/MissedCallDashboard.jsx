@@ -94,10 +94,9 @@ function MissedCallDashboard({
               {t("Average waiting time")}
             </label>
             <h4 className="font-h4 missed-header">
-            {totalCalled != 0
-                ? totalAvgWaitTime //changed
-                : // ? Math.round(totalAvgWaitTime / totalCalled)
-                  0}{" "}
+              {totalCalled != 0 //changed
+                ? Math.round(totalAvgWaitTime / totalMissedCalled)
+                : 0}{" "}
               {/* {missedCalledData &&
                 missedCalledData[missedCalledData.length - 1]
                   ?.average_waiting_time}{" "} */}
