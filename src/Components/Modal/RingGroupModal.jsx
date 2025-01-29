@@ -590,8 +590,8 @@ function RingGroupModal({
                     //     "1px solid var(--main-bordermodaldashboard-color)",
                     // }}
                   >
-                    <div className="modal-head">
-                      {t("Enable Voicemail")}
+                    <div className="modal-head d-flex justify-content-between">
+                      {t("Record calls")}
                       <label className="switch" style={{ marginLeft: "8px" }}>
                         <input type="checkbox" id="skipBusyAgent" />
                         <span className="slider"></span>
