@@ -177,6 +177,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               // $gte: new Date(start_date + "Z"),
               // $lt: new Date(end_date + "Z"),
             },
+            module_name: { $ne: "lua" },//new
+            status: { $ne: "voicemail" } //new
           },
         },
         {
@@ -661,6 +663,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                       { $eq: ["$extension_uuid", "$$extensionUuid"] }, // Match extension_uuid
                       { $gte: ["$start_stamp", new Date(start_date)] }, // Filter by start_date
                       { $lte: ["$start_stamp", new Date(end_date)] },  // Filter by end_date
+                      { $ne: ["$module_name", "lua"] }, //new
+                      { $ne: ["$status", "voicemail"] } //new
                     ],
                   },
                 },
@@ -855,6 +859,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: { $gte: startOfDay, $lte: endOfDay },
             leg: "a",
+            status: { $ne: "voicemail" }, //new
+            module_name: { $ne: "lua" } //new
           },
         },
         {
@@ -936,6 +942,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: { $gte: startOfWeek, $lte: endOfWeek },
             leg: 'a',
+            module_name: { $ne: "lua" }, //new
+            status: { $ne: "voicemail" } //new
           },
         },
         {
@@ -1008,6 +1016,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               $lte: endOfYear, // Ending date (December)
             },
             leg: "a",
+            module_name: { $ne: "lua" }, //new
+            status: { $ne: "voicemail" } //new
           },
         },
         {
@@ -1205,6 +1215,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $lt: endDate, // Use the calculated end date
               },
               leg: 'a',
+              module_name: { $ne: "lua" }, //new
+              status: { $ne: "voicemail" } //new
             },
           },
           {
@@ -1367,6 +1379,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $lte: endOfMonth,
               },
               leg: 'a',
+              module_name: { $ne: "lua" }, //new
+              status: { $ne: "voicemail" } //new
             },
           },
           {
@@ -2436,6 +2450,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 domain_uuid: companyDetail?.domain_uuid,
                 start_stamp: { $gte: startDate, $lte: endDate },
                 leg: "a",
+                module_name: { $ne: "lua" } //new
               },
             },
             {
@@ -2463,6 +2478,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                       $and: [
                         { $ne: ["$end_stamp", null] },
                         { $ne: ["$start_stamp", null] },
+                        { $ne: ["$status", "voicemail"] },
                         { $gte: [{ $toDate: "$end_stamp" }, { $toDate: "$start_stamp" }] }
                       ]
                     },

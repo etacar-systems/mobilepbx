@@ -334,7 +334,7 @@ function DashboardDesign() {
   }, [activeTabs2, data]);
 
   const multilinechart = {
-    labels: Linechartlabels,
+    labels: Linechartlabels.map((val) => t(val)), //changed
     // labels: missedCalledData?.map((item) => item.key.replaceAll("/", ".")),
     datasets: [
       {

@@ -4,6 +4,7 @@ import MultiLineChart from "./MultiLineChart";
 import Modal from "react-bootstrap/Modal";
 import { ReactComponent as Bigsize } from "../../Assets/Icon/biggersize.svg";
 import { useTranslation } from "react-i18next";
+import Utils from "../../utils";
 function MissedCallDashboard({
   // missedCalledData,
   activeTabs2,
@@ -95,12 +96,14 @@ function MissedCallDashboard({
             </label>
             <h4 className="font-h4 missed-header">
               {totalCalled != 0 //changed
-                ? Math.round(totalAvgWaitTime / totalMissedCalled)
-                : 0}{" "}
+                ? Utils.formatDuration(
+                    Math.round(totalAvgWaitTime / totalMissedCalled)
+                  )
+                : 0 + "s"}{" "}
               {/* {missedCalledData &&
                 missedCalledData[missedCalledData.length - 1]
                   ?.average_waiting_time}{" "} */}
-              {t("Sec")}
+              {/* {t("Sec")} */}
             </h4>
             {/* <small className="text-muted">
               <span className="missedcallfont">87.3%</span> {t("of")} 47{" "}

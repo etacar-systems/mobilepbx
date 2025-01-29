@@ -163,7 +163,7 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
 
     try {
       const data: any = await axios.request(api_config);
-      //   console.log(data);
+      // console.log("recording data",data);
       if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -528,6 +528,8 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         ...find_query,
         domain_uuid: companyDetail?.domain_uuid,
         leg: { $eq: "a" },
+        module_name: { $ne: "lua" }, //new
+        status: { $ne: "voicemail" }, //new
         $expr: {
           $and: [
             {

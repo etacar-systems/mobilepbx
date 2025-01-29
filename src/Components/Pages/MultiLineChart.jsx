@@ -132,20 +132,53 @@ const MultiLineChart = ({ data, Theme, theme }) => {
     };
 
     const determineStepSize = (maxValue) => {
+      // if (maxValue <= 10) {
+      //   return 1;
+      // } else if (maxValue <= 50) {
+      //   return 5;
+      // }else if (maxValue <= 100) {
+      //   return 10;
+      // }else if (maxValue <= 200) {
+      //   return 20;
+      // } else {
+      //   return 100;
+      // }
+
       if (maxValue <= 10) {
         return 1;
       } else if (maxValue <= 50) {
         return 5;
-      }else if (maxValue <= 100) {
+      } else if (maxValue <= 100) {
         return 10;
-      }else if (maxValue <= 200) {
+      } else if (maxValue <= 150) {
+        return 15;
+      } else if (maxValue <= 200) {
         return 20;
-      } else {
+      } else if (maxValue <= 300) {
+        return 30;
+      } else if (maxValue <= 400) {
+        return 40;
+      } else if (maxValue <= 700) {
+        return 50;
+      } else if (maxValue <= 1000) {
         return 100;
+      } else if (maxValue <= 10000) {
+        return 1000;
+      } else if (maxValue <= 50000) {
+        return 10000;
+      } else if (maxValue <= 100000) {
+        return 15000;
+      } else {
+        return 20000;
       }
     };
 
-    const adjustedMax = dynamicMax > 10 ? getNextMultiple(dynamicMax, 100) : 10;
+    const adjustedMax =
+      dynamicMax < 10
+        ? 10
+        : dynamicMax < 100
+        ? 100
+        : getNextMultiple(dynamicMax, 100);
     const stepSize = determineStepSize(adjustedMax);
 
     const myChart = new Chart(chartRef.current, {
@@ -208,7 +241,7 @@ const MultiLineChart = ({ data, Theme, theme }) => {
             //   const value = context.raw; // Current value
             //   const datasetLength = context.chart.data.datasets.length;
             //   const baseOffset = 1;
-          
+
             //   // Adjust the offset dynamically
             //   if (datasetIndex === 0) {
             //     // "Missed" labels
