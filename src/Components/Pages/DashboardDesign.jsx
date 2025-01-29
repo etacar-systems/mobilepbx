@@ -338,7 +338,7 @@ function DashboardDesign() {
     // labels: missedCalledData?.map((item) => item.key.replaceAll("/", ".")),
     datasets: [
       {
-        label: "Missed",
+        label: t("Missed"),
         data: missedCalledData?.map((item) => item.count),
         // data: [0, 0, 0, 0, 10, 0, 0],
         borderColor: Multilinechart.dataset1color,
@@ -353,7 +353,7 @@ function DashboardDesign() {
         },
       },
       {
-        label: "Waiting time",
+        label: t("Waiting time"),
         data: missedCalledData?.map((item) => item.total_waiting_time),
         // data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,
