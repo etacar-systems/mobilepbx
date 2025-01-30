@@ -54,7 +54,8 @@ i18n
           "Siirrettävät numerot": "Siirrettävät numerot",
           Vaihdepalvelu: "Vaihdepalvelu",
           "Upload files": "Lähetä tiedostoja",
-          "Drag and drop files here or click": "Raahaa ja pudota tiedostot tähän tai klikkaa",
+          "Drag and drop files here or click":
+            "Raahaa ja pudota tiedostot tähän tai klikkaa",
           "Send files": "Lähetä tiedostoja",
           "List of uploaded files": "Lähetettyjen tiedostojen lista",
 
@@ -151,7 +152,8 @@ i18n
           Logout: "Kirjaudu ulos",
           Cancel: "Peruuta",
           "Log-out": "Kirjaudu ulos",
-          "Are you sure you want to Logout?": "Haluatko varmasti kirjautua ulos?",
+          "Are you sure you want to Logout?":
+            "Haluatko varmasti kirjautua ulos?",
 
           // Video
           "You can watch the instructional video and make the desired changes at the same time. In the video, select the Picture in Picture function from the icon, on the right side of the video image, and close this tab from the upper right corner.":
@@ -225,7 +227,8 @@ i18n
           "Conference PIN": "Konferenssin PIN-koodi",
           "Conference record": "Konferenssin tallennus",
           Delete: "Poista",
-          "Do you really want to delete this record?": "Haluatko varmasti poistaa?",
+          "Do you really want to delete this record?":
+            "Haluatko varmasti poistaa?",
           "Add new": "Lisää uusi",
           "Edit conference": "Muokkaa konferenssia",
           "Add new conference": "Lisää uusi konferenssi",
@@ -235,16 +238,20 @@ i18n
           // IVR
           "Edit iVR": "Muokkaa IVR",
           "Add new iVR": "Lisää uusi iVR",
-          "Showing 1 to 2 of 2 entries": "Näytetään 1 - 2 yhteensä 2:sta merkinnästä",
+          "Showing 1 to 2 of 2 entries":
+            "Näytetään 1 - 2 yhteensä 2:sta merkinnästä",
           "IVR name is required": "IVR-nimi on pakollinen",
           "Description is required": "Kuvaus on pakollinen",
           "Announcement is required": "Ilmoitus on pakollinen",
-          "Invalid retry recording is required": "Virheellinen valinta on pakollinen",
-          "Timeout retries is required": "Aikakatkaisuyritykset ovat pakollisia",
+          "Invalid retry recording is required":
+            "Virheellinen valinta on pakollinen",
+          "Timeout retries is required":
+            "Aikakatkaisuyritykset ovat pakollisia",
           "Retry recording is required": "Virheellinen valinta on pakollinen",
           "Entries is required": "Merkinnät ovat pakollisia",
           "Destination type is required": "Kohteen tyyppi on pakollinen",
-          "Destination endpoint is required": "Kohteen päätepiste on pakollinen",
+          "Destination endpoint is required":
+            "Kohteen päätepiste on pakollinen",
           "IVR name": "IVR-nimi",
           Announcement: "Ilmoitus",
           "Invalid retry recording": "Virheellinen valinta",
@@ -257,15 +264,21 @@ i18n
           "Edit time condition": "Muokkaa aikaohjausta",
           "Add time condition": "Lisää aikaohjaus",
           "Destination matches": "Kohde täsmää",
-          "'Time condition name is required'": "'Aikaohjauksen nimi on pakollinen'",
-          "Destination matches is required": "Kohteen täsmäykset ovat pakollisia",
-          "Destination non-matches is required": "Kohteen ei täsmäykset ovat pakollisia",
+          "'Time condition name is required'":
+            "'Aikaohjauksen nimi on pakollinen'",
+          "Destination matches is required":
+            "Kohteen täsmäykset ovat pakollisia",
+          "Destination non-matches is required":
+            "Kohteen ei täsmäykset ovat pakollisia",
           "Time to Start is required": "Aloitusaika on pakollinen",
           "Time to finish is required": "Lopetusaika on pakollinen",
           "Week Day Start is required": "Viikonpäivä on pakollinen",
-          "Week Day finish is required": "Viikonpäivän päättyminen on pakollinen",
-          "Month Day start is required": "Kuukauden aloitus päivä on pakollinen",
-          "Month Day finish is required": "Kuukauden lopetus päivä on pakollinen",
+          "Week Day finish is required":
+            "Viikonpäivän päättyminen on pakollinen",
+          "Month Day start is required":
+            "Kuukauden aloitus päivä on pakollinen",
+          "Month Day finish is required":
+            "Kuukauden lopetus päivä on pakollinen",
           "Month start is required": "Kuukauden aloitus on pakollinen",
           "Month finish is required": "Kuukauden lopetus on pakollinen",
           "Time condition name": "Aikaohjauksen nimi",
@@ -296,7 +309,8 @@ i18n
           // List Record
           "Listen recording": "Kuuntele nauhoitus",
           "Recording details...": "Nauhoituksen tiedot",
-          "Your browser does not support the audio tag.": "Selaimesi ei tue äänitunnistetta.",
+          "Your browser does not support the audio tag.":
+            "Selaimesi ei tue äänitunnistetta.",
           "Speech to text": "Puhe tekstiksi",
           // System recording
           "System recordings": "Järjestelmän nauhoitukset",
@@ -322,10 +336,12 @@ i18n
           "Enter the proxy here.": "Välityspalvelin.",
           "Enter the from user here.": "Kirjoita käyttäjältä tähän.",
           "Enter the expire seconds here.": "Syötä vanhenemisaika sekunteina.",
-          "Enter the retry seconds here.": "Syötä uudelleenyritysaika tähän sekunteina.",
+          "Enter the retry seconds here.":
+            "Syötä uudelleenyritysaika tähän sekunteina.",
           "Please select domain here.": "Valitse verkkotunnus.",
           "Choose whether to register.": "Valitse rekisteröinti.",
-          "Enable or Disable the Gateway.": "Ota keskusjohto käyttöön tai poista se käytöstä.",
+          "Enable or Disable the Gateway.":
+            "Ota keskusjohto käyttöön tai poista se käytöstä.",
           "Enter the outbound name here.": "Kirjoita lähtevä nimi.",
           "Enter the prifix number to add to the beginning of the destination number.":
             "Syötä etuliitenumero, joka lisätään kohdenumeron alkuun.",
@@ -390,7 +406,8 @@ i18n
             " Conference profile is a collection of setting for the conference",
           "optional conference flags example : mute | moderater":
             "optional conference flags example : mute | moderater",
-          "Enter the name for the time condition": "Enter the name for the time condition",
+          "Enter the name for the time condition":
+            "Enter the name for the time condition",
           "Define custome condition necessary to execute the destination selected above":
             "Define custome condition necessary to execute the destination selected above",
           "Please enter PSTN number pool range": "Anna PSTN-numeroavaruus",
@@ -411,8 +428,10 @@ i18n
           "Call recordings": "Puhelujen tallenteet",
           "Greet long": "Pitkä tervehdys",
           "Greet short": "Lyhyt tervehdys",
-          "Ring group call forward enabled": "Soittoryhmän soitonsiirto käytössä",
-          "Choose to enable or disable the user record.": "Sallitaanko käyttäjän nauhoitukset.",
+          "Ring group call forward enabled":
+            "Soittoryhmän soitonsiirto käytössä",
+          "Choose to enable or disable the user record.":
+            "Sallitaanko käyttäjän nauhoitukset.",
           "User Record": "Käyttäjän nauhoite",
           "IVR menu timeout": "Virheellinen valinta",
           "IVR menu direct dial": "IVR menu direct dial",
@@ -454,8 +473,10 @@ i18n
           Answer: "Vastaa",
           "Click to replace": "Napsauta vaihtaaksesi",
           Remove: "Poista",
-          "Drag and drop files here or click": "Vedä ja pudota tiedostoja tähän tai napsauta",
-          "Only WAV and MP3 formats are supported": "Vain WAV- ja MP3-muotoja tuetaan",
+          "Drag and drop files here or click":
+            "Vedä ja pudota tiedostoja tähän tai napsauta",
+          "Only WAV and MP3 formats are supported":
+            "Vain WAV- ja MP3-muotoja tuetaan",
 
           // Customer
           "is required": "vaaditaan",
@@ -559,17 +580,20 @@ i18n
           "Remove Member": "Poista käyttäjä",
           "Remove Admin": "Poista pääkäyttäjä",
           "Add Admin": "Lisää pääkäyttäjä",
-          "Only Admin can send message": "Vain pääkäyttäjä voi lähettää viestejä",
+          "Only Admin can send message":
+            "Vain pääkäyttäjä voi lähettää viestejä",
           "Add Member": "Lisää käyttäjä",
           "Add New Members": "Lisää uusia käyttäjiä",
           "Back to members": "Takaisin käyttäjiin",
-          "Are you sure you want to delete Group`": "Haluatko varmasti poistaa ryhmän`",
+          "Are you sure you want to delete Group`":
+            "Haluatko varmasti poistaa ryhmän`",
           "You are the last admin of the group, first, you make any member admin then you can leave the group":
             "Olet ryhmän viimeinen ylläpitäjä, ensin teet kenestä tahansa jäsenestä järjestelmänvalvojan ja sitten voit poistua ryhmästä",
           Yes: "Kyllä",
           Ok: "Ok",
           No: "Ei",
-          "Are you sure you want to delete User": "Haluatko varmasti poistaa käyttäjän",
+          "Are you sure you want to delete User":
+            "Haluatko varmasti poistaa käyttäjän",
 
           "Are you sure you want to": "Haluatko varmasti",
           "user?": "käyttäjä?",
@@ -577,7 +601,8 @@ i18n
           Group: "Ryhmä",
           User: "Käyttäjä",
           "chat?": "chat?",
-          "Are you sure you want to exit group?": "Haluatko varmasti poistua ryhmästä?",
+          "Are you sure you want to exit group?":
+            "Haluatko varmasti poistua ryhmästä?",
           Today: "Tänään",
           Yesterday: "Eilen",
           "Message copied!": "Viesti kopioitu!",
@@ -608,7 +633,8 @@ i18n
           Location: "Sijainti",
           "Not supported this file type": "Tätä tiedostotyyppiä ei tueta",
           Send: "Lähetä",
-          "Are you sure you want to Unblock user?": "Haluatko varmasti poistaa käyttäjän eston?",
+          "Are you sure you want to Unblock user?":
+            "Haluatko varmasti poistaa käyttäjän eston?",
           "Last seen at": "Viimeksi nähty klo",
           "Last seen on": "Viimeksi nähty",
 
@@ -664,12 +690,16 @@ i18n
           "characters remaining.": "merkkiä jäljellä.",
           Voicemail: "Puheposti",
           "Enable Voicemail": "Aktivoi puheposti",
-          "Send E-Mail Alert New Voicemail": "Lähetä sähköposti uudesta viestistä",
-          "Send SMS Alert New Voicemail": "Lähetä tekstiviesti uudesta viestistä",
-          "Ringtime before going to voicemail": "Soittoaika ennen vastaajaan siirtymistä",
+          "Send E-Mail Alert New Voicemail":
+            "Lähetä sähköposti uudesta viestistä",
+          "Send SMS Alert New Voicemail":
+            "Lähetä tekstiviesti uudesta viestistä",
+          "Ringtime before going to voicemail":
+            "Soittoaika ennen vastaajaan siirtymistä",
           sec: "sek",
           "Voicemail Soundfile": "Vastaajan äänitiedosto",
-          "Drag and drop files here or click": "Vedä ja pudota tiedostoja tähän tai napsauta",
+          "Drag and drop files here or click":
+            "Vedä ja pudota tiedostoja tähän tai napsauta",
           Options: "Optiot",
           Update: "Päivitä",
           "Change Password": "Vaihda salasana",
@@ -696,8 +726,10 @@ i18n
           "Delete user successfully": "Käyttäjän poistaminen onnistui",
           Block: "Estä",
           Unblock: "Poista esto",
-          "Clear group chat successfully!": "Ryhmäkeskustelun tyhjennys onnistui!",
-          "Clear user chat successfully!": "Käyttäjäkeskustelun tyhjennys onnistui!",
+          "Clear group chat successfully!":
+            "Ryhmäkeskustelun tyhjennys onnistui!",
+          "Clear user chat successfully!":
+            "Käyttäjäkeskustelun tyhjennys onnistui!",
           "Create Group Successfully": "Ryhmän luominen onnistui",
           "Forward message to": "Lähetä viesti eteenpäin",
           "User assigned successfully to": "Käyttäjän määritys onnistui",
@@ -723,7 +755,8 @@ i18n
           "Destination number must be between 3 and 15 digits long":
             "Kohdenumeron on oltava 3–15 numeroa pitkä",
           "Range must be a valid number": "Alueen on oltava kelvollinen numero",
-          "Range must be between 3 and 15 digits long": "Alueen on oltava 3–15 numeroa pitkä",
+          "Range must be between 3 and 15 digits long":
+            "Alueen on oltava 3–15 numeroa pitkä",
           "The numbers must be different": "Numeroiden on oltava erilaisia",
           "The difference between numbers must be less than 100":
             "Lukujen välisen eron on oltava pienempi kuin 100",
@@ -737,10 +770,14 @@ i18n
           Transport: "Protokolla",
           transport: "protokolla",
           "Search using number,destination": "Search using number,destination",
-          "Search using user,extension,phonenumber": "Search using user,extension,phonenumber",
-          "Search using name,description,extension": "Search using name,description,extension",
-          "Search using name,extension,description": "Search using name,extension,description",
-          "Search using name,description,soundfile": "Search using name,description,soundfile",
+          "Search using user,extension,phonenumber":
+            "Search using user,extension,phonenumber",
+          "Search using name,description,extension":
+            "Search using name,description,extension",
+          "Search using name,extension,description":
+            "Search using name,extension,description",
+          "Search using name,description,soundfile":
+            "Search using name,description,soundfile",
           "Search using endpoint": "Search using endpoint",
           "Search using customer,domain,customernumber":
             "Search using customer,domain,customernumber",
@@ -758,7 +795,8 @@ i18n
           "Please enter a valid password": "Anna kelvollinen salasana",
           "Please enter password": "Anna salasana",
           "please enter email": "Anna sähköpostiosoite",
-          "Please enter a valid email address": "Anna kelvollinen sähköpostiosoite",
+          "Please enter a valid email address":
+            "Anna kelvollinen sähköpostiosoite",
           "-- Select trunk --": "-- Valitse keskusjohto --",
           Year: "Vuosi",
           Month: "Kuukausi",
@@ -784,7 +822,8 @@ i18n
           // 18-19-2024
 
           "PSTN Numbers": "PSTN Numerot",
-          "numbers were successfully created.": "numerot luotiin onnistuneesti.",
+          "numbers were successfully created.":
+            "numerot luotiin onnistuneesti.",
           " numbers are duplicates and were ignored:":
             " numerot ovat jo palvelussa ja ne jätettiin huomiotta:",
           These: "Nämä",
@@ -845,7 +884,8 @@ i18n
           "Video calls": "Videopuhelut",
           "Phone in the browser": "Selainpuhelin",
           Callback: "Takaisinsoitto",
-          "Record calls": "Tallennetut puhelut",
+          "Record calls": "Tallenna puhelut",
+          // "Record calls": "Tallennetut puhelut",
           Reportage: "Raportointi",
           Monitoring: "Monitorointi",
           "Time controls": "Ajan säätimet",
@@ -865,7 +905,8 @@ i18n
           "Confirm New Password": "Vahvista salasana",
           "confirm password": "Vahvista salasana",
           "SMS message": "SMS viesti",
-          "Are you sure you want to delete message?": "Haluatko varmasti poistaa viestin?",
+          "Are you sure you want to delete message?":
+            "Haluatko varmasti poistaa viestin?",
           ok: "Ok",
           "Are you sure you want to send your device current location":
             "Haluatko varmasti lähettää laitteesi nykyisen sijainnin",
@@ -881,11 +922,14 @@ i18n
           "SMTP port": "SMTP-portti",
           "SMTP settings": "SMTP-asetukset",
           "Use sendgrid": "Käytä sendgridiä",
-          "Please use a valid hex code.": "Käytä kelvollista heksadesimaalikoodia.",
+          "Please use a valid hex code.":
+            "Käytä kelvollista heksadesimaalikoodia.",
           "Destination number must be between 10 and 15 digits long.":
             "Kohdenumeron on oltava 3–15 numeroa pitkä.",
-          "Range must be a valid number.": "Alueen on oltava kelvollinen numero.",
-          "Range must be between 10 and 15 digits long.": "Alueen on oltava 3–15 numeroa pitkä.",
+          "Range must be a valid number.":
+            "Alueen on oltava kelvollinen numero.",
+          "Range must be between 10 and 15 digits long.":
+            "Alueen on oltava 3–15 numeroa pitkä.",
           "gateway id": "yhdyskäytävän tunnus",
           "gateway name": "yhdyskäytävän nimi",
           "from user": "käyttäjältä",
@@ -899,7 +943,8 @@ i18n
           "Last name": "Sukunimi",
           "Pstn number": "PSTN-numero",
           "Ring group duration is required": "Soittoryhmän kesto vaaditaan",
-          "At least one extension must be selected": "Vähintään yksi laajennus on valittava",
+          "At least one extension must be selected":
+            "Vähintään yksi laajennus on valittava",
 
           "Extension is required": "Laajennus vaaditaan",
           "Exit application is required": "Lopetussovellus vaaditaan",
@@ -918,7 +963,8 @@ i18n
           "Ring group name is required": "Soittoryhmän nimi vaaditaan",
           "Ring group description is required": "Soittoryhmän kuvaus vaaditaan",
           "End point is required": "Päätepiste vaaditaan",
-          "Ring group extension is required": "Soittoryhmän alaliittymä vaaditaan",
+          "Ring group extension is required":
+            "Soittoryhmän alaliittymä vaaditaan",
           "Ring group extension must contain only digits":
             "Soittoryhmän laajennuksen on sisällettävä vain numeroita",
           "Please enter a valid extension": "Anna kelvollinen alaliittymä",
@@ -935,7 +981,7 @@ i18n
           "Agent offline": "Käyttäjä poissa",
           "Calls queue": "Puhelujonot",
           Durations: "Kesto",
-          "Average": "Kesto",
+          Average: "Kesto",
           Week: "Viikko",
           "Call Metrics": "Puhelumittarit",
           "Missed calls": "Vastaamattomat puhelut",
@@ -962,7 +1008,8 @@ i18n
           Salesforce: "Salesforce",
           Pipedrive: "Pipedrive",
           "Microsoft Dynamics": "Microsoft Dynamics",
-          "Please upload only one file at a time.": "Please upload only one file at a time.",
+          "Please upload only one file at a time.":
+            "Please upload only one file at a time.",
           //
           "Not Required": "Ei pakollinen",
           "node cidr": "node cidr",
@@ -975,21 +1022,29 @@ i18n
             "please choose a strong password try a mix of letters numbers and symbols",
           "The difference between numbers must be less than 100.":
             "Lukujen välisen eron on oltava pienempi kuin 100.",
-          "Ring Group Updated successfully.": "Soittoryhmä päivitetty onnistuneesti.",
-          "Ring Group Created successfully.": "Soittoryhmä luotu onnistuneesti.",
+          "Ring Group Updated successfully.":
+            "Soittoryhmä päivitetty onnistuneesti.",
+          "Ring Group Created successfully.":
+            "Soittoryhmä luotu onnistuneesti.",
           "Number assigned successfully": "Numeron määrittäminen onnistui",
           "Number Updated Successfully": "Numeron päivitys onnistui",
-          "Number Unassigned Successfully": "Numeron määrittäminen peruutettu onnistuneesti",
+          "Number Unassigned Successfully":
+            "Numeron määrittäminen peruutettu onnistuneesti",
           "User created successfully": "Käyttäjän luominen onnistui",
           "Conference Created Successfully": "Konferenssi luotu onnistuneesti",
-          "Conference updated Successfully": "Konferenssi päivitetty onnistuneesti",
-          "Conference Deleted successfully": "Konferenssi poistettu onnistuneesti",
+          "Conference updated Successfully":
+            "Konferenssi päivitetty onnistuneesti",
+          "Conference Deleted successfully":
+            "Konferenssi poistettu onnistuneesti",
           "IVR created successfully.": "IVR luotiin onnistuneesti",
           "IVR update successfully.": "IVR päivitetty onnistuneesti",
           "IVR deleted successfully.": "IVR poistettiin onnistuneesti",
-          "Time Condition created Successfully": "Aikaohjaus luotu onnistuneesti",
-          "Time Condition Updated Successfully": "Aikaohjaus päivitetty onnistuneesti",
-          "Time Condition deleted successfully.": "Aikaohjaus poistettu onnistuneesti",
+          "Time Condition created Successfully":
+            "Aikaohjaus luotu onnistuneesti",
+          "Time Condition Updated Successfully":
+            "Aikaohjaus päivitetty onnistuneesti",
+          "Time Condition deleted successfully.":
+            "Aikaohjaus poistettu onnistuneesti",
           "Login Successfully": "Kirjautuminen onnistui",
           "New company added successfully": "Uusi yritys lisätty onnistuneesti",
           "New company Updated successfully": "Yritys päivitetty onnistuneesti",
@@ -997,16 +1052,22 @@ i18n
           "Gateway Created Successfully !!": "Gateway Created Successfully !!",
           "Gateway Updated Successfully !!": "Gateway Updated Successfully !!",
           "Gateway Deleted Successfully !!": "Gateway Deleted Successfully !!",
-          "Dialplan Outbound Created Successfully !!": "Dialplan Outbound Created Successfully !!",
-          "Outbound Routes Delete Successfully": "Outbound Routes Delete Successfully",
-          "Firewall Created Successfully !!": "Firewall Created Successfully !!",
-          "Firewall Data Update Successfully": "Firewall Data Update Successfully",
-          "Firewall Deleted Delete Successfully": "Firewall Deleted Delete Successfully",
+          "Dialplan Outbound Created Successfully !!":
+            "Dialplan Outbound Created Successfully !!",
+          "Outbound Routes Delete Successfully":
+            "Outbound Routes Delete Successfully",
+          "Firewall Created Successfully !!":
+            "Firewall Created Successfully !!",
+          "Firewall Data Update Successfully":
+            "Firewall Data Update Successfully",
+          "Firewall Deleted Delete Successfully":
+            "Firewall Deleted Delete Successfully",
           "Phonebook added successfully": "Phonebook added successfully",
           "Phonebook Deleted successfully": "Phonebook Deleted successfully",
           "Extension update successfully": "Alaliittymän päivitys onnistui",
           "Wrong Email or Password": "Väärä sähköpostiosoite tai salasana",
-          "User Detail Updated Successfully": "Käyttäjätiedot päivitetty onnistuneesti",
+          "User Detail Updated Successfully":
+            "Käyttäjätiedot päivitetty onnistuneesti",
           Sounds: "Äänet",
           January: "Tammikuu",
           February: "Helmikuu",
@@ -1054,30 +1115,38 @@ i18n
           "user_name is Required Field": "user_name is Required Field",
           "user_email is Required Field": "user_email is Required Field",
           "user_password is Required Field": "user_password is Required Field",
-          "user_mobileNumber is Required Field": "user_mobileNumber is Required Field",
+          "user_mobileNumber is Required Field":
+            "user_mobileNumber is Required Field",
           "user_address is Required Field": "user_address is Required Field",
           "User Email Already Exists": "User Email Already Exists",
           "Admin User Created Successfully": "Admin User Created Successfully",
           "user_email is Required Field": "user_email is Required Field",
           "user_password is Required Field": "user_password is Required Field",
-          "User Email Adderess is Invalid": "Käyttäjän sähköpostiosoite on virheellinen",
+          "User Email Adderess is Invalid":
+            "Käyttäjän sähköpostiosoite on virheellinen",
           "User Password is Invalid": "Käyttäjän salasana on virheellinen",
-          "User Login credentials is Invalid": "Käyttäjän kirjautumistiedot ovat virheelliset",
+          "User Login credentials is Invalid":
+            "Käyttäjän kirjautumistiedot ovat virheelliset",
           "User Login Successfully": "Sisäänkirjautuminen onnistui",
-          "Calender Config Updated Successfully": "Calender Config Updated Successfully",
+          "Calender Config Updated Successfully":
+            "Calender Config Updated Successfully",
           "Internal server error": "Internal server error",
           "User Detail Not Found": "Käyttäjätietoja ei löydy",
           "Please Verify Your Email": "Vahvista sähköpostiosoitteesi",
-          "Calendar Detail Updated Successfully": "Kalenterin tiedot päivitetty onnistuneesti",
-          "Calender Event Added Successfully": "Calender Event Added Successfully",
+          "Calendar Detail Updated Successfully":
+            "Kalenterin tiedot päivitetty onnistuneesti",
+          "Calender Event Added Successfully":
+            "Calender Event Added Successfully",
           "Failed to fetch CDR logs": "Failed to fetch CDR logs",
           "Failed to fetch data": "Failed to fetch data",
           "Company Password Is Mandatory.": "Yrityksen salasana on pakollinen",
           "Company Password Is Invalid.": "Yrityksen salasana on virheellinen",
           "Company Name Is Mandatory.": "Yrityksen nimi on pakollinen",
           "Company Name Is Invalid.": "Yrityksen nimi on virheellinen",
-          "Company Email Is Mandatory.": "Yrityksen sähköpostiosoite on pakollinen",
-          "Company Email Is Invalid.": "Yrityksen sähköpostiosoite on virheellinen",
+          "Company Email Is Mandatory.":
+            "Yrityksen sähköpostiosoite on pakollinen",
+          "Company Email Is Invalid.":
+            "Yrityksen sähköpostiosoite on virheellinen",
           "Hex Code Is Mandatory.": "Hex-koodi on pakollinen",
           "Pbx is invalid.": "Pbx is invalid.",
           "Extension is invalid.": "Alaliittymä on virheellinen",
@@ -1095,7 +1164,8 @@ i18n
           "Caller ID is invalid.": "Caller ID is invalid.",
           "Time Controls are invalid.": "Time Controls are invalid.",
           "WhatsApp is invalid.": "WhatsApp is invalid.",
-          "Calendar Integration is invalid.": "Calendar Integration is invalid.",
+          "Calendar Integration is invalid.":
+            "Calendar Integration is invalid.",
           "Text to Speech is invalid.": "Text to Speech is invalid.",
           "Virtual Assistant is invalid.": "Virtual Assistant is invalid.",
 
@@ -1105,22 +1175,31 @@ i18n
           "Conference Count is mandatory.": "Conference Count is mandatory.",
           "Video Call Count is mandatory.": "Video Call Count is mandatory.",
           "IVR Count is mandatory.": "IVR Count is mandatory.",
-          "Speech to Text Count is mandatory.": "Speech to Text Count is mandatory.",
-          "Phone in Browser Count is mandatory.": "Phone in Browser Count is mandatory.",
+          "Speech to Text Count is mandatory.":
+            "Speech to Text Count is mandatory.",
+          "Phone in Browser Count is mandatory.":
+            "Phone in Browser Count is mandatory.",
           "Voicemail Count is mandatory.": "Voicemail Count is mandatory.",
           "Callback Count is mandatory.": "Callback Count is mandatory.",
-          "Record Calls Count is mandatory.": "Record Calls Count is mandatory.",
+          "Record Calls Count is mandatory.":
+            "Record Calls Count is mandatory.",
           "Reportage Count is mandatory.": "Reportage Count is mandatory.",
           "Monitoring Count is mandatory.": "Monitoring Count is mandatory.",
           "Caller ID Count is mandatory.": "Caller ID Count is mandatory.",
-          "Time Controls Count is mandatory.": "Time Controls Count is mandatory.",
+          "Time Controls Count is mandatory.":
+            "Time Controls Count is mandatory.",
           "WhatsApp Count is mandatory.": "WhatsApp Count is mandatory.",
-          "Calendar Integration Count is mandatory.": "Calendar Integration Count is mandatory.",
-          "Text to Speech Count is mandatory.": "Text to Speech Count is mandatory.",
+          "Calendar Integration Count is mandatory.":
+            "Calendar Integration Count is mandatory.",
+          "Text to Speech Count is mandatory.":
+            "Text to Speech Count is mandatory.",
           "Virtual Assistant is mandatory.": "Virtual Assistant is mandatory.",
-          "Company Email Is Already Exist.": "Yrityksen sähköpostiosoite on jo olemassa",
-          "Company Domain Name Is Mandatory.": "Yrityksen verkkotunnus on pakollinen",
-          "Company Doamin Name Is Already Exist.": "Yrityksen verkkotunnus on jo olemassa",
+          "Company Email Is Already Exist.":
+            "Yrityksen sähköpostiosoite on jo olemassa",
+          "Company Domain Name Is Mandatory.":
+            "Yrityksen verkkotunnus on pakollinen",
+          "Company Doamin Name Is Already Exist.":
+            "Yrityksen verkkotunnus on jo olemassa",
           "Failed to create company": "Yrityksen luominen epäonnistui",
           "New company added successfully": "Uusi yritys lisätty onnistuneesti",
           "Failed to create company": "Yrityksen luominen epäonnistui",
@@ -1149,13 +1228,16 @@ i18n
           "Caller ID is invalid.": "Caller ID is invalid.",
           "Time Controls are invalid.": "Time Controls are invalid.",
           "WhatsApp is invalid.": "WhatsApp is invalid.",
-          "Calendar Integration is invalid.": "Calendar Integration is invalid.",
+          "Calendar Integration is invalid.":
+            "Calendar Integration is invalid.",
           "Text to Speech is invalid.": "Text to Speech is invalid.",
           "Virtual Assistant is invalid.": "Virtual Assistant is invalid.",
           "conference_name is Mandatory": "conference_name is Mandatory",
           "conference_name is Invalid": "conference_name is Invalid",
-          "conference_description is Mandatory": "conference_description is Mandatory",
-          "conference_description is Invalid": "conference_description is Invalid",
+          "conference_description is Mandatory":
+            "conference_description is Mandatory",
+          "conference_description is Invalid":
+            "conference_description is Invalid",
           "conference_pin is Mandatory": "conference_pin is Mandatory",
           "extension_number is Mandatory": "extension_number is Mandatory",
           "extension_number is Invalid": "extension_number is Invalid",
@@ -1170,7 +1252,8 @@ i18n
           "Extension Number Already Exist": "Extension Number Already Exist",
           "Failed To Update Conference": "Failed To Update Conference",
           "Failed to delete company": "Failed to delete company",
-          "Failed to get conference profile": "Failed to get conference profile",
+          "Failed to get conference profile":
+            "Failed to get conference profile",
           "conversations Clear Success": "conversations Clear Success",
           "Company Not Exists.": "Company Not Exists.",
           "Extension Number Is Mandatory.": "Extension Number Is Mandatory.",
@@ -1192,49 +1275,72 @@ i18n
           "Extension added successfully": "Extension added successfully",
           "Failed to create extension": "Failed to create extension",
           "Extension delete successfully": "Extension delete successfully",
-          "Access Control Default is mandatory.": "Access Control Default is mandatory.",
-          "Access Control Description is mandatory.": "Access Control Description is mandatory.",
+          "Access Control Default is mandatory.":
+            "Access Control Default is mandatory.",
+          "Access Control Description is mandatory.":
+            "Access Control Description is mandatory.",
           "Add Assign Zone is mandatory.": "Add Assign Zone is mandatory.",
-          "Access Control Nodes must be an array.": "Access Control Nodes must be an array.",
+          "Access Control Nodes must be an array.":
+            "Access Control Nodes must be an array.",
           "Each node must include node_type, node_cidr, and node_description.":
             "Each node must include node_type, node_cidr, and node_description.",
           "Copmany Id Invalid": "Copmany Id Invalid.",
           "Failed To Create Firewall Data": "Failed To Create Firewall Data",
           "Firewall ID is Invalid.": "Firewall ID is Invalid.",
           "Firewall Id Not Found.": "Firewall Id Not Found.",
-          "Firewall Data Update Successfully": "Firewall Data Update Successfully",
+          "Firewall Data Update Successfully":
+            "Firewall Data Update Successfully",
           "Failed To Update Firewall Data": "Failed To Update Firewall Data",
-          "Firewall Deleted  Delete Successfully": "Firewall Deleted  Delete Successfully",
+          "Firewall Deleted  Delete Successfully":
+            "Firewall Deleted  Delete Successfully",
           "Updated Successfully": "Updated Successfully",
           "Valid IVR Name is mandatory.": "Valid IVR Name is mandatory.",
-          "Valid IVR Extension is mandatory.": "Valid IVR Extension is mandatory.",
+          "Valid IVR Extension is mandatory.":
+            "Valid IVR Extension is mandatory.",
           "Valid Description is mandatory.": "Valid Description is mandatory.",
           "IVR Enabled is mandatory.": "IVR Enabled is mandatory.",
-          "Valid IVR Menu Timeout is mandatory.": "Valid IVR Menu Timeout is mandatory.",
-          "Valid IVR Menu Exit App is mandatory.": "Valid IVR Menu Exit App is mandatory.",
-          "Valid IVR Menu Exit Data is mandatory.": "Valid IVR Menu Exit Data is mandatory.",
-          "IVR Menu Direct Dial is mandatory.": "IVR Menu Direct Dial is mandatory.",
-          "Valid IVR Menu Ringback is mandatory.": "Valid IVR Menu Ringback is mandatory.",
-          "Valid IVR Menu CID Prefix is mandatory.": "Valid IVR Menu CID Prefix is mandatory.",
+          "Valid IVR Menu Timeout is mandatory.":
+            "Valid IVR Menu Timeout is mandatory.",
+          "Valid IVR Menu Exit App is mandatory.":
+            "Valid IVR Menu Exit App is mandatory.",
+          "Valid IVR Menu Exit Data is mandatory.":
+            "Valid IVR Menu Exit Data is mandatory.",
+          "IVR Menu Direct Dial is mandatory.":
+            "IVR Menu Direct Dial is mandatory.",
+          "Valid IVR Menu Ringback is mandatory.":
+            "Valid IVR Menu Ringback is mandatory.",
+          "Valid IVR Menu CID Prefix is mandatory.":
+            "Valid IVR Menu CID Prefix is mandatory.",
           "Valid IVR Menu Invalid Sound is mandatory.":
             "Valid IVR Menu Invalid Sound is mandatory.",
-          "Valid IVR Menu Exit Sound is mandatory.": "Valid IVR Menu Exit Sound is mandatory.",
-          "IVR Menu PIN Number is mandatory.": "IVR Menu PIN Number is mandatory.",
-          "IVR Menu Confirm Macro is mandatory.": "IVR Menu Confirm Macro is mandatory.",
-          "IVR Menu Confirm Key is mandatory.": "IVR Menu Confirm Key is mandatory.",
-          "Valid IVR Menu TTS Engine is mandatory.": "Valid IVR Menu TTS Engine is mandatory.",
-          "Valid IVR Menu TTS Voice is mandatory.": "Valid IVR Menu TTS Voice is mandatory.",
+          "Valid IVR Menu Exit Sound is mandatory.":
+            "Valid IVR Menu Exit Sound is mandatory.",
+          "IVR Menu PIN Number is mandatory.":
+            "IVR Menu PIN Number is mandatory.",
+          "IVR Menu Confirm Macro is mandatory.":
+            "IVR Menu Confirm Macro is mandatory.",
+          "IVR Menu Confirm Key is mandatory.":
+            "IVR Menu Confirm Key is mandatory.",
+          "Valid IVR Menu TTS Engine is mandatory.":
+            "Valid IVR Menu TTS Engine is mandatory.",
+          "Valid IVR Menu TTS Voice is mandatory.":
+            "Valid IVR Menu TTS Voice is mandatory.",
           "Valid IVR Menu Confirm Attempts is mandatory.":
             "Valid IVR Menu Confirm Attempts is mandatory.",
           "Valid IVR Menu Inter Digit Timeout is mandatory.":
             "Valid IVR Menu Inter Digit Timeout is mandatory.",
-          "Valid IVR Menu Max Failures is mandatory.": "Valid IVR Menu Max Failures is mandatory.",
-          "Valid IVR Menu Max Timeouts is mandatory.": "Valid IVR Menu Max Timeouts is mandatory.",
-          "Valid IVR Menu Digit Length is mandatory.": "Valid IVR Menu Digit Length is mandatory.",
+          "Valid IVR Menu Max Failures is mandatory.":
+            "Valid IVR Menu Max Failures is mandatory.",
+          "Valid IVR Menu Max Timeouts is mandatory.":
+            "Valid IVR Menu Max Timeouts is mandatory.",
+          "Valid IVR Menu Digit Length is mandatory.":
+            "Valid IVR Menu Digit Length is mandatory.",
           "Valid Greet Short is mandatory.": "Valid Greet Short is mandatory.",
-          "Valid IVR Menu Options are mandatory.": "Valid IVR Menu Options are mandatory.",
+          "Valid IVR Menu Options are mandatory.":
+            "Valid IVR Menu Options are mandatory.",
           "Company dose not exist": "Company dose not exist",
-          "IVR created and saved successfully.": "IVR created and saved successfully.",
+          "IVR created and saved successfully.":
+            "IVR created and saved successfully.",
           "Failed to create IVR": "Failed to create IVR",
           "ivr_id is mandatory.": "ivr_id is mandatory.",
           "Invalid ivr_id.": "Invalid ivr_id.",
@@ -1248,7 +1354,8 @@ i18n
           "Gateway 2 is mandatory.": "Gateway 2 is mandatory.",
           "Gateway 3 is mandatory.": "Gateway 3 is mandatory.",
           "Expression Detail is mandatory.": "Expression Detail is mandatory.",
-          "Dialplan Outbound Enabled is mandatory.": "Dialplan Outbound Enabled is mandatory.",
+          "Dialplan Outbound Enabled is mandatory.":
+            "Dialplan Outbound Enabled is mandatory.",
           "Order is mandatory.": "Order is mandatory.",
           "Outbound Name is mandatory.": "Outbound Name is mandatory.",
           "CID is Invalid.": "CID is Invalid.",
@@ -1257,11 +1364,13 @@ i18n
           "Gateway Id 2 Not Found.": "Gateway Id 2 Not Found.",
           "Gateway Id 3 Not Found.": "Gateway Id 3 Not Found.",
           "Failed To Create Outbound Route": "Failed To Create Outbound Route",
-          "Dialplan Outbound Updated Successfully !!": "Dialplan Outbound Updated Successfully !!",
+          "Dialplan Outbound Updated Successfully !!":
+            "Dialplan Outbound Updated Successfully !!",
           "Failed To update Outbound Route": "Failed To update Outbound Route",
           "Outbound Routes Id Is Invalid.": "Outbound Routes Id Is Invalid.",
           "Outbound Routes Not Exists.": "Outbound Routes Not Exists.",
-          "Failed to get dialplan_expression": "Failed to get dialplan_expression",
+          "Failed to get dialplan_expression":
+            "Failed to get dialplan_expression",
           "Phone number Is Mandatory.": "Phone number Is Mandatory.",
           "Phone number Is Invalid.": "Phone number Is Invalid.",
           "Mobile number Is Invalid.": "Mobile number Is Invalid.",
@@ -1274,9 +1383,11 @@ i18n
           "Destination is mandatory.": "Destination is mandatory.",
           "Caller ID Name is mandatory.": "Caller ID Name is mandatory.",
           "Caller ID Number is mandatory.": "Caller ID Number is mandatory.",
-          "Destination Condition is mandatory.": "Destination Condition is mandatory.",
+          "Destination Condition is mandatory.":
+            "Destination Condition is mandatory.",
           "Description is mandatory.": "Description is mandatory.",
-          "Destination Enabled is mandatory.": "Destination Enabled is mandatory.",
+          "Destination Enabled is mandatory.":
+            "Destination Enabled is mandatory.",
           "destination number range must be less than 100 requried.":
             "destination number range must be less than 100 requried.",
           "Gateway ID is Invalid.": "Gateway ID is Invalid.",
@@ -1290,10 +1401,13 @@ i18n
           "Destination is mandatory.": "Destination is mandatory.",
           "Caller ID Name is mandatory.": "Caller ID Name is mandatory.",
           "Caller ID Number is mandatory.": "Caller ID Number is mandatory.",
-          "Destination Condition is mandatory.": "Destination Condition is mandatory.",
+          "Destination Condition is mandatory.":
+            "Destination Condition is mandatory.",
           "Description is mandatory.": "Description is mandatory.",
-          "Destination Enabled is mandatory.": "Destination Enabled is mandatory.",
-          "destination_action must be an array.": "destination_action must be an array.",
+          "Destination Enabled is mandatory.":
+            "Destination Enabled is mandatory.",
+          "destination_action must be an array.":
+            "destination_action must be an array.",
           "Each item in destination_action must have valid destination_app and destination_data.":
             "Each item in destination_action must have valid destination_app and destination_data.",
           "Pstn Number already assigned to Extension  pls Unassign First.":
@@ -1325,25 +1439,32 @@ i18n
           "Token is expired.": "Token is expired.",
           "Token is invalid.": "Token is invalid.",
           "Ring Group Name Is Mandatory.": "Ring Group Name Is Mandatory.",
-          "Ring Group Description Is Mandatory.": "Ring Group Description Is Mandatory.",
+          "Ring Group Description Is Mandatory.":
+            "Ring Group Description Is Mandatory.",
           "Ring Greeting Is Mandatory.": "Ring Greeting Is Mandatory.",
-          "Ring Group Strategy Is Mandatory.": "Ring Group Strategy Is Mandatory.",
+          "Ring Group Strategy Is Mandatory.":
+            "Ring Group Strategy Is Mandatory.",
           "Caller ID Name Is Mandatory.": "Caller ID Name Is Mandatory.",
           "Call Timeout Is Mandatory.": "Call Timeout Is Mandatory.",
           "Destinations Are Mandatory.": "Destinations Are Mandatory.",
-          "Ring Group Forward Enabled Is Mandatory.": "Ring Group Forward Enabled Is Mandatory.",
+          "Ring Group Forward Enabled Is Mandatory.":
+            "Ring Group Forward Enabled Is Mandatory.",
           "Ring Group Forward Destination Is Mandatory.":
             "Ring Group Forward Destination Is Mandatory.",
-          "Forward Toll Allow Is Mandatory.": "Forward Toll Allow Is Mandatory.",
-          "Ring Group Enabled Is Mandatory.": "Ring Group Enabled Is Mandatory.",
-          "Please provide valid extension numbers.": "Please provide valid extension numbers.",
+          "Forward Toll Allow Is Mandatory.":
+            "Forward Toll Allow Is Mandatory.",
+          "Ring Group Enabled Is Mandatory.":
+            "Ring Group Enabled Is Mandatory.",
+          "Please provide valid extension numbers.":
+            "Please provide valid extension numbers.",
           "Ring Group added successfully.": "Ring Group added successfully.",
           "Failed To Create Ring Group": "Failed To Create Ring Group",
           "Ring Group Id Is Mandatory.": "Ring Group Id Is Mandatory.",
           "Ring Group UUID Is Mandatory.": "Ring Group UUID Is Mandatory.",
           "Invalid Ring Group Id ObjectId.": "Invalid Ring Group Id ObjectId.",
           "Ring Group Name Is Mandatory.": "Ring Group Name Is Mandatory.",
-          "Ring Group Description Is Mandatory.": "Ring Group Description Is Mandatory.",
+          "Ring Group Description Is Mandatory.":
+            "Ring Group Description Is Mandatory.",
           "Ring Greeting Is Mandatory.": "Ring Greeting Is Mandatory.",
           "Failed To Update Ring Group": "Failed To Update Ring Group",
           "Ring Group Id Is Invalid.": "Ring Group Id Is Invalid.",
@@ -1354,10 +1475,12 @@ i18n
           "Role user_id Is Mandatory.": "Role user_id Is Mandatory.",
           "User Id Is Invalid !!": "User Id Is Invalid !!",
           "Not Found User !!": "Not Found User !!",
-          "Current Password Does Not Match !!": "Current Password Does Not Match !!",
+          "Current Password Does Not Match !!":
+            "Current Password Does Not Match !!",
           "New And Confirm Password Does Not Match !!":
             "New And Confirm Password Does Not Match !!",
-          "User Detail Updated Successfully": "User Detail Updated Successfully",
+          "User Detail Updated Successfully":
+            "User Detail Updated Successfully",
           "User id Is Mandatory.": "User id Is Mandatory.",
           "Detail Change Successfully !!": "Detail Change Successfully !!",
           "Provider Is Mandatory": "Provider Is Mandatory",
@@ -1367,31 +1490,42 @@ i18n
           "SMTP Port Is Mandatory": "SMTP Port Is Mandatory",
           "User Name Is Invalid !!": "User Name Is Invalid !!",
           "SMTP Port Is Invalid !!": "SMTP Port Is Invalid !!",
-          "SMTP Detail Updated Successfully": "SMTP Detail Updated Successfully",
+          "SMTP Detail Updated Successfully":
+            "SMTP Detail Updated Successfully",
           "Audio file upload Mandatory": "Audio file upload Mandatory",
           "Record name is Mandatory": "Record name is Mandatory",
           "Description is Mandatory": "Description is Mandatory",
           "Description is invalid": "Description is invalid",
           "Record name is invalid": "Record name is invalid",
-          "System Recording Added Successfully": "System Recording Added Successfully",
-          "System Recording Update Successfully": "System Recording Update Successfully",
-          "Failed to Find Recording, Try Again !!": "Failed to Find Recording, Try Again !!",
+          "System Recording Added Successfully":
+            "System Recording Added Successfully",
+          "System Recording Update Successfully":
+            "System Recording Update Successfully",
+          "Failed to Find Recording, Try Again !!":
+            "Failed to Find Recording, Try Again !!",
           "Failed to delete System Record": "Failed to delete System Record",
-          "Failed to fetch system recording": "Failed to fetch system recording",
-          "System recording found successfully": "System recording found successfully",
+          "Failed to fetch system recording":
+            "Failed to fetch system recording",
+          "System recording found successfully":
+            "System recording found successfully",
           "Name Is Mandatory": "Name Is Mandatory",
           "Extension Is Mandatory": "Extension Is Mandatory",
           "Order Is Mandatory": "Order Is Mandatory",
-          "Time Condition Enabled Is Mandatory": "Time Condition Enabled Is Mandatory",
+          "Time Condition Enabled Is Mandatory":
+            "Time Condition Enabled Is Mandatory",
           "Dial Plan Action Is Mandatory": "Dial Plan Action Is Mandatory",
-          "Dial Plan Anti Action Is Mandatory": "Dial Plan Anti Action Is Mandatory",
-          "Time Condition Data Is Mandatory": "Time Condition Data Is Mandatory",
+          "Dial Plan Anti Action Is Mandatory":
+            "Dial Plan Anti Action Is Mandatory",
+          "Time Condition Data Is Mandatory":
+            "Time Condition Data Is Mandatory",
           "Description Is Mandatory": "Description Is Mandatory",
-          "Successfully created Time Condition": "Successfully created Time Condition",
+          "Successfully created Time Condition":
+            "Successfully created Time Condition",
           "Failed To Create TimeCondition": "Failed To Create TimeCondition",
           "time_condition_id is invalid": "time_condition_id is invalid",
           "time_condition dose not exist": "time_condition dose not exist",
-          "Time Condition Updated Successfully !!": "Time Condition Updated Successfully !!",
+          "Time Condition Updated Successfully !!":
+            "Time Condition Updated Successfully !!",
           "Deleted Successfully !!": "Deleted Successfully !!",
           "Gateway Name Is Mandatory": "Gateway Name Is Mandatory",
           "CID Is Mandatory": "CID Is Mandatory",
@@ -1442,7 +1576,8 @@ i18n
           "Enter WhatsApp API access token": "Enter WhatsApp API access token",
           "Call recording": "Call recording",
           "Copied successfully!": "Copied successfully!",
-          "Whatsaap Token Added Successfully": "Whatsaap Token Added Successfully",
+          "Whatsaap Token Added Successfully":
+            "Whatsaap Token Added Successfully",
           "Ring all": "Ring all",
           Andorra: "Andorra",
           "United Arab Emirates": "Yhdistyneet arabiemiirikunnat",
@@ -1472,7 +1607,8 @@ i18n
           "Saint Barthélemy": "Saint Barthélemy",
           Bermuda: "Bermuda",
           "Brunei Darussalam": "Brunei Darussalam",
-          "Bolivia, Plurinational State of": "Bolivia, monikansallinen osavaltio",
+          "Bolivia, Plurinational State of":
+            "Bolivia, monikansallinen osavaltio",
           "Bonaire, Sint Eustatius and Saba": "Bonaire, Sint Eustatius ja Saba",
           Brazil: "Brasilia",
           Bahamas: "Bahama",
@@ -1483,7 +1619,8 @@ i18n
           Belize: "Belize",
           Canada: "Kanada",
           "Cocos (Keeling) Islands": "Kookossaaret (Keeling)",
-          "Congo, Democratic Republic of the": "Kongo, Demokraattinen tasavalta",
+          "Congo, Democratic Republic of the":
+            "Kongo, Demokraattinen tasavalta",
           "Central African Republic": "Keski-Afrikan tasavalta",
           Congo: "Kongo",
           Switzerland: "Sveitsi",
@@ -1541,7 +1678,8 @@ i18n
           "Guinea-Bissau": "Guinea-Bissau",
           Guyana: "Guyana",
           "Hong Kong": "Hong Kong",
-          "Heard Island and McDonald Islands": "Heard Island ja McDonald Islands",
+          "Heard Island and McDonald Islands":
+            "Heard Island ja McDonald Islands",
           Honduras: "Honduras",
           Croatia: "Kroatia",
           Haiti: "Haiti",
@@ -1551,7 +1689,8 @@ i18n
           Israel: "Israel",
           "Isle of Man": "Isle of Man",
           India: "Intia",
-          "British Indian Ocean Territory": "Brittiläinen Intian valtameren alue",
+          "British Indian Ocean Territory":
+            "Brittiläinen Intian valtameren alue",
           Iraq: "Irak",
           "Iran, Islamic Republic of": "Iran, islamilainen tasavalta",
           Iceland: "Islanti",
@@ -1566,12 +1705,14 @@ i18n
           Kiribati: "Kiribati",
           Comoros: "Comoros",
           "Saint Kitts and Nevis": "Saint Kitts ja Nevis",
-          "Korea, Democratic People's Republic of": "Korea, demokraattinen kansantasavalta",
+          "Korea, Democratic People's Republic of":
+            "Korea, demokraattinen kansantasavalta",
           "Korea, Republic of": "Korea, tasavalta",
           Kuwait: "Kuwait",
           "Cayman Islands": "Caymansaaret",
           Kazakhstan: "Kazakhstan",
-          "Lao People's Democratic Republic": "Laon demokraattinen kansantasavalta",
+          "Lao People's Democratic Republic":
+            "Laon demokraattinen kansantasavalta",
           Lebanon: "Libanon",
           "Saint Lucia": "Saint Lucia",
           Liechtenstein: "Liechtenstein",
@@ -1704,8 +1845,10 @@ i18n
           "Super Admin": "Super Admin",
           "Video upload": "Video lataus",
           Busy: "Varattu",
-          "Only video files are allowed.": "Vain videotiedostot ovat sallittuja.",
-          "Need help configure the calendar": "Need help configure the calendar",
+          "Only video files are allowed.":
+            "Vain videotiedostot ovat sallittuja.",
+          "Need help configure the calendar":
+            "Need help configure the calendar",
           Password: "Salasana",
           Username: "Käyttäjätunnus",
           Realm: "Realm",
@@ -2334,7 +2477,7 @@ i18n
             "Are you sure you want to Unblock user?",
           "Last seen at": "Last seen at",
           "Last seen on": "Last seen on",
-          
+
           // Phone Book
           "Add new contact": "Add new contact",
           "Edit contact": "Edit contact",
