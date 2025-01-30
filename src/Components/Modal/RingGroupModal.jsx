@@ -20,6 +20,8 @@ import ConstantConfig, {
 } from "../ConstantConfig";
 
 function RingGroupModal({
+  recordCall,
+  handleRecordCall,
   allDropdown,
   ringDropdown,
   selectedValuesSecond,
@@ -584,17 +586,22 @@ function RingGroupModal({
                   )}
                   <Col
                     xs={12}
-                    className="status_namm mt-3"
-                    // style={{
-                    //   borderBottom:
-                    //     "1px solid var(--main-bordermodaldashboard-color)",
-                    // }}
+                    style={{
+                      marginTop: "20px",
+                    }}
                   >
-                    <div className="modal-head d-flex justify-content-between">
+                    <div className="record-modal-head d-flex justify-content-between">
                       {t("Record calls")}
-                      <label className="switch" style={{ marginLeft: "8px" }}>
-                        <input type="checkbox" id="skipBusyAgent" />
-                        <span className="slider"></span>
+                      <label
+                        className="record_switch"
+                        style={{ marginLeft: "8px" }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={recordCall}
+                          onChange={handleRecordCall}
+                        />
+                        <span className="record_slider"></span>
                       </label>
                     </div>
                   </Col>

@@ -802,6 +802,13 @@ ul.choose-skin li.active div::after {
   font-family: "krub", sans-serif !important;
   font-weight: 400;
 }
+/* new */
+.record-modal-head {
+  color: var(--main-adminheaderpage-color) !important;
+  font-size: 15px;
+  font-family: "krub", sans-serif !important;
+  font-weight: 400;
+}
 .num_table .modal-head {
   font-size: 15px;
   font-family: "Krub", sans-serif !important;
@@ -1494,6 +1501,72 @@ ul.choose-skin li.active div::after {
   width: 0;
   height: 0;
 }
+
+/* new */
+.record_switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 22px;
+}
+
+.record_switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* new */
+.record_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--main-switchbackground-color);
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  border-radius: 3px;
+}
+
+.record_slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  border-radius: 0.1875rem;
+}
+
+input:checked + .record_slider {
+  background-color: var(--main-orange-color);
+}
+
+input:focus + .record_slider {
+  box-shadow: 0 0 1px var(--main-orange-color);
+}
+
+input:checked + .record_slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  left: -10px;
+  border-radius: 0.1875rem;
+}
+
+.record_slider.round {
+  border-radius: 34px;
+}
+
+.record_slider.round:before {
+  border-radius: 50%;
+}
+
 
 .slider {
   position: absolute;

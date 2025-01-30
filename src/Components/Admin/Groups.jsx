@@ -73,6 +73,7 @@ export default function RingGroupTable() {
   const [ringDropdown, setRingDropDown] = useState({});
   const [allDropdown, setAllDropDown] = useState({});
   const [huntsliderValue, setHuntsliderValue] = useState(0);
+  const [recordCall, setRecordCall] = useState(false);
   const [selectType, setSelectType] = useState({
     id: "",
     display: "",
@@ -89,6 +90,7 @@ export default function RingGroupTable() {
   const [formData, setFormData] = useState({
     name: "",
     extension: "",
+    record_calls: false, //new
     ring_group_description: "",
     ring_group_greeting: "",
     ring_group_strategy: "",
@@ -220,6 +222,7 @@ export default function RingGroupTable() {
           domain_id: values?.domain_id,
           name: values?.name,
           extension: values?.extension,
+          record_calls: values?.record_calls, //new
           ring_group_description: values?.ring_group_description,
           ring_group_greeting: values?.ring_group_greeting,
           ring_group_strategy: values?.ring_group_strategy,
@@ -247,6 +250,7 @@ export default function RingGroupTable() {
           skip_busy_agent:
             values?.skip_busy_agent == undefined ? "false" : "true",
         });
+        setRecordCall(values?.record_calls);
         setHuntsliderValue(values?.ring_hunt_timeout);
         setSliderValue(values?.ring_group_call_timeout);
         const selectedIds = values?.destinations || [];
@@ -263,6 +267,7 @@ export default function RingGroupTable() {
       });
     }
   }, [value, mode]);
+
   const handleSearchChange = (e) => {
     const newSearchTerm = e.target.value;
     if (!newSearchTerm.trim()) {
@@ -283,6 +288,7 @@ export default function RingGroupTable() {
     setFormData({
       name: "",
       extension: "",
+      record_calls: false,
       ring_group_description: "",
       ring_group_greeting: "",
       ring_group_strategy: "",
@@ -310,11 +316,20 @@ export default function RingGroupTable() {
       ring_group_call_timeout: sliderValue,
     }));
   }, [sliderValue]);
+
+  useEffect(() => {
+    setFormData((prevdata) => ({
+      ...prevdata,
+      record_calls: recordCall,
+    }));
+  }, [recordCall]);
+
   const handlesavedata = () => {
     const valuesinextion = selectedValuesSecond?.map((item) => item._id);
     const listinvalues = {
       name: formData.name,
       extension: formData.extension,
+      record_calls: formData.record_calls,
       ring_group_description: formData.ring_group_description,
       ring_group_greeting: "Lights(chosic.com).mp3",
       ring_group_strategy: formData.ring_group_strategy,
@@ -384,6 +399,7 @@ export default function RingGroupTable() {
         domain_id: formData.domain_id,
         context: formData.context,
       };
+
       dispatch(
         putapiall({
           inputData: data,
@@ -475,10 +491,15 @@ export default function RingGroupTable() {
       setAllDropDown(response?.payload?.response?.data || {});
     });
   }, []);
+
   const openDelete = (id) => {
     setLoader(false);
     setDeletemodal(true);
     setDeleteId(id);
+  };
+
+  const handleCheckboxChange = () => {
+    setRecordCall(!recordCall);
   };
 
   const handleCloseDelete = () => {
@@ -507,6 +528,7 @@ export default function RingGroupTable() {
     setFormData({
       name: "",
       extension: "",
+      record_calls: false, //new
       ring_group_description: "",
       ring_group_greeting: "",
       ring_group_strategy: "",
@@ -783,6 +805,8 @@ export default function RingGroupTable() {
       </div>
       {show && (
         <RingGroupModal
+          handleRecordCall={handleCheckboxChange}
+          recordCall={recordCall}
           ringDropdown={ringDropdown}
           apidropdown={allDropdown}
           handleClosee={handleClose}

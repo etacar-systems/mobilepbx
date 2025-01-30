@@ -5,6 +5,7 @@ export interface RingGroup {
   ring_group_uuid: String;
   name: String;
   extension: String;
+  record_calls:Boolean,
   ring_group_strategy: String;
   domain_id: String;
   ring_group_greeting: String;
@@ -55,6 +56,10 @@ const ringGroupSchema: Schema = new Schema(
     extension: {
       type: String,
       default: "",
+    },
+    record_calls: { //new
+      type: Boolean,
+      default: false,
     },
     ring_group_strategy: {
       type: String,

@@ -41,6 +41,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     const {
       name,
       extension,
+      record_calls,
       ring_group_strategy,
       ring_group_greeting,
       ring_group_call_timeout,
@@ -158,6 +159,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
       domain_id: company_details?.domain_uuid,
       name,
       extension,
+      record_calls,
       ring_group_strategy,
       ring_group_greeting,
       ring_group_call_timeout,
@@ -230,8 +232,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     //console.log("api_config",api_config)
     try {
       const response = await axios.request(api_config);
-      //console.log("response",response)
-      if (response.data?.id) {
+        if (response.data?.id) {
         const newData = await ring_group.create({
           ...create_ringgroup_obj,
           ring_group_uuid: response.data?.id,
@@ -270,6 +271,7 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
       ring_group_id,
       name,
       extension,
+      record_calls,
       ring_group_description,
       ring_group_greeting,
       ring_group_strategy,
@@ -419,6 +421,7 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
     const updated_ringgroup_obj = {
       name,
       extension,
+      record_calls,
       ring_group_description,
       ring_group_greeting,
       ring_group_strategy,
@@ -496,7 +499,7 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
     //console.log(api_config,"api_config")
     try {
       const response = await axios.request(api_config);
-      if (response.data?.msg === "Ring Group Updated Successfully !!") {
+        if (response.data?.msg === "Ring Group Updated Successfully !!") {
         await ring_group.findByIdAndUpdate(ring_group_id, updated_ringgroup_obj, {
           runValidators: true,
         });
