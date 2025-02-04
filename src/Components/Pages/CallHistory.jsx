@@ -431,7 +431,11 @@ export default function CallHistory() {
                                 ? "00:00:00"
                                 : formattedTime}{" "}
                             </td>
-                            <td style={{ padding: "22px" }}>{t(val.status)}</td>
+                            <td style={{ padding: "22px" }}>
+                              {t(val?.status) != t("answered")
+                                ? t("missed")
+                                : t("answered")}
+                            </td>
                             <td className="table_edit3">
                               <button onClick={() => makeCall(val)}>
                                 <Call

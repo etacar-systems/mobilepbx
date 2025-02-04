@@ -311,6 +311,14 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
         find_query.extension_uuid = user_detail?.extension_uuid; // Filter by extension_uuid
       }
 
+      //new
+      find_query = {
+        ...find_query,
+        leg: { $eq: "a" },
+        module_name: { $ne: "lua" }, //new
+        status: { $ne: "voicemail" }, //new
+      };
+
       // Add search condition if provided
       if (search && search.trim()) {
         find_query.$or = [
@@ -342,10 +350,10 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
       }
 
       // Now, execute the query
-      const call_History = await cdrs.find(find_query);
+      const call_History = await cdrs.find(find_query).sort({ start_stamp: 1 });
 
       // Log the query and result for debugging
-      console.log("Final find_query:", JSON.stringify(find_query, null, 2));
+      // console.log("Final find_query:", JSON.stringify(find_query, null, 2));
       // console.log("Reports List:", call_History);
 
       //   console.log("call_History", call_History);
@@ -402,6 +410,7 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
 const getAllDataByDomainList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = req.body;
+    const internal_calls = data.internal_calls;
     const search = data.search;
     const per_page = data.size;
     const page = data.page;
@@ -508,7 +517,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
     const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf('day').toDate(); // Start of day in the timezone
     const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf('day').toDate(); // End of day in the timezone
-    console.log("startDateInTimeZone", start_date, startDateInTimeZone, endDateInTimeZone, countries, timezone);
+    // console.log("startDateInTimeZone", start_date, startDateInTimeZone, endDateInTimeZone, countries, timezone);
 
     let api_config = {
       method: "get",
@@ -553,6 +562,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
             },
           ],
         },
+
       };
 
       if (search) {
@@ -594,12 +604,19 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         };
       }
 
+      if (internal_calls) {
+        find_query = {
+          ...find_query,
+          direction: { $ne: "local" }
+        }
+      }
+
       // const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
       const reports_list = await cdrs.aggregate([
         {
           $match: find_query,
         },
-        { $sort: { start_stamp: -1 } },
+        { $sort: { start_stamp: 1 } },
         {
           $project: {
             xml_cdr_uuid: 1,

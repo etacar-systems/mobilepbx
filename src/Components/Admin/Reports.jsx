@@ -61,6 +61,11 @@ export default function Reports() {
   const clearSearch = () => {
     setSearchterm("");
   };
+  const [internalCalls, setInternalCalls] = useState(false);
+  const handleInternalCalls = () => {
+    setInternalCalls(!internalCalls);
+  };
+
   useEffect(() => {
     setLoading(true);
     if (abortControllerRef.current) {
@@ -71,6 +76,7 @@ export default function Reports() {
 
     const inputdata = {
       search: searchTerm,
+      internal_calls: internalCalls, //new
       size: select,
       direction: Direction,
       start_date: formattedDate,
@@ -103,7 +109,13 @@ export default function Reports() {
         setLoading(false);
       }
     });
-  }, [searchTerm, select, currentPage, filter]);
+  }, [
+    searchTerm,
+    internalCalls, // new
+    select,
+    currentPage,
+    filter,
+  ]);
   const handlelistner = (URL, date) => {
     setDate(date);
     setAudioURL(URL);
@@ -288,7 +300,21 @@ export default function Reports() {
             </div>
             <h6>{t("entries")}</h6>
           </div>
-          <div className="table_search">
+          <div className="table_search" style={{ width: "450px" }}>
+            <div
+              className="internal-call-modal-head d-flex justify-content-between align-items-center"
+              style={{ width: "100%", marginRight: "20px" }}
+            >
+              {t("Hide internal calls")}
+              <label className="internal-call-switch" style={{ marginLeft: "8px" }}>
+                <input
+                  type="checkbox"
+                  checked={internalCalls}
+                  onChange={handleInternalCalls}
+                />
+                <span className="internal-call-slider"></span>
+              </label>
+            </div>
             <h6>{t("Search")}:</h6>
             <Form.Control
               type="text"

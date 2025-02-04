@@ -101,6 +101,13 @@ function CallDetailDashboard({
     setListner(false);
     setRecordingUrl("");
   };
+
+  //new
+  const [internalCalls, setInternalCalls] = useState(false);
+  const handleInternalCalls = () => {
+    setInternalCalls(!internalCalls);
+  };
+
   const userid = Cookies.get("User_id");
   const [loading, setLoading] = useState(false);
   const [dashboartdata, setdashboartdata] = useState([]);
@@ -115,6 +122,7 @@ function CallDetailDashboard({
     abortControllerRef.current = abortController;
 
     const inputdata = {
+      internal_calls: internalCalls, //new
       search: searchTerm,
       size: select,
       direction: Direction,
@@ -146,7 +154,16 @@ function CallDetailDashboard({
         setTimezone(data?.timezone);
       }
     });
-  }, [searchTerm, select, currentPage, filter, Role, Extensiontype, Direction]);
+  }, [
+    searchTerm,
+    internalCalls, // new
+    select,
+    currentPage,
+    filter,
+    Role,
+    Extensiontype,
+    Direction,
+  ]);
 
   const convertToSeconds = (duration) => {
     if (typeof duration === "number") {
@@ -275,8 +292,23 @@ function CallDetailDashboard({
             style={{ display: "flex", alignItems: "center" }}
             className="formdasboard"
           >
+            {/* new */}
+            <div
+              className="internal-call-modal-head d-flex justify-content-around"
+              style={{ width: "100%", marginRight: "20px" }}
+            >
+              {t("Hide internal calls")}
+              <label className="internal-call-switch" style={{ marginLeft: "8px" }}>
+                <input
+                  type="checkbox"
+                  checked={internalCalls}
+                  onChange={handleInternalCalls}
+                />
+                <span className="internal-call-slider"></span>
+              </label>
+            </div>
             <h6 style={{ fontWeight: "400" }}>{t("Category")}:</h6>
-            <div className="ml-2">
+            <div className="ml-2" style={{ width: "auto" }}>
               <CustomDropDown
                 toggleDropdown={toggleDropdown}
                 showValue={Direction}
