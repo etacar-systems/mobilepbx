@@ -295,10 +295,13 @@ function CallDetailDashboard({
             {/* new */}
             <div
               className="internal-call-modal-head d-flex justify-content-around"
-              style={{ width: "100%", marginRight: "20px" }}
+              style={{ width: "110%", marginRight: "20px" }}
             >
               {t("Hide internal calls")}
-              <label className="internal-call-switch" style={{ marginLeft: "8px" }}>
+              <label
+                className="internal-call-switch"
+                style={{ marginLeft: "8px" }}
+              >
                 <input
                   type="checkbox"
                   checked={internalCalls}
