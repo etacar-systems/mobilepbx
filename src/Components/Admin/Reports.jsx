@@ -61,7 +61,7 @@ export default function Reports() {
   const clearSearch = () => {
     setSearchterm("");
   };
-  const [internalCalls, setInternalCalls] = useState(false);
+  const [internalCalls, setInternalCalls] = useState(true);
   const handleInternalCalls = () => {
     setInternalCalls(!internalCalls);
   };

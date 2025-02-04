@@ -103,7 +103,7 @@ function CallDetailDashboard({
   };
 
   //new
-  const [internalCalls, setInternalCalls] = useState(false);
+  const [internalCalls, setInternalCalls] = useState(true);
   const handleInternalCalls = () => {
     setInternalCalls(!internalCalls);
   };
