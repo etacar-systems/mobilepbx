@@ -2450,7 +2450,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 domain_uuid: companyDetail?.domain_uuid,
                 start_stamp: { $gte: startDate, $lte: endDate },
                 leg: "a",
-                module_name: { $ne: "lua" } //new
+                module_name: { $ne: "lua" },//new
+                status: { $nin: ["voicemail", "answered"] }
               },
             },
             {
@@ -2458,10 +2459,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 missed_number: {
                   $cond: {
                     if: {
-                      $and: [
-                        { $ne: ["$status", "answered"] },
-                        { $ne: ["$status", "voicemail"] }
-                      ]
+                      $not: { $in: ["status", ["answered", "voicemail"]] }
                     }, then: "$caller_id_number", else: null
                   },
                 },
@@ -2475,7 +2473,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 waiting_time: {
                   $cond: {
                     if: {
-                      $and: [
+                      $or: [
                         { $ne: ["$end_stamp", null] },
                         { $ne: ["$start_stamp", null] },
                         { $ne: ["$status", "voicemail"] },
@@ -2506,10 +2504,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $push: {
                     $cond: {
                       if: {
-                        $and: [
-                          { $ne: ["$status", "answered"] },
-                          { $ne: ["$status", "voicemail"] }
-                        ]
+                        $not: { $in: ["status", ["answered", "voicemail"]] }
                       }, then: "$missed_number", else: null
                     },
                   },
@@ -2518,27 +2513,43 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $sum: {
                     $cond: {
                       if: {
-                        $and: [
-                          { $ne: ["$status", "answered"] },
-                          { $ne: ["$status", "voicemail"] }
-                        ]
+                        $not: { $in: ["status", ["answered", "voicemail"]] }
                       }, then: 1, else: 0
                     },
                   },
                 },
                 total_count: { $sum: 1 },
-                total_waiting_time: { $sum: "$waiting_time" },
+                waitingTime: {
+                  $sum: {
+                    $cond: {
+                      if: {
+                        $not: { $in: ["status", ["answered", "voicemail"]] }
+                      },
+                      then: "$waiting_time",
+                      else: 0
+                    }
+                  }
+                }
+
               },
             },
             {
               $addFields: {
-                average_waiting_time: {
+                // average_waiting_time: {
+                //   $cond: {
+                //     if: { $eq: ["$count", 0] },
+                //     then: 0,
+                //     else: { $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2] },
+                //   },
+                // },
+                total_waiting_time: {
                   $cond: {
                     if: { $eq: ["$count", 0] },
                     then: 0,
-                    else: { $round: [{ $divide: ["$total_waiting_time", "$count"] }, 2] },
+                    else: { $divide: ["$waitingTime", "$count"] },
                   },
-                },
+
+                }
               },
             },
             {

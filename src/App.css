@@ -4073,7 +4073,7 @@ select {
 }
 
 .Selfmadedropdown-btn {
-  width: 95px;
+  width: 100%;
   padding: 4px 0 4px 9px;
   border-radius: 5px;
   font-size: 14px;
@@ -4082,7 +4082,7 @@ select {
   border: 1px solid var(--main-bordermodaldashboard-color);
   cursor: pointer;
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   /* align-items: center; */
   color: var(--main-adminheaderpage-color);
 }

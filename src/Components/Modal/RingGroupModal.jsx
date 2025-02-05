@@ -791,7 +791,7 @@ function RingGroupModal({
                   </Form.Label>
                   <div className="Selfmade-dropdown">
                     <div
-                      className="Selfmadedropdown-btn"
+                      className="Selfmadedropdown-btn d-flex justify-content-between"
                       onClick={() => toggleDropdown("type")}
                     >
                       {t(selectType.display) || t("None selected")}

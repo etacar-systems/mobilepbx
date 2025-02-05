@@ -97,7 +97,8 @@ function MissedCallDashboard({
             <h4 className="font-h4 missed-header">
               {totalCalled != 0 //changed
                 ? Utils.formatDuration(
-                    Math.round(totalAvgWaitTime / totalMissedCalled)
+                    Math.round(totalAvgWaitTime)
+                    // Math.round(totalAvgWaitTime / totalMissedCalled)
                   )
                 : 0 + "s"}{" "}
               {/* {missedCalledData &&

@@ -303,7 +303,7 @@ export default function Reports() {
           <div className="table_search" style={{ width: "450px" }}>
             <div
               className="internal-call-modal-head d-flex justify-content-between align-items-center"
-              style={{ width: "110%", marginRight: "20px" }}
+              style={{ width: "580px", marginRight: "20px" }}
             >
               {t("Hide internal calls")}
               <label className="internal-call-switch" style={{ marginLeft: "8px" }}>

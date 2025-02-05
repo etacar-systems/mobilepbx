@@ -92,7 +92,7 @@ function CustomDropDown({
         <div
           className="Selfmadedropdown-btn "
           onClick={mode === "edit" ? null : handleDropdownClick}
-          style={{ background: bgcolor }}
+          style={{ background: bgcolor ,width:"100px"}}
         >
           {console.log(state, "---state--")}
           <div className="elipsisDrodownshow">{t(state) || t(defaultValue)}</div>

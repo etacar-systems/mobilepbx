@@ -579,7 +579,7 @@ function CallDetailDashboard({
                                   }}
                                 >
                                   <div className="overflowdashboaard">
-                                    {t(row.direction)}
+                                    {t(row.direction) == "local" ? t("internal"):t(row?.direction)}
                                   </div>
                                 </td>
 

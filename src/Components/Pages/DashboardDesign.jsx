@@ -300,7 +300,7 @@ function DashboardDesign() {
     (item) => {
       totalMissedCalled += item.count;
       totalCalled += item.total_count;
-      totalAvgWaitTime += item.total_waiting_time;
+      totalAvgWaitTime += Math.round(item.total_waiting_time);
       return item;
     }
   );
@@ -353,8 +353,8 @@ function DashboardDesign() {
         },
       },
       {
-        label: t("Waiting time"),
-        data: missedCalledData?.map((item) => item.total_waiting_time),
+        label: t("Average Waiting time"),
+        data: missedCalledData?.map((item) => Math.round(item.total_waiting_time)),
         // data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,
         backgroundColor: Multilinechart.dataset2color,
