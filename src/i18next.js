@@ -1579,7 +1579,7 @@ i18n
           "Copied successfully!": "Copied successfully!",
           "Whatsaap Token Added Successfully":
             "Whatsaap Token Added Successfully",
-          "Ring all": "Ring all",
+          "Ring all": "Soittoryhmä",
           Andorra: "Andorra",
           "United Arab Emirates": "Yhdistyneet arabiemiirikunnat",
           Afghanistan: "Afghanistan",
