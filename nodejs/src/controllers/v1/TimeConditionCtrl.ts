@@ -26,7 +26,7 @@ const getTimeConditionList = async (
       });
     }
     let cid: any = user_detail?.cid;
-    
+
     let page: any = data?.page;
     let size: any = data?.size;
     let search: any = data?.search?.toString();
@@ -71,7 +71,7 @@ const getTimeConditionList = async (
       find_query = {
         is_deleted: 0,
         cid: cid,
-        type:type
+        type: type
       };
     }
     const ListData = await TimeCondition.find(find_query)
@@ -236,6 +236,7 @@ const editTimeCondition = async (
       dialplan_action,
       dialplan_anti_action,
       timecondition_data,
+      type
     } = req.body;
 
     const requiredFields = {
@@ -284,6 +285,7 @@ const editTimeCondition = async (
       });
     }
     const createObj = {
+      type,
       name,
       extension,
       order,
@@ -313,6 +315,7 @@ const editTimeCondition = async (
         url: config.PBX_API.TIME_CONDITION.UPDATE,
         auth: config.PBX_API.AUTH,
         data: {
+          type,
           name,
           extension,
           order,
