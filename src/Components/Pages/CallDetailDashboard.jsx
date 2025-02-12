@@ -295,7 +295,7 @@ function CallDetailDashboard({
             {/* new */}
             <div
               className="internal-call-modal-head d-flex justify-content-around"
-              style={{ width: "110%", marginRight: "20px" }}
+              style={{ width: "140%", marginRight: "20px" }}
             >
               {t("Hide internal calls")}
               <label
