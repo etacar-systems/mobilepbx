@@ -54,6 +54,7 @@ export default function Webphone() {
   const [hasMore, setHasMore] = useState(true);
   const [groupList, setGroupList] = useState([]);
   const [contactList, setContactList] = useState([]);
+  const [groupUserOnline, setGroupUserOnline] = useState(0);
   const tabKey = {
     Extension: "Extension",
     Contact: "Contact",
@@ -157,6 +158,7 @@ export default function Webphone() {
           setGroupList(response?.payload?.response?.RingGroupList);
           setCurrentPage(initialPage + 1);
           setUserTotal(response.payload?.response?.ring_group_total_counts);
+          setGroupUserOnline(response?.payload?.response?.groupUserOnline)
         }
       });
     }
@@ -274,7 +276,10 @@ export default function Webphone() {
               }}
             >
               <span className="dashboardtext">{t("Communication")}</span>
-              <span style={{ color: "var(--main-adminnumberheader-color)" }} className="siptext">
+              <span
+                style={{ color: "var(--main-adminnumberheader-color)" }}
+                className="siptext"
+              >
                 {/* <i class="fa fa-signal" style={{ fontSize: "14px" }}></i>{" "} */}
                 {/* {t("sip")} :-  */}
                 {sip}
@@ -301,7 +306,11 @@ export default function Webphone() {
             <Col lg={8} className="m-0">
               <Card style={{ width: "100%" }}>
                 <Card.Body className="misscall" style={{ width: "100%" }}>
-                  <Tab.Container activeKey={activeTab} onSelect={handleTabSelect} className="mb-2">
+                  <Tab.Container
+                    activeKey={activeTab}
+                    onSelect={handleTabSelect}
+                    className="mb-2"
+                  >
                     <Nav variant="tabs" className="custome-nav table-nav">
                       <Nav.Item className="custom-nav-item">
                         <Nav.Link eventKey="Extension" className="nav-link2">
@@ -381,7 +390,9 @@ export default function Webphone() {
                                   >
                                     <ChatList
                                       badge={true}
-                                      name={item.first_name + " " + item.last_name}
+                                      name={
+                                        item.first_name + " " + item.last_name
+                                      }
                                       image={item?.user_image}
                                       message={statusText}
                                       status={statusText}
@@ -389,7 +400,10 @@ export default function Webphone() {
                                       activeTab={activeTab}
                                       onOpenModal={() =>
                                         openModal({
-                                          name: item.first_name + " " + item.last_name,
+                                          name:
+                                            item.first_name +
+                                            " " +
+                                            item.last_name,
                                           extension: item.user_extension,
                                           mobile: item.mobile,
                                         })
@@ -408,14 +422,26 @@ export default function Webphone() {
                         >
                           <div className="row g-0">
                             {groupList?.map((item) => {
+                               const statusText = groupUserOnline == 0
+                               ? "Offline"
+                               : "Online"
+
+                             const statusClass = groupUserOnline == 0
+                             ? "Offline"
+                             : "Online"
+
                               return (
-                                <div className="col-12 col-sm-4 " style={{ padding: "14px" }}>
+                                <div
+                                  className="col-12 col-sm-4"
+                                  style={{ padding: "14px" }}
+                                >
                                   <ChatList
+                                    usersOnline={groupUserOnline}
                                     badge={true}
                                     name={item.name}
-                                    message="Online"
-                                    status="Online"
-                                    statusClass="online"
+                                    message={statusText}
+                                    status={statusText}
+                                    statusClass={statusClass}
                                     activeTab={activeTab}
                                     onOpenModal={(e) =>
                                       openModal({
@@ -449,14 +475,19 @@ export default function Webphone() {
                                 >
                                   <ChatList
                                     badge={false}
-                                    name={item.first_name + " " + item.last_name}
+                                    name={
+                                      item.first_name + " " + item.last_name
+                                    }
                                     message="Online"
                                     status="Online"
                                     statusClass="online"
                                     activeTab={activeTab}
                                     onOpenModal={(e) =>
                                       openModal({
-                                        name: item.first_name + " " + item.last_name,
+                                        name:
+                                          item.first_name +
+                                          " " +
+                                          item.last_name,
                                         extension: item.phone_number,
                                         mobile: item.mobile_number,
                                         position: item.position,
@@ -482,7 +513,9 @@ export default function Webphone() {
                                         message=""
                                         status=""
                                         statusClass="online"
-                                        onOpenModal={(e) => openModal(e, "Function", 185)}
+                                        onOpenModal={(e) =>
+                                          openModal(e, "Function", 185)
+                                        }
                                       />
                                     </td>
                                     <td>
@@ -491,7 +524,9 @@ export default function Webphone() {
                                         message=""
                                         status=""
                                         statusClass="busy"
-                                        onOpenModal={(e) => openModal(e, "Function", 180)}
+                                        onOpenModal={(e) =>
+                                          openModal(e, "Function", 180)
+                                        }
                                       />
                                     </td>
                                     <td>
@@ -500,7 +535,9 @@ export default function Webphone() {
                                         message=""
                                         status=""
                                         statusClass="offline"
-                                        onOpenModal={(e) => openModal(e, "Function", 181)}
+                                        onOpenModal={(e) =>
+                                          openModal(e, "Function", 181)
+                                        }
                                       />
                                     </td>
                                   </tr>

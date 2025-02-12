@@ -24,7 +24,8 @@ i18n
           Register: "Rekisteröidy",
           "Email is Required": "Sähköposti on pakollinen",
           "Password is Required": "Salasana vaaditaan",
-
+          "This E-Mail Does not exist" :"Sähköpostia ei löytynyt",
+          "Password Incorrect":"Virheellinen salasana",
           // Register Page
 
           Identify: "Tunnista",

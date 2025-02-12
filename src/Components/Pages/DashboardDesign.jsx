@@ -353,7 +353,7 @@ function DashboardDesign() {
         },
       },
       {
-        label: t("Average Waiting time"),
+        label: t("Average waiting time"),
         data: missedCalledData?.map((item) => Math.round(item.total_waiting_time)),
         // data: [15, 18, 14, 15, 17, 16, 14, 17, 16, 14],
         borderColor: Multilinechart.dataset2color,

@@ -232,7 +232,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
     //console.log("api_config",api_config)
     try {
       const response = await axios.request(api_config);
-        if (response.data?.id) {
+      if (response.data?.id) {
         const newData = await ring_group.create({
           ...create_ringgroup_obj,
           ring_group_uuid: response.data?.id,
@@ -499,7 +499,7 @@ const EditNewRecord = async (req: Request, res: Response, next: NextFunction) =>
     //console.log(api_config,"api_config")
     try {
       const response = await axios.request(api_config);
-        if (response.data?.msg === "Ring Group Updated Successfully !!") {
+      if (response.data?.msg === "Ring Group Updated Successfully !!") {
         await ring_group.findByIdAndUpdate(ring_group_id, updated_ringgroup_obj, {
           runValidators: true,
         });
@@ -672,13 +672,73 @@ const getRingGrouplist = async (req: Request, res: Response, next: NextFunction)
       };
     }
     // console.log(find_query);
-    const ring_group_list: any = await ring_group
-      .find(find_query)
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .skip(skip);
+    // const ring_group_list: any = await ring_group
+    //   .find(find_query)
+    //   .sort({ createdAt: -1 })
+    //   .limit(limit)
+    //   .skip(skip);
     // console.log(ring_group_list);
 
+    const ring_group_list = await ring_group.aggregate([
+      {
+        $match: find_query, // Apply the filtering conditions
+      },
+      {
+        $addFields: {
+          destinations: {
+            $map: {
+              input: "$destinations",
+              as: "id",
+              in: { $toObjectId: "$$id" }, // Convert string IDs to ObjectId
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // The collection to join
+          localField: "destinations", // The field in ring_group (array of user IDs)
+          foreignField: "_id", // The field in users collection
+          as: "user_details", // Output array containing matched users
+        },
+      },
+      {
+        $unwind: "$user_details"
+      },
+      {
+        $group: {
+          _id: "$_id", // Group by ring_group ID
+          ring_group_data: { $first: "$$ROOT" }, // Preserve the first ring_group data
+          user_details: { $push: "$user_details" }, // Collect all user details in an array
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$ring_group_data", { user_details: "$user_details" }],
+          },
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: limit,
+      },
+    ]);
+
+    let userOnline = 0;
+
+    ring_group_list.forEach((group) => {
+      group.user_details?.forEach((val: any) => {
+        if (val.is_online === 1) {
+          userOnline += 1;
+        }
+      });
+    });
     const ring_group_total_counts: any = await ring_group.find(find_query).countDocuments();
     // console.log(ring_group_total_counts);
 
@@ -689,6 +749,7 @@ const getRingGrouplist = async (req: Request, res: Response, next: NextFunction)
       message: "Ring Group List",
       RingGroupList: ring_group_list,
       total_page_count: total_page_count,
+      groupUserOnline: userOnline,
       ring_group_total_counts: ring_group_total_counts,
     });
   } catch (error) {

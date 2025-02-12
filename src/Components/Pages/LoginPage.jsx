@@ -327,7 +327,7 @@ function LoginPage() {
             }
           } else {
             if (response?.payload?.error) setloading(false);
-            toast.error(response?.payload?.error?.response?.data?.message, {
+            toast.error(t(response?.payload?.error?.response?.data?.message), {
               autoClose: 2000,
             });
             setIsButtonClicked(false);

@@ -534,50 +534,60 @@ export default function Extension() {
               ) : (
                 <>
                   {extensionData && extensionData.length > 0 ? (
-                    extensionData?.map((val, index) => {
-                      const username = val?.first_name + " " + val?.last_name;
-                      const date = new Date(val?.createdAt);
-                      const formattedDate = new Date(date)
-                        .toLocaleDateString("en-GB")
-                        .replace(/\//g, ".");
-                      return (
-                        <>
-                          <tr className="table_body" key={val?._id}>
-                            <td>{username}</td>
-                            <td>{val?.user_extension}</td>
-                            <td>
-                              {val?.pstn_number?.destination
-                                ? val?.pstn_number?.destination
-                                : t("Not Assigned")}
-                            </td>
-                            <td>{formattedDate}</td>
-                            <td>
-                              {val?.role.type == 1 ? t("User") : t("Admin")}
-                            </td>
-                            {/* <td>{val.user_type == 1 ? "User" : "Admin"}</td> */}
-                            <td className="table_edit">
-                              <button onClick={() => handleEdit(val?._id)}>
-                                <Edit_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
-                              </button>
-                              <button
-                                className="ms-1"
-                                onClick={() => openDelete(val?._id)}
-                              >
-                                <Delete_logo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
-                              </button>
-                            </td>
-                          </tr>
-                        </>
-                      );
-                    })
+                    [...extensionData]
+                      ?.sort((a, b) => {
+                        if (a?.user_extension < b?.user_extension) {
+                          return -1; // a comes before b
+                        }
+                        if (a?.user_extension > b?.user_extension) {
+                          return 1; // b comes before a
+                        }
+                        return 0; // a and b are equal
+                      })
+                      ?.map((val, index) => {
+                        const username = val?.first_name + " " + val?.last_name;
+                        const date = new Date(val?.createdAt);
+                        const formattedDate = new Date(date)
+                          .toLocaleDateString("en-GB")
+                          .replace(/\//g, ".");
+                        return (
+                          <>
+                            <tr className="table_body" key={val?._id}>
+                              <td>{username}</td>
+                              <td>{val?.user_extension}</td>
+                              <td>
+                                {val?.pstn_number?.destination
+                                  ? val?.pstn_number?.destination
+                                  : t("Not Assigned")}
+                              </td>
+                              <td>{formattedDate}</td>
+                              <td>
+                                {val?.role.type == 1 ? t("User") : t("Admin")}
+                              </td>
+                              {/* <td>{val.user_type == 1 ? "User" : "Admin"}</td> */}
+                              <td className="table_edit">
+                                <button onClick={() => handleEdit(val?._id)}>
+                                  <Edit_logo
+                                    width={14}
+                                    height={14}
+                                    className="edithover"
+                                  />
+                                </button>
+                                <button
+                                  className="ms-1"
+                                  onClick={() => openDelete(val?._id)}
+                                >
+                                  <Delete_logo
+                                    width={14}
+                                    height={14}
+                                    className="edithover"
+                                  />
+                                </button>
+                              </td>
+                            </tr>
+                          </>
+                        );
+                      })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
                       <td

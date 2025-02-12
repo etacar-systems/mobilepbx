@@ -1,5 +1,6 @@
 import React from "react";
 function ChatList({
+  usersOnline,
   name,
   message,
   status,
@@ -21,14 +22,20 @@ function ChatList({
             <div
               className="avtar-pic w35 bg-cyan"
               style={{
+                fontSize:"18px",
                 flexShrink: 0,
                 backgroundColor: "var(--main-orange-color)",
               }}
             >
-              {image ? (
-                <img style={{height:"34px",width:"34px",borderRadius:"5px"}} src={process.env.REACT_APP_FILE_BASE_URL + "/" + image} />
+             {image ? (
+                <img
+                  style={{ height: "34px", width: "34px", borderRadius: "5px" }}
+                  src={process.env.REACT_APP_FILE_BASE_URL + "/" + image}
+                />
               ) : (
-                <span className="avtarfont">{name.charAt(0)}</span>
+                <span className="avtarfont">
+                  {activeTab === "Group" ? usersOnline : name.charAt(0)}
+                </span>
               )}
             </div>
             <div

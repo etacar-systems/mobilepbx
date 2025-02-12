@@ -645,7 +645,7 @@ export default function Setting() {
                 className="modal-head"
                 style={{ marginBottom: "0px" }}
               >
-                {t("Email Address")}
+                {t("Email")}
               </Form.Label>
               <InputGroup className="">
                 <InputGroup.Text id="basic-addon1" className="modal-icon">
@@ -755,7 +755,7 @@ export default function Setting() {
                 className="modal-head"
                 style={{ marginBottom: "0px" }}
               >
-                {t("Email Address")}
+                {t("Email")}
               </Form.Label>
               <InputGroup className="">
                 <InputGroup.Text id="basic-addon1" className="modal-icon">

@@ -549,7 +549,7 @@ function RingGroupModal({
                     )}
                   </div>
                   {formData.ring_group_strategy === "sequence" ? (
-                    <>
+                    <div style={{marginBottom:"30px"}}>
                       <Form.Label className="modal-head ">
                         {t("Ring Hunt")}
                       </Form.Label>
@@ -566,9 +566,9 @@ function RingGroupModal({
                           {errors.ring_hunt}
                         </div>
                       )}
-                    </>
+                    </div>
                   ) : (
-                    <>
+                    <div style={{marginTop:"55px"}}>
                       <Form.Label className="modal-head">
                         {t("Ring group duration")}
                       </Form.Label>
@@ -582,12 +582,12 @@ function RingGroupModal({
                           {errors.ring_group_call_timeout}
                         </div>
                       )}
-                    </>
+                    </div>
                   )}
                   <Col
                     xs={12}
                     style={{
-                      marginTop: "20px",
+                      marginTop: "10px",
                     }}
                   >
                     <div className="record-modal-head d-flex justify-content-between">
