@@ -306,7 +306,7 @@ const createIVR = async (req: Request, res: Response, next: NextFunction) => {
         });
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
-          message: "IVR created and saved successfully.",
+          message: "IVR created successfully.",
         });
       } else {
         return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({

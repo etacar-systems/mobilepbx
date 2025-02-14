@@ -429,7 +429,7 @@ export default function Call_recordings() {
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
                       <td style={{ width: "100%", textAlign: "center" }} colSpan="7">
-                        {t(" No data found")}
+                        {t("No data found")}
                       </td>
                     </tr>
                   )}

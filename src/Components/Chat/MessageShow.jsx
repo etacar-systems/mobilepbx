@@ -432,7 +432,23 @@ function MessageShow({
                     val?.media_type == 13 ||
                     val?.media_type == 14) && (
                     <div className="text-center my-1">
-                      <span className="mideatypemesage">{val.message}</span>{" "}
+                      <span className="mideatypemesage">
+                        {val.message.includes("Created a Group")
+                          ? val.message.split(" Created a Group")[0] +
+                            " " +
+                            t("Created a Group")
+                          : val.message.includes("added")
+                          ? val.message.split("added")[0] +
+                            " " +
+                            t("added") +
+                            val.message.split("added")[1]
+                          : val.message.includes("Removed")
+                          ? val.message.split("Removed")[0] +
+                            " " +
+                            t("Removed") +
+                            val.message.split("Removed")[1]
+                          : val.message}
+                      </span>{" "}
                     </div>
                   )}
 
@@ -916,7 +932,7 @@ function MessageShow({
                                       style={{
                                         display: "flex",
                                         flexDirection: "column",
-                                        color:"var(--main-droparear2-color)"
+                                        color: "var(--main-droparear2-color)",
                                       }}
                                     >
                                       <div>
@@ -1243,7 +1259,9 @@ function MessageShow({
                               val?.media_type !== 14 && (
                                 <div className="d-flex align-items-center justify-content-end">
                                   <p className="msg_right_time">
-                                    {Utils.timeDisplay(moment(val?.createdAt).toDate())}
+                                    {Utils.timeDisplay(
+                                      moment(val?.createdAt).toDate()
+                                    )}
                                   </p>
                                   {val?.delivery_type === 1 ? (
                                     <SingleTick className="single_tick" />

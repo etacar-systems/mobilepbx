@@ -79,13 +79,13 @@ function TimeConditionModal({
     return Array.from({ length: daysInMonth }, (_, i) => i + 1);
   };
   const dayOfWeekList = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ];
   const weekOfYearList = () => Array.from({ length: 52 }, (_, i) => `${t("Week")} ${i + 1}`);
   const weekOfMonthList = () => ["1st Week", "2nd Week", "3rd Week", "4th Week", "5th Week"];
@@ -202,7 +202,7 @@ function TimeConditionModal({
           newTimepass[index] = dayOfMonthList(selectedMonth, selectedYear);
           break;
         case "Day of Week":
-          newTimepass[index] = dayOfWeekList;
+          newTimepass[index-1] = dayOfWeekList;
           break;
         case "Week of Year":
           newTimepass[index] = weekOfYearList();

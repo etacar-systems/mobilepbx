@@ -26,6 +26,10 @@ i18n
           "Password is Required": "Salasana vaaditaan",
           "This E-Mail Does not exist" :"Sähköpostia ei löytynyt",
           "Password Incorrect":"Virheellinen salasana",
+
+          // Admin Portal
+          "User delete successfully":"Käyttäjän poistaminen onnistui",
+
           // Register Page
 
           Identify: "Tunnista",
@@ -177,6 +181,7 @@ i18n
           "Send to Email": "Lähetä sähköpostitse",
 
           // Ring Group Dashboard
+          // "Ring Group added successfully":"Soittoryhmä luotu onnistuneesti",
           "Ring groups": "Soittoryhmät",
           "Customer service": "Asiakaspalvelu",
           SLA: "SLA",
@@ -1038,7 +1043,7 @@ i18n
             "Konferenssi päivitetty onnistuneesti",
           "Conference Deleted successfully":
             "Konferenssi poistettu onnistuneesti",
-          "IVR created successfully.": "IVR luotiin onnistuneesti",
+          "IVR created successfully.": "IVR luotu onnistuneesti",
           "IVR update successfully.": "IVR päivitetty onnistuneesti",
           "IVR deleted successfully.": "IVR poistettiin onnistuneesti",
           "Time Condition created Successfully":
@@ -1064,8 +1069,8 @@ i18n
             "Firewall Data Update Successfully",
           "Firewall Deleted Delete Successfully":
             "Firewall Deleted Delete Successfully",
-          "Phonebook added successfully": "Phonebook added successfully",
-          "Phonebook Deleted successfully": "Phonebook Deleted successfully",
+          "Contact added successfully": "Yhteystieto lisätty",
+          "Contact Deleted successfully": "Yhteystieto poistettu",
           "Extension update successfully": "Alaliittymän päivitys onnistui",
           "Wrong Email or Password": "Väärä sähköpostiosoite tai salasana",
           "User Detail Updated Successfully":
@@ -1341,8 +1346,8 @@ i18n
           "Valid IVR Menu Options are mandatory.":
             "Valid IVR Menu Options are mandatory.",
           "Company dose not exist": "Company dose not exist",
-          "IVR created and saved successfully.":
-            "IVR created and saved successfully.",
+          // "IVR created and saved successfully.":
+          //   "IVR created and saved successfully.",
           "Failed to create IVR": "Failed to create IVR",
           "ivr_id is mandatory.": "ivr_id is mandatory.",
           "Invalid ivr_id.": "Invalid ivr_id.",
@@ -1378,7 +1383,7 @@ i18n
           "Mobile number Is Invalid.": "Mobile number Is Invalid.",
           "Company Is Invalid.": "Company Is Invalid.",
           "Position Is Invalid.": "Position Is Invalid.",
-          "Phonebook updated successfully": "Phonebook updated successfully",
+          "Contact card updated successfully": "Yhteystieto päivitetty onnistuneesti",
           "Phonebook Id Is Invalid.": "Phonebook Id Is Invalid.",
           "Type is mandatory.": "Type is mandatory.",
           "User is mandatory.": "User is mandatory.",
@@ -1459,7 +1464,7 @@ i18n
             "Ring Group Enabled Is Mandatory.",
           "Please provide valid extension numbers.":
             "Please provide valid extension numbers.",
-          "Ring Group added successfully.": "Ring Group added successfully.",
+          "Ring Group added successfully.": "Soittoryhmä luotu onnistuneesti.",
           "Failed To Create Ring Group": "Failed To Create Ring Group",
           "Ring Group Id Is Mandatory.": "Ring Group Id Is Mandatory.",
           "Ring Group UUID Is Mandatory.": "Ring Group UUID Is Mandatory.",
@@ -1471,7 +1476,7 @@ i18n
           "Failed To Update Ring Group": "Failed To Update Ring Group",
           "Ring Group Id Is Invalid.": "Ring Group Id Is Invalid.",
           "Ring Group Not Exists.": "Ring Group Not Exists.",
-          "Ring Group Deleted successfully": "Ring Group Deleted successfully",
+          "Ring Group Deleted successfully": "Soittoryhmän poisto onnistui",
           "Ring Group Id Id Is Invalid.": "Ring Group Id Id Is Invalid.",
           "user_id Is Mandatory.": "user_id Is Mandatory.",
           "Role user_id Is Mandatory.": "Role user_id Is Mandatory.",
@@ -1521,13 +1526,13 @@ i18n
           "Time Condition Data Is Mandatory":
             "Time Condition Data Is Mandatory",
           "Description Is Mandatory": "Description Is Mandatory",
-          "Successfully created Time Condition":
-            "Successfully created Time Condition",
+          "Time Condition created Successfully":
+            "Aikaohjaus luotiin onnistuneesti",
           "Failed To Create TimeCondition": "Failed To Create TimeCondition",
           "time_condition_id is invalid": "time_condition_id is invalid",
           "time_condition dose not exist": "time_condition dose not exist",
-          "Time Condition Updated Successfully !!":
-            "Time Condition Updated Successfully !!",
+          // "Time Condition Updated Successfully !!":
+          //   "Time Condition Updated Successfully !!",
           "Deleted Successfully !!": "Deleted Successfully !!",
           "Gateway Name Is Mandatory": "Gateway Name Is Mandatory",
           "CID Is Mandatory": "CID Is Mandatory",
@@ -1842,7 +1847,7 @@ i18n
           Removed: "Ratkaistu",
           "Make Member": "Make Member",
           added: "Lisätty",
-          "Created a Group": "Ryhmä luotu",
+          "Created a Group": "Loi ryhmän",
           "Left Group": "Vasen ryhmä",
           "Super Admin": "Super Admin",
           "Video upload": "Video lataus",
@@ -2896,8 +2901,8 @@ i18n
             "Firewall Data Update Successfully",
           "Firewall Deleted Delete Successfully":
             "Firewall Deleted Delete Successfully",
-          "Phonebook added successfully": "Phonebook added successfully",
-          "Phonebook Deleted successfully": "Phonebook Deleted successfully",
+          // "Contact card added successfully": "Contact card added successfully",
+          "Contact Deleted successfully": "Contact Deleted successfully",
           "Extension update successfully": "Extension update successfully",
           "Wrong Email or Password": "Wrong Email or Password",
           "User Detail Updated Successfully":
@@ -3169,8 +3174,8 @@ i18n
           "Valid IVR Menu Options are mandatory.":
             "Valid IVR Menu Options are mandatory.",
           "Company dose not exist": "Company dose not exist",
-          "IVR created and saved successfully.":
-            "IVR created and saved successfully.",
+          // "IVR created and saved successfully.":
+          //   "IVR created and saved successfully.",
           "Failed to create IVR": "Failed to create IVR",
           "ivr_id is mandatory.": "ivr_id is mandatory.",
           "Invalid ivr_id.": "Invalid ivr_id.",
@@ -3206,7 +3211,7 @@ i18n
           "Mobile number Is Invalid.": "Mobile number Is Invalid.",
           "Company Is Invalid.": "Company Is Invalid.",
           "Position Is Invalid.": "Position Is Invalid.",
-          "Phonebook updated successfully": "Phonebook updated successfully",
+          "Contact card updated successfully": "Contact card updated successfully",
           "Phonebook Id Is Invalid.": "Phonebook Id Is Invalid.",
           "Type is mandatory.": "Type is mandatory.",
           "User is mandatory.": "User is mandatory.",
@@ -3354,8 +3359,8 @@ i18n
           "Failed To Create TimeCondition": "Failed To Create TimeCondition",
           "time_condition_id is invalid": "time_condition_id is invalid",
           "time_condition dose not exist": "time_condition dose not exist",
-          "Time Condition Updated Successfully !!":
-            "Time Condition Updated Successfully !!",
+          // "Time Condition Updated Successfully !!":
+          //   "Time Condition Updated Successfully !!",
           "Deleted Successfully !!": "Deleted Successfully !!",
           "Gateway Name Is Mandatory": "Gateway Name Is Mandatory",
           "CID Is Mandatory": "CID Is Mandatory",

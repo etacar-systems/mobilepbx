@@ -195,7 +195,7 @@ const addTimeCondition = async (
         });
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
-          message: "Successfully created Time Condition",
+          message: "Time Condition created Successfully",
         });
       } else {
         return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
@@ -331,7 +331,7 @@ const editTimeCondition = async (
       };
       const responseData = await axios.request(api_config);
       if (
-        responseData?.data?.msg === "Time Condition Updated Successfully !!"
+        responseData?.data?.msg === "Time Condition Updated Successfully"
       ) {
         const result = await TimeCondition.findByIdAndUpdate(
           time_condition_id,
@@ -342,7 +342,7 @@ const editTimeCondition = async (
         );
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
-          message: "Successfully created Time Condition",
+          message: "Time Condition Updated Successfully",
         });
       } else {
         console.error(responseData);

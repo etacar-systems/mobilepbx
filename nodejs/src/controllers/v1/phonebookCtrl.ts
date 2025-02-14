@@ -97,7 +97,7 @@ const addPhonebookData = async (
 
     return res.status(200).send({
       success: 1,
-      message: "Phonebook added successfully",
+      message: "Contact added successfully",
     });
   } catch (error) {
     return res.status(500).send({
@@ -205,7 +205,7 @@ const editPhonebookData = async (
 
     return res.status(200).send({
       success: 1,
-      message: "Phonebook updated successfully",
+      message: "Contact updated successfully",
     });
   } catch (error) {
     return res.status(500).send({
@@ -363,7 +363,7 @@ const deletePhonrbookData = async (
 
     return res.status(200).send({
       success: 1,
-      message: "Phonebook Deleted successfully",
+      message: "Contact Deleted successfully",
     });
   } catch (error) {
     console.log(error);

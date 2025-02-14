@@ -115,7 +115,7 @@ const addPhonebookData = async (req: Request, res: Response, next: NextFunction)
 
                 return res.status(200).send({
                         success: 1,
-                        message: "Phonebook added successfully",
+                        message: "Contact added successfully",
                 });
 
         } catch (error) {
@@ -382,7 +382,7 @@ const deletePhonrbookData = async (req: Request, res: Response, next: NextFuncti
 
                 return res.status(200).send({
                         success: 1,
-                        message: "Phonebook Deleted successfully",
+                        message: "Contact Deleted successfully",
                 });
 
         } catch (error) {
