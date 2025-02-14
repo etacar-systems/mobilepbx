@@ -377,7 +377,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
   const handleSave = () => {
     if (validateForm()) {
       const listvalues = {
-        type:role_type,
+        type: role_type,
         name: formData.timename,
         extension: user_extension,
         // extension: formData.extension,
@@ -597,6 +597,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
         const updatedTimeConditionData = [
           ...updatedFormData.timecondition_data,
         ];
+        console.log("current Data timelist", updatedTimeConditionData);
         updatedTimeConditionData[index].dialplan_detail_type =
           displayToApiTimeType(value);
         updatedTimeConditionData[index].dialplan_detail_data = "";
@@ -611,6 +612,8 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
         ];
         const currentData =
           updatedTimeConditionData[index].dialplan_detail_data.split("-");
+        console.log("current Data value range", currentData, value);
+
         if (dropdown.startsWith("Value_")) {
           currentData[0] = value;
         } else {
@@ -619,6 +622,7 @@ function CallRoutingModal({ handleClose, show, optionValue, timeConditionID }) {
         updatedTimeConditionData[index].dialplan_detail_data =
           currentData.join("-");
         updatedFormData.timecondition_data = updatedTimeConditionData;
+        console.log("current Data value range updated",updatedTimeConditionData);
       }
 
       return updatedFormData;

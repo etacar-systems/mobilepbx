@@ -243,7 +243,7 @@ export default function Calendar() {
         openModal={openModal}
         pathname={t("Calendar")}
         addBtn={false}
-        btnName={"Calendar Configuration"}
+        btnName={t("Calendar Configuration")}
       />
       <FullCalendar
         locale={language === Fi ? Fi : ""}

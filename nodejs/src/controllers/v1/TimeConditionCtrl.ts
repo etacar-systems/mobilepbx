@@ -226,7 +226,7 @@ const editTimeCondition = async (
   next: NextFunction
 ) => {
   try {
-    const {
+    let {
       time_condition_id,
       name,
       extension,
@@ -238,6 +238,29 @@ const editTimeCondition = async (
       timecondition_data,
       type
     } = req.body;
+
+    const monthMap: any = {
+      January: 1, February: 2, March: 3, April: 4, May: 5, June: 6,
+      July: 7, August: 8, September: 9, October: 10, November: 11, December: 12
+    };
+
+    const dayMap: any = {
+      Sunday: 1, Monday: 2, Tuesday: 3, Wednesday: 4, Thursday: 5, Friday: 6, Saturday: 7
+    };
+
+    timecondition_data = timecondition_data.map((item: any) => {
+      let [val1, val2] = item?.dialplan_detail_data?.split("-") || [];
+
+      // Check if both values are either months or weekdays
+      if ((val1 in monthMap && val2 in monthMap) || (val1 in dayMap && val2 in dayMap)) {
+        val1 = monthMap[val1] || dayMap[val1];
+        val2 = monthMap[val2] || dayMap[val2];
+
+        item.dialplan_detail_data = `${val1}-${val2}`;
+      }
+
+      return item;
+    });
 
     const requiredFields = {
       time_condition_id: "Time Condition Id",
