@@ -83,7 +83,7 @@ i18n
           Login: "Kirjaudu",
 
           // Webphone
-          Communication: "Viestintä",
+          Communication: "Web-puhelin",
           Connected: "Yhdistetty",
           "Registration Failed": "Rekisteröinti epäonnistui",
           sip: "sip",
@@ -1931,7 +1931,7 @@ i18n
           Login: "Login",
 
           // Webphone
-          Communication: "Communication",
+          Communication: "Webphone",
           Connected: "Connected",
           "Registration Failed": "Registration Failed",
           sip: "sip",
