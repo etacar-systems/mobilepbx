@@ -576,7 +576,7 @@ function DashboardDesign() {
                                   <td
                                     className="w250 table-custom-body-td"
                                     style={{
-                                      width: "45%",
+                                      width: "50%",
                                       padding: "0.5rem",
                                       paddingLeft: "calc( 0.5rem + 10px )",
                                     }}
