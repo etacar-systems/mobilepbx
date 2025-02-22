@@ -387,7 +387,7 @@ function DialPad({}) {
             xs={4}
             className="d-flex align-items-center justify-content-center"
           >
-            <div className="number-btn1">
+            <div className="number-btn1 mt-4">
               <Videocam
                 className="video-call-color"
                 onClick={() => {
@@ -401,7 +401,7 @@ function DialPad({}) {
             className="d-flex align-items-center justify-content-center"
           >
             <div
-              className="number-btn1 voice-call-color"
+              className="number-btn1 mt-4 voice-call-color"
               onClick={VoicmailCall}
             >
               <Voicecall className="video-call-color" />
@@ -412,7 +412,7 @@ function DialPad({}) {
             className="d-flex align-items-center justify-content-center"
           >
             <div
-              className="number-btn1"
+              className="number-btn1 mt-4"
               onClick={() => {
                 callConnect(1);
               }}
