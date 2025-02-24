@@ -671,7 +671,9 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       const endIndex = startIndex + per_page;
 
       // Assuming `reports_list` is the full list of CDR logs that you have fetched
-      const paginatedReports = reports_list.slice(startIndex, endIndex);
+      const paginatedReports = reports_list
+                                ?.sort((a, b) => new Date(b.start_stamp).getTime() - new Date(a.start_stamp).getTime())
+                                .slice(startIndex, endIndex);
 
       // Get total records count (if available) for pagination purposes
       const totalRecords = reports_list.length; // Or fetch this from your database if necessary
