@@ -550,6 +550,7 @@ i18n
           Secret: "Salasana",
           Authentication: "Todennus",
           Registration: "Rekisteröinti",
+          Registered: "Rekisteröity",
           "SIP Server": "SIP palvelin",
           "SIP Server Port": "SIP palvelimen portti",
           proxy: "SIP palvelimen portti",
@@ -1875,6 +1876,7 @@ i18n
           "Forgot password?": "Forgot password?",
           "Don't have an account?": "Don't have an account?",
           Register: "Register",
+          Registered: "Registered",
           "Email is Required": "Email is Required",
           "Password is Required": "Password is Required",
           // Register Page
