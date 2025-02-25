@@ -2670,15 +2670,15 @@ select {
 .multiple_call_btn {
   width: 16px !important;
   height: 16px !important;
-  fill: var(--main-grey-color) !important;
-  color: var(--main-grey-color) !important;
+  fill: var(--main-base-color) !important;
+  color: var(--main-base-color) !important;
 }
 
 .multiple_call_btn1 {
   width: 20px !important;
   height: 20px !important;
-  fill: var(--main-grey-color) !important;
-  color: var(--main-grey-color) !important;
+  fill: var(--main-base-color) !important;
+  color: var(--main-base-color) !important;
 }
 
 .width_tabbs {
