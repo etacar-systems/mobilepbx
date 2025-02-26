@@ -13,11 +13,7 @@ import Paginationall from "../Pages/Paginationall";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import {
-  getapiAll,
-  getapiAllWithBasicAuth,
-  postapiAll,
-} from "../../Redux/Reducers/ApiServices";
+import { getapiAll, getapiAllWithBasicAuth, postapiAll } from "../../Redux/Reducers/ApiServices";
 import Cookies from "js-cookie";
 import config from "../../config";
 import Loader from "../Loader";
@@ -32,7 +28,7 @@ export default function Reports() {
   const [Row, setRow] = useState([]);
   const [fetchData, setFetchData] = useState([]);
   const [searchTerm, setSearchterm] = useState("");
-  const [ascending, setAscending] = useState(true);
+  const [ascending, setAscending] = useState(false);
   const [select, setselect] = useState(10);
   const [value, setvalue] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,10 +49,9 @@ export default function Reports() {
   const [listner, setListner] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [filter, setfilter] = useState(false);
-  const formattedDate =
-    startDate && new Date(startDate).toLocaleDateString("en-CA");
-  const formattedEnddata =
-    endDate && new Date(endDate).toLocaleDateString("en-CA");
+  const [sortBy, setSortBy] = useState("start_stamp");
+  const formattedDate = startDate && new Date(startDate).toLocaleDateString("en-CA");
+  const formattedEnddata = endDate && new Date(endDate).toLocaleDateString("en-CA");
   console.log("formattedEnddata", formattedDate);
   const clearSearch = () => {
     setSearchterm("");
@@ -73,7 +68,6 @@ export default function Reports() {
     }
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
-
     const inputdata = {
       search: searchTerm,
       internal_calls: internalCalls, //new
@@ -84,9 +78,10 @@ export default function Reports() {
       page: currentPage,
       cid: companyid,
       select_type: selectextension,
+      sort_by: sortBy,
+      sort_order: ascending,
       ...(extension ? { extension_id: extension } : {}),
     };
-
     //change
     dispatch(
       postapiAll({
@@ -103,8 +98,6 @@ export default function Reports() {
         // console.log("resssssssssssssssssssssssssssssss:",response)
         const data = response?.payload?.response?.data || [];
         setRow(data?.cdr_list);
-
-        setSortedColumn("");
         setFetchData(data);
         setLoading(false);
       }
@@ -115,6 +108,7 @@ export default function Reports() {
     select,
     currentPage,
     filter,
+    ascending,
   ]);
   const handlelistner = (URL, date) => {
     setDate(date);
@@ -175,32 +169,13 @@ export default function Reports() {
   };
   const sortingTable = (name) => {
     if (!Row) return;
-    let newAscending = ascending;
-
     if (sortedColumn !== name) {
-      newAscending = true;
+      setAscending(true);
+    } else {
+      setAscending(!ascending);
     }
-
-    const sortData = [...Row].sort((a, b) => {
-      if (name === "duration") {
-        const durationA = convertToSeconds(a[name]);
-        const durationB = convertToSeconds(b[name]);
-        return ascending ? durationA - durationB : durationB - durationA;
-      } else {
-        const valueA = a[name];
-        const valueB = b[name];
-
-        const strA = String(valueA);
-        const strB = String(valueB);
-        return newAscending
-          ? strA.localeCompare(strB)
-          : strB.localeCompare(strA);
-      }
-    });
-
+    setSortBy(name);
     setSortedColumn(name);
-    setAscending(!newAscending);
-    setRow(sortData);
   };
   const handleSearchChange = (e) => {
     const newSearchTerm = e.target.value;
@@ -230,26 +205,19 @@ export default function Reports() {
   const arrowShow = (val) => {
     return (
       <div>
-        {listner && (
-          <ListenRecordingModal
-            recordingUrl={audioURL}
-            show={listner}
-            onHide={handleCloseListner}
-            recordDate={Date1}
-          />
-        )}
+        {listner && <ListenRecordingModal recordingUrl={audioURL} show={listner} onHide={handleCloseListner} recordDate={Date1} />}
         <Uparrow
           width={10}
           height={20}
           style={{
-            filter: sortedColumn === val && ascending ? "opacity(0.5)" : "",
+            filter: sortedColumn === val && !ascending ? "opacity(0.5)" : "",
           }}
         />
         <Downarrow
           width={10}
           height={20}
           style={{
-            filter: sortedColumn === val && !ascending ? "opacity(0.5)" : "",
+            filter: sortedColumn === val && ascending ? "opacity(0.5)" : "",
             marginLeft: "-4px",
           }}
         />
@@ -258,11 +226,7 @@ export default function Reports() {
   };
   return (
     <div className="tablespadding">
-      <AdminHeader
-        openModal={openModal}
-        pathname={t("Reports")}
-        addBtn={true}
-      />
+      <AdminHeader openModal={openModal} pathname={t("Reports")} addBtn={true} />
       <DatePickers
         btn_name={t("Search")}
         fontwidth="300"
@@ -287,11 +251,7 @@ export default function Reports() {
           <div className="show">
             <h6>{t("Show")}</h6>
             <div className="select_entry">
-              <Form.Select
-                aria-label="Default select example"
-                onChange={(e) => (setselect(e.target.value), setCurrentPage(1))}
-                value={select}
-              >
+              <Form.Select aria-label="Default select example" onChange={(e) => (setselect(e.target.value), setCurrentPage(1))} value={select}>
                 <option>10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -301,89 +261,54 @@ export default function Reports() {
             <h6>{t("entries")}</h6>
           </div>
           <div className="table_search" style={{ width: "450px" }}>
-            <div
-              className="internal-call-modal-head d-flex justify-content-between align-items-center"
-              style={{ width: "580px", marginRight: "20px" }}
-            >
+            <div className="internal-call-modal-head d-flex justify-content-between align-items-center" style={{ width: "580px", marginRight: "20px" }}>
               {t("Hide internal calls")}
               <label className="internal-call-switch" style={{ marginLeft: "8px" }}>
-                <input
-                  type="checkbox"
-                  checked={internalCalls}
-                  onChange={handleInternalCalls}
-                />
+                <input type="checkbox" checked={internalCalls} onChange={handleInternalCalls} />
                 <span className="internal-call-slider"></span>
               </label>
             </div>
             <h6>{t("Search")}:</h6>
-            <Form.Control
-              type="text"
-              height={38}
-              className="search-bg new-search-add"
-              onChange={handleSearchChange}
-              value={searchTerm}
-              onPaste={handlePaste}
-            />
+            <Form.Control type="text" height={38} className="search-bg new-search-add" onChange={handleSearchChange} value={searchTerm} onPaste={handlePaste} />
             {searchTerm && <ClearSearch clearSearch={clearSearch} />}
           </div>
         </div>
-        <div
-          className="sidebar_scroll"
-          style={{ overflowX: "auto", height: dynamicHeight, width: "100%" }}
-        >
+        <div className="sidebar_scroll" style={{ overflowX: "auto", height: dynamicHeight, width: "100%" }}>
           <table className="responshive">
             <thead className="Tablehead">
               <tr>
                 <th style={{ width: "20%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("start_stamp")}
-                  >
+                  <div className="d-flex align-items-center justify-content-between" onClick={() => sortingTable("start_stamp")}>
                     <p className="mb-0">{t("Date")}</p>
                     <div>{arrowShow("start_stamp")}</div>
                   </div>
                 </th>
                 <th style={{ width: "15%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("caller_id_number")}
-                  >
+                  <div className="d-flex align-items-center justify-content-between" onClick={() => sortingTable("caller_id_number")}>
                     <p className="mb-0">{t("Caller ID")} </p>
                     <div>{arrowShow("caller_id_number")}</div>
                   </div>
                 </th>
                 <th style={{ width: "18%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("caller_id_name")}
-                  >
+                  <div className="d-flex align-items-center justify-content-between" onClick={() => sortingTable("caller_id_name")}>
                     <p className="mb-0">{t("Caller Name")} </p>
                     <div>{arrowShow("caller_id_name")}</div>
                   </div>
                 </th>
                 <th style={{ width: "10%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("destination_number")}
-                  >
+                  <div className="d-flex align-items-center justify-content-between" onClick={() => sortingTable("destination_number")}>
                     <p className="mb-0">{t("Endpoint")} </p>
                     <div>{arrowShow("destination_number")}</div>
                   </div>
                 </th>
                 <th style={{ width: "12%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("duration")}
-                  >
+                  <div className="d-flex align-items-center justify-content-between" onClick={() => sortingTable("duration")}>
                     <p className="mb-0">{t("Duration")}</p>
                     <div>{arrowShow("duration")}</div>
                   </div>
                 </th>
                 <th style={{ width: "12%" }}>
-                  <div
-                    className="d-flex align-items-center justify-content-between"
-                    onClick={() => sortingTable("status")}
-                  >
+                  <div className="d-flex align-items-center justify-content-between" onClick={() => sortingTable("status")}>
                     <p className="mb-0"> {t("Call type")}</p>
                     <div>{arrowShow("status")}</div>
                   </div>
@@ -405,21 +330,11 @@ export default function Reports() {
               ) : (
                 <>
                   {Row && Row.length > 0 ? (
-                    Row?.filter(
-                      (item) => !item.destination_number.includes("*")
-                    ).map((val) => {
+                    Row?.filter((item) => !item.destination_number.includes("*")).map((val) => {
                       const formatTime = (seconds) =>
-                        `${String(Math.floor(seconds / 3600)).padStart(
-                          2,
-                          "0"
-                        )}:${String(Math.floor(seconds / 60) % 60).padStart(
-                          2,
-                          "0"
-                        )}:${String(seconds % 60).padStart(2, "0")}`;
+                        `${String(Math.floor(seconds / 3600)).padStart(2, "0")}:${String(Math.floor(seconds / 60) % 60).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
                       const date = new Date(val?.start_stamp);
-                      const formattedDate = new Date(date)
-                        .toLocaleDateString("en-GB")
-                        .replace(/\//g, ".");
+                      const formattedDate = new Date(date).toLocaleDateString("en-GB").replace(/\//g, ".");
                       const formattedTime = formatTime(val?.duration);
                       function extractTimeFromDate(dateString, locale) {
                         const date = new Date(dateString);
@@ -435,50 +350,28 @@ export default function Reports() {
                         <>
                           <tr className="table_body">
                             <td style={{ padding: "22px" }}>
-                              {formattedDate}{" "}
-                              {extractTimeFromDate(val?.start_stamp)}
+                              {formattedDate} {extractTimeFromDate(val?.start_stamp)}
                             </td>
-                            <td style={{ padding: "22px" }}>
-                              {val.caller_id_number}
-                            </td>
-                            <td style={{ padding: "22px" }}>
-                              {val.caller_id_name}
-                            </td>
-                            <td style={{ padding: "22px" }}>
-                              {val.destination_number}
-                            </td>
+                            <td style={{ padding: "22px" }}>{val.caller_id_number}</td>
+                            <td style={{ padding: "22px" }}>{val.caller_id_name}</td>
+                            <td style={{ padding: "22px" }}>{val.destination_number}</td>
 
-                            <td style={{ padding: "22px" }}>
-                              {val.duration == null
-                                ? "00:00:00"
-                                : formattedTime}{" "}
-                            </td>
-                            <td style={{ padding: "22px" }}>
-                              {" "}
-                              {t(val.direction)}
-                            </td>
+                            <td style={{ padding: "22px" }}>{val.duration == null ? "00:00:00" : formattedTime} </td>
+                            <td style={{ padding: "22px" }}> {t(val.direction)}</td>
                             <td className="table_edit2">
                               <button
                                 disabled={!val.recording_url}
                                 style={{
-                                  backgroundColor: !val.recording_url
-                                    ? "var(--main-searchGrey-color)"
-                                    : "var(--main-orange-color)",
+                                  backgroundColor: !val.recording_url ? "var(--main-searchGrey-color)" : "var(--main-orange-color)",
                                   border: "none",
                                   // opacity: !val.recording_url ? "0.5" : "",
                                 }}
                                 onClick={() => {
-                                  handlelistner(
-                                    val.recording_url,
-                                    val.start_stamp
-                                  );
+                                  handlelistner(val.recording_url, val.start_stamp);
                                 }}
                               >
-                                <CallLogo
-                                  width={14}
-                                  height={14}
-                                  className="edithover"
-                                />
+                                <CallLogo width={14} height={14} className="edithover" />
+                                {val.recording_url}
                               </button>
                               {/* <button className="ms-1"  onClick={handleEditListner}>
                               <EditLogo
@@ -503,10 +396,7 @@ export default function Reports() {
                     })
                   ) : (
                     <tr style={{ height: dynamicHeight - 50 }}>
-                      <td
-                        style={{ width: "100%", textAlign: "center" }}
-                        colSpan="6"
-                      >
+                      <td style={{ width: "100%", textAlign: "center" }} colSpan="6">
                         {t("No data found")}
                       </td>
                     </tr>
@@ -518,15 +408,10 @@ export default function Reports() {
         </div>
         <div className="show show2 mt-2 d-flex align-items-center justify-content-between">
           <h6>
-            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")}{" "}
-            {fetchData.total_record} {t("entries")}
+            {t("Showing")} {startEntry} {t("to")} {endEntry} {t("of")} {fetchData.total_record} {t("entries")}
           </h6>
           <div>
-            <Paginationall
-              totalPages={fetchData.total_page}
-              currentPage={currentPage}
-              setcurrenPage={setCurrentPage}
-            />
+            <Paginationall totalPages={fetchData.total_page} currentPage={currentPage} setcurrenPage={setCurrentPage} />
           </div>
         </div>
       </div>

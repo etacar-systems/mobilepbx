@@ -138,9 +138,9 @@ const getAllRecordings = async (req: Request, res: Response, next: NextFunction)
       is_deleted: 0,
     });
 
-    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${page || ""
-      }&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""
-      }&extension=${extensionDetail?.extension_uuid || ""}`;
+    let newParamString = `&search=${search || ""}&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${
+      end_date || ""
+    }&extension=${extensionDetail?.extension_uuid || ""}`;
     // console.log(data,newParamString)
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -273,11 +273,11 @@ const getAllDataByDomain = async (req: Request, res: Response, next: NextFunctio
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${
+        extension || ""
+      }`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""}&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
@@ -420,6 +420,8 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
     const cid = data.cid;
     const extensionId = data.extension_id;
     const select_type = data.select_type;
+    const sort_by = data.sort_by;
+    const sort_order = data.sort_order ? 1 : -1;
 
     let module_name: any = "";
     let extension: any = "";
@@ -479,11 +481,11 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
 
     let newParamString: any;
     if (direction) {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${extension || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&direction=${direction || ""}&start_date=${start_date || ""}&end_date=${end_date || ""}&extension=${
+        extension || ""
+      }`;
     } else {
-      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""
-        }&start_date=${start_date || ""}&end_date=${end_date || ""}`;
+      newParamString = `&per_page=${per_page || ""}&page=${page || ""}&extension=${extension || ""}&start_date=${start_date || ""}&end_date=${end_date || ""}`;
     }
     console.log("module_name", module_name);
 
@@ -515,8 +517,8 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
     // const timezone = "Asia/Dubai";
     const timezone = countryTimeZones[countries.replace(/ /g, "_")];
 
-    const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf('day').toDate(); // Start of day in the timezone
-    const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf('day').toDate(); // End of day in the timezone
+    const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf("day").toDate(); // Start of day in the timezone
+    const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf("day").toDate(); // End of day in the timezone
     // console.log("startDateInTimeZone", start_date, startDateInTimeZone, endDateInTimeZone, countries, timezone);
 
     let api_config = {
@@ -549,20 +551,13 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
               },
             },
             {
-              $gte: [
-                "$start_stamp",
-                startDateInTimeZone,
-              ],
+              $gte: ["$start_stamp", startDateInTimeZone],
             },
             {
-              $lte: [
-                "$start_stamp",
-                endDateInTimeZone,
-              ],
+              $lte: ["$start_stamp", endDateInTimeZone],
             },
           ],
         },
-
       };
 
       if (search) {
@@ -593,7 +588,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
                 $options: "i",
               },
             },
-            //new 
+            //new
             {
               status: {
                 $regex: search,
@@ -607,8 +602,8 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       if (internal_calls) {
         find_query = {
           ...find_query,
-          direction: { $ne: "local" }
-        }
+          direction: { $ne: "local" },
+        };
       }
 
       // const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
@@ -616,7 +611,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
         {
           $match: find_query,
         },
-        { $sort: { start_stamp: 1 } },
+        { $sort: { [sort_by]: sort_order } },
         {
           $project: {
             xml_cdr_uuid: 1,
@@ -671,9 +666,7 @@ const getAllDataByDomainList = async (req: Request, res: Response, next: NextFun
       const endIndex = startIndex + per_page;
 
       // Assuming `reports_list` is the full list of CDR logs that you have fetched
-      const paginatedReports = reports_list
-                                ?.sort((a, b) => new Date(b.start_stamp).getTime() - new Date(a.start_stamp).getTime())
-                                .slice(startIndex, endIndex);
+      const paginatedReports = reports_list.slice(startIndex, endIndex);
 
       // Get total records count (if available) for pagination purposes
       const totalRecords = reports_list.length; // Or fetch this from your database if necessary
