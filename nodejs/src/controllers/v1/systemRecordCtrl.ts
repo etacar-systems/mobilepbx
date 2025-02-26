@@ -296,7 +296,7 @@ const getrecodlist = async (req: Request, res: Response, next: NextFunction) => 
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
           message: "System recording found successfully",
-          data: data.data,
+          data: data?.data.sort((a: any, b :any) => a.recording_name.localeCompare(b.recording_name)),
         });
       }
     } catch (error: any) {
