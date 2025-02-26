@@ -371,7 +371,6 @@ export default function Reports() {
                                 }}
                               >
                                 <CallLogo width={14} height={14} className="edithover" />
-                                {val.recording_url}
                               </button>
                               {/* <button className="ms-1"  onClick={handleEditListner}>
                               <EditLogo
