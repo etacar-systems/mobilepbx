@@ -32,7 +32,7 @@ const REGEXP = {
     creditLimit: /^(?=.*\d)[\d.]{1,50}$/,
     units: /^(?=.*\d)[\d.]{1,50}$/,
     user_email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-    user_type:/^[14]$/
+    user_type: /^[14]$/,
   },
   COMMON: {
     BOOLEAN: /^[01]$/,
@@ -45,8 +45,8 @@ const REGEXP = {
     PORT: /^[0-9]{1,5}$/,
     LENGTH50: /^.{1,50}$/,
     blnakString: /^\s*$/,
-    checkStringISNumber:/^[0-9+*#]+$/,
-    checkIsString:/^[a-zA-Z][a-zA-Z .-_]*$/
+    checkStringISNumber: /^[0-9+*#]+$/,
+    checkIsString: /^[a-zA-Z][a-zA-Z .-_]*$/,
   },
   SUB_ADMIN: {
     NAME: /^.{1,50}$/,
@@ -102,8 +102,7 @@ const REGEXP = {
     company_username: /^.{1,50}$/,
     company_password: /^[A-Za-z0-9!@#$%^&*()_+{}|;:'",.<>?/\\[\]\-=`~]{4,15}$/,
     company_name: /^.{1,50}$/,
-    company_email:
-      /^([A-Za-z0-9_\-\.+])+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,10}$/i,
+    company_email: /^([A-Za-z0-9_\-\.+])+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,10}$/i,
   },
   extension: {
     first_name: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
@@ -135,8 +134,8 @@ const REGEXP = {
     last_name: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
     mobile: /^[0-9]{3,20}$/,
     phone_number: /^[0-9]{3,20}$/,
-    company: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
-    position: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
+    company: /^[a-zA-Z0-9ÖÄ][a-zA-Z0-9ÖÄ .-_]{0,199}$/,
+    position: /^[a-zA-Z0-9ÖÄ][a-zA-Z0-9ÖÄ .-_]{0,199}$/,
   },
   system_record: {
     record_name: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
