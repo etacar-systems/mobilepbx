@@ -111,7 +111,9 @@ const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
             <Col className="mb-55 row">
               <b className="webphone-firstname">{t("Company")}</b>
               <br />
-              <label className="webphone-lastname">{Company_name || ""}</label>
+              <label className="webphone-lastname">
+                {contactName?.company || ""}
+              </label>
             </Col>
             {activeTab === "Contact" && (
               <Col className="mb-55 row">

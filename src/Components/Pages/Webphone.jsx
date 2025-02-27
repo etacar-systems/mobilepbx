@@ -75,12 +75,13 @@ export default function Webphone() {
     };
   }, [window.innerWidth, window.innerHeight, dynamicHeight]);
 
-  const openModal = ({ name, mobile, extension, position }) => {
+  const openModal = ({ name, mobile, extension, position, company }) => {
     setSelectedContact({
       name: name,
       extension: extension,
       mobile: mobile,
       position: position,
+      company: company,
     });
     setShowModal(true);
   };
@@ -158,7 +159,7 @@ export default function Webphone() {
           setGroupList(response?.payload?.response?.RingGroupList);
           setCurrentPage(initialPage + 1);
           setUserTotal(response.payload?.response?.ring_group_total_counts);
-          setGroupUserOnline(response?.payload?.response?.groupUserOnline)
+          setGroupUserOnline(response?.payload?.response?.groupUserOnline);
         }
       });
     }
@@ -422,13 +423,11 @@ export default function Webphone() {
                         >
                           <div className="row g-0">
                             {groupList?.map((item) => {
-                               const statusText = groupUserOnline == 0
-                               ? "Offline"
-                               : "Online"
+                              const statusText =
+                                groupUserOnline == 0 ? "Offline" : "Online";
 
-                             const statusClass = groupUserOnline == 0
-                             ? "Offline"
-                             : "Online"
+                              const statusClass =
+                                groupUserOnline == 0 ? "Offline" : "Online";
 
                               return (
                                 <div
@@ -491,6 +490,7 @@ export default function Webphone() {
                                         extension: item.phone_number,
                                         mobile: item.mobile_number,
                                         position: item.position,
+                                        company: item.company,
                                       })
                                     }
                                   />
