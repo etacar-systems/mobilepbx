@@ -146,17 +146,14 @@ td {
   background-color: var(--main-white-color) !important;
   z-index: 1;
 }
-.head_color th  
-{
+.head_color th {
   color: var(--main-adminnumberfont-color) !important;
 }
 .Tablehead tr {
   width: 100%;
 }
-.table_body td
-{
+.table_body td {
   color: var(--main-adminnumberfont-color) !important;
-
 }
 
 .Tablehead th {
@@ -803,7 +800,8 @@ ul.choose-skin li.active div::after {
   font-weight: 400;
 }
 /* new */
-.record-modal-head , .internal-call-modal-head {
+.record-modal-head,
+.internal-call-modal-head {
   color: var(--main-adminheaderpage-color) !important;
   font-size: 15px;
   font-family: "krub", sans-serif !important;
@@ -943,7 +941,7 @@ ul.choose-skin li.active div::after {
   padding: 0.25rem 0.5rem !important;
   line-height: 1.5 !important;
 }
-.Langcursor{
+.Langcursor {
   cursor: pointer;
 }
 
@@ -1059,8 +1057,8 @@ ul.choose-skin li.active div::after {
 } */
 
 .table_edit button:nth-child(2) {
-  border-color:var(--main-red-color);
-  background-color: var(--main-red-color) ;
+  border-color: var(--main-red-color);
+  background-color: var(--main-red-color);
 }
 
 .table_edit button:nth-child(2) .edithover {
@@ -1105,7 +1103,6 @@ ul.choose-skin li.active div::after {
   border-color: var(--main-red-color);
   /* Assuming --main-red-color is defined in your CSS */
   background-color: var(--main-red-color);
-
 }
 .table_edit3 button:nth-child(4):hover {
   background-color: var(--main-red-color);
@@ -1144,7 +1141,6 @@ ul.choose-skin li.active div::after {
 }
 .table_edit3 button:nth-child(3):hover {
   background-color: var(--main-orange-color);
-  
 }
 .table_edit3 button:nth-child(3) .edithover {
   /* color: var(--main-orange-color) !important; */
@@ -1153,7 +1149,6 @@ ul.choose-skin li.active div::after {
   stroke: white !important;
   stroke-width: 1px !important;
   stroke-opacity: 1px !important;
-  
 }
 .table_edit3 button:nth-child(3):hover .edithover {
   fill: white !important;
@@ -1177,10 +1172,9 @@ ul.choose-skin li.active div::after {
   fill: var(--main-white-color) !important;
   color: var(--main-white-color) !important;
   stroke: var(--main-white-color) !important; */
-  border-color:var(--main-borderblue-color);
+  border-color: var(--main-borderblue-color);
   background-color: var(--main-borderblue-color);
 }
-
 
 .table_edit2 button:nth-child(1) .edithover {
   /* background-color: var(--main-borderblue-color); */
@@ -1401,7 +1395,6 @@ ul.choose-skin li.active div::after {
 }
 
 .btn_delete {
- 
   border: 1px solid var(--main-red-color) !important;
   box-shadow: var(--mian-webphonecloseshadow-color) 0px 5px 10px 0px !important;
   background-color: var(--main-red-color) !important;
@@ -1503,21 +1496,24 @@ ul.choose-skin li.active div::after {
 }
 
 /* new */
-.record_switch , .internal-call-switch{
+.record_switch,
+.internal-call-switch {
   position: relative;
   display: inline-block;
   width: 36px;
   height: 22px;
 }
 
-.record_switch input,.internal-call-switch input {
+.record_switch input,
+.internal-call-switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
 /* new */
-.record_slider , .internal-call-slider{
+.record_slider,
+.internal-call-slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -1530,7 +1526,8 @@ ul.choose-skin li.active div::after {
   border-radius: 3px;
 }
 
-.record_slider:before ,.internal-call-slider:before{
+.record_slider:before,
+.internal-call-slider:before {
   position: absolute;
   content: "";
   height: 16px;
@@ -1543,15 +1540,18 @@ ul.choose-skin li.active div::after {
   border-radius: 0.1875rem;
 }
 
-input:checked + .record_slider , input:checked + .internal-call-slider {
+input:checked + .record_slider,
+input:checked + .internal-call-slider {
   background-color: var(--main-orange-color);
 }
 
-input:focus + .record_slider , input:focus + .internal-call-slider{
+input:focus + .record_slider,
+input:focus + .internal-call-slider {
   box-shadow: 0 0 1px var(--main-orange-color);
 }
 
-input:checked + .record_slider:before , input:checked + .internal-call-slider:before {
+input:checked + .record_slider:before,
+input:checked + .internal-call-slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -1559,14 +1559,15 @@ input:checked + .record_slider:before , input:checked + .internal-call-slider:be
   border-radius: 0.1875rem;
 }
 
-.record_slider.round ,.internal-call-slider.round {
+.record_slider.round,
+.internal-call-slider.round {
   border-radius: 34px;
 }
 
-.record_slider.round:before,.internal-call-slider.round:before {
+.record_slider.round:before,
+.internal-call-slider.round:before {
   border-radius: 50%;
 }
-
 
 .slider {
   position: absolute;
@@ -2677,7 +2678,7 @@ select {
 .multiple_call_btn1 {
   width: 20px !important;
   height: 20px !important;
-  fill: var(--main-base-color) !important;
+  /* fill: var(--main-base-color) !important; */
   color: var(--main-base-color) !important;
 }
 
@@ -3354,7 +3355,6 @@ select {
   border-radius: 50%;
 }
 
-
 .badge_circle1 svg {
   color: var(--main-phone-color) !important;
   fill: var(--main-phone-color) !important;
@@ -3474,7 +3474,6 @@ select {
   padding: 4px 20px;
   z-index: 10;
   font-weight: 700;
- 
 }
 .hover-layer_customer {
   position: absolute;
@@ -3490,8 +3489,7 @@ select {
   font-weight: 700;
   opacity: 0;
 }
-.image-preview1:hover .hover-layer_customer
-{
+.image-preview1:hover .hover-layer_customer {
   opacity: 1;
 }
 
@@ -3799,7 +3797,7 @@ select {
   padding: 5px 15px !important;
 }
 .fc .fc-daygrid-today-top a {
-  color:pink
+  color: pink;
 }
 
 .fc-direction-ltr .fc-button-group .fc-button {
@@ -3835,10 +3833,10 @@ select {
 .fc .fc-daygrid-day-top {
   flex-direction: row !important;
 }
-.fc .fc-daygrid-day.fc-day-today{
-  background-color : var(--main-orange-color);
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: var(--main-orange-color);
 }
-.fc .fc-daygrid-day.fc-day-today a{
+.fc .fc-daygrid-day.fc-day-today a {
   color: var(--main-sideborder-color) !important;
 }
 
@@ -4113,7 +4111,7 @@ select {
   padding: 2px 6px;
   text-decoration: none;
   display: block;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .Selfmade-dropdown .Selfmadedropdown-content.show {
@@ -4420,33 +4418,33 @@ input:disabled {
 .infinite-scroll-component::-webkit-scrollbar {
   display: none;
 }
-.Norecordcss{
+.Norecordcss {
   font-size: 14px;
   color: var(--main-dashboardfont-color);
   padding: 0px 11px;
   opacity: 0.5;
 }
-.companyfilter{
+.companyfilter {
   display: flex;
   align-items: center;
 }
 @media screen and (max-width: 768px) {
-  .companyfilter{
+  .companyfilter {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 }
 .pstnnumber .for_search_number {
-  right:295px !important;
+  right: 295px !important;
 }
-.Modaltitle{
-  color:var(--main-adminheaderpage-color) !important;
+.Modaltitle {
+  color: var(--main-adminheaderpage-color) !important;
   font-size: 20px !important;
   font-weight: 400 !important;
-  font-family: "krub",sans-serif !important;
-  }
-.callback{
+  font-family: "krub", sans-serif !important;
+}
+.callback {
   font-size: 15px !important;
   font-family: "Krub", sans-serif !important;
   display: flex;
@@ -4454,11 +4452,11 @@ input:disabled {
 }
 .tooltipert {
   position: absolute;
-  top: 0; 
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--main-Custometooltip-color);
-  color:var(--main-white-color);
+  color: var(--main-white-color);
   padding: 5px;
   border-radius: 4px;
   font-size: 11px;
@@ -4466,12 +4464,12 @@ input:disabled {
   pointer-events: none;
   font-weight: 600 !important;
 }
-.epr_346qu6{
+.epr_346qu6 {
   display: none !important;
 }
-.Piechartpra{
+.Piechartpra {
   height: 260px;
-  width:260px;
+  width: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4499,8 +4497,12 @@ input:disabled {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .google-redirect-text {
@@ -4509,7 +4511,6 @@ input:disabled {
   margin-top: 20px;
   text-align: center;
 }
-
 
 .overlay {
   position: fixed;
@@ -4568,7 +4569,7 @@ input:disabled {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.configurationlink{
-  text-decoration:underline !important;
-  color:var(--main-hyperlink-color) !important;
+.configurationlink {
+  text-decoration: underline !important;
+  color: var(--main-hyperlink-color) !important;
 }

@@ -3,6 +3,7 @@
   --main-hover-color: rgb(241, 244, 246);
   --main-grey-color: rgb(241, 244, 246);
   --main-white-color: rgb(255, 255, 255);
+  --main-whiteclose-color: rgb(255, 255, 255);
   --main-sideborder-color: rgb(225, 232, 237);
   --main-imgtext-color: rgb(255, 255, 255);
   --main-orange-color: rgb(254, 112, 10);
@@ -110,6 +111,7 @@
   --main-cloudupload-color: #c5c5c5;
   --main-callmake-color: #0f0f0f;
   --main-deafultsvg-color: #000000;
+  --main-deafultvcsvg-color: #ffffff;
   --main-audiotypesvg-color: #292d32;
   --main-backspace-color: #1c274c;
   --main-loackfilled-color: #9a9a9a;
@@ -160,6 +162,7 @@
   --main-hover-color: rgb(158, 173, 186, 0.2);
   --main-grey-color: rgb(34, 37, 42);
   --main-white-color: rgb(34, 37, 42);
+  --main-whiteclose-color: rgb(255, 255, 255);
   --main-gray-color: lightgray;
   --main-sidebarfont-color: rgb(255, 255, 255);
   --main-dashboardfont-color: rgb(255, 255, 255);
@@ -255,6 +258,7 @@
   --main-cloudupload-color: #c5c5c5;
   --main-callmake-color: #0f0f0f;
   --main-deafultsvg-color: #000000;
+  --main-deafultvcsvg-color: #ffffff;
   --main-audiotypesvg-color: #292d32;
   --main-backspace-color: #1c274c;
   --main-loackfilled-color: #9a9a9a;
