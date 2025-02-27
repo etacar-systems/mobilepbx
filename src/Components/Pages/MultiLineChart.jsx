@@ -26,124 +26,12 @@ const MultiLineChart = ({ data, Theme, theme }) => {
   const dynamicMin = calculatedMin - padding < 0 ? 0 : calculatedMin - padding;
   const dynamicMax = calculatedMax + padding;
 
-  // useEffect(() => {
-  //   const myChart = new Chart(chartRef.current, {
-  //     type: "line",
-  //     data: data,
-  //     options: {
-  //       responsive: true,
-  //       interaction: {
-  //         mode: "index",
-  //         intersect: false,
-  //       },
-  //       plugins: {
-  //         legend: {
-  //           labels: {
-  //             boxWidth: 10,
-  //             boxHeight: 10,
-  //             color: Textcolor,
-  //             font: {
-  //               size: 15,
-  //               weight: 300,
-  //             },
-  //           },
-  //           position: "bottom",
-  //         },
-  //         title: {
-  //           display: true,
-  //         },
-  //       },
-  //       stacked: false,
-  //       scales: {
-  //         x: {
-  //           display: true,
-  //           title: {
-  //             display: true,
-  //             position: "bottom", // Position the label at the bottom
-  //           },
-  //           grid: {
-  //             drawOnChartArea: true, // This will draw grid lines on the chart area
-  //             color: gridlinecolor, // Set the grid line color
-  //             lineWidth: 1, // Set the grid line width
-  //           },
-  //           border: {
-  //             color: gridlinecolor, // Set only the main x-axis line to the grid line color
-  //           },
-  //           ticks: {
-  //             color: Textcolor,
-  //             font: {
-  //               family: "Courier New, monospace", // Set the font family of the x-axis labels
-  //               size: 12, // Set the font size of the x-axis labels
-  //               weight: 300,
-  //             },
-  //           },
-  //         },
-  //         y: {
-  //           type: "linear",
-  //           display: true,
-  //           position: "left",
-  //           grid: {
-  //             drawOnChartArea: true, // This will draw grid lines on the chart area
-  //             color: gridlinecolor, // Set the grid line color
-  //             lineWidth: 1, // Set the grid line width
-  //           },
-  //           border: {
-  //             color: gridlinecolor, // Set the main y-axis line color
-  //           },
-  //           min: dynamicMin,
-  //           max: dynamicMax,
-  //           ticks: {
-  //             stepSize: 2, // Set the step size or interval between ticks
-  //           },
-  //           ticks: {
-  //             color: Textcolor, // Set the color of the x-axis labels
-  //             font: {
-  //               family: "Courier New, monospace", // Set the font family of the x-axis labels
-  //               size: 12, // Set the font size of the x-axis labels
-  //               weight: 300,
-  //             },
-  //           },
-  //         },
-  //         y1: {
-  //           type: "linear",
-  //           display: false,
-  //           position: "right",
-  //           grid: {
-  //             drawOnChartArea: true, // This will draw grid lines on the chart area
-  //           },
-  //           min: dynamicMin,
-  //           max: dynamicMax,
-  //           ticks: {
-  //             stepSize: 2, // Set the step size or interval between ticks
-  //           },
-  //         },
-  //       },
-  //     },
-  //   });
-
-  //   return () => {
-  //     myChart.destroy(); // Cleanup chart on component unmount
-  //   };
-  // }, [data, Textcolor]);
-
   useEffect(() => {
     const getNextMultiple = (value, multiple) => {
       return Math.ceil(value / multiple) * multiple;
     };
 
     const determineStepSize = (maxValue) => {
-      // if (maxValue <= 10) {
-      //   return 1;
-      // } else if (maxValue <= 50) {
-      //   return 5;
-      // }else if (maxValue <= 100) {
-      //   return 10;
-      // }else if (maxValue <= 200) {
-      //   return 20;
-      // } else {
-      //   return 100;
-      // }
-
       if (maxValue <= 10) {
         return 1;
       } else if (maxValue <= 50) {
@@ -173,12 +61,7 @@ const MultiLineChart = ({ data, Theme, theme }) => {
       }
     };
 
-    const adjustedMax =
-      dynamicMax < 10
-        ? 10
-        : dynamicMax < 100
-        ? 100
-        : getNextMultiple(dynamicMax, 100);
+    const adjustedMax = ( Math.round(dynamicMax/10) + 1 ) * 10; // for better view, convert number to the next multiple of 10
     const stepSize = determineStepSize(adjustedMax);
 
     const myChart = new Chart(chartRef.current, {
