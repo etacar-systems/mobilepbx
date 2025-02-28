@@ -60,8 +60,8 @@ function CardsDashboard({
                   // Answeredcall={data?.call_comparison.answered_call}
                   // Answeredcall={data?.call_comparison?.answered_call}
                   Totalcall={
-                    (data?.today_total_calls -
-                    data?.today_missed_calls) +
+                    data?.today_total_calls -
+                    data?.today_missed_calls +
                     data?.today_total_calls
                   }
                   Answeredcall={data?.total_answered}
@@ -81,8 +81,9 @@ function CardsDashboard({
             <div className="rowdata">
               <div className="col-12 text-center col-name">
                 <h2>
-                  {data?.today_total_calls +
-                    (data?.today_total_calls - data?.today_missed_calls) ?? 0}
+                  {(data?.today_total_calls ?? 0) +
+                    ((data?.today_total_calls ?? 0) -
+                      (data?.today_missed_calls ?? 0))}
                 </h2>
               </div>
             </div>
