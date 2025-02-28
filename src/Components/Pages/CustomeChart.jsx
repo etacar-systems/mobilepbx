@@ -47,6 +47,8 @@ const ProgressCircle = ({
             strokeDasharray: circumference,
             strokeDashoffset:
               circumference - (completedPercent / 100) * circumference,
+            transform: "rotate(-90deg)",
+            transformOrigin: "50% 50%",
           }}
         />
       </svg>
