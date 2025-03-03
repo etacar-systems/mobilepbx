@@ -130,8 +130,8 @@ const REGEXP = {
     firewall_description: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
   },
   phonebook: {
-    first_name: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
-    last_name: /^[a-zA-Z0-9][a-zA-Z0-9 .-_]{1,200}$/,
+    first_name: /^[a-zA-Z0-9ÖÄ][a-zA-Z0-9ÖÄ .-_]{1,200}$/,
+    last_name: /^[a-zA-Z0-9ÖÄ][a-zA-Z0-9ÖÄ .-_]{1,200}$/,
     mobile: /^[0-9]{3,20}$/,
     phone_number: /^[0-9]{3,20}$/,
     company: /^[a-zA-Z0-9ÖÄ][a-zA-Z0-9ÖÄ .-_]{0,199}$/,
