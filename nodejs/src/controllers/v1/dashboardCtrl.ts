@@ -19,9 +19,12 @@ function convertISODate(date: String): String {
   return new Date(`${date.replace(" ", "T")}Z`).toISOString();
 }
 
-const getDasboardDetail = async (req: Request, res: Response, next: NextFunction) => {
+const getDasboardDetail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-
     const token = await get_token(req);
     const user_detail = await User_token(token);
     let dashboard_response_obj: { [key: string]: any } = {};
@@ -48,8 +51,14 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     const countries: any = companyDetail?.company_country;
     // const timezone = "Asia/Dubai";
     const timezone = countryTimeZones[countries.replace(/ /g, "_")];
-    const startDateInTimeZone = momentTimezone.tz(start_date, timezone).startOf('day').toDate(); // Start of day in the timezone
-    const endDateInTimeZone = momentTimezone.tz(end_date, timezone).endOf('day').toDate(); // End of day in the timezone
+    const startDateInTimeZone = momentTimezone
+      .tz(start_date, timezone)
+      .startOf("day")
+      .toDate(); // Start of day in the timezone
+    const endDateInTimeZone = momentTimezone
+      .tz(end_date, timezone)
+      .endOf("day")
+      .toDate(); // End of day in the timezone
 
     if (start_date == undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
@@ -72,14 +81,20 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    if (start_date == "" || !moment(start_date, "YYYY-MM-DD HH:mm", true).isValid()) {
+    if (
+      start_date == "" ||
+      !moment(start_date, "YYYY-MM-DD HH:mm", true).isValid()
+    ) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
         success: 0,
         message: `Start Date Is Invalid.`,
       });
     }
 
-    if (end_date == "" || !moment(end_date, "YYYY-MM-DD HH:mm", true).isValid()) {
+    if (
+      end_date == "" ||
+      !moment(end_date, "YYYY-MM-DD HH:mm", true).isValid()
+    ) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
         success: 0,
         message: `End Date Is Invalid.`,
@@ -177,8 +192,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               // $gte: new Date(start_date + "Z"),
               // $lt: new Date(end_date + "Z"),
             },
-            module_name: { $ne: "lua" },//new
-            status: { $ne: "voicemail" } //new
+            module_name: { $ne: "lua" }, //new
+            status: { $ne: "voicemail" }, //new
           },
         },
         {
@@ -224,22 +239,27 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $and: [
                     { $ne: ["$answer_stamp", null] },
                     { $ne: ["$start_stamp", null] },
-                    { $gte: [{ $toDate: "$answer_stamp" }, { $toDate: "$start_stamp" }] } // Ensure valid range
-                  ]
+                    {
+                      $gte: [
+                        { $toDate: "$answer_stamp" },
+                        { $toDate: "$start_stamp" },
+                      ],
+                    }, // Ensure valid range
+                  ],
                 },
                 then: {
                   $divide: [
                     {
                       $subtract: [
                         { $toDate: "$answer_stamp" },
-                        { $toDate: "$start_stamp" }
-                      ]
+                        { $toDate: "$start_stamp" },
+                      ],
                     },
-                    1000 // Convert milliseconds to seconds
-                  ]
+                    1000, // Convert milliseconds to seconds
+                  ],
                 },
-                else: 0 // Set waiting time to 0 if invalid range
-              }
+                else: 0, // Set waiting time to 0 if invalid range
+              },
             },
           },
         },
@@ -265,9 +285,14 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             today_total_calls: {
               $sum: {
                 $cond: [
-                  { $and: [{ $gte: ["$start_stamp", today] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $gte: ["$start_stamp", today] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   1,
-                  0
+                  0,
                 ],
               },
             },
@@ -297,11 +322,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                       { $ne: ["$status", "answered"] },
                       // { $eq: ["$status", "missed"] },
                       { $gte: ["$start_stamp", today] },
-                      { $eq: ["$leg", "a"] }
-                    ]
+                      { $eq: ["$leg", "a"] },
+                    ],
                   },
                   1,
-                  0
+                  0,
                 ],
               },
             },
@@ -327,62 +352,91 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 // ]
 
                 $cond: [
-                  { $and: [{ $ne: ["$status", "answered"] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $ne: ["$status", "answered"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   // { $and: [{ $eq: ["$status", "missed"] }, { $eq: ["$leg", "a"] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             total_answered: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$status", "answered"] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $eq: ["$status", "answered"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   // { $and: [{ $eq: ["$status", "answered"] }, { $eq: ["$leg", "a"] }, { $not: [{ $regexMatch: { input: "$destination_number", regex: /\*/ } }] }] },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             voicemailCalls: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$status", "voicemail"] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $eq: ["$status", "voicemail"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             total_outbound: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$status", "outbound_calls"] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $eq: ["$status", "outbound_calls"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             total_local: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$direction", "local"] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $eq: ["$direction", "local"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   1,
-                  0
+                  0,
                 ],
               },
             },
             inboundCalls: {
               $sum: {
                 $cond: [
-                  { $and: [{ $eq: ["$direction", "inbound"] }, { $eq: ["$leg", "a"] }] },
+                  {
+                    $and: [
+                      { $eq: ["$direction", "inbound"] },
+                      { $eq: ["$leg", "a"] },
+                    ],
+                  },
                   1,
-                  0
+                  0,
                 ],
               },
             },
           },
         },
-
 
         // {
         //   $group: {
@@ -529,7 +583,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     //   _id: userData?.role
     // })
 
-
     try {
       const reports_api_data: any = await axios.request(api_config);
       dashboard_response_obj.reports_counts_updated = {
@@ -662,9 +715,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                     $and: [
                       { $eq: ["$extension_uuid", "$$extensionUuid"] }, // Match extension_uuid
                       { $gte: ["$start_stamp", new Date(start_date)] }, // Filter by start_date
-                      { $lte: ["$start_stamp", new Date(end_date)] },  // Filter by end_date
+                      { $lte: ["$start_stamp", new Date(end_date)] }, // Filter by end_date
                       { $ne: ["$module_name", "lua"] }, //new
-                      { $ne: ["$status", "voicemail"] } //new
+                      { $ne: ["$status", "voicemail"] }, //new
                     ],
                   },
                 },
@@ -744,7 +797,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             //   },
             // },
             _id: { extension_uuid: "$extension_uuid" }, // Group by extension UUID
-            total_calls: { $sum: { $cond: [{ $ifNull: ["$cdrDetails", false] }, 1, 0] } }, // Count total calls only if cdrDetails exists
+            total_calls: {
+              $sum: { $cond: [{ $ifNull: ["$cdrDetails", false] }, 1, 0] },
+            }, // Count total calls only if cdrDetails exists
             answered: {
               $sum: {
                 $cond: [
@@ -796,7 +851,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         { $sort: { _id: 1 } }, // Sort by extension UUID
       ];
 
-
       const extension_list = await user.aggregate(pipeline).exec();
 
       console.log("extension_listextension_list", extension_list);
@@ -827,10 +881,14 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           total_local: reports_api_data?.data?.total_counts?.total_local,
           total_answered: reports_api_data?.data?.total_counts?.total_answered,
           total_missed: reports_api_data?.data?.total_counts?.total_missed,
-          total_duration_sec: reports_api_data?.data?.total_counts?.total_duration_sec,
-          avg_response_sec: reports_api_data?.data?.total_counts?.avg_response_sec,
-          today_total_calls: (reports_api_data?.data?.total_counts?.today_total_calls),
-          today_missed_calls: reports_api_data?.data?.total_counts?.today_missed_calls,
+          total_duration_sec:
+            reports_api_data?.data?.total_counts?.total_duration_sec,
+          avg_response_sec:
+            reports_api_data?.data?.total_counts?.avg_response_sec,
+          today_total_calls:
+            reports_api_data?.data?.total_counts?.today_total_calls,
+          today_missed_calls:
+            reports_api_data?.data?.total_counts?.today_missed_calls,
           today_missed_calls_percentage:
             reports_api_data?.data?.total_counts?.today_missed_calls_percentage,
           sla: reports_api_data?.data?.sla,
@@ -846,8 +904,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-
-    function createHourlyAggregation(date: any, hours: string[]): PipelineStage[] {
+    function createHourlyAggregation(
+      date: any,
+      hours: string[]
+    ): PipelineStage[] {
       const startOfDay = new Date(date);
       startOfDay.setHours(0, 0, 0, 0); // Set to 12:00 AM
 
@@ -860,7 +920,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             start_stamp: { $gte: startOfDay, $lte: endOfDay },
             leg: "a",
             status: { $ne: "voicemail" }, //new
-            module_name: { $ne: "lua" } //new
+            module_name: { $ne: "lua" }, //new
           },
         },
         {
@@ -878,12 +938,24 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $group: {
             _id: "$hour", // Group by the timezone-corrected hour
             total_calls: { $sum: 1 },
-            inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
-            local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
-            outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
-            no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
-            answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
-            missed: { $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] } },
+            inbound_calls: {
+              $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] },
+            },
+            local_calls: {
+              $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] },
+            },
+            outbound_calls: {
+              $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] },
+            },
+            no_answer: {
+              $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] },
+            },
+            answered: {
+              $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] },
+            },
+            missed: {
+              $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] },
+            },
             // missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
           },
         },
@@ -941,9 +1013,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $match: {
             domain_uuid: companyDetail.domain_uuid,
             start_stamp: { $gte: startOfWeek, $lte: endOfWeek },
-            leg: 'a',
+            leg: "a",
             module_name: { $ne: "lua" }, //new
-            status: { $ne: "voicemail" } //new
+            status: { $ne: "voicemail" }, //new
           },
         },
         {
@@ -955,12 +1027,24 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           $group: {
             _id: "$dayOfWeek",
             total_calls: { $sum: 1 },
-            inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
-            local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
-            outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
-            no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
-            answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
-            missed: { $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] } },
+            inbound_calls: {
+              $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] },
+            },
+            local_calls: {
+              $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] },
+            },
+            outbound_calls: {
+              $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] },
+            },
+            no_answer: {
+              $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] },
+            },
+            answered: {
+              $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] },
+            },
+            missed: {
+              $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] },
+            },
             // missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
           },
         },
@@ -1004,7 +1088,15 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
     function createMonthlyAggregation(months: any) {
       const startOfYear = new Date(new Date().getFullYear(), 0, 1);
-      const endOfYear = new Date(new Date().getFullYear(), 12, 0, 23, 59, 59, 999);
+      const endOfYear = new Date(
+        new Date().getFullYear(),
+        12,
+        0,
+        23,
+        59,
+        59,
+        999
+      );
       // console.log("startofyear",startOfYear,endOfYear);
 
       const pipeline = [
@@ -1017,7 +1109,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             },
             leg: "a",
             module_name: { $ne: "lua" }, //new
-            status: { $ne: "voicemail" } //new
+            status: { $ne: "voicemail" }, //new
           },
         },
         {
@@ -1025,9 +1117,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             year: { $year: "$start_stamp" },
             month: { $month: "$start_stamp" },
             total_calls: 1,
-            inbound_calls: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] },
+            inbound_calls: {
+              $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
+            },
             local_calls: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] },
-            outbound_calls: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] },
+            outbound_calls: {
+              $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0],
+            },
             no_answer: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] },
             answered: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] },
             missed: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] },
@@ -1084,7 +1180,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       day: string; // Day of the week (e.g., Monday)
     };
 
-    function createWeeklyAggregationFormat(weekData: WeeklyData[]): WeeklyData[] {
+    function createWeeklyAggregationFormat(
+      weekData: WeeklyData[]
+    ): WeeklyData[] {
       // Array to match day names to their index for easier calculation
       const dayNames = [
         "Sunday",
@@ -1102,7 +1200,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
       // Initialize the start of the week based on the first date's day
       const startOfWeek = new Date(firstDataDate);
-      startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + startDayIndex); // Adjust to the start of the week
+      startOfWeek.setDate(
+        startOfWeek.getDate() - startOfWeek.getDay() + startDayIndex
+      ); // Adjust to the start of the week
 
       // Generate all days of the week and their corresponding dates
       const daysOfWeek = [];
@@ -1110,13 +1210,18 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         const day = new Date(startOfWeek);
         day.setDate(startOfWeek.getDate() + i); // Add i days to the start date
         const formattedDate = day.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
-        daysOfWeek.push({ day: dayNames[(startDayIndex + i) % 7], date: formattedDate });
+        daysOfWeek.push({
+          day: dayNames[(startDayIndex + i) % 7],
+          date: formattedDate,
+        });
       }
 
       // Fill in the data for the week
       const filledData: WeeklyData[] = daysOfWeek.map((dayOfWeek) => {
         // Find the existing data for the current day
-        const existingData = weekData.find((item) => item.day === dayOfWeek.day);
+        const existingData = weekData.find(
+          (item) => item.day === dayOfWeek.day
+        );
 
         // If data exists for this day, return it; otherwise, fill with default data
         if (existingData) {
@@ -1156,8 +1261,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         // startOfDay = new Date(dateObj.setHours(0, 0, 0, 0)); // Start of the day (12:00 AM)
         // endOfDay = new Date(dateObj.setHours(23, 59, 59, 999)); // End of the day (11:59 PM)
 
-        startOfDay = dateInTimezone.startOf('day').toDate();
-        endOfDay = dateInTimezone.endOf('day').toDate();
+        startOfDay = dateInTimezone.startOf("day").toDate();
+        endOfDay = dateInTimezone.endOf("day").toDate();
       }
 
       if (timePeriod === "week") {
@@ -1172,9 +1277,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         // lastDayOfWeek.setHours(23, 59, 59, 999); // End of the day (Saturday)
         // endOfWeek = lastDayOfWeek;
 
-        startOfWeek = dateInTimezone.startOf('week').add(1, 'day').toDate();
-        endOfWeek = dateInTimezone.endOf('week').add(1, 'day').toDate();
-
+        startOfWeek = dateInTimezone.startOf("week").add(1, "day").toDate();
+        endOfWeek = dateInTimezone.endOf("week").add(1, "day").toDate();
       }
 
       if (timePeriod === "year") {
@@ -1185,8 +1289,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         // endOfYear = new Date(dateObj.getFullYear(), 11, 31); // December 31st
         // endOfYear.setHours(23, 59, 59, 999);
 
-        startOfYear = dateInTimezone.startOf('year').toDate();
-        endOfYear = dateInTimezone.endOf('year').toDate();
+        startOfYear = dateInTimezone.startOf("year").toDate();
+        endOfYear = dateInTimezone.endOf("year").toDate();
       }
 
       // Determine which date range to use based on the timePeriod
@@ -1204,7 +1308,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       }
       console.log("start end", startDate, endDate);
 
-
       try {
         const data = await CdrModel.aggregate([
           {
@@ -1214,9 +1317,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $gte: startDate, // Use the calculated start date
                 $lt: endDate, // Use the calculated end date
               },
-              leg: 'a',
+              leg: "a",
               module_name: { $ne: "lua" }, //new
-              status: { $ne: "voicemail" } //new
+              status: { $ne: "voicemail" }, //new
             },
           },
           {
@@ -1309,7 +1412,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       return `${year}-${month}-${day}`;
     }
 
-    async function getMonthlyCallMetrics(domain_uuid: string, year: number, month: number) {
+    async function getMonthlyCallMetrics(
+      domain_uuid: string,
+      year: number,
+      month: number
+    ) {
       const daysOfWeek = [
         "Sunday",
         "Monday",
@@ -1378,9 +1485,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 $gte: startOfMonth,
                 $lte: endOfMonth,
               },
-              leg: 'a',
+              leg: "a",
               module_name: { $ne: "lua" }, //new
-              status: { $ne: "voicemail" } //new
+              status: { $ne: "voicemail" }, //new
             },
           },
           {
@@ -1399,12 +1506,24 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               _id: { day: "$start_stamp_local" },
               date: { $first: "$start_stamp" },
               total_calls: { $sum: 1 },
-              inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
-              local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
-              outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
-              no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
-              answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
-              missed: { $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] } },
+              inbound_calls: {
+                $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] },
+              },
+              local_calls: {
+                $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] },
+              },
+              outbound_calls: {
+                $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] },
+              },
+              no_answer: {
+                $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] },
+              },
+              answered: {
+                $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] },
+              },
+              missed: {
+                $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] },
+              },
             },
           },
           {
@@ -1413,7 +1532,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         ]);
         // console.log("result",result);
 
-
         const callMetrics = datesInMonth.map((dateObj) => {
           const dayData = result.find(
             (item) => item?._id?.day === dateObj.date
@@ -1421,15 +1539,15 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           );
           return dayData
             ? {
-              ...dateObj,
-              total_calls: dayData.total_calls,
-              inbound_calls: dayData.inbound_calls,
-              local_calls: dayData.local_calls,
-              outbound_calls: dayData.outbound_calls,
-              no_answer: dayData.no_answer,
-              answered: dayData.answered,
-              missed: dayData.missed,
-            }
+                ...dateObj,
+                total_calls: dayData.total_calls,
+                inbound_calls: dayData.inbound_calls,
+                local_calls: dayData.local_calls,
+                outbound_calls: dayData.outbound_calls,
+                no_answer: dayData.no_answer,
+                answered: dayData.answered,
+                missed: dayData.missed,
+              }
             : dateObj;
         });
 
@@ -1493,7 +1611,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         "22",
         "23",
       ];
-      const pipeline = createHourlyAggregation(getFormatedDate(new Date()), hours);
+      const pipeline = createHourlyAggregation(
+        getFormatedDate(new Date()),
+        hours
+      );
 
       // console.log("pipeline", JSON.stringify(pipeline));
 
@@ -1622,41 +1743,41 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     };
 
     try {
-      const call_metrix_api_data: any = await axios.request(api_config_call_metrix);
+      const call_metrix_api_data: any = await axios.request(
+        api_config_call_metrix
+      );
 
       // new
       const pipeline2 = [
         {
           $match: {
             domain_uuid: companyDetail?.domain_uuid, // Add your specific domain_uuid here
-          }
+          },
         },
         {
           $facet: {
-            total_calls: [
-              { $count: "total_calls" }
-            ],
+            total_calls: [{ $count: "total_calls" }],
             inbound_calls: [
               {
                 $match: {
                   direction: "inbound",
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
+                },
               },
-              { $count: "inbound_calls" }
+              { $count: "inbound_calls" },
             ],
             local_calls: [
               {
                 $match: {
                   direction: "local",
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
+                },
               },
-              { $count: "local_calls" }
+              { $count: "local_calls" },
             ],
             outbound_calls: [
               { $match: { direction: "outbound" } },
-              { $count: "outbound_calls" }
+              { $count: "outbound_calls" },
             ],
             no_answer: [
               {
@@ -1664,57 +1785,67 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   hangup_cause: "NO_ANSWER",
                   $and: [
                     // { $or: [{ cc_side: { $ne: null } }, { cc_side: "agent" }] },
-                    { $or: [{ direction: "inbound" }, { direction: "local" }] }
-                  ]
-                }
+                    { $or: [{ direction: "inbound" }, { direction: "local" }] },
+                  ],
+                },
               },
-              { $count: "no_answer" }
+              { $count: "no_answer" },
             ],
             answered: [
               {
                 $match: {
                   missed_call: false,
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }],
-                  $or: [{ direction: "inbound" }, { direction: "local" }]
-                }
+                  $or: [{ direction: "inbound" }, { direction: "local" }],
+                },
               },
-              { $count: "answered" }
+              { $count: "answered" },
             ],
             missed: [
               {
                 $match: {
                   missed_call: true,
-                  status: { $ne: "answered" }
+                  status: { $ne: "answered" },
                   // $or: [{ cc_side: null }, { cc_side: { $ne: "agent" } }]
-                }
+                },
               },
-              { $count: "missed" }
-            ]
-          }
+              { $count: "missed" },
+            ],
+          },
         },
         {
           $project: {
             total_calls: { $arrayElemAt: ["$total_calls.total_calls", 0] },
-            inbound_calls: { $arrayElemAt: ["$inbound_calls.inbound_calls", 0] },
+            inbound_calls: {
+              $arrayElemAt: ["$inbound_calls.inbound_calls", 0],
+            },
             local_calls: { $arrayElemAt: ["$local_calls.local_calls", 0] },
-            outbound_calls: { $arrayElemAt: ["$outbound_calls.outbound_calls", 0] },
+            outbound_calls: {
+              $arrayElemAt: ["$outbound_calls.outbound_calls", 0],
+            },
             no_answer: { $arrayElemAt: ["$no_answer.no_answer", 0] },
             answered: { $arrayElemAt: ["$answered.answered", 0] },
-            missed: { $arrayElemAt: ["$missed.missed", 0] }
-          }
-        }
+            missed: { $arrayElemAt: ["$missed.missed", 0] },
+          },
+        },
       ];
 
       const call_matrix_new = await CdrModel.aggregate(pipeline2).exec();
 
-      if (call_metrix_api_data?.data?.data && call_metrix_api_data?.data?.total_counts) {
+      if (
+        call_metrix_api_data?.data?.data &&
+        call_metrix_api_data?.data?.total_counts
+      ) {
         let call_matrics_data = {
           call_metrics: call_metrix_api_data?.data?.data,
           total_inbound: call_metrix_api_data?.data?.total_counts.total_inbound,
-          total_outbound: call_metrix_api_data?.data?.total_counts.total_outbound,
+          total_outbound:
+            call_metrix_api_data?.data?.total_counts.total_outbound,
           total_local: call_metrix_api_data?.data?.total_counts.total_local,
-          total_answered: call_metrix_api_data?.data?.total_counts.total_answered,
-          total_unanswered: call_metrix_api_data?.data?.total_counts.total_unanswered,
+          total_answered:
+            call_metrix_api_data?.data?.total_counts.total_answered,
+          total_unanswered:
+            call_metrix_api_data?.data?.total_counts.total_unanswered,
           total_missed: call_metrix_api_data?.data?.total_counts.total_missed,
         };
         dashboard_response_obj.call_metrics_detail_old = call_matrics_data;
@@ -1741,12 +1872,18 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     };
 
     try {
-      const missed_call_api_data: any = await axios.request(api_config_missed_call);
-      if (missed_call_api_data?.data?.data && missed_call_api_data?.data?.total_counts) {
+      const missed_call_api_data: any = await axios.request(
+        api_config_missed_call
+      );
+      if (
+        missed_call_api_data?.data?.data &&
+        missed_call_api_data?.data?.total_counts
+      ) {
         let missed_call_data = {
           missed_call: missed_call_api_data?.data?.data,
           total_missed: missed_call_api_data?.data?.total_counts.total_missed,
-          total_missed_persentage: missed_call_api_data?.data?.total_counts.total_missed_persentage,
+          total_missed_persentage:
+            missed_call_api_data?.data?.total_counts.total_missed_persentage,
           avg_wait_sec: missed_call_api_data?.data?.total_counts.avg_wait_sec,
         };
         dashboard_response_obj.missed_call_detail = missed_call_data;
@@ -1772,7 +1909,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
     };
     // console.log("api_ring_groups", api_ring_groups);
     try {
-      const ringroup_api_data: any = await axios.request(api_ring_groups);
+      // const ringroup_api_data: any = await axios.request(api_ring_groups);
 
       // CHANGED
       // const ring_group_list: any = await ring_group.find({
@@ -1783,7 +1920,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       //   //   $lt: end_date,
       //   // },
       // });
-
 
       const ring_group_list: any = await ring_group.aggregate([
         // Step 1: Match ring_group based on cid and is_deleted
@@ -1813,7 +1949,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             let: {
               domain_uuid: "$company.domain_uuid",
               start_date: startDateInTimeZone, // Replace with your actual start_date
-              end_date: endDateInTimeZone // Replace with your actual end_date
+              end_date: endDateInTimeZone, // Replace with your actual end_date
             },
             pipeline: [
               {
@@ -1824,7 +1960,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                       { $eq: ["$module_name", "ring_group"] },
                       { $eq: ["$leg", "a"] },
                       { $gte: ["$start_stamp", "$$start_date"] }, // Start date filter
-                      { $lte: ["$start_stamp", "$$end_date"] }  // End date filter
+                      { $lte: ["$start_stamp", "$$end_date"] }, // End date filter
                     ],
                   },
                 },
@@ -1849,7 +1985,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             answered: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.status", "answered"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.status", "answered"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -1858,7 +1999,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             inbound_calls: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "inbound"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.direction", "inbound"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -1867,7 +2013,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             outbound_calls: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "outbound"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.direction", "outbound"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -1876,7 +2027,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             missed: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $ne: ["$cdrs_logs.status", "answered"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $ne: ["$cdrs_logs.status", "answered"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -1885,7 +2041,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             inbound_duration: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "inbound"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.direction", "inbound"] },
+                    ],
+                  },
                   "$cdrs_logs.duration",
                   0,
                 ],
@@ -1894,7 +2055,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             outbound_duration: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.direction", "outbound"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.direction", "outbound"] },
+                    ],
+                  },
                   "$cdrs_logs.duration",
                   0,
                 ],
@@ -1903,7 +2069,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             no_answer: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.status", "no_answer"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.status", "no_answer"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -1912,7 +2083,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
             busy: {
               $sum: {
                 $cond: [
-                  { $and: [{ $ifNull: ["$cdrs_logs", false] }, { $eq: ["$cdrs_logs.status", "busy"] }] },
+                  {
+                    $and: [
+                      { $ifNull: ["$cdrs_logs", false] },
+                      { $eq: ["$cdrs_logs.status", "busy"] },
+                    ],
+                  },
                   1,
                   0,
                 ],
@@ -1932,7 +2108,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
               $cond: [
                 { $eq: ["$total_calls", 0] },
                 0,
-                { $multiply: [{ $divide: ["$answered", "$total_calls"] }, 100] },
+                {
+                  $multiply: [{ $divide: ["$answered", "$total_calls"] }, 100],
+                },
               ],
             },
             missed_percentage: {
@@ -1965,7 +2143,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         },
       ]);
 
-
       if (
         // ringroup_api_data?.data?.data ||
         ring_group_list // new
@@ -1992,7 +2169,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    //new 
+    //new
     try {
       // const getLast7Days = () => {
       //   const dates = [];
@@ -2119,8 +2296,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
       // }
 
       try {
-
-
         // const getHoursInRange = (start: string | Date, end: string | Date) => {
         //   const result = [];
 
@@ -2190,14 +2365,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //   }
         //   console.log("months", months);
 
-
         //   return months;
         // };
 
         // // Convert `start_date` and `end_date` to ISO strings if needed
         // const startDateISO = getFormatedDate(start_date) + "T00:00:00Z";
         // const endDateISO = getFormatedDate(end_date) + "T23:59:59Z";
-
 
         // const dateDifferenceInDays =
         //   (endDateInTimeZone.getTime() - startDateInTimeZone.getTime()) / (1000 * 60 * 60 * 24);
@@ -2311,8 +2484,6 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
         // dashboard_response_obj.missed_call_new = result;
 
-
-
         // Helper functions to get ranges
         const getHoursInRange = (date: any) => {
           const result = [];
@@ -2336,7 +2507,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
           while (currentDate <= endDate) {
             const day = currentDate.getDate().toString().padStart(2, "0");
-            const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+            const month = (currentDate.getMonth() + 1)
+              .toString()
+              .padStart(2, "0");
             const year = currentDate.getFullYear();
 
             result.push(`${day}/${month}/${year}`);
@@ -2352,7 +2525,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           const endDate = new Date(end);
 
           while (startDate <= endDate) {
-            const month = (startDate.getMonth() + 1).toString().padStart(2, "0");
+            const month = (startDate.getMonth() + 1)
+              .toString()
+              .padStart(2, "0");
             const year = startDate.getFullYear();
 
             result.push(`${month}/${year}`);
@@ -2368,7 +2543,11 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
 
           switch (tab) {
             case "today":
-              startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+              startDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+              );
               endDate = new Date(startDate);
               endDate.setHours(23, 59, 59, 999);
               break;
@@ -2418,9 +2597,12 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           return { startDate, endDate };
         };
 
-
         // Main function
-        const getMissedCallsData = async (tab: any, timezone: any, companyDetail: any) => {
+        const getMissedCallsData = async (
+          tab: any,
+          timezone: any,
+          companyDetail: any
+        ) => {
           const { startDate, endDate } = getStartAndEndDatesForTab(tab);
 
           let dateGroupFormat;
@@ -2450,8 +2632,8 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 domain_uuid: companyDetail?.domain_uuid,
                 start_stamp: { $gte: startDate, $lte: endDate },
                 leg: "a",
-                module_name: { $ne: "lua" },//new
-                status: { $nin: ["voicemail", "answered"] }
+                module_name: { $ne: "lua" }, //new
+                status: { $nin: ["voicemail", "answered"] },
               },
             },
             {
@@ -2459,8 +2641,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                 missed_number: {
                   $cond: {
                     if: {
-                      $not: { $in: ["status", ["answered", "voicemail"]] }
-                    }, then: "$caller_id_number", else: null
+                      $not: { $in: ["status", ["answered", "voicemail"]] },
+                    },
+                    then: "$caller_id_number",
+                    else: null,
                   },
                 },
                 group_key: {
@@ -2477,22 +2661,27 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                         { $ne: ["$end_stamp", null] },
                         { $ne: ["$start_stamp", null] },
                         { $ne: ["$status", "voicemail"] },
-                        { $gte: [{ $toDate: "$end_stamp" }, { $toDate: "$start_stamp" }] }
-                      ]
+                        {
+                          $gte: [
+                            { $toDate: "$end_stamp" },
+                            { $toDate: "$start_stamp" },
+                          ],
+                        },
+                      ],
                     },
                     then: {
                       $divide: [
                         {
                           $subtract: [
                             { $toDate: "$end_stamp" },
-                            { $toDate: "$start_stamp" }
-                          ]
+                            { $toDate: "$start_stamp" },
+                          ],
                         },
-                        1000
-                      ]
+                        1000,
+                      ],
                     },
-                    else: 0
-                  }
+                    else: 0,
+                  },
                 },
                 status: 1,
               },
@@ -2504,8 +2693,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $push: {
                     $cond: {
                       if: {
-                        $not: { $in: ["status", ["answered", "voicemail"]] }
-                      }, then: "$missed_number", else: null
+                        $not: { $in: ["status", ["answered", "voicemail"]] },
+                      },
+                      then: "$missed_number",
+                      else: null,
                     },
                   },
                 },
@@ -2513,8 +2704,10 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $sum: {
                     $cond: {
                       if: {
-                        $not: { $in: ["status", ["answered", "voicemail"]] }
-                      }, then: 1, else: 0
+                        $not: { $in: ["status", ["answered", "voicemail"]] },
+                      },
+                      then: 1,
+                      else: 0,
                     },
                   },
                 },
@@ -2523,14 +2716,13 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                   $sum: {
                     $cond: {
                       if: {
-                        $not: { $in: ["status", ["answered", "voicemail"]] }
+                        $not: { $in: ["status", ["answered", "voicemail"]] },
                       },
                       then: "$waiting_time",
-                      else: 0
-                    }
-                  }
-                }
-
+                      else: 0,
+                    },
+                  },
+                },
               },
             },
             {
@@ -2548,8 +2740,7 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
                     then: 0,
                     else: { $divide: ["$waitingTime", "$count"] },
                   },
-
-                }
+                },
               },
             },
             {
@@ -2591,12 +2782,15 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
           return result;
         };
 
-
-        const misssed_result = await getMissedCallsData(call_matrics_type2, timezone, companyDetail)
+        const misssed_result = await getMissedCallsData(
+          call_matrics_type2,
+          timezone,
+          companyDetail
+        );
         // const final_missed_data = {
         //   missed_called: { misssed_result }
         // }
-        dashboard_response_obj.missed_call_new = misssed_result
+        dashboard_response_obj.missed_call_new = misssed_result;
 
         // console.log("Missed Calls Grouped by Dynamic Key:", result);
 
@@ -2700,12 +2894,9 @@ const getDasboardDetail = async (req: Request, res: Response, next: NextFunction
         //     $sort: { _id: 1 },
         //   },
         // ]);
-
-
       } catch (err) {
         console.error("Error fetching missed calls:", err);
       }
-
     } catch (error) {
       console.log("error in misscalled api", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
