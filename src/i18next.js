@@ -560,9 +560,9 @@ i18n
           "Add new Outbound route": "Lisää lähtevä reitti",
           "Outbound routes": "Lähtevät reitit",
           Prepend: "Etuliite",
-          prepend: "etuliite",
+          prepend: "Etuliite",
           Prefix: "Prefiksi",
-          prefix: "prefiksi",
+          prefix: "Prefiksi",
           "Match pattern": "Sallitut numerot",
           Invalid: "Virheellinen",
           "Select trunk": "Valitse keskusjohto",
@@ -1018,14 +1018,13 @@ i18n
           Pipedrive: "Pipedrive",
           "Microsoft Dynamics": "Microsoft Dynamics",
           "Please upload only one file at a time.":
-            "Please upload only one file at a time.",
+            "Lataa vain yksi tiedosto kerrallaan.",
           //
           "Not Required": "Ei pakollinen",
           "node cidr": "node cidr",
           "Range must be between 3 and 15 digits long.":
             "Range must be between 3 and 15 digits long.",
-          "The difference between numbers must be less than 100.":
-            "The difference between numbers must be less than 100.",
+
           //toasted 21/10/2024
           "please choose a strong password try a mix of letters numbers and symbols":
             "please choose a strong password try a mix of letters numbers and symbols",
@@ -1058,13 +1057,13 @@ i18n
           "New company added successfully": "Uusi yritys lisätty onnistuneesti",
           "New company Updated successfully": "Yritys päivitetty onnistuneesti",
           "Company Deleted successfully": "Yrityksen poistaminen onnistui",
-          "Gateway Created Successfully !!": "Gateway Created Successfully !!",
-          "Gateway Updated Successfully !!": "Gateway Updated Successfully !!",
-          "Gateway Deleted Successfully !!": "Gateway Deleted Successfully !!",
+          "Gateway Created Successfully !!": "Keskusjohdon lisäys onnistui",
+          "Gateway Updated Successfully !!": "Keskusjohdon päivitys onnistui",
+          "Gateway Deleted Successfully !!": "Keskusjohdon poisto onnistui",
           "Dialplan Outbound Created Successfully !!":
-            "Dialplan Outbound Created Successfully !!",
+            "Lähtevän reitin lisäys onnistui",
           "Outbound Routes Delete Successfully":
-            "Outbound Routes Delete Successfully",
+            "Lähtevä reitin poisto onnistui",
           "Firewall Created Successfully !!":
             "Firewall Created Successfully !!",
           "Firewall Data Update Successfully":
@@ -1138,7 +1137,7 @@ i18n
             "Käyttäjän kirjautumistiedot ovat virheelliset",
           "User Login Successfully": "Sisäänkirjautuminen onnistui",
           "Calender Config Updated Successfully":
-            "Calender Config Updated Successfully",
+            "Kalenterin luonti onnistui",
           "Internal server error": "Internal server error",
           "User Detail Not Found": "Käyttäjätietoja ei löydy",
           "Please Verify Your Email": "Vahvista sähköpostiosoitteesi",
@@ -1489,7 +1488,7 @@ i18n
           "New And Confirm Password Does Not Match !!":
             "New And Confirm Password Does Not Match !!",
           "User Detail Updated Successfully":
-            "User Detail Updated Successfully",
+            "Käyttäjän tiedot päivitetty onnistuneesti",
           "User id Is Mandatory.": "User id Is Mandatory.",
           "Detail Change Successfully !!": "Detail Change Successfully !!",
           "Provider Is Mandatory": "Provider Is Mandatory",
