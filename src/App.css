@@ -2810,7 +2810,7 @@ select {
 }
 
 .widthpassword {
-  width: 800px;
+  width: 450px;
 }
 
 @media screen and (max-width: 995px) {
