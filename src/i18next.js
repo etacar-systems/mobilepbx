@@ -832,7 +832,7 @@ i18n
 
           "PSTN Numbers": "PSTN Numerot",
           "numbers were successfully created.":
-            "numerot luotiin onnistuneesti.",
+            "numeroa luotiin onnistuneesti.",
           " numbers are duplicates and were ignored:":
             " numerot ovat jo palvelussa ja ne jätettiin huomiotta:",
           These: "Nämä",
