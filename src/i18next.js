@@ -1004,7 +1004,7 @@ i18n
           "Call Type": "Puhelutyyppi",
           "Call details": "Puhelutiedot",
           "Call Status": "Puhelun tila",
-          "No data available in table": "Taulukossa ei ole saatavilla tietoja",
+          "No data available in table": "Ei dataa",
           "Notice board": "Notice board",
           Calls: "Puhelut",
           Sec: "Sek",
