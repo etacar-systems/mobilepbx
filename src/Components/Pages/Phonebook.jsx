@@ -436,7 +436,7 @@ export default function Phonebook() {
                       sortingTable("phone_number");
                     }}
                   >
-                    <p className="mb-0">{t("Phone number")}</p>
+                    <p className="mb-0">{t("Phone Number")}</p>
                     <div>{adduisortingui("phone_number")}</div>
                   </div>
                 </th>
