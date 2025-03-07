@@ -429,7 +429,7 @@ export default function Conference() {
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("assign_pstn_number")}
                   >
-                    <p className="mb-0">{t("Phone number")}</p>
+                    <p className="mb-0">{t("Phone Number")}</p>
                     {arrowShow("assign_pstn_number")}
                   </div>
                 </th>
