@@ -1420,7 +1420,7 @@ i18n
             "Each item in destination_action must have valid destination_app and destination_data.",
           "Pstn Number already assigned to Extension  pls Unassign First.":
             "Pstn Number already assigned to Extension  pls Unassign First.",
-          "PSTN Number Delete Successfully": "PSTN Number Delete Successfully",
+          "PSTN Number Delete Successfully": "PSTN Numeron poito onnistui",
           "Invalid value for isassigned.": "Invalid value for isassigned.",
           "PSTN Number is mandatory.": "PSTN Number is mandatory.",
           "select_type is mandatory.": "select_type is mandatory.",
