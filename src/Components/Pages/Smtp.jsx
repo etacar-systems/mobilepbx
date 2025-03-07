@@ -243,7 +243,7 @@ const Smtp = () => {
           <thead className="Tablehead" style={{ marginTop: "10px" }}>
             <tr className="head_color">
               <th style={{ width: "19%" }}>
-                <p className="mb-0">{t("Email from")}</p>
+                <p className="mb-0">{t("From")}</p>
               </th>
               <th style={{ width: "19%" }}>
                 <p className="mb-0">{t("Subject")}</p>
@@ -252,10 +252,10 @@ const Smtp = () => {
                 <p className="mb-0">{t("Message")}</p>
               </th>
               <th style={{ width: "15%" }}>
-                <p className="mb-0">{t("Created date")}</p>
+                <p className="mb-0">{t("Created Date")}</p>
               </th>
               <th style={{ width: "15%" }}>
-                <p className="mb-0">{t("Edited date")}</p>
+                <p className="mb-0">{t("Edited")}</p>
               </th>
               <th style={{ width: "10%" }}> {t("Action")}</th>
             </tr>
