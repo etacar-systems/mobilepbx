@@ -496,7 +496,7 @@ export default function Extension() {
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("destination")}
                   >
-                    <p className="mb-0">{t("Phone number")}</p>
+                    <p className="mb-0">{t("Phone Number")}</p>
                     {arrowShow("destination")}
                   </div>
                 </th>
