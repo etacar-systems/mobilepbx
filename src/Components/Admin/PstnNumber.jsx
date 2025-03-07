@@ -503,7 +503,7 @@ export default function PstnNumber() {
             {searchTerm && <ClearSearch clearSearch={clearSearch} number={true} />}
 
             <div className="companyfilter">
-              <h6 style={{ width: "120px", marginLeft: "15px" }}>{t("Select company")}:</h6>
+              <h6 style={{ width: "120px", marginLeft: "15px" }}>{t("Select Company")}:</h6>
               <div style={{ width: "140px" }}>
                 <CustomDropDown
                   toggleDropdown={toggleDropdown}
@@ -541,7 +541,7 @@ export default function PstnNumber() {
                     className="d-flex align-items-center justify-content-between"
                     onClick={() => sortingTable("destination")}
                   >
-                    <p className="mb-0">{t("Destination")}</p>
+                    <p className="mb-0">{t("Destination Number")}</p>
                     <div>{arrowShow("destination")}</div>
                   </div>
                 </th>
