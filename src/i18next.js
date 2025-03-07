@@ -1568,6 +1568,7 @@ i18n
           "Replay to": "Vastausosoite",
           Subject: "Otsikko",
           Message: "Viesti",
+          Edited: "Muokattu",
           "Sendgrid auth": "Sendgrid todennus",
           "Sendgrid token": "Sendgrid-tunnus",
           "Configure SMTP": "Määritä SMTP",
