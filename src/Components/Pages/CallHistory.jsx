@@ -325,7 +325,7 @@ export default function CallHistory() {
                   }}
                 >
                   <div className="d-flex align-items-center justify-content-between">
-                    <p className="mb-0">{t("Destination ")}</p>
+                    <p className="mb-0">{t("Destination Number")}</p>
                     {arrowShow("destination_number")}
                   </div>
                 </th>
