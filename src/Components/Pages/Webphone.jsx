@@ -304,7 +304,7 @@ export default function Webphone() {
               </Card>
             </Col>
 
-            <Col lg={8} className="m-0">
+            <Col lg={8} className="m-0 p-0">
               <Card style={{ width: "100%" }}>
                 <Card.Body className="misscall" style={{ width: "100%" }}>
                   <Tab.Container
