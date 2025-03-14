@@ -75,7 +75,7 @@ function CardsDashboard({
       </Col>
       <Col lg={3} className="col-name">
         <Card className="dear-card">
-          <Card.Body className="text-center" style={{ padding: "15px 36px" }}>
+          <Card.Body className="text-center" style={{ padding: "24px 36px" }}>
             <p className="chart-value">{t("Calls today")}</p>
 
             <div className="rowdata">
@@ -148,7 +148,7 @@ function CardsDashboard({
       </Col>
       <Col lg={3} className="col-name">
         <Card className="dear-card">
-          <Card.Body className="text-center" style={{ padding: "15px 36px" }}>
+          <Card.Body className="text-center" style={{ padding: "24px 36px" }}>
             <p className="chart-value">{t("Missed today")}</p>
 
             <div className="rowdata">
