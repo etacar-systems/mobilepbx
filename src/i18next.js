@@ -110,6 +110,7 @@ i18n
           "Contact card": "Yhteystietokortti",
           Name: "Nimi",
           "Phone Number": "Puhelinnumero",
+          "Phone number": "Puhelinnumero",
           Phonenumber: "Puhelinnumero",
           "Mobile number": "Matkapuhelinnumero",
           Mobilenumber: "Matkapuhelinnumero",
