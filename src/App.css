@@ -1663,14 +1663,14 @@ input:checked + .slider:before {
 }
 
 .report_form {
-  padding: 22px;
+  padding: 18px;
   background: var(--main-tabledarkbackground-color);
   border-width: var(--border-width); /* top, right, bottom, left */
   border-style: var(--border-style); /* sets the border style */
   border-color: var(--border-color);
   border-radius: 3px;
   color: var(--main-adminheaderpage-color);
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .report_form label {
