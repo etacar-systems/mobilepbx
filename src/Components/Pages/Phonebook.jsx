@@ -538,18 +538,8 @@ export default function Phonebook() {
                                   }}
                                 >
                                   <div className="row">
-                                    <div className="col-9 Numberlength">
+                                    <div className="col-12 Numberlength">
                                       {val.phone_number}{" "}
-                                    </div>
-                                    <div className="col-3">
-                                      <Calling
-                                        width={25}
-                                        height={25}
-                                        style={{
-                                          color:
-                                            "var(--main-sidebarfont-color)",
-                                        }}
-                                      />
                                     </div>
                                   </div>
                                 </Dropdown.Item>
