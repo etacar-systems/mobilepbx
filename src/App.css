@@ -645,7 +645,7 @@ ul.choose-skin li.active div::after {
 }
 
 .num_table {
-  padding: 22px;
+  padding: 18px;
   background: var(--main-tabledarkbackground-color);
   border-width: var(--border-width);
   border-style: var(--border-style);
