@@ -328,11 +328,11 @@ export default function Webphone() {
                           {t("Contact")}
                         </Nav.Link>
                       </Nav.Item>
-                      <Nav.Item className="custom-nav-item">
+                    {/* <Nav.Item className="custom-nav-item">
                         <Nav.Link eventKey="BLF" className="nav-link2">
                           {t("BLF")}
                         </Nav.Link>
-                      </Nav.Item>
+                      </Nav.Item> */}
                     </Nav>
                     <Tab.Content
                       className="tabcontent webphone-table hide_scrollbar"
