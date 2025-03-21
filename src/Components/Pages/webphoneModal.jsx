@@ -167,17 +167,8 @@ const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
                           }}
                         >
                           <div className="row">
-                            <div className="col-9  Numberlength">
+                            <div className="col-12 Numberlength">
                               {contactName?.mobile}{" "}
-                            </div>
-                            <div className="col-3  Numberlength">
-                              <Calling
-                                width={25}
-                                height={25}
-                                style={{
-                                  color: "var(--main-sidebarfont-color)",
-                                }}
-                              />
                             </div>
                           </div>
                         </Dropdown.Item>
