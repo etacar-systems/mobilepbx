@@ -47,6 +47,9 @@ import { company_Features } from "../ConstantConfig";
 import LanguageSelect from "../Modal/LanguageSelect";
 import { settheme } from "../../Redux/Reducers/DataServices";
 import { Badge } from "react-bootstrap";
+import CustomDropDown from "../CustomDropDown";
+
+import { SELECTSTATUS } from "../ConstantConfig";
 
 function MainComponent({ children }) {
   const { t } = useTranslation();
@@ -481,6 +484,13 @@ function MainComponent({ children }) {
   const handleLanguage = () => {
     setIsClick(!isClick);
   };
+
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const toggleDropdown = (dropdown) => {
+    setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
+  };
+
   return (
     <>
       <div className=" d-flex h-100">
@@ -932,11 +942,11 @@ function MainComponent({ children }) {
               </div>
               <div
                 style={{ cursor: "pointer", height: "100%" }}
-                className="d-flex align-items-center "
+                className="d-flex align-items-center gap-3"
               >
                 {role == 1 && (
                   <div
-                    className="d-flex align-items-center me-3"
+                    className="d-flex align-items-center"
                     onClick={openModal}
                     style={{ height: "100%" }}
                   >
@@ -954,6 +964,22 @@ function MainComponent({ children }) {
                       )}
                     </span>
                   </div>
+                )}
+
+                {window.location.pathname === "/webphone" && (
+                  <CustomDropDown
+                    toggleDropdown={toggleDropdown}
+                    // showValue={formData.selectstatus}
+                    openDropdown={openDropdown}
+                    valueArray={SELECTSTATUS}
+                    handleSelection={() => {}}
+                    name={"selectstatus"}
+                    defaultValue={t("Available")}
+                    mapValue={"item"}
+                    storeValue={"item"}
+                    setOpenDropdown={setOpenDropdown}
+                    sorting={true}
+                  />
                 )}
 
                 <Icon16

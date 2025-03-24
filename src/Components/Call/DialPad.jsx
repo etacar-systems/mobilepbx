@@ -12,9 +12,7 @@ import { useTranslation } from "react-i18next";
 import CustomDropDown from "../CustomDropDown";
 import Webphone from "../Pages/Webphone";
 import config from "../../config";
-import ConstantConfig, {
-  SELECTSTATUS,
-  TRANSFERCALL,
+import {
   voicemailNumber,
 } from "../ConstantConfig";
 
@@ -22,11 +20,6 @@ function DialPad({}) {
   const { t } = useTranslation();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [inputFocuse, setInputFocus] = useState(true);
-  const [openDropdown, setOpenDropdown] = useState(null);
-  const [formData, setFormdata] = useState({
-    selectstatus: "",
-    Transfercall: "",
-  });
   const call_function = useSelector(
     (state) => state.calling_function.calling_function
   );
@@ -124,26 +117,7 @@ function DialPad({}) {
       setPhoneNumber("");
     }
   };
-  const toggleDropdown = (dropdown) => {
-    setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
-  };
 
-  const handlechange = (e) => {
-    const { name, value } = e.target;
-    setFormdata({
-      ...formData,
-      [name]: value,
-    });
-  };
-  const handleSelection = (dropdown, value) => {
-    const syntheticEvent = {
-      target: {
-        name: dropdown,
-        value: value,
-      },
-    };
-    handlechange(syntheticEvent);
-  };
   const handleZeroTouchStart = (e) => {
     e.preventDefault(); // Prevent default touch behavior
     const timer = setTimeout(() => {
@@ -212,40 +186,6 @@ function DialPad({}) {
               />
             </Col>
           )}
-        </Row>
-      </Container>
-      <Container className="mb-3">
-        <Row>
-          <Col xs={6}>
-            <CustomDropDown
-              toggleDropdown={toggleDropdown}
-              showValue={formData.selectstatus}
-              openDropdown={openDropdown}
-              valueArray={SELECTSTATUS}
-              handleSelection={handleSelection}
-              name={"selectstatus"}
-              defaultValue={t("Available")}
-              mapValue={"item"}
-              storeValue={"item"}
-              setOpenDropdown={setOpenDropdown}
-              sorting={true}
-            />
-          </Col>
-          <Col xs={6}>
-            <CustomDropDown
-              toggleDropdown={toggleDropdown}
-              showValue={formData.Transfercall}
-              openDropdown={openDropdown}
-              valueArray={TRANSFERCALL}
-              handleSelection={handleSelection}
-              name={"Transfercall"}
-              defaultValue={t("No transfer")}
-              mapValue={"item"}
-              storeValue={"item"}
-              setOpenDropdown={setOpenDropdown}
-              sorting={true}
-            />
-          </Col>
         </Row>
       </Container>
       <Container>

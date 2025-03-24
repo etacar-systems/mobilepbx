@@ -549,7 +549,7 @@ function RingGroupModal({
                     )}
                   </div>
                   {formData.ring_group_strategy === "sequence" ? (
-                    <div style={{marginBottom:"30px"}}>
+                    <div style={{ marginBottom: "30px" }}>
                       <Form.Label className="modal-head ">
                         {t("Ring Hunt")}
                       </Form.Label>
@@ -568,7 +568,7 @@ function RingGroupModal({
                       )}
                     </div>
                   ) : (
-                    <div style={{marginTop:"55px"}}>
+                    <div style={{ marginTop: "55px" }}>
                       <Form.Label className="modal-head">
                         {t("Ring group duration")}
                       </Form.Label>
@@ -874,6 +874,46 @@ function RingGroupModal({
                   {errors.destination && (
                     <p className="text-danger error-ui">{errors.destination}</p>
                   )}
+                </Col>
+                <Col lg={4} className="mt-3">
+                  <Form.Label className="modal-head m-0">
+                    {t("Automatic SMS sender")}
+                  </Form.Label>
+                  <div
+                    className="musicback border-0"
+                    style={{ gap: "6px", padding: "0.75rem 0" }}
+                  >
+                    {t("Activate")}
+                    <label className="switch">
+                      <input type="checkbox" id="skipBusyAgent" />
+                      <span className="slider"></span>
+                    </label>
+                  </div>
+                  <Row className="align-items-center my-2">
+                    <Col xs={12}>
+                      <textarea
+                        name=""
+                        placeholder={t("SMS message")}
+                        id=""
+                        style={{
+                          width: "100%",
+                          padding: "6px 12px",
+                          height: "100px",
+                          borderColor: "var(--main-bordermodaldashboard-color)",
+                        }}
+                        // value={message}
+                        // onChange={handleChange1}
+                        className="search-bg"
+                      ></textarea>
+                    </Col>
+                    <Col xs={12} className="status_namm">
+                      <h6>
+                        {" "}
+                        {/* {maxLength - message.length}{" "} */}
+                        {t("characters remaining.")}
+                      </h6>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
             </Form>
