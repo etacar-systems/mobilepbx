@@ -31,16 +31,13 @@ import { ReactComponent as Icon18 } from "../../Assets/Icon/chat.svg";
 import { ReactComponent as Icon19 } from "../../Assets/Icon/phonebook.svg";
 import { ReactComponent as Whtasapp } from "../../Assets/Icon/whatsapp-svgrepo-com.svg";
 import { ReactComponent as Icon20 } from "../../Assets/Icon/call-history-svgrepo-com.svg";
-import { ReactComponent as Dialpad } from "../../Assets/Icon/dial-pad.svg";
 import { ReactComponent as Icon22 } from "../../Assets/Icon/smtp.svg";
 import { ReactComponent as Icon23 } from "../../Assets/Icon/integration-icon.svg";
 import { ReactComponent as Icon24 } from "../../Assets/Icon/video_upload.svg";
 import socketIoClient from "socket.io-client";
 import Cookies from "js-cookie";
 import SipConnection from "../Call/SipConnection";
-import DialPad from "../Call/DialPad";
 import { useDispatch, useSelector } from "react-redux";
-import { getapiAll, postapiAll, setUnreadCount } from "../../Redux/Reducers/ApiServices";
 import SocketConfig, { AllEmit } from "../Chat/SocketConfig";
 import ConfirmationModal from "../Chat/ConfirmationModal";
 import Whatsappsocketconfig from "../Whatsapp/Whatsappsocketconfig";
@@ -53,6 +50,10 @@ import { Badge } from "react-bootstrap";
 
 function MainComponent({ children }) {
   const { t } = useTranslation();
+
+  const sipRegister = useSelector((state) => state.sipconnect.sipconnect);
+  const sip = Cookies.get("Sip_number");
+
   const fileBaseUrl = process.env.REACT_APP_FILE_BASE_URL;
   const localurl = useSelector((state) => state.getapiall.getapiall.profileurl);
   const unread_count = useSelector((state) => state.getapiall.unreadCount);
@@ -92,15 +93,21 @@ function MainComponent({ children }) {
   const sideRef = useRef(null);
   const role = Cookies.get("role");
   const navigate = useNavigate();
-  const settingUpdateStatus = useSelector((state) => state.settingUpdateStatus.settingUpdateStatus);
+  const settingUpdateStatus = useSelector(
+    (state) => state.settingUpdateStatus.settingUpdateStatus
+  );
   let profile_url = Cookies.get("profile_url");
 
   const getDetail = Cookies.get("company_features");
   const hex_code = Cookies.get("hex_code");
-  const companyFeatures = getDetail == "undefined" ? null : JSON.parse(getDetail);
+  const companyFeatures =
+    getDetail == "undefined" ? null : JSON.parse(getDetail);
   if (hex_code && role !== "3") {
     document.documentElement.style.setProperty("--main-orange-color", hex_code);
-    document.documentElement.setAttribute("style", `--main-orange-color: ${hex_code}`);
+    document.documentElement.setAttribute(
+      "style",
+      `--main-orange-color: ${hex_code}`
+    );
     document.documentElement.style.cssText = `--main-orange-color: ${hex_code}`;
   } else {
     // If hex_code is not provided or role is "3", reset to default color
@@ -437,16 +444,21 @@ function MainComponent({ children }) {
 
   let display_small_logo = logo;
   let display_logo_text = img_logo;
-  
-  if (!theme)
-  {
-    display_small_logo = companyFeatures?.small_logo ? `${fileBaseUrl}${companyFeatures?.small_logo}` : logo;
-    display_logo_text  = companyFeatures?.logo_text ? `${fileBaseUrl}${companyFeatures?.logo_text}` : img_logo;
-  }
-  else
-  {
-    display_small_logo = companyFeatures?.dark_small_logo ? `${fileBaseUrl}${companyFeatures?.dark_small_logo}` : logo;
-    display_logo_text  = companyFeatures?.dark_logo_text ? `${fileBaseUrl}${companyFeatures?.dark_logo_text}` : img_logo;
+
+  if (!theme) {
+    display_small_logo = companyFeatures?.small_logo
+      ? `${fileBaseUrl}${companyFeatures?.small_logo}`
+      : logo;
+    display_logo_text = companyFeatures?.logo_text
+      ? `${fileBaseUrl}${companyFeatures?.logo_text}`
+      : img_logo;
+  } else {
+    display_small_logo = companyFeatures?.dark_small_logo
+      ? `${fileBaseUrl}${companyFeatures?.dark_small_logo}`
+      : logo;
+    display_logo_text = companyFeatures?.dark_logo_text
+      ? `${fileBaseUrl}${companyFeatures?.dark_logo_text}`
+      : img_logo;
   }
 
   useEffect(() => {
@@ -483,11 +495,18 @@ function MainComponent({ children }) {
               <img
                 src={display_logo_text}
                 alt="logo"
-                style={ { maxHeight: "35px", maxWidth: "180px", marginTop: "12px" } }
+                style={{
+                  maxHeight: "35px",
+                  maxWidth: "180px",
+                  marginTop: "12px",
+                }}
               />
             </div>
 
-            <div style={{ maxHeight: dynamicHeight, overflow: "auto" }} className="sidebar_scroll">
+            <div
+              style={{ maxHeight: dynamicHeight, overflow: "auto" }}
+              className="sidebar_scroll"
+            >
               <div className="user-full d-flex align-items-center mt-3 ">
                 {localurl ? (
                   <img
@@ -506,8 +525,16 @@ function MainComponent({ children }) {
                     className="rounded"
                   />
                 ) : (
-                  <div style={{ backgroundColor: "var(--main-orange-color)" }} className="rounded">
-                    <img src={user} width={40} height={40} className="rounded" />
+                  <div
+                    style={{ backgroundColor: "var(--main-orange-color)" }}
+                    className="rounded"
+                  >
+                    <img
+                      src={user}
+                      width={40}
+                      height={40}
+                      className="rounded"
+                    />
                   </div>
                 )}
 
@@ -543,11 +570,14 @@ function MainComponent({ children }) {
                           color: "var(--main-adminheaderpage-color)",
                         }}
                       >
-                        {(company_name !== "undefined" && role == 2) || role == 4 ? (
+                        {(company_name !== "undefined" && role == 2) ||
+                        role == 4 ? (
                           company_name
                         ) : (
                           <>
-                            <span style={{ marginRight: "4px" }}>{firstname}</span>
+                            <span style={{ marginRight: "4px" }}>
+                              {firstname}
+                            </span>
                             <span>{lastname}</span>
                           </>
                         )}
@@ -558,7 +588,8 @@ function MainComponent({ children }) {
                       style={{
                         border: "none !important",
                         borderRadius: "10px",
-                        boxShadow: "var(--main-boxshadowdropdown-color) 0px 2px 20px 0px",
+                        boxShadow:
+                          "var(--main-boxshadowdropdown-color) 0px 2px 20px 0px",
                       }}
                     >
                       <Dropdown.Item
@@ -596,6 +627,16 @@ function MainComponent({ children }) {
                           )}
                         </Link>
                       </Dropdown.Item>
+                      <Dropdown.Item
+                        className="d-flex align-items-center user-link-logout"
+                        onClick={logout}
+                      >
+                        <Icon16
+                          className="icontest1"
+                          style={{ width: "16px", height: "100%" }}
+                        />
+                        <p className="m-0 ms-2">{t("Logout")}</p>
+                      </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>
@@ -610,24 +651,30 @@ function MainComponent({ children }) {
                         <Link
                           to={val.to}
                           className={`d-flex align-items-center py-2 ${
-                            window.location.pathname === val.to ? "active_bg" : "active_color"
+                            window.location.pathname === val.to
+                              ? "active_bg"
+                              : "active_color"
                           }`}
                         >
                           <div
                             className={`sideimg_manage ${
-                              window.location.pathname === val.to ? "sideimg_bg" : "sideimg_manage"
+                              window.location.pathname === val.to
+                                ? "sideimg_bg"
+                                : "sideimg_manage"
                             }`}
                           >
                             <val.icon
                               className="icontest"
                               width={
-                                val.name == ("Call History" || "Puheluhistoria") ||
+                                val.name ==
+                                  ("Call History" || "Puheluhistoria") ||
                                 val.name_2 == "Call History"
                                   ? 28
                                   : 18
                               }
                               height={
-                                val.name == ("Call History" || "Puheluhistoria") ||
+                                val.name ==
+                                  ("Call History" || "Puheluhistoria") ||
                                 val.name_2 == "Call History"
                                   ? 28
                                   : 18
@@ -652,14 +699,18 @@ function MainComponent({ children }) {
           </div>
         )}
         {isDrawerOpen && (
-          <div className={`drawer ${isDrawerOpen == true ? "open" : ""}`} ref={sideRef}>
+          <div
+            className={`drawer ${isDrawerOpen == true ? "open" : ""}`}
+            ref={sideRef}
+          >
             <div className="">
               <div className="sidebar_logo">
                 <img src={display_small_logo} alt="" />
-                <img src={display_logo_text} 
+                <img
+                  src={display_logo_text}
                   alt=""
-                  style={ { maxHeight: "30px", maxWidth: "170px" } }
-                  />
+                  style={{ maxHeight: "30px", maxWidth: "170px" }}
+                />
               </div>
               <hr className="m-1 horizontal_border" />
               <div
@@ -688,7 +739,12 @@ function MainComponent({ children }) {
                       style={{ backgroundColor: "var(--main-orange-color)" }}
                       className="rounded"
                     >
-                      <img src={user} width={40} height={40} className="rounded" />
+                      <img
+                        src={user}
+                        width={40}
+                        height={40}
+                        className="rounded"
+                      />
                     </div>
                   )}
 
@@ -717,11 +773,14 @@ function MainComponent({ children }) {
                             color: "var(--main-adminnumberheader-color)",
                           }}
                         >
-                          {(company_name !== "undefined" && role == 2) || role == 4 ? (
+                          {(company_name !== "undefined" && role == 2) ||
+                          role == 4 ? (
                             company_name
                           ) : (
                             <>
-                              <span style={{ marginRight: "4px" }}>{firstname}</span>
+                              <span style={{ marginRight: "4px" }}>
+                                {firstname}
+                              </span>
                               <span>{lastname}</span>
                             </>
                           )}
@@ -769,6 +828,16 @@ function MainComponent({ children }) {
                             )}
                           </Link>
                         </Dropdown.Item>
+                        <Dropdown.Item
+                          className="d-flex align-items-center user-link-logout"
+                          onClick={logout}
+                        >
+                          <Icon16
+                            className="icontest1"
+                            style={{ width: "16px", height: "100%" }}
+                          />
+                          <p className="m-0 ms-2">{t("Logout")}</p>
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
@@ -787,7 +856,9 @@ function MainComponent({ children }) {
                             onClick={() => setIsDrawerOpen(false)}
                             key={index}
                             className={`d-flex align-items-center py-2 ${
-                              window.location.pathname === val.to ? "active_bg" : "active_color"
+                              window.location.pathname === val.to
+                                ? "active_bg"
+                                : "active_color"
                             }`}
                           >
                             <div
@@ -800,13 +871,15 @@ function MainComponent({ children }) {
                               <val.icon
                                 className="icontest"
                                 width={
-                                  val.name == ("Call History" || "Puheluhistoria") ||
+                                  val.name ==
+                                    ("Call History" || "Puheluhistoria") ||
                                   val.name_2 == "Call History"
                                     ? 28
                                     : 18
                                 }
                                 height={
-                                  val.name == ("Call History" || "Puheluhistoria") ||
+                                  val.name ==
+                                    ("Call History" || "Puheluhistoria") ||
                                   val.name_2 == "Call History"
                                     ? 28
                                     : 18
@@ -867,10 +940,19 @@ function MainComponent({ children }) {
                     onClick={openModal}
                     style={{ height: "100%" }}
                   >
-                    <Dialpad className="dial_pad" style={{ height: "100%" }} />
-                    <h6 className="mb-0 location_path" style={{ fontSize: "small" }}>
-                      {t("Dial pad")}
-                    </h6>{" "}
+                    <span
+                      style={{ color: "var(--main-adminnumberheader-color)" }}
+                      className="siptext"
+                    >
+                      {sip}{" "}
+                      {sipRegister == true ? (
+                        <span className="conlist">{t("Connected")}</span>
+                      ) : (
+                        <span className="conlist">
+                          {t("Registration Failed")}
+                        </span>
+                      )}
+                    </span>
                   </div>
                 )}
 
@@ -902,7 +984,9 @@ function MainComponent({ children }) {
           <div
             style={{
               padding:
-                path1 == "/chat" || path1 == "/whatsappChat" || path1 == "/dashboard"
+                path1 == "/chat" ||
+                path1 == "/whatsappChat" ||
+                path1 == "/dashboard"
                   ? "0px 0px"
                   : "11px 15px",
               background: "var(--main-grey-color)",

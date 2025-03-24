@@ -22,7 +22,6 @@ export default function Webphone() {
     busy: "Busy",
   };
   const dispatch = useDispatch();
-  const sipRegister = useSelector((state) => state.sipconnect.sipconnect);
   const allListeners = useSelector((state) => state.allListeners.allListeners);
   useEffect(() => {
     if (allListeners.name === "ack_register_extantions") {
@@ -46,7 +45,6 @@ export default function Webphone() {
     name: "",
     number: "",
   });
-  const sip = Cookies.get("Sip_number");
   const [dynamicHeight, setDynamicHeight] = useState(0);
   const [dynamicHeightForTabs, setDynamicHeightForTabs] = useState(0);
   const [extensionList, setExtensionList] = useState([]);
@@ -277,20 +275,6 @@ export default function Webphone() {
               }}
             >
               <span className="dashboardtext">{t("Communication")}</span>
-              <span
-                style={{ color: "var(--main-adminnumberheader-color)" }}
-                className="siptext"
-              >
-                {/* <i class="fa fa-signal" style={{ fontSize: "14px" }}></i>{" "} */}
-                {/* {t("sip")} :-  */}
-                {sip}
-                <br />
-                {sipRegister == true ? (
-                  <span className="conlist">{t("Connected")}</span>
-                ) : (
-                  <span className="conlist">{t("Registration Failed")}</span>
-                )}
-              </span>
             </div>
           </div>
         </div>
