@@ -547,7 +547,7 @@
 }
 .dropdown-menu {
   background-color: var(--main-white-color) !important;
-  right: 0px !important;
+  left: 0;
   border: 1px solid var(--main-bordermodaldashboard-color);
 }
 .dropdown-menu_main {

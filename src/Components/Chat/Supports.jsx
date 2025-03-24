@@ -11,6 +11,7 @@ import config from "../../config";
 import Cookies from "js-cookie";
 import { error } from "toastr";
 import { toast } from "react-toastify";
+import ChatWidget from "../Pages/ChatWidget";
 
 export default function Supports({ show, setShow }) {
   const file_base = process.env.REACT_APP_FILE_BASE_URL;
@@ -95,6 +96,7 @@ export default function Supports({ show, setShow }) {
             </p>
             <img src={chatbot} />
           </div>
+          <ChatWidget />
         </div>
       </Modal>
     </div>

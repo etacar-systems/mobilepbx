@@ -46,7 +46,6 @@ import ConfirmationModal from "../Chat/ConfirmationModal";
 import Whatsappsocketconfig from "../Whatsapp/Whatsappsocketconfig";
 import Supports from "../Chat/Supports";
 import { useTranslation } from "react-i18next";
-import ChatWidget from "./ChatWidget";
 import { company_Features } from "../ConstantConfig";
 import LanguageSelect from "../Modal/LanguageSelect";
 import { settheme } from "../../Redux/Reducers/DataServices";
@@ -935,7 +934,6 @@ function MainComponent({ children }) {
           button2function={setConfirmationModal}
         />
       )}
-      <ChatWidget />
     </>
   );
 }
