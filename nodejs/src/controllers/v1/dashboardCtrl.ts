@@ -174,14 +174,14 @@ const getDasboardDetail = async (
     try {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      console.log(
-        start_date,
-        "start_date",
-        end_date,
-        "end_date",
-        new Date(start_date + "Z"),
-        new Date(end_date + "Z")
-      );
+      // console.log(
+      //   start_date,
+      //   "start_date",
+      //   end_date,
+      //   "end_date",
+      //   new Date(start_date + "Z"),
+      //   new Date(end_date + "Z")
+      // );
       const data = await CdrModel.aggregate([
         {
           $match: {
@@ -437,62 +437,6 @@ const getDasboardDetail = async (
             },
           },
         },
-
-        // {
-        //   $group: {
-        //     _id: null,
-        //     total_calls: { $sum: 1 },
-        //     total_duration_sec: { $sum: "$duration" },
-        //     avg_response_sec: { $avg: "$response_time_sec" },
-        //     today_total_calls: {
-        //       $sum: {
-        //         $cond: [{ $gte: ["$start_stamp", today] }, 1, 0],
-        //       },
-        //     },
-        //     today_missed_calls: {
-        //       $sum: {
-        //         $cond: [
-        //           // { $and: [{ $eq: ["$status", "missed"] }, { $gte: ["$start_stamp", today] }] },
-        //           { $and: [{ $ne: ["$status", "answered"] }, { $gte: ["$start_stamp", today] }] },
-        //           1,
-        //           0,
-        //         ],
-        //       },
-        //     },
-        //     total_missed: {
-        //       $sum: {
-        //         $cond: [{ $ne: ["$status", "answered"] }, 1, 0],
-        //         // $cond: [{ $eq: ["$status", "missed"] }, 1, 0],
-        //       },
-        //     },
-        //     total_answered: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$status", "answered"] }, 1, 0],
-        //       },
-        //     },
-        //     voicemailCalls: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$status", "voicemail"] }, 1, 0],
-        //       },
-        //     },
-        //     total_outbound: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$status", "outbound_calls"] }, 1, 0],
-        //       },
-        //     },
-        //     total_local: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$direction", "local"] }, 1, 0],
-        //       },
-        //     },
-        //     inboundCalls: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0],
-        //       },
-        //     },
-        //   },
-        // },
-
         {
           $project: {
             _id: 0,
@@ -853,7 +797,7 @@ const getDasboardDetail = async (
 
       const extension_list = await user.aggregate(pipeline).exec();
 
-      console.log("extension_listextension_list", extension_list);
+      // console.log("extension_listextension_list", extension_list);
 
       if (
         reports_api_data?.data?.data ||
@@ -1306,7 +1250,7 @@ const getDasboardDetail = async (
         startDate = startOfYear;
         endDate = endOfYear;
       }
-      console.log("start end", startDate, endDate);
+      // console.log('details:', timePeriod, startDate, endDate, companyDetail.domain_uuid);
 
       try {
         const data = await CdrModel.aggregate([
@@ -1379,7 +1323,7 @@ const getDasboardDetail = async (
             },
           },
         ]);
-
+        console.log('data', data);
         // Return or process the data
         return data;
       } catch (error) {
@@ -1464,13 +1408,13 @@ const getDasboardDetail = async (
           //   $group: {
           //     _id: { day: { $dayOfMonth: "$start_stamp" } },
           //     date: { $first: "$start_stamp" },
-          //     total_calls: { $sum: 1 },
-          //     inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
-          //     local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
-          //     outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
-          //     no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
-          //     answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
-          //     missed: { $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] } },
+              // total_calls: { $sum: 1 },
+              // inbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "inbound"] }, 1, 0] } },
+              // local_calls: { $sum: { $cond: [{ $eq: ["$direction", "local"] }, 1, 0] } },
+              // outbound_calls: { $sum: { $cond: [{ $eq: ["$direction", "outbound"] }, 1, 0] } },
+              // no_answer: { $sum: { $cond: [{ $eq: ["$status", "no_answer"] }, 1, 0] } },
+              // answered: { $sum: { $cond: [{ $eq: ["$status", "answered"] }, 1, 0] } },
+              // missed: { $sum: { $cond: [{ $ne: ["$status", "answered"] }, 1, 0] } },
           //     // missed: { $sum: { $cond: [{ $eq: ["$status", "missed"] }, 1, 0] } },
           //   },
           // },
@@ -1645,8 +1589,8 @@ const getDasboardDetail = async (
 
       findTotal("today", getFormatedDate(new Date()))
         .then((result) => {
-          console.log("Today:", result);
-          console.log(filledData, "-----today-----");
+          // console.log("Today:", result);
+          // console.log(filledData, "-----today-----");
           dashboard_response_obj.call_metrics_detail = {
             call_metrics: filledData,
             ...result[0],

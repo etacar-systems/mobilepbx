@@ -16,3 +16,5 @@ nodejs/.DS_Store
 nodejs/.DS_Store
 nodejs/app.log
 nodejs/mobininja-backend-out.log
+
+/build

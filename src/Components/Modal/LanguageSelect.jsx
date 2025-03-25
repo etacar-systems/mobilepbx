@@ -75,6 +75,7 @@ const LanguageSelect = ({ main }) => {
         style={{
           display: isClick ? "block" : "none",
           position: "absolute",
+          left: 0,
         }}
       >
         <div

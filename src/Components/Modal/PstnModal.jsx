@@ -366,6 +366,7 @@ function PstnModal({
                     storeValue={"_id"}
                     setOpenDropdown={setOpenDropdown}
                     sorting={true}
+                    fullWidth={true}
                   />
                   {errors.Domain && <div className="text-danger error-ui">{errors.Domain}</div>}
                 </Col>

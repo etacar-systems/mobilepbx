@@ -34,7 +34,6 @@ import { ReactComponent as Icon20 } from "../../Assets/Icon/call-history-svgrepo
 import { ReactComponent as Icon22 } from "../../Assets/Icon/smtp.svg";
 import { ReactComponent as Icon23 } from "../../Assets/Icon/integration-icon.svg";
 import { ReactComponent as Icon24 } from "../../Assets/Icon/video_upload.svg";
-import socketIoClient from "socket.io-client";
 import Cookies from "js-cookie";
 import SipConnection from "../Call/SipConnection";
 import { useDispatch, useSelector } from "react-redux";
@@ -981,12 +980,6 @@ function MainComponent({ children }) {
                     sorting={true}
                   />
                 )}
-
-                <Icon16
-                  className="icontest1"
-                  style={{ width: "16px", height: "100%" }}
-                  onClick={logout}
-                />
               </div>
             </div>
             <div

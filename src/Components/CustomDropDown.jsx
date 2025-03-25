@@ -16,6 +16,7 @@ function CustomDropDown({
   bgcolor,
   mode,
   sorting,
+  fullWidth,
 }) {
   useEffect(() => {
     const selectedextension = valueArray?.find((val) => val._id === showValue);
@@ -54,7 +55,10 @@ function CustomDropDown({
   useEffect(() => {
     const selectedObject = valueArray?.find((val) => val._id === showValue);
 
-    if ((selectedObject && name == "cid") || (selectedObject && name == "Domain")) {
+    if (
+      (selectedObject && name == "cid") ||
+      (selectedObject && name == "Domain")
+    ) {
       Showstate(selectedObject?.company_name || selectedObject?.gateway_name);
     } else if (name == "cid") {
       Showstate(null);
@@ -70,7 +74,11 @@ function CustomDropDown({
     }
   }, [showValue, defaultValue]);
   useEffect(() => {
-    if (name.startsWith("TimeList_") || name.startsWith("Value_") || name.startsWith("Range_")) {
+    if (
+      name.startsWith("TimeList_") ||
+      name.startsWith("Value_") ||
+      name.startsWith("Range_")
+    ) {
       if (showValue) {
         Showstate(showValue);
       } else {
@@ -92,10 +100,15 @@ function CustomDropDown({
         <div
           className="Selfmadedropdown-btn "
           onClick={mode === "edit" ? null : handleDropdownClick}
-          style={{ background: bgcolor ,width:"100px"}}
+          style={{
+            background: bgcolor,
+            width: fullWidth ? undefined : "100px",
+          }}
         >
           {console.log(state, "---state--")}
-          <div className="elipsisDrodownshow">{t(state) || t(defaultValue)}</div>
+          <div className="elipsisDrodownshow">
+            {t(state) || t(defaultValue)}
+          </div>
           <div>
             <Dropdownicon />
           </div>
@@ -135,24 +148,26 @@ function CustomDropDown({
             {valueArray && valueArray.length > 0 ? (
               <>
                 {" "}
-                {(!sorting ? valueArray : valueArray?.sort()).map((item, index) => {
-                  return (
-                    <a
-                      key={item._id}
-                      className="elipsisDrodownshow"
-                      style={{
-                        color: "var(--main-dropdowncontent-color)",
-                        width: "99%",
-                      }}
-                      onClick={() => {
-                        handleSelection(name, item);
-                        Showstate(item);
-                      }}
-                    >
-                      {t(item)}
-                    </a>
-                  );
-                })}
+                {(!sorting ? valueArray : valueArray?.sort()).map(
+                  (item, index) => {
+                    return (
+                      <a
+                        key={item._id}
+                        className="elipsisDrodownshow"
+                        style={{
+                          color: "var(--main-dropdowncontent-color)",
+                          width: "99%",
+                        }}
+                        onClick={() => {
+                          handleSelection(name, item);
+                          Showstate(item);
+                        }}
+                      >
+                        {t(item)}
+                      </a>
+                    );
+                  }
+                )}
               </>
             ) : (
               <div>{t("No Record")}</div>

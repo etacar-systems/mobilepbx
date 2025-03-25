@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { setExtensionStatus } from "../../Redux/Reducers/DataServices";
 import Utils from "../../utils";
+
 function DashboardCardDetails() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
