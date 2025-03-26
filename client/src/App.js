@@ -47,10 +47,12 @@ import ForgotRedirect from "./Components/Pages/ForgotRedirect";
 import ChatWidget from "./Components/Pages/ChatWidget";
 import Smtp from "./Components/Pages/Smtp";
 import Integrations from "./Components/Pages/Integrations";
-import VideoUpload from "./Components/Pages/VideoUpload";
+// import VideoUpload from ;
 import GoogleRedirect from "./Components/Calendar/GoogleRedirect";
 import CookiesPage from "./Components/Pages/CookiesPage";
 import TimeConditionOptions from "./Components/Admin/TimeConditionOptions";
+
+import { TRPCContextProvider } from "./contexts";
 
 const rolePaths = {
   1: [
@@ -65,7 +67,7 @@ const rolePaths = {
     "/setting",
     "/google/redirect",
     "/cookies",
-    "/timeConditionOptions"
+    "/timeConditionOptions",
   ],
   2: [
     "/dashboard",
@@ -80,7 +82,7 @@ const rolePaths = {
     "/reports",
     "/setting",
     "/integration",
-    "/cookies"
+    "/cookies",
   ],
   3: [
     "/customers",
@@ -92,7 +94,7 @@ const rolePaths = {
     "/firewall",
     "/smtp",
     "/video",
-    "/cookies"
+    "/cookies",
   ],
   4: [
     "/dashboard",
@@ -107,7 +109,7 @@ const rolePaths = {
     "/reports",
     "/setting",
     "/integration",
-    "/cookies"
+    "/cookies",
   ],
 };
 
@@ -117,6 +119,8 @@ const defaultRolePaths = {
   3: "/customers",
   4: "/dashboard",
 };
+
+const VideoUpload = lazy(() => import("./Components/Pages/VideoUpload"));
 
 function App() {
   // console.log = console.warn = console.error = () => {};
@@ -151,16 +155,14 @@ function App() {
   // );
 
   return (
-    <>
+    <TRPCContextProvider>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/registerPage" element={<RegisterPage />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/forgotpasswordred" element={<ForgotRedirect />} />
-        {Role && (
-          <Route path="/cookies" element={<CookiesPage />} />
-        )}
+        {Role && <Route path="/cookies" element={<CookiesPage />} />}
 
         {(Role == 2 || Role == 4) && (
           <>
@@ -314,11 +316,13 @@ function App() {
                 </Protected>
               }
             />
-               <Route
+            <Route
               path="/video"
               element={
                 <Protected>
-                  <VideoUpload />
+                  <Suspense fallback={<></>}>
+                    <VideoUpload />
+                  </Suspense>
                 </Protected>
               }
             />
@@ -428,7 +432,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </TRPCContextProvider>
   );
 }
 

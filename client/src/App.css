@@ -1778,7 +1778,11 @@ input:checked + .slider:before {
   }
 }
 
-.drop-area:hover {
+.drop-area[data-empty="false"] {
+  cursor:auto;
+}
+
+.drop-area:not([data-empty="false"]):hover {
   background-size: 30px 30px;
   background-image: -webkit-linear-gradient(
     135deg,

@@ -1,4 +1,7 @@
 import { Router } from "express";
+import path from "path";
+import fs from "fs";
+
 import { adminroutes } from "./v1/admin";
 import { broadcastRouter } from "././v1/broadcast";
 import { block_userRoutes } from "././v1/block_user";
@@ -36,6 +39,13 @@ import { whatsapplogIn } from "./v1/loginWhatsapp";
 import { emailRoute } from "./v1/email";
 import { dashboardRoute } from "./v1/dashboard";
 import { callRecordingRoute } from "./v1/callRecording";
+
+import * as trpcExpress from "@trpc/server/adapters/express";
+import { appRouter } from "./v2";
+import { createContext } from "../utils/trpc";
+import { SUPPORT_VIDEOS_DIRECTORY_PATH } from "./v2/superAdminRouter/video";
+import { mimeTypes } from "./v2/superAdminRouter/video/video.dto";
+
 export const route = Router();
 
 route.use("/v1/admin", adminroutes);
@@ -75,6 +85,31 @@ route.use("/v1/api", whatsapplogIn);
 route.use("/v1/email", emailRoute);
 route.use("/v1/dashboard", dashboardRoute);
 route.use("/v1/save-call-recording-details", callRecordingRoute);
+
+route.get("/v1/uploads/supportVideos/:file_name", (req, res) => {
+  try {
+    const filename = req.params.file_name;
+    const file = fs.readFileSync(SUPPORT_VIDEOS_DIRECTORY_PATH + filename);
+
+    if (file) {
+      const ext = path.extname(filename);
+      const mimeType: string | undefined = (mimeTypes as any)[ext];
+
+      return res.status(200).send(file);
+    }
+  } catch (e) {
+  } finally {
+    return res.status(404).send();
+  }
+});
+
+route.use(
+  "/v1/trpc",
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  })
+);
 
 route.use((req, res, next) => {
   const error = new Error("Route not found");
