@@ -86,7 +86,7 @@ i18n
           // Webphone
           Communication: "Web-puhelin",
           Connected: "Yhdistetty",
-          "Registration Failed": "Rekisteröinti epäonnistui",
+          "Registration Failed": "Ei rekisteröity",
           sip: "sip",
           "Select status": "Valitse tila",
           Available: "Saatavilla",
