@@ -264,20 +264,6 @@ export default function Webphone() {
   return (
     <div id="main-content">
       <div className="communication">
-        <div className="block-header">
-          <div className="row clearfix">
-            <div
-              className="col-md-6 col-sm-12 col-name "
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <span className="dashboardtext">{t("Communication")}</span>
-            </div>
-          </div>
-        </div>
         <div>
           <Row className="clearfix mt-4">
             <Col lg={4} className="m-0 p-0">
