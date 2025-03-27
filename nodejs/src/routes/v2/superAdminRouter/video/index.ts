@@ -31,7 +31,7 @@ export const videoRouter = router({
       (Object.entries(mimeTypes).find(([_, type]) => type === mime) || [])[0] ||
       data.ext;
 
-    const videoData = matches[2];
+    const videoData = matches[2] || data.base64.replace(/^data:video\/\w+;base64,/, '');
 
     const filePath = `${data.section}.${extension}`;
 

@@ -1,49 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import "react-medium-image-zoom/dist/styles.css";
-import { ReactComponent as Closeicon } from "../../Assets/Icon/close-square-svgrepo-com.svg";
-import chatbot from "../../Assets/Image/chatbot.png";
 import { useTranslation } from "react-i18next";
-import promo from "../../Assets/Video/promo.mp4";
-import { useDispatch } from "react-redux";
-import { getapiAll } from "../../Redux/Reducers/ApiServices";
-import config from "../../config";
-import Cookies from "js-cookie";
-import { error } from "toastr";
-import { toast } from "react-toastify";
+import { useLocation } from "react-router";
+
+import { pages } from "../Pages/VideoUpload/pages";
+import { useGetVideoURL } from "../../requests/queries";
 import ChatWidget from "../Pages/ChatWidget";
 
-export default function Supports({ show, setShow }) {
-  const file_base = process.env.REACT_APP_FILE_BASE_URL;
+import { ReactComponent as Closeicon } from "../../Assets/Icon/close-square-svgrepo-com.svg";
+import chatbot from "../../Assets/Image/chatbot.png";
+import promo from "../../Assets/Video/promo.mp4";
+
+interface ISupportsProps {
+  show?: boolean;
+  setShow?: (isShow: boolean) => void;
+}
+
+export default function Supports({ show, setShow }: ISupportsProps) {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const Role = Cookies.get("role");
-  const Token = Cookies.get("Token");
-  const [videoURL, setVideoURL] = useState(null);
+  let location = useLocation();
+
+  const section = useMemo(() => {
+    return pages.find(({ link }) => link === location.pathname)?.key;
+  }, [location.pathname]);
+
+  const { url, isFetching: isURLFetching } = useGetVideoURL({
+    section,
+  });
+
+  const [videoURL, setVideoURL] = useState<string>();
   useEffect(() => {
-    dispatch(
-      getapiAll({
-        Api: config.INTEGRATION_LIST.VIDEO_BY_ROLE + Role,
-        Token: Token,
-      })
-    )
-      .then((response) => {
-        if (response?.payload?.response?.success === 1) {
-          setVideoURL(file_base + response.payload.response.IntergationList[0].video_url);
-        } else {
-          toast.error(response?.payload?.response?.message);
-          setVideoURL(promo);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    if (isURLFetching) return;
+
+    if (url) setVideoURL(url);
+    else setVideoURL(promo);
+  }, [url, isURLFetching]);
   return (
     <div>
       <Modal
         show={show}
-        onHide={() => setShow(false)}
+        onHide={() => setShow && setShow(false)}
         dialogClassName="modal-supports-open"
         aria-labelledby="example-custom-modal-styling-title"
         style={{ backdropFilter: "brightness(0.2)" }}
@@ -52,7 +48,7 @@ export default function Supports({ show, setShow }) {
           <Closeicon
             className="set_close_modal"
             onClick={() => {
-              setShow(false);
+              setShow && setShow(false);
             }}
             style={{
               width: "40px",
@@ -94,7 +90,7 @@ export default function Supports({ show, setShow }) {
                 "You can also watch the video in full screen mode by selecting or from the icon from the icon to stream to another device."
               )}
             </p>
-            <img src={chatbot} />
+            <img src={chatbot} alt="chat" />
           </div>
           <ChatWidget />
         </div>

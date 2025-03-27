@@ -18,7 +18,7 @@ import { pages } from "./pages";
 import { useRemoveVideo, useUploadVideo } from "../../../requests/mutations";
 import { useGetVideoURL } from "../../../requests/queries";
 
-const MAX_FILE_SIZE = 1024 * 1024 * 10; // 10mb;
+const MAX_FILE_SIZE = 1024 * 1024 * 40; // 40mb;
 
 const VideoUpload = () => {
   const [file, setFile] = useState<{
@@ -89,7 +89,7 @@ const VideoUpload = () => {
       />
       <div
         style={{
-          overflowY: "auto",
+          overflowY: "visible",
           width: "100%",
           background: "var(--main-tabledarkbackground-color)",
           padding: "25px",

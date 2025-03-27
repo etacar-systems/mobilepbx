@@ -54,6 +54,7 @@ export const DropDown = ({
       const file = event.target.files?.length
         ? event.target.files![0]
         : undefined;
+
       try {
         fileDTO(maxFileSize).parse(file);
 
@@ -105,7 +106,7 @@ export const DropDown = ({
             <input
               onChange={onInputChange}
               type="file"
-              accept="video/*"
+              accept="video/mp4,video/quicktime,video/webm"
               className={classNames.dropdown__input}
               multiple={false}
             />
