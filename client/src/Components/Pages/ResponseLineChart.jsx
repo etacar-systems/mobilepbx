@@ -82,7 +82,7 @@ const ResponseLineChart = ({ responseLineValue }) => {
             data: responseChartValue,
             // data: ResponseLineChartData,
             borderColor: bordercolor.ResponseLineChart,
-            backgroundColor: Backgroundcolor.ResponseLineChart,
+            backgroundColor: bordercolor.ResponseLineChart,
             borderWidth: 1,
             fill: true,
           },

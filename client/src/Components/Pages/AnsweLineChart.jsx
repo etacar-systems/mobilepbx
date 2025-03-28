@@ -50,7 +50,7 @@ const AnsweLineChart = ({ answeredValue }) => {
             data: Utils.generateArray(answeredValue),
             // data: AnsweLineChartData,
             borderColor: bordercolor.AnsweLineChart,
-            backgroundColor: Backgroundcolor.AnsweLineChart,
+            backgroundColor: bordercolor.AnsweLineChart,
             borderWidth: 1,
             fill: true,
           },

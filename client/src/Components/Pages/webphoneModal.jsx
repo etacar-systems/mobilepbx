@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { ReactComponent as Closeicon } from "../../Assets/Icon/close.svg";
-import { ReactComponent as Calling } from "../../Assets/Icon/call_com.svg";
 import { useEffect, useRef, useState } from "react";
 
 const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
@@ -193,15 +192,6 @@ const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
                         <div className="col-9  Numberlength">
                           {contactName?.extension}
                         </div>
-                        <div className="col-3 Numberlength">
-                          <Calling
-                            width={25}
-                            height={25}
-                            style={{
-                              color: "var(--main-sidebarfont-color)",
-                            }}
-                          />
-                        </div>
                       </div>
                     </Dropdown.Item>
                   </Dropdown.Menu>
@@ -250,15 +240,6 @@ const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
                             <div className="col-9 Numberlength">
                               {contactName?.mobile}{" "}
                             </div>
-                            <div className="col-3 Numberlength">
-                              <Calling
-                                width={25}
-                                height={25}
-                                style={{
-                                  color: "var(--main-sidebarfont-color)",
-                                }}
-                              />
-                            </div>
                           </div>
                         </Dropdown.Item>
                         <hr style={{ margin: "0px" }} />
@@ -280,15 +261,6 @@ const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
                       <div className="row">
                         <div className="col-9 Numberlength">
                           {contactName?.extension}
-                        </div>
-                        <div className="col-3 Numberlength">
-                          <Calling
-                            width={25}
-                            height={25}
-                            style={{
-                              color: "var(--main-sidebarfont-color)",
-                            }}
-                          />
                         </div>
                       </div>
                     </Dropdown.Item>

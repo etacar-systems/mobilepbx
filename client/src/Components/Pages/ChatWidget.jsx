@@ -2,14 +2,15 @@ import { useEffect } from "react";
 import { useChatCredentials } from "../../requests/queries";
 
 const ChatWidget = () => {
-  const { data, isFetching } = useChatCredentials();
+  const { data } = useChatCredentials();
   useEffect(() => {
-    const origin = data.origin || "https://desk.contakti.com";
-    const channelId = data.id || "10259";
+    const origin = data?.origin || "https://desk.contakti.com";
+    const channelId = data?.id || "10259";
 
     const buildDom = () => {
       const ifrm = document.createElement("iframe");
       const iFrameSrc = `${origin}/build_plugin?id=${channelId}`;
+
 
       ifrm.setAttribute("src", iFrameSrc);
       ifrm.setAttribute("id", "contakti-chat-main-iframe");
@@ -23,6 +24,7 @@ const ChatWidget = () => {
       );
       ifrm.style.border = "none";
       ifrm.allow = "microphone";
+
 
       document.body.appendChild(ifrm);
     };

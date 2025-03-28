@@ -7,7 +7,7 @@ import { ActionMenu } from "./actions/ActionMenu";
 
 import classNames from "./actionBar.module.scss";
 
-import defaultProfileIcon from "../../../../Assets/Icon/profile_default.svg";
+import { ReactComponent as DefaultProfileIcon } from "../../../../Assets/Icon/profile_default.svg";
 
 interface IActionBarProps {
   localurl: string;
@@ -37,17 +37,20 @@ export const ActionBar = forwardRef<HTMLDivElement, IActionBarProps>(
 
     return (
       <div ref={ref} className="user-full d-flex align-items-center mt-3 ">
-        <img
-          src={
-            localurl || profile_url
-              ? `${fileBaseUrl}${localurl || profile_url}`
-              : (defaultProfileIcon as unknown as string)
-          }
-          alt="profile"
-          width={40}
-          height={40}
-          className="rounded"
-        />
+        {localurl || profile_url ? (
+          <img
+            src={
+              `${fileBaseUrl}${localurl || profile_url}`
+              // ( as unknown as string)
+            }
+            alt="profile"
+            width={40}
+            height={40}
+            className="rounded"
+          />
+        ) : (
+          <DefaultProfileIcon width={40} height={40} className="rounded" />
+        )}
 
         <div className="ms-3">
           <h5 className="m-0 welcome">{t("Welcome,")}</h5>

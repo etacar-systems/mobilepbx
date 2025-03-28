@@ -56,7 +56,7 @@ const MissedLineChart = ({ missedValue }) => {
             data: Utils.generateArray(missedValue),
             // data: MissedLineChartData,
             borderColor: bordercolor.MissedLineChart,
-            backgroundColor: Backgroundcolor.MissedLineChart,
+            backgroundColor: bordercolor.MissedLineChart,
             borderWidth: 1,
             fill: true,
           },

@@ -1,10 +1,10 @@
 import { SettingsModel } from "../../../../../models/settings";
-import { router } from "../../../../../utils/trpc";
+import { publicProcedure, router } from "../../../../../utils/trpc";
 import { superAdminProcedure } from "../../procedure";
 import { chatCredentialsDTO } from "./settings.dto";
 
 export const chatSettingsRouter = router({
-  credentials: superAdminProcedure.query(async () => {
+  credentials: publicProcedure.query(async () => {
     const settings = await SettingsModel.findOne();
 
     return {
@@ -27,6 +27,6 @@ export const chatSettingsRouter = router({
           { chat_id: input.id, chat_origin: input.origin }
         );
 
-      return { chat_id: input.id, chat_origin: input.origin };
+      return { id: input.id, origin: input.origin };
     }),
 });

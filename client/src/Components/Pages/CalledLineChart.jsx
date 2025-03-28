@@ -47,7 +47,7 @@ const CalledLineChart = ({ calledValue }) => {
             data: Utils.generateArray(calledValue),
             // data: CalledLineChartData,
             borderColor: bordercolor.CalledLineChart,
-            backgroundColor: Backgroundcolor.CalledLineChart,
+            backgroundColor: bordercolor.CalledLineChart,
             borderWidth: 1.5,
             fill: true,
           },
