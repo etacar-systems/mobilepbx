@@ -15,7 +15,6 @@ import { ReactComponent as Up_arrow } from "../../Assets/Icon/up-arrow.svg";
 import { ReactComponent as Down_arrow } from "../../Assets/Icon/down-arrow.svg";
 import DeleteModal from "../Modal/DeleteModal";
 import { ReactComponent as Call } from "../../Assets/Icon/call.svg";
-import AdminHeader from "../Admin/AdminHeader";
 import PhonebookModal from "../Modal/PhonebookModal";
 import Paginationall from "./Paginationall";
 import { getapiAll, postapiAll } from "../../Redux/Reducers/ApiServices";

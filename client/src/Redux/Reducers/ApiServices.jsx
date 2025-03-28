@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import axios from "axios";
 import config from "../../config";
-import { performLogout } from "../../Components/LogOut"; // Import the helper function
+import { performLogout } from "../../components/LogOut"; // Import the helper function
 
 let SideBarData;
 export const postapiAll = createAsyncThunk(

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import AdminHeader from "./AdminHeader";
+import {AdminHeader} from "./AdminHeader";
 import Form from "react-bootstrap/Form";
 import yes_logo from "../../Assets/Icon/check.svg";
 import close_logo from "../../Assets/Icon/assinnpn.svg";
@@ -275,7 +275,7 @@ export default function Numbers() {
 
   return (
     <div className="tablespadding">
-      <AdminHeader openModal={() => openModal()} pathname={t("Numbers")} />
+      <AdminHeader openModal={() => openModal()} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">

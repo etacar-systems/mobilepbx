@@ -1,9 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useChatCredentials } from "../../requests/queries";
 
 const ChatWidget = () => {
+  const { data, isFetching } = useChatCredentials();
   useEffect(() => {
-    const origin = "https://desk.contakti.com";
-    const channelId = "10259";
+    if (!data || isFetching) return;
+
+    const origin = data.origin || "https://desk.contakti.com";
+    const channelId = data.id || "10259";
 
     const buildDom = () => {
       const ifrm = document.createElement("iframe");
@@ -48,7 +52,7 @@ const ChatWidget = () => {
         iframe.remove();
       }
     };
-  }, []);
+  }, [data, isFetching]);
 
   return null;
 };

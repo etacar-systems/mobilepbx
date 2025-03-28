@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+
+import i18n from "../../i18next";
+
 import language from "../../Assets/Image/languge.jpg";
 import language_dark from "../../Assets/Image/language_dark_2.png";
 import englishLanguage from "../../Assets/Image/English_language.webp";
 import finnishLanguage from "../../Assets/Image/Finnish_language.png";
-import Cookies from "js-cookie";
-import i18n from "../../i18next";
-import { useTranslation } from "react-i18next";
 
 const LanguageSelect = ({ main }) => {
-  const [theme, setTheme] = useState(false);
+  const theme = useSelector((state) => state?.Theme?.Theme);
 
   const handleLanguage = () => {
     setIsClick(!isClick);
@@ -32,7 +34,6 @@ const LanguageSelect = ({ main }) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  const { t } = useTranslation();
 
   const languagehandler = (language) => {
     i18n.changeLanguage(language);
@@ -40,12 +41,11 @@ const LanguageSelect = ({ main }) => {
     handleLanguage();
   };
 
-  const Themee = Cookies.get("Theme");
 
   return (
     <div style={{ position: "relative" }} className="p-2">
       <div className="d-flex justify-content-end " ref={iconRef}>
-        {Themee !== "Dark" ? (
+        {theme !== "Dark" ? (
           <img
             src={language}
             alt=""

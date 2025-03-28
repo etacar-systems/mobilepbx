@@ -6,11 +6,10 @@ import classNames from "./dragAndDrop.module.scss";
 
 import { ReactComponent as Fileupload } from "../../../../../Assets/Icon/fileupload.svg";
 
-interface IDropDownProps {
+interface IDragAndDropProps {
   maxFileSize: number;
   value?: File;
   onChange: (file?: File) => void;
-  disabled?: boolean;
   url?: string;
   onRemove?: () => void;
 }
@@ -38,14 +37,13 @@ export const fileDTO = (maxSize: number) =>
       ""
     );
 
-export const DropDown = ({
+export const DragAndDrop = ({
   maxFileSize,
   onChange,
   value,
-  disabled,
   url,
   onRemove: onRemoveExternal,
-}: IDropDownProps) => {
+}: IDragAndDropProps) => {
   const { t } = useTranslation();
   const [error, setError] = useState<ZodIssue>();
 

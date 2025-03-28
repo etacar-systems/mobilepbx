@@ -22,6 +22,7 @@ const pagesKeys = [
   "firewall",
   "smtp",
   "video_upload",
+  "support",
   "dashboard",
   "numbers",
   "extensions",

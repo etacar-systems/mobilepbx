@@ -14,6 +14,8 @@ i18n
     resources: {
       fi: {
         translation: {
+          "id": "tunnus",
+          "origin": "alkuperä",
           "The video has been successfully saved": "Tiedosto on tallennettu onnistuneesti",
           "Login to your account": "Kirjaudu tilillesi",
           "Remember me": "Muista minut",
@@ -1870,6 +1872,8 @@ i18n
       },
       en: {
         translation: {
+          "id": "id",
+          "origin": "origin",
           "The video has been successfully saved": "The video has been successfully saved",
           "Login to your account": "Login to your account",
           "Remember me": "Remember me",

@@ -7,50 +7,50 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import LoginPage from "./Components/Pages/LoginPage";
-import RegisterPage from "./Components/Pages/RegisterPage";
+import LoginPage from "./components/Pages/LoginPage";
+import RegisterPage from "./components/Pages/RegisterPage";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Protected from "./Components/Protected";
-import DashboardDesign from "./Components/Pages/DashboardDesign";
-import Webphone from "./Components/Pages/Webphone";
-import Phonebook from "./Components/Pages/Phonebook";
-import Whatsapp from "./Components/Pages/Whatsapp";
-import Numbers from "./Components/Admin/Numbers";
-import ForgotPassword from "./Components/Pages/ForgotPassword";
+import { Protected } from "./routes/Protected";
+import DashboardDesign from "./components/Pages/DashboardDesign";
+import Webphone from "./components/Pages/Webphone";
+import Phonebook from "./components/Pages/Phonebook";
+import Whatsapp from "./components/Pages/Whatsapp";
+import Numbers from "./components/Admin/Numbers";
+import ForgotPassword from "./components/Pages/ForgotPassword";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Extension from "./Components/Admin/Extension";
-import Groups from "./Components/Admin/Groups";
-import Conference from "./Components/Admin/Conference";
-import IVR from "./Components/Admin/IVR";
-import TimeCondition from "./Components/Admin/TimeCondition";
-import Call_recordings from "./Components/Admin/Call_recordings";
-import System_recordings from "./Components/Admin/System_recordings";
-import Reports from "./Components/Admin/Reports";
-import Customer from "./Components/Admin/Customer";
-import Invoice from "./Components/Admin/Invoice";
-import PstnNumber from "./Components/Admin/PstnNumber";
+import Extension from "./components/Admin/Extension";
+import Groups from "./components/Admin/Groups";
+import Conference from "./components/Admin/Conference";
+import IVR from "./components/Admin/IVR";
+import TimeCondition from "./components/Admin/TimeCondition";
+import Call_recordings from "./components/Admin/Call_recordings";
+import System_recordings from "./components/Admin/System_recordings";
+import Reports from "./components/Admin/Reports";
+import Customer from "./components/Admin/Customer";
+import Invoice from "./components/Admin/Invoice";
+import PstnNumber from "./components/Admin/PstnNumber";
 import { Chart } from "chart.js/auto";
-import Truncks from "./Components/Admin/Truncks";
-import Outbound from "./Components/Admin/Outbound";
-import Firewall from "./Components/Admin/Firewall";
-import ChatScreen from "./Components/Chat/ChatScreen";
-import CallHistory from "./Components/Pages/CallHistory";
+import Truncks from "./components/Admin/Truncks";
+import Outbound from "./components/Admin/Outbound";
+import Firewall from "./components/Admin/Firewall";
+import ChatScreen from "./components/Chat/ChatScreen";
+import CallHistory from "./components/Pages/CallHistory";
 import { Suspense, lazy, useEffect } from "react";
 import Cookies from "js-cookie";
-import Setting from "./Components/Pages/Setting";
-import WpScreen from "./Components/Whatsapp/WpScreen";
-import Calendar from "./Components/Calendar/Calendar";
-import Roles from "./Components/Pages/Roles";
+import Setting from "./components/Pages/Setting";
+import WpScreen from "./components/Whatsapp/WpScreen";
+import Calendar from "./components/Calendar/Calendar";
+import Roles from "./components/Pages/Roles";
 import { FacebookProvider } from "react-facebook";
-import ForgotRedirect from "./Components/Pages/ForgotRedirect";
-import ChatWidget from "./Components/Pages/ChatWidget";
-import Smtp from "./Components/Pages/Smtp";
-import Integrations from "./Components/Pages/Integrations";
+import ForgotRedirect from "./components/Pages/ForgotRedirect";
+import ChatWidget from "./components/Pages/ChatWidget";
+import Smtp from "./components/Pages/Smtp";
+import Integrations from "./components/Pages/Integrations";
 // import VideoUpload from ;
-import GoogleRedirect from "./Components/Calendar/GoogleRedirect";
-import CookiesPage from "./Components/Pages/CookiesPage";
-import TimeConditionOptions from "./Components/Admin/TimeConditionOptions";
+import GoogleRedirect from "./components/Calendar/GoogleRedirect";
+import CookiesPage from "./components/Pages/CookiesPage";
+import TimeConditionOptions from "./components/Admin/TimeConditionOptions";
 
 import { TRPCContextProvider } from "./contexts";
 
@@ -94,6 +94,7 @@ const rolePaths = {
     "/firewall",
     "/smtp",
     "/video",
+    "/support",
     "/cookies",
   ],
   4: [
@@ -120,7 +121,8 @@ const defaultRolePaths = {
   4: "/dashboard",
 };
 
-const VideoUpload = lazy(() => import("./Components/Pages/VideoUpload"));
+const VideoUploadPage = lazy(() => import("./components/Pages/VideoUpload"));
+const SupportPage = lazy(() => import("./components/Pages/Support"));
 
 function App() {
   // console.log = console.warn = console.error = () => {};
@@ -151,7 +153,7 @@ function App() {
   }, [token, Role, location.pathname]);
 
   // const DashboardDesign = lazy(() =>
-  //   import("./Components/Pages/DashboardDesign")
+  //   import("./components/Pages/DashboardDesign")
   // );
 
   return (
@@ -321,7 +323,17 @@ function App() {
               element={
                 <Protected>
                   <Suspense fallback={<></>}>
-                    <VideoUpload />
+                    <VideoUploadPage />
+                  </Suspense>
+                </Protected>
+              }
+            />
+            <Route
+              path="/support"
+              element={
+                <Protected>
+                  <Suspense fallback={<></>}>
+                    <SupportPage />
                   </Suspense>
                 </Protected>
               }

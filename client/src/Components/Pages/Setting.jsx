@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import AdminHeader from "../Admin/AdminHeader";
+import {AdminHeader} from "../Admin/AdminHeader";
 import { ReactComponent as Phone } from "../../Assets/Icon/phoneregister.svg";
 import { ReactComponent as Email } from "../../Assets/Icon/email-svgrepo-com.svg";
 import Form from "react-bootstrap/Form";
@@ -573,7 +573,7 @@ export default function Setting() {
       style={{ maxHeight: dynamicHeight, overflow: "auto" }}
       className="sidebar_scroll tablespadding"
     >
-      <AdminHeader pathname={t("Settings")} addBtn={true} />
+      <AdminHeader addBtn={true} />
       {role === "3" && (
         <div className="num_table set_lable_color">
           <Row className="set_lable_color">

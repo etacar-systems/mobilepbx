@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import AdminHeader from "./AdminHeader";
+import {AdminHeader} from "./AdminHeader";
 import Form from "react-bootstrap/Form";
 import { ReactComponent as Uparrow } from "../../Assets/Icon/up-arrow.svg";
 import { ReactComponent as Downarrow } from "../../Assets/Icon/down-arrow.svg";
@@ -785,7 +785,6 @@ export default function Customer() {
     <div className="tablespadding">
       <AdminHeader
         openModal={openModal}
-        pathname={t("Customers")}
         addBtn={false}
       />
       <div className="num_table">

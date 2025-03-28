@@ -6,7 +6,7 @@ import { ReactComponent as Call } from "../../Assets/Icon/call.svg";
 import { ReactComponent as Edit_logo } from "../../Assets/Icon/edit.svg";
 import { ReactComponent as Delete_logo } from "../../Assets/Icon/delete.svg";
 import DeleteModal from "../Modal/DeleteModal";
-import AdminHeader from "../Admin/AdminHeader";
+import {AdminHeader} from "../Admin/AdminHeader";
 import { ReactComponent as Calling } from "../../Assets/Icon/call_com.svg";
 import PhonebookModal from "../Modal/PhonebookModal";
 import { toast } from "react-toastify";
@@ -379,7 +379,7 @@ export default function Phonebook() {
   };
   return (
     <div className="tablespadding">
-      <AdminHeader openModal={openModal} pathname={t("Phonebook")} />
+      <AdminHeader openModal={openModal} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">

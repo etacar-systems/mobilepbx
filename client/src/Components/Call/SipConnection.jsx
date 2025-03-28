@@ -15,7 +15,7 @@ import {
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import AudioPlayer from "react-audio-player";
-import Ringing from "../Call/CallRing/Ringing.mp3";
+import Ringing from "./CallRing/Ringing.mp3";
 import ContactModal from "./ContactModal";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";

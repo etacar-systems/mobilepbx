@@ -3695,9 +3695,6 @@ select {
 .btn_delete .spinner-border:hover{
   color:white !important;
 }
-.tablespadding tbody .btn{
-  color:var(--main-orange-color) !important; 
-}*/
 /* .spinner-border{
   color: var(--main-orange-color) !important;
 } */

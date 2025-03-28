@@ -1,0 +1,18 @@
+.scroll {
+  overflow-y: auto;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.section {
+  display: flex;
+
+  width: 100%;
+  background: var(--main-tabledarkbackground-color);
+  padding: 25px;
+}

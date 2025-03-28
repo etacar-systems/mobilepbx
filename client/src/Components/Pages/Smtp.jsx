@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminHeader from "../Admin/AdminHeader";
+import {AdminHeader} from "../Admin/AdminHeader";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import {
@@ -225,7 +225,6 @@ const Smtp = () => {
   return (
     <div className="tablespadding">
       <AdminHeader
-        pathname={t("SMTP settings")}
         addBtn={false}
         btnName={t("Configure SMTP")}
         openModal={handleOpen}

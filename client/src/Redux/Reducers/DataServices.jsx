@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import Cookies from 'js-cookie';
 
 export const Calling_Function = createAsyncThunk(
   "dataservice/Calling_Function",
@@ -46,7 +47,7 @@ const dataService = createSlice({
     whatsappAllListeners: [],
     settingUpdateStatus: "",
     extensionstatus: [],
-    Theme: "",
+    Theme: Cookies.get("Theme"),
     TransferOn: false,
   },
   reducers: {

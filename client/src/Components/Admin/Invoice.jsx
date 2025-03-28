@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AdminHeader from "./AdminHeader";
+import {AdminHeader} from "./AdminHeader";
 import Form from "react-bootstrap/Form";
 import { ReactComponent as Uparrow } from "../../Assets/Icon/up-arrow.svg";
 import { ReactComponent as Downarrow } from "../../Assets/Icon/down-arrow.svg";
@@ -113,7 +113,7 @@ export default function Invoice() {
   }, [window.innerWidth, window.innerHeight, dynamicHeight]);
   return (
     <div className="tablespadding">
-      <AdminHeader openModal={openModal} pathname={t("Invoices")} addBtn={false} />
+      <AdminHeader openModal={openModal} addBtn={false} />
       <div className="num_table">
         <div className="table_header">
           <div className="show">

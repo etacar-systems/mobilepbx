@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction"; // For drag-and-drop functionality
-import AdminHeader from "../Admin/AdminHeader";
+import {AdminHeader} from "../Admin/AdminHeader";
 import CalendarModal from "./CalendarModal";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
@@ -241,7 +241,6 @@ export default function Calendar() {
 
       <AdminHeader
         openModal={openModal}
-        pathname={t("Calendar")}
         addBtn={false}
         btnName={t("Calendar Configuration")}
       />

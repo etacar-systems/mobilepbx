@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import AdminHeader from "./AdminHeader";
+import {AdminHeader} from "./AdminHeader";
 import Form from "react-bootstrap/Form";
 import yes_logo from "../../Assets/Icon/yes.svg";
 import edit_logo from "../../Assets/Icon/edit.svg";
@@ -226,7 +226,7 @@ export default function Reports() {
   };
   return (
     <div className="tablespadding">
-      <AdminHeader openModal={openModal} pathname={t("Reports")} addBtn={true} />
+      <AdminHeader openModal={openModal} addBtn={true} />
       <DatePickers
         btn_name={t("Search")}
         fontwidth="300"

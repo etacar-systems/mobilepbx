@@ -41,6 +41,12 @@ export const pages = [
     label: 'Video upload',
     link: '/video'
   },
+  {
+    key: 'support',
+    label: 'Support',
+    link: '/support'
+  },
+
 
   // admin
   {
@@ -80,7 +86,7 @@ export const pages = [
   },
   {
     key: 'call_recordings',
-    label: 'Call Recordings',
+    label: 'Call recordings',
     link: '/call'
   },
   {
