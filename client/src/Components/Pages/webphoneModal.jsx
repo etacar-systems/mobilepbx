@@ -189,7 +189,7 @@ const ContactCardModal = ({ show, onHide, contactName, activeTab }) => {
                       }}
                     >
                       <div className="row ">
-                        <div className="col-9  Numberlength">
+                        <div className="col-12  Numberlength">
                           {contactName?.extension}
                         </div>
                       </div>
