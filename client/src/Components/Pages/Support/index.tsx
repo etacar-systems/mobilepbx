@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,10 +7,9 @@ import { z } from "zod";
 import { ContentTemplate } from "../../shared";
 import { Input } from "../../shared/Input";
 import { useChatCredentials } from '../../../requests/queries'
+import { useUpdateChatCredentials } from "../../../requests/mutations";
 
 import classNames from "./support.module.scss";
-import { useUpdateChatCredentials } from "../../../requests/mutations";
-import { useEffect } from "react";
 
 const chatFormDTO = z.object({
   id: z.string().min(1),
@@ -22,8 +22,6 @@ export default function SupportPage() {
   const { t } = useTranslation();
   const { data, isFetching } = useChatCredentials();
   const { updateChatCredentials, isFetching: isUpdating } = useUpdateChatCredentials();
-
-  console.log(data);
 
   const {
     register,
@@ -38,7 +36,6 @@ export default function SupportPage() {
   }, [data, setValue])
 
   const onSubmit: SubmitHandler<TChatFormArgs> = (data) => {
-    console.log("a", data);
     updateChatCredentials(data);
   }
 

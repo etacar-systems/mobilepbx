@@ -22,8 +22,8 @@ export const chatSettingsRouter = router({
           chat_origin: input.origin,
         });
       else
-        await settings.updateOne(
-          {},
+        await SettingsModel.updateOne(
+          { _id: settings._id },
           { chat_id: input.id, chat_origin: input.origin }
         );
 

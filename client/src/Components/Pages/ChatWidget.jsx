@@ -4,8 +4,6 @@ import { useChatCredentials } from "../../requests/queries";
 const ChatWidget = () => {
   const { data, isFetching } = useChatCredentials();
   useEffect(() => {
-    if (!data || isFetching) return;
-
     const origin = data.origin || "https://desk.contakti.com";
     const channelId = data.id || "10259";
 
@@ -52,7 +50,7 @@ const ChatWidget = () => {
         iframe.remove();
       }
     };
-  }, [data, isFetching]);
+  }, [data]);
 
   return null;
 };
