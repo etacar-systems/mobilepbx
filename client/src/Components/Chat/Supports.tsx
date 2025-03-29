@@ -74,7 +74,7 @@ export default function Supports({ show, setShow }: ISupportsProps) {
             </p>
             <p className="paragraphsupoort">
               {t(
-                "  You can also watch the video in full screen mode by selecting the icon or the icon to stream to another device."
+                "You can also watch the video in full screen mode."
               )}
             </p>
           </div>
@@ -87,7 +87,13 @@ export default function Supports({ show, setShow }: ISupportsProps) {
             </p>
             <p className="paragraphsupoort">
               {t(
-                "You can also watch the video in full screen mode by selecting or from the icon from the icon to stream to another device."
+                "You can also leave us a support request via Chatbot if necessary."
+              )}
+            </p>
+            <p className="snamemain">{t("Multi-channel customer support")}</p>
+            <p className="paragraphsupoort">
+              {t(
+                "Our service is integrated into Contakti's multi-channel customer service solution, which you can use seamlessly. You can place an order or request a quote via the Chatbot."
               )}
             </p>
             <img src={chatbot} alt="chat" />
