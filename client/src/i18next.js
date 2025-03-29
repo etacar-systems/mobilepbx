@@ -167,12 +167,20 @@ i18n
 
           // Video
           "You can watch the instructional video and make the desired changes at the same time. In the video, select the Picture in Picture function from the icon, on the right side of the video image, and close this tab from the upper right corner.":
-            "Voit katsoa opastusvideon ja tehdä haluamasi muutokset samalla. Valitse videosta 'Kuva kuvassa' toiminto  ikonista, videokuvan oikeasta alallaidasta ja sulje tämä välilehti oikeasta yläkulmasta.",
+            "Voit katsoa opastusvideon ja tehdä haluamasi muutokset samalla. Valitse videosta 'Kuva kuvassa' toiminto ikonista, videokuvan oikeasta alallaidasta ja sulje tämä välilehti oikeasta yläkulmasta.",
+          "You can also watch the video in full screen mode.":
+            "Voit katsoa videon myös koko näytön tilassa.",
+          
           "Operating support": "Käyttötuki",
           "Our chatbot is at the bottom right of the page answering questions and to help with the use of the gear service.":
-            "Chatbotimme on sivun oikeassa alakulmassa vastaamassa kysymyksiin ja auttamassa palvelun käytössä.",
-          "You can also watch the video in full screen mode by selecting or from the icon from the icon to stream to another device.":
-            "Chatbotista hallitset myös laskutustasi, kuten tilaat lisää palveluita tai vähennät käytössäsi olevia palveluitasi",
+            "Chatbotimme on tämän sivun oikeassa alakulmassa vastaamassa kysymyksiin ja auttamassa palvelun käytössä.",
+          "You can also leave us a support request via Chatbot if necessary.":
+            "Voit jättää Chatbotin kautta myös tukipyynnön meille tarvittaessa.",
+
+          "Multi-channel customer support": 
+            "Monikanavainen asiakaspalvelu",
+          "Our service is integrated into Contakti's multi-channel customer service solution, which you can use seamlessly. You can place an order or request a quote via the Chatbot.":
+            "Palvelumme on integroitu Contaktin monikanavaiseen asiakaspalveluratkaisuun, jonka saat saumattomasti käyttöösi. Voit tehdä tilauksen tai tarjouspyynnön Chatbotin kautta.",
 
           // Dashboard Design
           Dashboard: "Monitorointi",
