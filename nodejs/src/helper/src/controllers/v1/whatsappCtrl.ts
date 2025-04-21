@@ -13,7 +13,7 @@ const accessToken = 'EAAaKy9XEVsMBOwGLLFDHnZB1QFpzRy0UPhiAchoP0ZCZBK1NuDT9MZA1J7
 const apiUrl = 'https://graph.facebook.com/v19.0/378441851999607/messages';
 
 
-const SERVER_URL = `ws://70.34.220.241:8081/?uid=664dce76c2ac7807e7c6ea50&cid=6641fb77e965afdc1ee27c87&device_id=Samsung`;
+const SERVER_URL = `ws://70.34.195.221:8081/?uid=664dce76c2ac7807e7c6ea50&cid=6641fb77e965afdc1ee27c87&device_id=Samsung`;
 const options = {
   transports: ["websocket", "polling"],
   rejectUnauthorized: false,

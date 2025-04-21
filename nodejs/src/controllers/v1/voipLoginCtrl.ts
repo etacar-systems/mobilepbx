@@ -5,11 +5,11 @@ export const loginCookies = {
   cookies: storeCookies,
 };
 export const pbxLogin = async () => {
-  const apiUrl = "http://70.34.207.207/:8080/pbx/index.pl";
+  const apiUrl = "http://70.34.212.211/:8080/pbx/index.pl";
   const params = {
     mod: "Login",
     action: "login",
-    domain: "mobilepbx.mobiililinja.fi",
+    domain: "mobile.mobiililinja.fi",
     user: "apiuser",
     password: "aZuiqEW7tSHLfoGeMUgzMaDoVcW4zxB0",
   };

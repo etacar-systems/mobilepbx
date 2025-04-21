@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import Cookies from 'js-cookie';
+import { createAsyncThunk, createThunk, createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 export const Calling_Function = createAsyncThunk(
   "dataservice/Calling_Function",
@@ -69,7 +69,11 @@ const dataService = createSlice({
     setExtensionStatus(state, action) {
       const { offline_extension, online_extension, busy_extension } =
         action?.payload;
-      state.extensionstatus = [...offline_extension, ...online_extension, ...busy_extension];
+      state.extensionstatus = [
+        ...offline_extension,
+        ...(online_extension || []),
+        ...busy_extension,
+      ];
     },
     settheme(state, action) {
       state.Theme = action.payload;

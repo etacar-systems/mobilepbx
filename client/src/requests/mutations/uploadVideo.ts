@@ -1,12 +1,11 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { RouterInputs } from "../../contexts";
 import { trpc } from "../../utils/trpc";
 
-type IUploadVideoInput = RouterInputs["superAdminRouter"]["video"]["upload"];
+type IUploadVideoInput = RouterInputs["superAdmin"]["video"]["upload"];
 
 export const useUploadVideo = () => {
   const utils = trpc.useUtils()
-  const { mutate, isPending } = trpc.superAdminRouter.video.upload.useMutation({
+  const { mutate, isPending } = trpc.superAdmin.video.upload.useMutation({
     retry: false,
   });
 
@@ -17,7 +16,7 @@ export const useUploadVideo = () => {
     mutate(input, {
       ...opts,
       onSuccess(data, variables, context) {
-        utils.superAdminRouter.video.getUrl.setData({ section: input.section }, () => {
+        utils.superAdmin.video.getUrl.setData({ section: input.section }, () => {
           return data;
         })
         opts?.onSuccess && opts.onSuccess(data, variables, context);

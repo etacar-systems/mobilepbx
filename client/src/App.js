@@ -11,7 +11,7 @@ import LoginPage from "./components/Pages/LoginPage";
 import RegisterPage from "./components/Pages/RegisterPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Protected } from "./routes/Protected";
-import DashboardDesign from "./components/Pages/DashboardDesign";
+// import DashboardDesign from "./components/Pages/DashboardDesign";
 import Webphone from "./components/Pages/Webphone";
 import Phonebook from "./components/Pages/Phonebook";
 import Whatsapp from "./components/Pages/Whatsapp";
@@ -29,7 +29,7 @@ import System_recordings from "./components/Admin/System_recordings";
 import Reports from "./components/Admin/Reports";
 import Customer from "./components/Admin/Customer";
 import Invoice from "./components/Admin/Invoice";
-import PstnNumber from "./components/Admin/PstnNumber";
+// import PstnNumber from "./components/Admin/PstnNumber";
 import { Chart } from "chart.js/auto";
 import Truncks from "./components/Admin/Truncks";
 import Outbound from "./components/Admin/Outbound";
@@ -121,8 +121,12 @@ const defaultRolePaths = {
   4: "/dashboard",
 };
 
+const DashboardPage = lazy(() => import("./components/Pages/Dashboard"));
 const VideoUploadPage = lazy(() => import("./components/Pages/VideoUpload"));
 const SupportPage = lazy(() => import("./components/Pages/Support"));
+const PSTNNumbersPage = lazy(() =>
+  import("./components/Admin/pages/PSTNNumbers")
+);
 
 function App() {
   // console.log = console.warn = console.error = () => {};
@@ -172,7 +176,9 @@ function App() {
               path="/dashboard"
               element={
                 <Protected>
-                  <DashboardDesign />
+                  <Suspense fallback={<></>}>
+                    <DashboardPage />
+                  </Suspense>
                 </Protected>
               }
             />
@@ -282,7 +288,9 @@ function App() {
               path="/pstn"
               element={
                 <Protected>
-                  <PstnNumber />
+                  <Suspense fallback={<></>}>
+                    <PSTNNumbersPage />
+                  </Suspense>
                 </Protected>
               }
             />
@@ -370,7 +378,9 @@ function App() {
               path="/dashboard"
               element={
                 <Protected>
-                  <DashboardDesign />
+                  <Suspense fallback={<></>}>
+                    <DashboardPage />
+                  </Suspense>
                 </Protected>
               }
             />

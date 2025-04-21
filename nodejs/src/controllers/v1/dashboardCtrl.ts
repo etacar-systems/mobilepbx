@@ -117,13 +117,13 @@ const getDasboardDetail = async (
       auth: config.PBX_API.AUTH,
       data: {
         domain_id: companyDetail.domain_uuid,
-        // start_date: convertISODate(start_date),
-        // end_date: convertISODate(end_date),
+        start_date, //: convertISODate(start_date),
+        end_date//: convertISODate(end_date),
         // defaultTimezone,
       },
     };
 
-    // console.log(convertISODate(start_date), convertISODate(end_date))
+    console.log(api_config)
 
     // interface ICdr extends Document {
     //   domain_uuid: string;

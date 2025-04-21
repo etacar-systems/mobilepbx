@@ -14,24 +14,28 @@ i18n
     resources: {
       fi: {
         translation: {
-          "id": "tunnus",
-          "origin": "alkuperä",
-          "The video has been successfully saved": "Tiedosto on tallennettu onnistuneesti",
+          "Destination number must be between start and end digits long.":
+            "Destination number must be between {{ start, number }} and {{ end, number }} digits long.",
+            
+          id: "tunnus",
+          origin: "alkuperä",
+          "The video has been successfully saved":
+            "Tiedosto on tallennettu onnistuneesti",
           "Login to your account": "Kirjaudu tilillesi",
           "Remember me": "Muista minut",
           "Loading...": "Ladataan...",
-          "Hide internal calls":"Piilota sisäiset puhelut",
+          "Hide internal calls": "Piilota sisäiset puhelut",
           LOGIN: "KIRJAUDU",
           "Forgot password?": "Unohtuiko salasana?",
           "Don't have an account?": "Eikö sinulla ole tiliä?",
           Register: "Rekisteröidy",
           "Email is Required": "Sähköposti on pakollinen",
           "Password is Required": "Salasana vaaditaan",
-          "This E-Mail Does not exist" :"Sähköpostia ei löytynyt",
-          "Password Incorrect":"Virheellinen salasana",
+          "This E-Mail Does not exist": "Sähköpostia ei löytynyt",
+          "Password Incorrect": "Virheellinen salasana",
 
           // Admin Portal
-          "User delete successfully":"Käyttäjän poistaminen onnistui",
+          "User delete successfully": "Käyttäjän poistaminen onnistui",
 
           // Register Page
 
@@ -170,15 +174,14 @@ i18n
             "Voit katsoa opastusvideon ja tehdä haluamasi muutokset samalla. Valitse videosta 'Kuva kuvassa' toiminto ikonista, videokuvan oikeasta alallaidasta ja sulje tämä välilehti oikeasta yläkulmasta.",
           "You can also watch the video in full screen mode.":
             "Voit katsoa videon myös koko näytön tilassa.",
-          
+
           "Operating support": "Käyttötuki",
           "Our chatbot is at the bottom right of the page answering questions and to help with the use of the gear service.":
             "Chatbotimme on tämän sivun oikeassa alakulmassa vastaamassa kysymyksiin ja auttamassa palvelun käytössä.",
           "You can also leave us a support request via Chatbot if necessary.":
             "Voit jättää Chatbotin kautta myös tukipyynnön meille tarvittaessa.",
 
-          "Multi-channel customer support": 
-            "Monikanavainen asiakaspalvelu",
+          "Multi-channel customer support": "Monikanavainen asiakaspalvelu",
           "Our service is integrated into Contakti's multi-channel customer service solution, which you can use seamlessly. You can place an order or request a quote via the Chatbot.":
             "Palvelumme on integroitu Contaktin monikanavaiseen asiakaspalveluratkaisuun, jonka saat saumattomasti käyttöösi. Voit tehdä tilauksen tai tarjouspyynnön Chatbotin kautta.",
 
@@ -668,7 +671,7 @@ i18n
           // calender
           "Add calendar details": "Lisää kalenterin asetukset",
           "Edit calendar details": "Muokkaa kalenterin asetuksia",
-          "Calendar Configuration":"Kalenteri asetukset",
+          "Calendar Configuration": "Kalenteri asetukset",
           Calendar: "Kalenteri",
           "Add ICal": "Lisää ICal",
           "Add Outlook": "Lisää Outlook",
@@ -1148,8 +1151,7 @@ i18n
           "User Login credentials is Invalid":
             "Käyttäjän kirjautumistiedot ovat virheelliset",
           "User Login Successfully": "Sisäänkirjautuminen onnistui",
-          "Calender Config Updated Successfully":
-            "Kalenterin luonti onnistui",
+          "Calender Config Updated Successfully": "Kalenterin luonti onnistui",
           "Internal server error": "Internal server error",
           "User Detail Not Found": "Käyttäjätietoja ei löydy",
           "Please Verify Your Email": "Vahvista sähköpostiosoitteesi",
@@ -1396,7 +1398,8 @@ i18n
           "Mobile number Is Invalid.": "Mobile number Is Invalid.",
           "Company Is Invalid.": "Company Is Invalid.",
           "Position Is Invalid.": "Position Is Invalid.",
-          "Contact card updated successfully": "Yhteystieto päivitetty onnistuneesti",
+          "Contact card updated successfully":
+            "Yhteystieto päivitetty onnistuneesti",
           "Phonebook Id Is Invalid.": "Phonebook Id Is Invalid.",
           "Type is mandatory.": "Type is mandatory.",
           "User is mandatory.": "User is mandatory.",
@@ -1880,13 +1883,16 @@ i18n
       },
       en: {
         translation: {
-          "id": "id",
-          "origin": "origin",
-          "The video has been successfully saved": "The video has been successfully saved",
+          "Destination number must be between start and end digits long.":
+            "Destination number must be between {{ start, number }} and {{ end, number }} digits long.",
+          id: "id",
+          origin: "origin",
+          "The video has been successfully saved":
+            "The video has been successfully saved",
           "Login to your account": "Login to your account",
           "Remember me": "Remember me",
           "Loading...": "Loading...",
-          "Hide internal calls":"Hide internal calls",
+          "Hide internal calls": "Hide internal calls",
           LOGIN: "LOGIN",
           "Forgot password?": "Forgot password?",
           "Don't have an account?": "Don't have an account?",
@@ -2161,7 +2167,7 @@ i18n
           ACD: "ACD",
           "Ring Groups": "Ring Groups",
           Category: "Category",
-          Called: "Called",
+          called: "called",
           Answered: "Answered",
           Unanswered: "Unanswered",
           "Caller ID": "Caller ID",
@@ -3229,7 +3235,8 @@ i18n
           "Mobile number Is Invalid.": "Mobile number Is Invalid.",
           "Company Is Invalid.": "Company Is Invalid.",
           "Position Is Invalid.": "Position Is Invalid.",
-          "Contact card updated successfully": "Contact card updated successfully",
+          "Contact card updated successfully":
+            "Contact card updated successfully",
           "Phonebook Id Is Invalid.": "Phonebook Id Is Invalid.",
           "Type is mandatory.": "Type is mandatory.",
           "User is mandatory.": "User is mandatory.",

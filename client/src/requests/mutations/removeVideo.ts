@@ -1,11 +1,11 @@
 import { RouterInputs } from "../../contexts";
 import { trpc } from "../../utils/trpc";
 
-type IRemoveVideoInput = RouterInputs["superAdminRouter"]["video"]["remove"];
+type IRemoveVideoInput = RouterInputs["superAdmin"]["video"]["remove"];
 
 export const useRemoveVideo = () => {
   const utils = trpc.useUtils()
-  const { mutate, isPending } = trpc.superAdminRouter.video.remove.useMutation({
+  const { mutate, isPending } = trpc.superAdmin.video.remove.useMutation({
     retry: false,
   });
 
@@ -17,7 +17,7 @@ export const useRemoveVideo = () => {
       ...opts,
       onSuccess(data, variables, context) {
         // @ts-ignore
-        utils.superAdminRouter.video.getUrl.setData({ section: input.section }, () => {
+        utils.superAdmin.video.getUrl.setData({ section: input.section }, () => {
           return null;
         })
         opts?.onSuccess && opts.onSuccess(data, variables, context);

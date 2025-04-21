@@ -8,7 +8,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "";
 const PBX_API_USERNAME = "apiuser";
 const PBX_API_PASSWORD = "d6kVImEEV1A34B2fjduZpxxFAf4";
 //const PBX_BASE_URL = "https://voip.mobiililinja.fi/webapi/core/";
-const PBX_BASE_URL = "https://mobilepbx.mobiililinja.fi/webapi/core/";
+const PBX_BASE_URL = "https://mobile.mobiililinja.fi/webapi/core/";
 export const config = {
   mariaDB: {
     host: process.env.MARIA_DB_HOST,
@@ -93,7 +93,7 @@ export const config = {
       ADD: PBX_BASE_URL + "destination/create.php",
       UPDATE: PBX_BASE_URL + "destination/update.php",
       BULK_ADD: PBX_BASE_URL + "destination/import.php",
-      REMOVE: PBX_BASE_URL + "destination/delete.php?id=",
+      REMOVE: PBX_BASE_URL + "destination/delete.php?ids=",
     },
     TRUNKS: {
       ADD: PBX_BASE_URL + "gateway/create.php",

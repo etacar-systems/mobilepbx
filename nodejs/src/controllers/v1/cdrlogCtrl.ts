@@ -178,11 +178,11 @@ const getAllRecordings = async (
         newParamString,
       auth: config.PBX_API.AUTH,
     };
-    console.log(api_config);
+    // console.log(api_config);
 
     try {
       const data: any = await axios.request(api_config);
-      // console.log("recording data",data);
+      console.log("recording data", data);
       if (data?.data?.total_rows === 0 || data?.data?.total_pages === 0) {
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -336,54 +336,54 @@ const getAllDataByDomain = async (
     }
 
     try {
-      let find_query: { [key: string]: any } = {};
+      // let find_query: { [key: string]: any } = {};
 
-      // Ensure companyDetail is not null or undefined before proceeding
-      if (companyDetail) {
-        find_query.domain_uuid = companyDetail?.domain_uuid; // Filter by domain_uuid
-        find_query.extension_uuid = user_detail?.extension_uuid; // Filter by extension_uuid
-      }
+      // // Ensure companyDetail is not null or undefined before proceeding
+      // if (companyDetail) {
+      //   find_query.domain_uuid = companyDetail?.domain_uuid; // Filter by domain_uuid
+      //   find_query.extension_uuid = user_detail?.extension_uuid; // Filter by extension_uuid
+      // }
 
-      //new
-      find_query = {
-        ...find_query,
-        leg: { $eq: "a" },
-        module_name: { $ne: "lua" }, //new
-        status: { $ne: "voicemail" }, //new
-      };
+      // //new
+      // find_query = {
+      //   ...find_query,
+      //   leg: { $eq: "a" },
+      //   module_name: { $ne: "lua" }, //new
+      //   status: { $ne: "voicemail" }, //new
+      // };
 
-      // Add search condition if provided
-      if (search && search.trim()) {
-        find_query.$or = [
-          {
-            caller_id_name: {
-              $regex: search,
-              $options: "i", // Case-insensitive search
-            },
-          },
-          {
-            caller_id_number: {
-              $regex: search,
-              $options: "i", // Case-insensitive search
-            },
-          },
-          {
-            destination_number: {
-              $regex: search,
-              $options: "i", // Case-insensitive search
-            },
-          },
-          {
-            caller_destination: {
-              $regex: search,
-              $options: "i", // Case-insensitive search
-            },
-          },
-        ];
-      }
+      // // Add search condition if provided
+      // if (search && search.trim()) {
+      //   find_query.$or = [
+      //     {
+      //       caller_id_name: {
+      //         $regex: search,
+      //         $options: "i", // Case-insensitive search
+      //       },
+      //     },
+      //     {
+      //       caller_id_number: {
+      //         $regex: search,
+      //         $options: "i", // Case-insensitive search
+      //       },
+      //     },
+      //     {
+      //       destination_number: {
+      //         $regex: search,
+      //         $options: "i", // Case-insensitive search
+      //       },
+      //     },
+      //     {
+      //       caller_destination: {
+      //         $regex: search,
+      //         $options: "i", // Case-insensitive search
+      //       },
+      //     },
+      //   ];
+      // }
 
       // Now, execute the query
-      const call_History = await cdrs.find(find_query).sort({ start_stamp: 1 });
+      // const call_History = await cdrs.find(find_query).sort({ start_stamp: 1 });
 
       // Log the query and result for debugging
       // console.log("Final find_query:", JSON.stringify(find_query, null, 2));
@@ -392,34 +392,53 @@ const getAllDataByDomain = async (
       //   console.log("call_History", call_History);
 
       // Calculate the starting index for the data based on the page and per_page
-      const startIndex = (page - 1) * per_page;
-      const endIndex = startIndex + per_page;
+      // const startIndex = (page - 1) * per_page;
+      // const endIndex = startIndex + per_page;
 
       // Assuming `reports_list` is the full list of CDR logs that you have fetched
-      const paginatedReports = call_History.slice(startIndex, endIndex);
+      // const paginatedReports = call_History.slice(startIndex, endIndex);
 
       // Get total records count (if available) for pagination purposes
-      const totalRecords = call_History.length; // Or fetch this from your database if necessary
-      const totalPages = Math.ceil(totalRecords / per_page);
+      // const totalRecords = call_History.length; // Or fetch this from your database if necessary
+      // const totalPages = Math.ceil(totalRecords / per_page);
 
-      if (totalRecords === 0 || totalPages === 0) {
-        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-          success: 1,
-          message: "CDR logs fetched successfully",
-          data: {
-            list: [],
-            total_page: 0,
-            total_record: 0,
-          },
-        });
-      }
+      // if (totalRecords === 0 || totalPages === 0) {
+      //   return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      //     success: 1,
+      //     message: "CDR logs fetched successfully",
+      //     data: {
+      //       list: [],
+      //       total_page: 0,
+      //       total_record: 0,
+      //     },
+      //   });
+      // }
+
+      let api_config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url:
+          config.PBX_API.CDR.GET_BY_DOMAIN +
+          companyDetail?.domain_uuid +
+          newParamString,
+        auth: config.PBX_API.AUTH,
+      };
+
+      const data: any = await axios.request(api_config);
+
+      const total_record = Number(data.data.total_rows);
+      const total_page = Number(data.data.total_pages);
+      delete data.data.total_rows;
+      delete data.data.total_pages;
+      const list = Object.values(data.data);
+
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
         message: "CDR logs fetched successfully",
         data: {
-          list: paginatedReports || [],
-          total_page: totalPages,
-          total_record: totalRecords,
+          list: list,
+          total_page,
+          total_record,
         },
       });
     } catch (error: any) {
@@ -773,6 +792,7 @@ const getAllDataByDomainList = async (
   try {
     const data = req.body;
     const internal_calls = data.internal_calls;
+    const timezone = data.timezone || 'Europe/London';
     const search = data.search;
     const per_page = data.size;
     const page = data.page;
@@ -787,59 +807,61 @@ const getAllDataByDomainList = async (
 
     let module_name: any = "";
     let extension: any = "";
-    if (select_type && select_type == config.SELECT_NAME.IVR) {
-      module_name = "ivr";
-      let ivrDetail: any = await IVR.findOne({
-        _id: extensionId,
-        is_deleted: 0,
-      });
-      if (ivrDetail) {
-        extension = ivrDetail?.extension;
-      }
-    } else if (select_type && select_type == config.SELECT_NAME.RINGGROUP) {
-      module_name = "ring_group";
-      let ringgroupDetail: any = await ring_group.findOne({
-        _id: extensionId,
-        is_deleted: 0,
-      });
-      if (ringgroupDetail) {
-        extension = ringgroupDetail?.extension;
-      }
-    } else if (select_type && select_type == config.SELECT_NAME.EXTENSION) {
-      module_name = "extension";
-      let extensionDetail: any = await user.findOne({
-        _id: extensionId,
-        is_deleted: 0,
-      });
-      if (extensionDetail) {
-        extension = extensionDetail?.user_extension;
-      }
-    } else if (select_type && select_type == config.SELECT_NAME.CONFERENCE) {
-      module_name = "conference";
-      let conferenceDetail: any = await conferncers.findOne({
-        _id: extensionId,
-        is_deleted: 0,
-      });
-      if (conferenceDetail) {
-        extension = conferenceDetail?.extension_number;
-      }
-    } else if (select_type && select_type == config.SELECT_NAME.TIMECONDTION) {
-      module_name = "time_condition";
-      let time_conditionDetail: any = await time_condition.findOne({
-        _id: extensionId,
-        is_deleted: 0,
-      });
-      if (time_conditionDetail) {
-        extension = time_conditionDetail?.extension;
-      }
-    } else {
-      module_name = "";
-    }
+    // if (select_type && select_type == config.SELECT_NAME.IVR) {
+    //   module_name = "ivr";
+    //   let ivrDetail: any = await IVR.findOne({
+    //     _id: extensionId,
+    //     is_deleted: 0,
+    //   });
+    //   if (ivrDetail) {
+    //     extension = ivrDetail?.extension;
+    //   }
+    // } else if (select_type && select_type == config.SELECT_NAME.RINGGROUP) {
+    //   module_name = "ring_group";
+    //   let ringgroupDetail: any = await ring_group.findOne({
+    //     _id: extensionId,
+    //     is_deleted: 0,
+    //   });
+    //   if (ringgroupDetail) {
+    //     extension = ringgroupDetail?.extension;
+    //   }
+    // } else if (select_type && select_type == config.SELECT_NAME.EXTENSION) {
+    //   module_name = "extension";
+    //   let extensionDetail: any = await user.findOne({
+    //     _id: extensionId,
+    //     is_deleted: 0,
+    //   });
+    //   if (extensionDetail) {
+    //     extension = extensionDetail?.user_extension;
+    //   }
+    // } else if (select_type && select_type == config.SELECT_NAME.CONFERENCE) {
+    //   module_name = "conference";
+    //   let conferenceDetail: any = await conferncers.findOne({
+    //     _id: extensionId,
+    //     is_deleted: 0,
+    //   });
+    //   if (conferenceDetail) {
+    //     extension = conferenceDetail?.extension_number;
+    //   }
+    // } else if (select_type && select_type == config.SELECT_NAME.TIMECONDTION) {
+    //   module_name = "time_condition";
+    //   let time_conditionDetail: any = await time_condition.findOne({
+    //     _id: extensionId,
+    //     is_deleted: 0,
+    //   });
+    //   if (time_conditionDetail) {
+    //     extension = time_conditionDetail?.extension;
+    //   }
+    // } else {
+    //   module_name = "";
+    // }
     // console.log("extension:::::::::::::::::::::::::", extension);
     const companyDetail = await company.findOne({
       _id: cid,
       is_deleted: 0,
     });
+
+    // $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause, REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr WHERE domain_uuid ='9b9a639a-6e8d-41d4-995b-1172cf20f723' and leg = 'a' ";
 
     let newParamString: any;
     if (direction) {
@@ -855,23 +877,27 @@ const getAllDataByDomainList = async (
         end_date || ""
       }`;
     }
-    console.log("module_name", module_name);
+
+    if (internal_calls) {
+      newParamString += `&hide_internal=${internal_calls}`;
+    }
+    // console.log("module_name", module_name);
 
     if (module_name) {
       newParamString = newParamString + `&module=${module_name || ""}`;
     }
-    console.log(
-      "search",
-      search,
-      REGEXP.COMMON.checkStringISNumber.test(search)
-    );
+    // console.log(
+    //   "search",
+    //   search,
+    //   REGEXP.COMMON.checkStringISNumber.test(search)
+    // );
     if (search && REGEXP.COMMON.checkStringISNumber.test(search)) {
-      console.log("caller_number if called");
+      // console.log("caller_number if called");
       newParamString = newParamString + `&caller_number=${search || ""}`;
     }
-    console.log("search", search, REGEXP.COMMON.checkIsString.test(search));
+    // console.log("search", search, REGEXP.COMMON.checkIsString.test(search));
     if (search && REGEXP.COMMON.checkIsString.test(search)) {
-      console.log("caller_name if called");
+      // console.log("caller_name if called");
       newParamString = newParamString + `&caller_name=${search || ""}`;
     }
 
@@ -887,7 +913,7 @@ const getAllDataByDomainList = async (
     const countries: any = companyDetail?.company_country;
 
     // const timezone = "Asia/Dubai";
-    const timezone = countryTimeZones[countries.replace(/ /g, "_")];
+    // const timezone = countryTimeZones[countries.replace(/ /g, "_")];
 
     const startDateInTimeZone = momentTimezone
       .tz(start_date, timezone)
@@ -908,174 +934,181 @@ const getAllDataByDomainList = async (
         newParamString,
       auth: config.PBX_API.AUTH,
     };
-    //  console.log("api_config", api_config);
     try {
-      // const data: any = await axios.request(api_config);
+      const data: any = await axios.request(api_config);
 
       // new
-      let find_query: { [key: string]: any } = {};
+      // let find_query: { [key: string]: any } = {};
 
       //changed
-      find_query = {
-        ...find_query,
-        domain_uuid: companyDetail?.domain_uuid,
-        leg: { $eq: "a" },
-        module_name: { $ne: "lua" }, //new
-        status: { $ne: "voicemail" }, //new
-        $expr: {
-          $and: [
-            {
-              $cond: {
-                if: { $ne: [module_name, ""] }, // Check if `module_name` is not null
-                then: { $eq: ["$module_name", module_name] }, // Apply condition
-                else: true, // Ignore condition
-              },
-            },
-            {
-              $gte: ["$start_stamp", startDateInTimeZone],
-            },
-            {
-              $lte: ["$start_stamp", endDateInTimeZone],
-            },
-          ],
-        },
-      };
+      // find_query = {
+      //   ...find_query,
+      //   domain_uuid: companyDetail?.domain_uuid,
+      //   leg: { $eq: "a" },
+      //   module_name: { $ne: "lua" }, //new
+      //   status: { $ne: "voicemail" }, //new
+      //   $expr: {
+      //     $and: [
+      //       {
+      //         $cond: {
+      //           if: { $ne: [module_name, ""] }, // Check if `module_name` is not null
+      //           then: { $eq: ["$module_name", module_name] }, // Apply condition
+      //           else: true, // Ignore condition
+      //         },
+      //       },
+      //       {
+      //         $gte: ["$start_stamp", startDateInTimeZone],
+      //       },
+      //       {
+      //         $lte: ["$start_stamp", endDateInTimeZone],
+      //       },
+      //     ],
+      //   },
+      // };
 
-      if (search) {
-        find_query = {
-          ...find_query,
-          $or: [
-            {
-              caller_id_name: {
-                $regex: search,
-                $options: "i",
-              },
-            },
-            {
-              caller_id_number: {
-                $regex: search,
-                $options: "i",
-              },
-            },
-            {
-              direction: {
-                $regex: search,
-                $options: "i",
-              },
-            },
-            {
-              destination_number: {
-                $regex: search,
-                $options: "i",
-              },
-            },
-            //new
-            {
-              status: {
-                $regex: search,
-                $options: "i",
-              },
-            },
-          ],
-        };
-      }
+      // if (search) {
+      //   find_query = {
+      //     ...find_query,
+      //     $or: [
+      //       {
+      //         caller_id_name: {
+      //           $regex: search,
+      //           $options: "i",
+      //         },
+      //       },
+      //       {
+      //         caller_id_number: {
+      //           $regex: search,
+      //           $options: "i",
+      //         },
+      //       },
+      //       {
+      //         direction: {
+      //           $regex: search,
+      //           $options: "i",
+      //         },
+      //       },
+      //       {
+      //         destination_number: {
+      //           $regex: search,
+      //           $options: "i",
+      //         },
+      //       },
+      //       //new
+      //       {
+      //         status: {
+      //           $regex: search,
+      //           $options: "i",
+      //         },
+      //       },
+      //     ],
+      //   };
+      // }
 
-      if (internal_calls) {
-        find_query = {
-          ...find_query,
-          direction: { $ne: "local" },
-        };
-      }
+      // if (internal_calls) {
+      //   find_query = {
+      //     ...find_query,
+      //     direction: { $ne: "local" },
+      //   };
+      // }
 
-      // const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
-      const reports_list = await cdrs.aggregate([
-        {
-          $match: find_query,
-        },
-        { $sort: { [sort_by]: sort_order } },
-        {
-          $project: {
-            xml_cdr_uuid: 1,
-            domain_name: 1,
-            domain_uuid: 1,
-            sip_call_id: 1,
-            extension_uuid: 1,
-            direction: 1,
-            caller_id_name: 1,
-            caller_id_number: 1,
-            destination_number: 1,
-            start_stamp: 1,
-            duration: 1,
-            record_name: 1,
-            status: 1,
-            hangup_cause: 1,
-            module_name: 1,
-            recording_url: 1,
-            end_stamp: 1,
-            accountcode: 1,
-            missed_call: 1,
-            caller_destination: 1,
-            source_number: 1,
-            start_epoch: 1,
-            answer_stamp: 1,
-            answer_epoch: 1,
-            end_epoch: 1,
-            mduration: 1,
-            billsec: 1,
-            billmsec: 1,
-            bridge_uuid: 1,
-            read_codec: 1,
-            read_rate: 1,
-            write_codec: 1,
-            write_rate: 1,
-            remote_media_ip: 1,
-            network_addr: 1,
-            leg: 1,
-            pdd_ms: 1,
-            rtp_audio_in_mos: 1,
-            last_app: 1,
-            last_arg: 1,
-            voicemail_message: 1,
-            waitsec: 1,
-            hangup_cause_q850: 1,
-            sip_hangup_disposition: 1,
-          },
-        },
-      ]);
+      // // const reports_list = await cdrs.find(find_query).sort({ start_stamp: -1 });
+      // const reports_list = await cdrs.aggregate([
+      //   {
+      //     $match: find_query,
+      //   },
+      //   { $sort: { [sort_by]: sort_order } },
+      //   {
+      //     $project: {
+      //       xml_cdr_uuid: 1,
+      //       domain_name: 1,
+      //       domain_uuid: 1,
+      //       sip_call_id: 1,
+      //       extension_uuid: 1,
+      //       direction: 1,
+      //       caller_id_name: 1,
+      //       caller_id_number: 1,
+      //       destination_number: 1,
+      //       start_stamp: 1,
+      //       duration: 1,
+      //       record_name: 1,
+      //       status: 1,
+      //       hangup_cause: 1,
+      //       module_name: 1,
+      //       recording_url: 1,
+      //       end_stamp: 1,
+      //       accountcode: 1,
+      //       missed_call: 1,
+      //       caller_destination: 1,
+      //       source_number: 1,
+      //       start_epoch: 1,
+      //       answer_stamp: 1,
+      //       answer_epoch: 1,
+      //       end_epoch: 1,
+      //       mduration: 1,
+      //       billsec: 1,
+      //       billmsec: 1,
+      //       bridge_uuid: 1,
+      //       read_codec: 1,
+      //       read_rate: 1,
+      //       write_codec: 1,
+      //       write_rate: 1,
+      //       remote_media_ip: 1,
+      //       network_addr: 1,
+      //       leg: 1,
+      //       pdd_ms: 1,
+      //       rtp_audio_in_mos: 1,
+      //       last_app: 1,
+      //       last_arg: 1,
+      //       voicemail_message: 1,
+      //       waitsec: 1,
+      //       hangup_cause_q850: 1,
+      //       sip_hangup_disposition: 1,
+      //     },
+      //   },
+      // ]);
       // Calculate the starting index for the data based on the page and per_page
-      const startIndex = (page - 1) * per_page;
-      const endIndex = startIndex + per_page;
+      // const startIndex = (page - 1) * per_page;
+      // const endIndex = startIndex + per_page;
 
-      // Assuming `reports_list` is the full list of CDR logs that you have fetched
-      const paginatedReports = reports_list.slice(startIndex, endIndex);
+      // // Assuming `reports_list` is the full list of CDR logs that you have fetched
+      // const paginatedReports = reports_list.slice(startIndex, endIndex);
 
-      // Get total records count (if available) for pagination purposes
-      const totalRecords = reports_list.length; // Or fetch this from your database if necessary
-      const totalPages = Math.ceil(totalRecords / per_page);
-      //  console.log("start_end_data",reports_list)
-      if (!reports_list) {
-        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-          success: 1,
-          message: "CDR logs fetched successfully",
-          data: {
-            cdr_list: [],
-            total_page: 0,
-            total_record: 0,
-          },
-        });
-      }
+      // // Get total records count (if available) for pagination purposes
+      // const totalRecords = reports_list.length; // Or fetch this from your database if necessary
+      // const totalPages = Math.ceil(totalRecords / per_page);
+      // //  console.log("start_end_data",reports_list)
+      // if (!reports_list) {
+      // console.log('data', data);
+      //   return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+      //     success: 1,
+      //     message: "CDR logs fetched successfully",
+      //     data: {
+      //       cdr_list: [],
+      //       total_page: 0,
+      //       total_record: 0,
+      //     },
+      // });
+      // }
+
+      const total_record = Number(data.data.total_rows);
+      const total_page = Number(data.data.total_pages);
+      delete data.data.total_rows;
+      delete data.data.total_pages;
+      const list = Object.values(data.data);
+
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
         message: "CDR logs fetched successfully",
         data: {
-          cdr_list: paginatedReports, // Only the sliced part of the original list
+          cdr_list: list, // Only the sliced part of the original list
           timezone: timezone,
-          total_page: totalPages, // Total number of pages
-          total_record: totalRecords, // Total number of records
+          total_page, // Total number of pages
+          total_record, // Total number of records
         },
       });
     } catch (error: any) {
-      console.log(error, "11");
+      console.log("11", error);
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: "Failed to fetch data",

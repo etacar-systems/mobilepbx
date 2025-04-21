@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Card, Col, Nav, Row, Spinner, Tab, Table } from "react-bootstrap";
 import ChatList from "./ChatList";
 import "./webphoneCss.css";
+import './Dashboard/DashboardCss.css';
 import ContactCardModal from "./webphoneModal";
 import DialPad from "../Call/DialPad";
 import Cookies from "js-cookie";

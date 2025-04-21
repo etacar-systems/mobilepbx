@@ -1,0 +1,51 @@
+<?php
+    //headers
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json');
+
+    require("../../config/config.php");
+    require("zoiper.php");
+
+    $zoiper = new Zoiper();
+
+    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
+        echo json_encode([
+            "message" => "Authentication Failed !!"
+        ]);
+        return;
+    } else {
+        $username = $_SERVER['PHP_AUTH_USER'];
+        $password = $_SERVER['PHP_AUTH_PW'];
+    }
+
+    $check_user = $zoiper->verify_user($con, $username, $password);
+    if ($check_user == 'true') {
+        if (isset($_GET['id'])) {
+
+            $result = $zoiper->fetch_by_domain($con, $_GET['id']);
+
+            if (pg_num_rows($result) > 0 ) {
+
+                $arr = array();
+                while ($row = pg_fetch_assoc($result)) {
+                    $row['zoiper_desktop_download'] = "https://www.zoiper.com/en/page/f2e74095638be2e8ee2df2c8bdeeaa80?u=".$row['extension']."&h=".$row['domain_name']."&p=".$row['password']."&o=&t=&x=&a=".$row['extension']."&tr=";
+                    $row['zoiper_mobile_qr_code'] = "https://oem.zoiper.com/qr.php?provider_id=7814ba99bce3d45072b629a210a60e4a&u=".$row['extension']."&h=".$row['domain_name']."&p=".$row['password']."&o=&t=&x=&a=".$row['extension']."&tr=";
+                    $arr[] = $row;
+                }
+
+                echo json_encode($arr);
+            } else {
+                echo json_encode(["message" => "No QR Codes Found !!"]);
+            }
+        } else {
+            echo json_encode(["message" => "No QR Codes Found !!"]);
+        }
+    } else {
+        header('WWW-Authenticate: Basic realm="My Realm"');
+        header('HTTP/1.0 401 Unauthorized');
+        echo json_encode([
+            "message" => "Authentication Failed !!"
+        ]);
+        exit;
+    }
+?>

@@ -2,11 +2,10 @@ import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import Utils from "../../utils";
 
-const ChartDataComponent = () => {
-  const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
-  console.log(data, "datacheckdummy");
-  let valuedata = data?.DashboardDetail?.reports_counts_updated;
-  console.log(valuedata, "valuedatacheck");
+const ChartDataComponent = (data) => {
+  let valuedata = data?.total_counts;
+
+  console.log("valuedata", valuedata)
   const chartData = [
     {
       id: "chart-bg-users-1",
@@ -44,8 +43,6 @@ const ChartDataComponent = () => {
 
   return chartData;
 };
-
-export default ChartDataComponent;
 
 export const dummyData = [
   {

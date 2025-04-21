@@ -118,7 +118,7 @@ export default function SocketConfig() {
     if (Role == 1 || Role == 2) {
       socket = socketIoClient(
        // `wss://ui.mobiililinja.fi/?uid=${uid}&cid=${cid}&device_id=${uniqueId}&last_message_time=${currentTime}`,
-        `wss://vaihde.mobiililinja.fi/?uid=${uid}&cid=${cid}&device_id=${uniqueId}&last_message_time=${currentTime}`,
+        `wss://pabx.mobiililinja.fi/?uid=${uid}&cid=${cid}&device_id=${uniqueId}&last_message_time=${currentTime}`,
         {
           transports: ["websocket", "polling"],
           rejectUnauthorized: false,
@@ -249,10 +249,10 @@ export default function SocketConfig() {
       "ack_register_extantions",
       "ack_unread_message_count"
     ];
-    allowedEvents?.forEach((item) => {
-      socket?.on(item, (data) => {
-        dispatch(AllListeners({ listener_params: data, name: item }));
-        if (item === "receive_message") {
+    allowedEvents?.forEach((event_name) => {
+      socket?.on(event_name, (data) => {
+        dispatch(AllListeners({ listener_params: data, name: event_name }));
+        if (event_name === "receive_message") {
           AllEmit("unread_message_count", { uid: uid })
           showNotification(data, setCallRing, navigate);
         }

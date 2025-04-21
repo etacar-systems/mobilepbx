@@ -138,7 +138,7 @@ export default function SipConnection({ show, setShow }) {
     const Sip_number = "5002";
     let domainName = Cookies.get("domain_name");
 
-    var socket = new JsSIP.WebSocketInterface("wss://pbx.mobiililinja.fi:7443");
+    var socket = new JsSIP.WebSocketInterface("wss://oss.mobiililinja.fi:8443");
     // var socket = new JsSIP.WebSocketInterface("wss://internal.celloip.com:4443");
 
     JsSIP.debug.enable("JsSIP:*");

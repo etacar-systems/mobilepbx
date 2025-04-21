@@ -1,11 +1,11 @@
 import { RouterInputs } from "../../contexts";
 import { trpc } from "../../utils/trpc";
 
-type IUpdateChatCredentialsInput = RouterInputs["superAdminRouter"]["chat"]["settings"]["update"];
+type IUpdateChatCredentialsInput = RouterInputs["superAdmin"]["chat"]["settings"]["update"];
 
 export const useUpdateChatCredentials = () => {
   const utils = trpc.useUtils()
-  const { mutate, isPending } = trpc.superAdminRouter.chat.settings.update.useMutation({
+  const { mutate, isPending } = trpc.superAdmin.chat.settings.update.useMutation({
     retry: false,
   });
 
@@ -17,7 +17,7 @@ export const useUpdateChatCredentials = () => {
       ...opts,
       onSuccess(data, variables, context) {
         // @ts-ignore
-        utils.superAdminRouter.chat.settings.credentials.setData(undefined, () => {
+        utils.superAdmin.chat.settings.credentials.setData(undefined, () => {
           return data;
         })
         opts?.onSuccess && opts.onSuccess(data, variables, context);

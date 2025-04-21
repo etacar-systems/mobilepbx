@@ -1,11 +1,11 @@
 import { RouterInputs } from "../../contexts";
 import { trpc } from "../../utils/trpc";
 
-type IGetVideoURLInput = RouterInputs["superAdminRouter"]["video"]["getUrl"];
+type IGetVideoURLInput = RouterInputs["superAdmin"]["video"]["getUrl"];
 
 export const useGetVideoURL = ({ section }: Partial<IGetVideoURLInput>) => {
   const { data, isFetching, refetch, isSuccess } =
-    trpc.superAdminRouter.video.getUrl.useQuery(
+    trpc.superAdmin.video.getUrl.useQuery(
       {
         section: (section || "") as IGetVideoURLInput["section"],
       },

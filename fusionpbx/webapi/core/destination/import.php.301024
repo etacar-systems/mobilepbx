@@ -1,0 +1,155 @@
+<?php
+    //headers
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Methods: POST');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods,Authorization,');
+
+    require("../../config/config.php");
+    require("../../vendor/autoload.php");
+    
+    use Ramsey\Uuid\Uuid;
+
+    require("destination.php");
+
+    $destination = new Destination();
+
+    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])){
+        echo json_encode([
+            "message" => "Authentication Failed !!"
+        ]);
+        return;
+    } else {
+        $username = $_SERVER['PHP_AUTH_USER'];
+        $password = $_SERVER['PHP_AUTH_PW'];
+    }
+
+    $check_user = $destination->verify_user($con, $username, $password);
+    $json_response = json_decode($check_user, true);
+
+    if ($json_response['msg'] == 'true') {
+        $id = $json_response['id'];
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        $type = $data->type;
+        $destination_number = $data->destination;
+        $create_range = $data->create_range;
+        $caller_id_name = $data->caller_id_name;
+        $caller_id_number = $data->caller_id_number;
+        $destination_condition = $data->destination_condition;
+        $destination_action = (isset($data->destination_action)) ? $data->destination_action : '';
+        $domain = $data->domain;
+        $user = $data->user;
+        $description = $data->description;
+        $destination_enabled = $data->destination_enabled;
+        $destination_prefix = (isset($data->destination_prefix)) ? $data->destination_prefix : 1;
+        $copy_action_to_all = (isset($data->copy_action_to_all)) ? $data->copy_action_to_all : 'NO';
+       // Date :09-09-2024 Added by Atul for add provider details
+	$trunk_id=$data->trunk_id;
+	// END 
+        
+        $uuid = Uuid::uuid4();
+        // Get the UUID as a string
+        $uuidDestination = $uuid->toString();
+
+        if (strlen($domain) == 0 ) {
+            echo json_encode([
+                "message" => "Domain is require !!"
+            ]);
+            exit;
+        }
+
+        if(!Uuid::isValid($trunk_id)){
+            echo json_encode([
+                "message" => "Enter valid trunk_id !!"
+            ]);
+            exit;
+        }
+
+        if(!Uuid::isValid($domain)){
+            echo json_encode([
+                "message" => "Enter valid domain !!"
+            ]);
+            exit;
+        }
+
+        if ($destination_enabled == "true" || $destination_enabled == "false") {
+
+            $query = "SELECT * FROM public.v_destinations WHERE destination_number ='$destination_number' and domain_uuid='$domain' ";
+            $check_destination = pg_query($con, $query);
+
+            $duplicate_arr = array();
+            $array = [];
+
+            if (pg_num_rows($check_destination) > 0 ) {
+
+                array_push($duplicate_arr,$destination_number);
+                
+            }else{
+
+                $result_add = $destination->post($con, $type, $destination_number, $caller_id_name, $caller_id_number, $destination_condition, $destination_action, $domain, $user, $description, $destination_enabled, $uuidDestination, $id, $destination_prefix,'import',$trunk_id);
+
+                array_push($array,$result_add);
+            }
+            
+
+            if($create_range > 0){
+
+                $destination_number_new = $destination_number;
+                $dest_prefix = substr($destination_number, 0, -10);
+                //$dest_prefix = substr($destination_number, 0, -3);
+
+                for ($i=0; $i < $create_range; $i++) { 
+
+                    if($copy_action_to_all == 'NO'){
+                        $destination_action = 'null';
+                    }
+
+                    if(empty($destination_action)){
+                        $destination_action = 'null';
+                    }
+
+                    echo $destination_number_new = $dest_prefix.$destination_number_new + 1;
+
+                   // $incrementedNumber = str_pad((int)$destination_number_new + 1, strlen($destination_number_new), '0', STR_PAD_LEFT);
+                   // echo $destination_number_new = $dest_prefix.$incrementedNumber;
+
+
+                    $query = "SELECT * FROM public.v_destinations WHERE destination_number ='$destination_number_new' and domain_uuid='$domain' ";
+                    $check_destination = pg_query($con, $query);
+
+                    if (pg_num_rows($check_destination) > 0 ) {
+
+                        array_push($duplicate_arr,$destination_number_new);
+                        
+                    }else{
+
+                        $uuid = Uuid::uuid4();
+                        // Get the UUID as a string
+                        $uuidDestination = $uuid->toString();
+
+                        $result = $destination->post($con, $type, $destination_number_new, $caller_id_name, $caller_id_number, $destination_condition, $destination_action, $domain, $user, $description, $destination_enabled, $uuidDestination, $id, $destination_prefix,'import',$trunk_id);
+
+                        array_push($array,$result);
+                    }
+                }
+            }
+
+            $array['duplicate_numbers'] = $duplicate_arr;
+
+            echo json_encode($array);
+        } else {
+            echo json_encode([
+                "message" => "Destination Enabled Value Must be either True or False !!"
+            ]);
+        }
+    } else {
+        header('WWW-Authenticate: Basic realm="My Realm"');
+        header('HTTP/1.0 401 Unauthorized');
+        echo json_encode([
+            "message" => "Authentication Failed !!"
+        ]);
+        exit;
+    }
+?>

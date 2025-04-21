@@ -1,0 +1,317 @@
+<?php
+    require("../../config/config.php");
+    require("../classes/SocketConnection.php");
+
+    class Conference {
+
+        public function verify_user($con, $username, $password) {
+            $query = "SELECT * FROM public.v_users WHERE username = '$username'";
+            $result = pg_query($con,$query);
+            $admin = pg_fetch_array($result);
+        
+            if (!empty($admin)) {
+                if (password_verify($password, $admin['password'])) {
+                    $data = json_encode([
+                        'msg' => 'true',
+                        'id' => $admin['user_uuid']
+                    ]);
+                    return $data;
+                } else {
+                    $data = json_encode([
+                        'msg' => 'false',
+                    ]);
+                    return $data;   
+                }
+                
+            } else {
+                $data = json_encode([
+                    'msg' => 'false',
+                ]);
+                return $data;
+            }
+        }
+        
+        public function fetch($con) {
+            $query = 'SELECT * FROM public.v_conferences
+            JOIN public.v_domains
+            ON v_conferences.domain_uuid = v_domains.domain_uuid';
+            $result = pg_query($con, $query);
+            return $result;
+        }
+// Date :8/8/24 Added by Atul for conference profile 
+	public function fetch_conference_profile($con) {
+            $query = 'SELECT * FROM public.v_conference_profiles';
+            $result = pg_query($con, $query);
+            return $result;
+        }
+
+// END 
+
+        public function fetch_by_id($con, $id) {
+            $query = "SELECT * FROM public.v_conferences
+            JOIN public.v_domains
+            ON v_conferences.domain_uuid = v_domains.domain_uuid
+            WHERE v_conferences.conference_uuid = '$id'";
+            $result = pg_query($con, $query);
+            return $result;
+        }
+
+        public function fetch_by_domain($con, $id) {
+            $query = "SELECT * FROM public.v_conferences
+            JOIN public.v_domains
+            ON v_conferences.domain_uuid = v_domains.domain_uuid
+            WHERE v_conferences.domain_uuid = '$id'";
+            $result = pg_query($con, $query);
+            return $result;
+        }
+
+        // public function post($con, $name, $domain_name, $extension, $pin_number, $description, $conference_enabled, $uuidConference, $userID) {
+// Date : 08-08-24 Added by Atul for add conferece field
+        public function post($con, $name, $domain_name, $extension, $pin_number, $description, $conference_enabled, $uuidConference, $userID,$conference_profile,$conference_flags,$conference_account_code,$conference_context,$dialplanuuid) {
+            if (empty(trim($name))) {
+                echo json_encode([
+                    "msg"     => 'Name cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($extension))) {
+                echo json_encode([
+                    "msg"     => 'Extension cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($pin_number))) {
+                echo json_encode([
+                    "msg"     => 'Pin Number cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($description))) {
+                echo json_encode([
+                    "msg"     => 'Description cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($domain_name))) {
+                echo json_encode([
+                    "msg"     => 'Please Select Domain !'
+                ]);
+                return;
+            }
+
+            // $userID = '3d7c90a5-3936-422a-8fac-4dbfbea35237';
+            //$insertConference = "INSERT INTO public.v_conferences (conference_uuid, domain_uuid, conference_name, conference_extension, conference_pin_number, conference_profile, conference_order, conference_description, conference_enabled, insert_user) VALUES ('$uuidConference', '$domain_name', '$name', '$extension', '$pin_number', 'default', 0, '$description', '$conference_enabled', '$userID')";
+ // Date :08-08-24 Added by Atul for add conference addtional field
+	    $conference_enabled='true';
+            $insertConference = "INSERT INTO public.v_conferences (conference_uuid, domain_uuid, conference_name, conference_extension, conference_pin_number, conference_profile, conference_order, conference_description, conference_enabled, insert_user,conference_flags,conference_account_code,conference_context,dialplan_uuid) VALUES ('$uuidConference', '$domain_name', '$name', '$extension', '$pin_number', '$conference_profile', 0, '$description', '$conference_enabled', '$userID','$conference_flags','$conference_account_code','$conference_context','$dialplanuuid')";
+            $resultConference = pg_query($con, $insertConference);
+
+            $domain = "SELECT * FROM public.v_domains WHERE domain_uuid = '$domain_name'";
+            $resultDomain = pg_query($con, $domain);
+
+            if (pg_num_rows($resultDomain) > 0) {
+                $row = pg_fetch_assoc($resultDomain); 
+                $domain_name = $row['domain_name'];
+
+
+                SocketConnection::cache_delete("dialplan:".$domain_name);
+            }
+            
+
+            if ($resultConference) {
+                echo json_encode([
+                    "msg"     => 'Conference Created Successfully !!',
+                    "id"      => $uuidConference
+                ]);
+                return;
+            } else {
+                echo json_encode([
+
+                    "msg"     => 'Failed to Create Conference, Try Again !!'
+                ]);
+                return;
+            }    
+        }
+ // date : Added by Atul for create dialplan 
+	public function create_dialplan($con, $name, $domain_name, $extension, $pin_number, $description, $conference_enabled, $uuidConference, $userID,$conference_profile,$conference_flags,$conference_account_code,$conference_context,$dialplanuuid){
+	$conf_data="$extension@$conference_context@$conference_profile+$pin_number+flags"."{".$conference_flags."}";
+	$dialplan_xml = "<extension name=\"$name\" continue=\"\" uuid=\"$uuidConference\">
+        	<condition field=\"destination_number\" expression=\"^$extension\">
+                	<action application=\"answer\" data=\"\"/>
+                	<action application=\"set\" data=\"conference_uuid=$dialplanuuid\" inline=\"true\"/>
+                	<action application=\"set\" data=\"conference_extension=$extension\" inline=\"true\"/>
+                	<action application=\"conference\" data=\"$conf_data\"/>
+        	</condition>
+		</extension>";
+
+	$app_uuid='b81412e8-7253-91f4-e48e-42fc2c9a38d9';
+	 $insertdialplan = "INSERT INTO public.v_dialplans (dialplan_uuid, domain_uuid, dialplan_context, dialplan_name, dialplan_number, dialplan_continue, dialplan_xml,dialplan_order, dialplan_enabled, dialplan_description, insert_user,app_uuid) VALUES ('$dialplanuuid', '$domain_name', '$conference_context', '$name', '$extension', 'false', '$dialplan_xml' ,'333', '$conference_enabled', '$description', '$userID','$app_uuid')";
+	 $conference_dialplan = pg_query($con, $insertdialplan);
+	 
+	  if ($conference_dialplan) {
+               // echo json_encode([
+               //     "msg1"     => 'Dialplan Created Successfully !!',
+               //     "dialplan_uuid"      => $dialplanuuid
+					
+               // ]);
+                return;
+            } else {
+                echo json_encode([
+
+                    "msg"     => 'Failed to Create Conference Dialplan, Try Again !!'
+					
+                ]);
+                return;
+            }    
+	}
+
+// END 
+
+      //  public function update($con, $name, $extension, $pin_number, $description, $conference_enabled, $conference_id) {
+		  // Date :08-08-24 Added by Atul for update conference additional field 
+		   public function update($con, $name, $extension, $pin_number, $description, $conference_enabled, $conference_id,$conference_profile,$conference_flags,$conference_account_code,$conference_context,$domain_name) {
+            if (empty(trim($name))) {
+                echo json_encode([
+                    "msg"     => 'Name cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($extension))) {
+                echo json_encode([
+                    "msg"     => 'Extension cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($pin_number))) {
+                echo json_encode([
+                    "msg"     => 'Pin Number cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($description))) {
+                echo json_encode([
+                    "msg"     => 'Description cannot be EMPTY !'
+                ]);
+                return;
+            }
+	    $conference_enabled='true';
+            $query = "UPDATE public.v_conferences SET 
+            conference_name = '$name', 
+            conference_extension = '$extension', 
+            conference_pin_number = '$pin_number', 
+            conference_description = '$description',
+	    conference_profile = '$conference_profile',
+	    conference_flags ='$conference_flags',
+	    conference_account_code='$conference_account_code',
+	    conference_context='$conference_context',
+            conference_enabled = '$conference_enabled' WHERE conference_uuid = '$conference_id'";
+            $updateConference = pg_query($con, $query);
+            if ($updateConference) {
+
+
+                $domain = "SELECT * FROM public.v_domains WHERE domain_uuid = '$domain_name'";
+		
+                $resultDomain = pg_query($con, $domain);
+
+                if (pg_num_rows($resultDomain) > 0) {
+                    $row = pg_fetch_assoc($resultDomain); 
+                    $domain_name = $row['domain_name'];
+
+
+                    SocketConnection::cache_delete("dialplan:".$domain_name);
+                }
+
+                echo json_encode([
+                    "msg"     => 'Conference Updated Successfully !!'
+                ]);
+                return;
+            } else {
+                echo json_encode([
+
+                    "msg"     => 'Failed to Update Conference, Try Again !!'
+                ]);
+                return;
+            }    
+        }
+
+
+
+// UPdate Dialplan 
+public function update_dialplan($con, $name,$extension, $pin_number, $description, $conference_enabled, $conference_id,$conference_profile,$conference_flags,$conference_account_code,$conference_context,$domain_name){
+	
+	
+
+	$checkDialplan = "SELECT dialplan_uuid FROM public.v_conferences WHERE conference_uuid = '$conference_id'";
+            $resultCheckDialplan = pg_query($con, $checkDialplan);
+	 if (pg_num_rows($resultCheckDialplan) > 0) {
+                $row = pg_fetch_assoc($resultCheckDialplan); 
+				$dialplan_id = $row['dialplan_uuid'];
+	 }	
+	$conf_data="$extension@$conference_context@$conference_profile+$pin_number+flags"."{'$conference_flags'}";	
+					
+	$dialplan_xml = "<extension name=\"$name\" continue=\"\" uuid=\"$conference_id\">
+        	<condition field=\"destination_number\" expression=\"^$extension\">
+                	<action application=\"answer\" data=\"\"/>
+                	<action application=\"set\" data=\"conference_uuid=$dialplan_id\" inline=\"true\"/>
+                	<action application=\"set\" data=\"conference_extension=$extension\" inline=\"true\"/>
+                	<action application=\"conference\" data=\"$conf_data\"/>
+        	</condition>
+		</extension>";
+				
+				$updateQuery = "UPDATE public.v_dialplans SET
+                dialplan_context = '$conference_context',
+                dialplan_name = '$name',
+                dialplan_number = '$extension',
+                dialplan_continue = 'false',
+                dialplan_order = '333',
+                dialplan_enabled = '$conference_enabled',
+                dialplan_description = '$description',
+				dialplan_xml ='$dialplan_xml'
+				WHERE dialplan_uuid = '$dialplan_id'";
+				$conference_dialplan = pg_query($con, $updateQuery);
+	 
+	  if ($conference_dialplan) {
+              //  echo json_encode([
+              //      "msg1"     => 'Dialplan Updated Successfully !!',
+              //      "dialplan_uuid"      => $dialplan_id
+					
+              //  ]);
+                return;
+            } else {
+                echo json_encode([
+
+                    "msg"     => 'Failed to Create Conference Dialplan, Try Again !!'
+					
+                ]);
+                return;
+            }    
+	}
+
+// END 
+
+// END
+
+
+        public function delete($con, $id) {
+            $checkDialplan = "SELECT * FROM public.v_conferences WHERE conference_uuid = '$id'";
+            $resultCheckDialplan = pg_query($con, $checkDialplan);
+            if (pg_num_rows($resultCheckDialplan) > 0) {
+                $row = pg_fetch_assoc($resultCheckDialplan); 
+                $dialplan_id = $row['dialplan_uuid'];
+                $queryDeleteDialplan = "DELETE FROM public.v_dialplans WHERE dialplan_uuid = '$dialplan_id'";
+                pg_query($con, $queryDeleteDialplan);
+                $queryDeleteDialplanDetails = "DELETE FROM public.v_dialplan_details WHERE dialplan_uuid = '$dialplan_id'";
+                pg_query($con, $queryDeleteDialplanDetails);
+            }
+
+            $query = "DELETE FROM public.v_conferences WHERE conference_uuid = '$id'";
+            $result = pg_query($con, $query);
+            if ($result) {
+                echo json_encode([
+                    "message" => "Conference Deleted Successfully !!"
+                ]);            
+                return;
+            
+            } else {
+                echo json_encode([
+                    "message" => "Failed to Delete Conference, Try Again !!"
+                ]);            
+                return;
+            }
+        }
+
+    }
+?>

@@ -21,7 +21,7 @@ app.use(
       "http://localhost:3001",
       "http://localhost:3002",
       // "https://ui.mobiililinja.fi/",
-      "https://vaihde.mobiililinja.fi/",
+      "https://pabx.mobiililinja.fi/",
       "https://ccdemo.sheerbit.com/",
       "https://ccdemo.sheerbit.com",
     ],

@@ -10,7 +10,7 @@ import logger from "../../logger";
 import company from "../../models/company";
 import user from "../../models/user";
 
-const BASE_RECORDING_URL = "https://mobilepbx.mobiililinja.fi/call_recording/";
+const BASE_RECORDING_URL = "https://mobile.mobiililinja.fi/call_recording/";
 
 const validateData = (data: any[], requiredFields: string[]): string | null => {
   for (const [index, item] of data.entries()) {

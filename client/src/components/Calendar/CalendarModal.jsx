@@ -919,7 +919,7 @@ function CalendarModal({
             <div style={{ padding: "10px 20px" }}>
               <a
                 // href="https://ui.mobiililinja.fi/nodejs/calendar.pdf"
-                href="https://vaihde.mobiililinja.fi/nodejs/calendar.pdf"
+                href="https://pabx.mobiililinja.fi/nodejs/calendar.pdf"
                 className="configurationlink"
               >
                 {"Need help configure the calendar"}

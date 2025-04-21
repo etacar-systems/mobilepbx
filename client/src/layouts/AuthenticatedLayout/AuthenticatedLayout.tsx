@@ -289,13 +289,11 @@ export const AuthenticatedLayout = ({ children }: PropsWithChildren) => {
                 </div>
               </div>
               <div
-                style={{ cursor: "pointer", height: "100%" }}
                 className="d-flex align-items-center gap-3"
               >
                 {role === 1 && (
                   <div
                     className="d-flex align-items-center"
-                    onClick={openModal}
                     style={{ height: "100%" }}
                   >
                     <span

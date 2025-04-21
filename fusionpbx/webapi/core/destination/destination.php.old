@@ -1,0 +1,207 @@
+<?php
+    require("../../config/config.php");
+
+    class Destination {
+
+        public function verify_user($con, $username, $password) {
+            $query = "SELECT * FROM public.v_users WHERE username = '$username'";
+            $result = pg_query($con,$query);
+            $admin = pg_fetch_array($result);
+        
+            if (!empty($admin)) {
+                if (password_verify($password, $admin['password'])) {
+                    $data = json_encode([
+                        'msg' => 'true',
+                        'id' => $admin['user_uuid']
+                    ]);
+                    return $data;
+                } else {
+                    $data = json_encode([
+                        'msg' => 'false',
+                    ]);
+                    return $data;   
+                }
+                
+            } else {
+                $data = json_encode([
+                    'msg' => 'false',
+                ]);
+                return $data;
+            }
+        }
+        
+        public function fetch($con) {
+            $query = 'SELECT * FROM public.v_destinations';
+            $result = pg_query($con, $query);
+            return $result;
+        }
+
+        public function fetch_destination_by_id($con, $id) {
+            $query = "SELECT * FROM public.v_destinations WHERE destination_uuid ='$id'";
+            $result = pg_query($con, $query);
+            return $result;
+        }
+
+        public function fetch_by_domain($con, $id) {
+            $query = "SELECT * FROM public.v_destinations WHERE domain_uuid ='$id'";
+            $result = pg_query($con, $query);
+            return $result;
+        }
+
+        public function post($con, $type, $destination_number, $caller_id_name, $caller_id_number, $destination_condition, $destination_action, $domain, $user, $description, $destination_enabled, $uuidDestination, $userID) {
+            if (empty(trim($type))) {
+                echo json_encode([
+                    "msg"     => 'Type cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($destination_number))) {
+                echo json_encode([
+                    "msg"     => 'Destination Number cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($description))) {
+                echo json_encode([
+                    "msg"     => 'Description cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($domain))) {
+                echo json_encode([
+                    "msg"     => 'Please Select Domain !'
+                ]);
+                return;
+            }
+
+            // $userID = '3d7c90a5-3936-422a-8fac-4dbfbea35237';
+
+            $destination_number_regex = "^(".$destination_number.")$";
+
+            if ($destination_condition == "") {
+                $data = array('condition_field'=> null);
+                $json = json_encode($data);
+                $destination_condition = $json;
+            }
+
+            if ($destination_action == "") {
+                $data = array('destination_app'=> null);
+                $json = json_encode($data);
+                $destination_action = $json;
+            }
+
+            if ($user != "") {
+                $insertDestination = "INSERT INTO public.v_destinations (destination_uuid, domain_uuid, user_uuid, destination_type, destination_number, destination_number_regex, destination_caller_id_name, destination_caller_id_number, destination_conditions, destination_actions, destination_context, destination_order, destination_description, destination_enabled, insert_user) VALUES ('$uuidDestination', '$domain', '$user', '$type', '$destination_number', '$destination_number_regex', '$caller_id_name', '$caller_id_number', '$destination_condition', '$destination_action', 'public', 100, '$description', '$destination_enabled', '$userID')";
+
+            } else {
+                $insertDestination = "INSERT INTO public.v_destinations (destination_uuid, domain_uuid, destination_type, destination_number, destination_number_regex, destination_caller_id_name, destination_caller_id_number, destination_conditions, destination_actions, destination_context, destination_order, destination_description, destination_enabled, insert_user) VALUES ('$uuidDestination', '$domain', '$type', '$destination_number', '$destination_number_regex', '$caller_id_name', '$caller_id_number', '$destination_condition', '$destination_action', 'public', 100, '$description', '$destination_enabled', '$userID')";
+            }
+
+            $resultDestination = pg_query($con, $insertDestination);
+            if ($resultDestination) {
+                echo json_encode([
+                    "msg"     => 'Destination Created Successfully !!',
+                    "id"      => $uuidDestination
+                ]);
+                return;
+            } else {
+                echo json_encode([
+
+                    "msg"     => 'Failed to Create Destination, Try Again !!'
+                ]);
+                return;
+            }    
+        }
+
+        public function update($con, $type, $destination_number, $caller_id_name, $caller_id_number, $destination_condition, $destination_action, $user, $description, $destination_enabled, $destination_id){
+            if (empty(trim($type))) {
+                echo json_encode([
+                    "msg"     => 'Type cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($destination_number))) {
+                echo json_encode([
+                    "msg"     => 'Destination Number cannot be EMPTY !'
+                ]);
+                return;
+            } elseif (empty(trim($description))) {
+                echo json_encode([
+                    "msg"     => 'Description cannot be EMPTY !'
+                ]);
+                return;
+            }
+
+            $destination_number_regex = "^(".$destination_number.")$";
+            
+            if ($destination_condition == "") {
+                $data = array('condition_field'=> null);
+                $json = json_encode($data);
+                $destination_condition = $json;
+            }
+
+            if ($destination_action == "") {
+                $data = array('destination_app'=> null);
+                $json = json_encode($data);
+                $destination_action = $json;
+            }
+
+            if ($user != "") {
+                $editQuery = "UPDATE public.v_destinations SET
+                destination_type = '$type',
+                user_uuid = '$user', 
+                destination_number = '$destination_number',
+                destination_number_regex = '$destination_number_regex',
+                destination_caller_id_name = '$caller_id_name', 
+                destination_caller_id_number = '$caller_id_number', 
+                destination_conditions = '$destination_condition', 
+                destination_actions = '$destination_action',
+                destination_description = '$description', 
+                destination_enabled = '$destination_enabled' 
+                WHERE destination_uuid = '$destination_id'";
+
+            } else {
+                $editQuery = "UPDATE public.v_destinations SET
+                destination_type = '$type', 
+                destination_number = '$destination_number',
+                destination_number_regex = '$destination_number_regex',
+                destination_caller_id_name = '$caller_id_name', 
+                destination_caller_id_number = '$caller_id_number', 
+                destination_conditions = '$destination_condition', 
+                destination_actions = '$destination_action',
+                destination_description = '$description', 
+                destination_enabled = '$destination_enabled' 
+                WHERE destination_uuid = '$destination_id'";
+            }
+
+            
+            $edit = pg_query($con, $editQuery);
+            if ($edit) {
+                echo json_encode([
+                    "msg"     => 'Destination Updated Successfully !!'
+                ]);
+                return;
+            } else {
+                echo json_encode([
+
+                    "msg"     => 'Failed to Update Destination, Try Again !!'
+                ]);
+                return;
+            }
+        }
+
+        public function delete($con, $id) {
+            $query = "DELETE FROM public.v_destinations WHERE destination_uuid = '$id'";
+            $result = pg_query($con, $query);
+            if ($result) {
+                echo json_encode([
+                    "message" => "Destination Deleted Successfully !!"
+                ]);            
+                return;
+            
+            } else {
+                echo json_encode([
+                    "message" => "Failed to Delete Destination, Try Again !!"
+                ]);            
+                return;
+            }
+        }
+
+    }
+?>

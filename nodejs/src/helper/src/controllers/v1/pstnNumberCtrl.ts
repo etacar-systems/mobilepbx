@@ -344,68 +344,7 @@ const getpstnNumberList = async (req:Request,res:Response,next:NextFunction)=>{
     })
   }
 }
-const removepstn = async (req:Request,res:Response,next:NextFunction)=>{
-  try{
-    let data:any = req.body
-    let cid:any = data.cid
 
-    if(Object.keys(data).length === 0){
-      return res.status(400).send({
-         success: 0,
-         message: "Request Body Params Is Empty"
-       });
-     }
-
-     if(cid == undefined){
-      return res.status(400).send({
-        success: 0,
-        message: "Company Id Is Mandatory."
-      });
-     }
-  
-     if(!mongoose.Types.ObjectId.isValid(cid)){
-      return res.status(400).send({
-        success: 0,
-        message: "Company Id Is Invalid."
-      });
-     }
-
-     let get_company_pstn:any []= await pstn_number.find({
-      cid:cid
-     }).distinct("_id")
-
-     let check_assigned_pstn:any = await extension.find({
-      pstn_number:{$in:get_company_pstn}
-     }).countDocuments()
-
-
-     if(check_assigned_pstn > 0){
-      return res.status(403).send({
-        success:0,
-        message:"Copmany Pstn Number already assigned to Extension  pls Unassign First."
-      })
-     }
-
-    await pstn_number.updateMany({
-      cid:cid
-    },{
-      is_deleted:1
-    },{
-      new:true
-    })
-
-    return res.status(200).send({
-      success: 1,
-      message: "Pstn Deleted Successfully."
-    });
-
-  }catch(error){
-    return res.status(500).send({
-      success:0,
-      message:"Internal Server Error"
-    })
-  }
-}
 const getAnAssignedPstnNumberList = async (req:Request,res:Response,next:NextFunction)=>{
   try{
 
@@ -430,6 +369,5 @@ const getAnAssignedPstnNumberList = async (req:Request,res:Response,next:NextFun
 export default {
   addNewRecord,
   getpstnNumberList,
-  removepstn,
   getAnAssignedPstnNumberList
 };

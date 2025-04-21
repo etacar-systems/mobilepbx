@@ -12,7 +12,7 @@ function DashboardHeaderDatePicker({
   setStartDate,
   endDate,
   setEndDate,
-  handledatefilter,
+  // handledatefilter,
 }) {
   const { t } = useTranslation();
   return (
@@ -48,7 +48,7 @@ function DashboardHeaderDatePicker({
                   <Col lg={4} md={12} className="filter_btn mt-2  mt-lg-0">
                     <Button
                       style={{ backgroundColor: "white", width: "100%" }}
-                      onClick={handledatefilter}
+                      // onClick={handledatefilter}
                     >
                       {t("Search")}
                     </Button>

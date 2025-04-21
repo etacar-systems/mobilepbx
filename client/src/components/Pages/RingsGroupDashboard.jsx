@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import ProgressCircle from "./CustomeChart";
+import ProgressCircle from "./Dashboard/CustomeChart";
 import { ReactComponent as Usersicon } from "../../Assets/Icon/users-svgrepo.svg";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";

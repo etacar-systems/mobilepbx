@@ -8,7 +8,7 @@ export const pstnRoute = Router();
 pstnRoute.get("/unassigned/list",authUser,pstnNumberCtrl.getAnAssignedPstnNumberList);
 pstnRoute.post("/add",authUser,pstnNumberCtrl.addNewRecord);
 pstnRoute.post("/list",authUser,pstnNumberCtrl.getpstnNumberList);
-pstnRoute.delete("/delete",authUser,pstnNumberCtrl.removepstn);
+// pstnRoute.delete("/delete",authUser,pstnNumberCtrl.removepstn);
 
 
 

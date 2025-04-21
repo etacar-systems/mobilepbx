@@ -19,10 +19,10 @@ function CustomDropDown({
   fullWidth,
 }) {
   useEffect(() => {
+    const customItem = valueArray?.find((val) => val._id === showValue);
     const selectedextension = valueArray?.find((val) => val._id === showValue);
     const selectedtype = valueArray?.find((val) => val.value === showValue);
     const gt_type = valueArray?.find((val) => val._id === showValue);
-    console.log(valueArray, "gt_type", gt_type, showValue);
     if (name == "extension") {
       Showstate(selectedextension?.extension);
     } else if (name == "selectextension") {
@@ -31,10 +31,12 @@ function CustomDropDown({
       Showstate(selectedtype?.name);
     } else if (name == "gt_type") {
       Showstate(gt_type?._id);
+    } else if (customItem && customItem[name]) {
+      Showstate(customItem[name])
     } else {
       Showstate(defaultValue);
     }
-  }, [defaultValue, showValue]);
+  }, [defaultValue, showValue, valueArray]);
   const [state, Showstate] = useState("");
   const handleClickOutside = (event) => {
     if (openDropdown == name) {
@@ -105,7 +107,6 @@ function CustomDropDown({
             width: fullWidth ? undefined : "100px",
           }}
         >
-          {console.log(state, "---state--")}
           <div className="elipsisDrodownshow">
             {t(state) || t(defaultValue)}
           </div>

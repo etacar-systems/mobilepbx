@@ -19,11 +19,17 @@ import system_recording from "../../models/system_recording";
 import role from "../../models/role";
 import { v4 as uuidv4 } from "uuid";
 
-const addNewRecord = async (req: Request, res: Response, next: NextFunction) => {
+const addNewRecord = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
     let uid = user_detail?.uid;
+
+    
 
     const {
       type,
@@ -160,7 +166,7 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
         caller_id_name,
         caller_id_number,
         destination_condition,
-        destination_action: [],
+        destination_action: "",
         description,
         destination_enabled: destination_enabled == true ? "true" : "false",
         trunk_id: gatewayIdDetail?.trunks_uuid,
@@ -234,7 +240,11 @@ const addNewRecord = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-const UpdateRecord = async (req: Request, res: Response, next: NextFunction) => {
+const UpdateRecord = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -293,7 +303,10 @@ const UpdateRecord = async (req: Request, res: Response, next: NextFunction) => 
     }
 
     for (const action of destination_action) {
-      if (action.destination_app == undefined || action.destination_data == undefined) {
+      if (
+        action.destination_app == undefined ||
+        action.destination_data == undefined
+      ) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
           success: 0,
           message:
@@ -387,7 +400,11 @@ const UpdateRecord = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-const getpstnNumberList = async (req: Request, res: Response, next: NextFunction) => {
+const getpstnNumberList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     let page: any = data.page;
@@ -531,159 +548,100 @@ const getpstnNumberList = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-const removepstnOLD = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    let data: any = req.body;
-    let pstn_id: any = data.pstn_id;
 
-    const token = await get_token(req);
-    const user_detail = await User_token(token);
-    let uid = user_detail?.uid;
+// const removepstn = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     let data: { pstn_range_uuid: string } = req.body;
+//     let pstn_range_uuid: string = data.pstn_range_uuid;
 
-    if (Object.keys(data).length === 0) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Request Body Params Is Empty",
-      });
-    }
+//     const token = await get_token(req);
+//     const user_detail = await User_token(token);
+//     let uid = user_detail?.uid;
 
-    let get_company_pstn: any = await pstn_number.findOne({
-      _id: pstn_id,
-    });
+//     if (Object.keys(data).length === 0) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+//         success: 0,
+//         message: "Request Body Params Is Empty",
+//       });
+//     }
 
-    if (get_company_pstn?.isassigned === 1) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: "Pstn Number already assigned to Extension  pls Unassign First.",
-      });
-    }
+//     let get_companies_pstn: any = await pstn_number.find({
+//       pstn_range_uuid: pstn_range_uuid,
+//     });
 
-    let api_config = {
-      method: "delete",
-      maxBodyLength: Infinity,
-      url: `${config.PBX_API.PSTN.REMOVE}${get_company_pstn?.pstn_uuid}`,
-      auth: config.PBX_API.AUTH,
-    };
+//     const grouped_companies_pstn = get_companies_pstn.reduce(
+//       (acc: any, item: any) => {
+//         const key: number = item.isassigned;
+//         if (!acc[key]) {
+//           acc[key] = [];
+//         }
+//         acc[key].push(item);
+//         return acc;
+//       },
+//       {}
+//     );
 
-    try {
-      const data: any = await axios.request(api_config);
+//     // remove unassigned pstn number
+//     grouped_companies_pstn[0].forEach(async (item: any) => {
+//       let api_config = {
+//         method: "delete",
+//         maxBodyLength: Infinity,
+//         url: `${config.PBX_API.PSTN.REMOVE}${item.pstn_uuid}`,
+//         auth: config.PBX_API.AUTH,
+//       };
 
-      if (data) {
-        await pstn_number.findByIdAndUpdate(
-          {
-            _id: pstn_id,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: uid,
-          },
-          {
-            new: true,
-          }
-        );
-        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-          success: 1,
-          message: "PSTN Number Delete Successfully",
-        });
-      }
-    } catch (error: any) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-      });
-    }
-  } catch (error) {
-    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-      success: 0,
-      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-    });
-  }
-};
+//       try {
+//         const data: any = await axios.request(api_config);
+//         if (data) {
+//           await pstn_number.findByIdAndUpdate(
+//             {
+//               _id: item._id,
+//             },
+//             {
+//               is_deleted: 1,
+//               last_updated_user: uid,
+//             },
+//             {
+//               new: true,
+//             }
+//           );
 
-const removepstn = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    let data: { pstn_range_uuid: string } = req.body;
-    let pstn_range_uuid: string = data.pstn_range_uuid;
+//           const assined_destinations =
+//             grouped_companies_pstn[1] &&
+//             grouped_companies_pstn[1].map((item: any) => item.destination);
 
-    const token = await get_token(req);
-    const user_detail = await User_token(token);
-    let uid = user_detail?.uid;
-
-    if (Object.keys(data).length === 0) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Request Body Params Is Empty",
-      });
-    }
-
-    let get_companies_pstn: any = await pstn_number.find({ pstn_range_uuid: pstn_range_uuid });
-
-    const grouped_companies_pstn = get_companies_pstn.reduce((acc: any, item: any) => {
-      const key: number = item.isassigned;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(item);
-      return acc;
-    }, {});
-
-    // remove unassigned pstn number
-    grouped_companies_pstn[0].forEach(async (item: any) => {
-      let api_config = {
-        method: "delete",
-        maxBodyLength: Infinity,
-        url: `${config.PBX_API.PSTN.REMOVE}${item.pstn_uuid}`,
-        auth: config.PBX_API.AUTH,
-      };
-
-      try {
-        const data: any = await axios.request(api_config);
-        if (data) {
-          await pstn_number.findByIdAndUpdate(
-            {
-              _id: item._id,
-            },
-            {
-              is_deleted: 1,
-              last_updated_user: uid,
-            },
-            {
-              new: true,
-            }
-          );
-
-          const assined_destinations =
-            grouped_companies_pstn[1] &&
-            grouped_companies_pstn[1].map((item: any) => item.destination);
-
-          return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-            success: 1,
-            message: assined_destinations
-              ? `PSTN Number Delete Successfully. Pstn Number already assigned to Extension ${assined_destinations.join(
-                  ", "
-                )} won't be deleted. Please Unassign First`
-              : "PSTN Number Delete Successfully",
-          });
-        }
-      } catch (error) {
-        if (!res.headersSent) {
-          return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-            success: 0,
-            message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-          });
-        }
-      }
-    });
-  } catch (error) {
-    if (!res.headersSent) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-      });
-    }
-  }
-};
-const getAnAssignedPstnNumberList = async (req: Request, res: Response, next: NextFunction) => {
+//           return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+//             success: 1,
+//             message: assined_destinations
+//               ? `PSTN Number Delete Successfully. Pstn Number already assigned to Extension ${assined_destinations.join(
+//                   ", "
+//                 )} won't be deleted. Please Unassign First`
+//               : "PSTN Number Delete Successfully",
+//           });
+//         }
+//       } catch (error) {
+//         if (!res.headersSent) {
+//           return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+//             success: 0,
+//             message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+//           });
+//         }
+//       }
+//     });
+//   } catch (error) {
+//     if (!res.headersSent) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+//         success: 0,
+//         message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+//       });
+//     }
+//   }
+// };
+const getAnAssignedPstnNumberList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     //  let get_anassigned_pstn:any []= await pstn_number.find({
     //   isassigned:0,
@@ -723,7 +681,11 @@ const getAnAssignedPstnNumberList = async (req: Request, res: Response, next: Ne
   }
 };
 
-const CompanyWisePstnList = async (req: Request, res: Response, next: NextFunction) => {
+const CompanyWisePstnList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail: any = await User_token(token);
@@ -795,7 +757,9 @@ const CompanyWisePstnList = async (req: Request, res: Response, next: NextFuncti
     //   .limit(limit)
     //   .skip(skip);
 
-    const pstn_total_counts: any = await pstn_number.find(find_query).countDocuments();
+    const pstn_total_counts: any = await pstn_number
+      .find(find_query)
+      .countDocuments();
 
     let total_page_count: any = Math.ceil(pstn_total_counts / size);
 
@@ -816,7 +780,11 @@ const CompanyWisePstnList = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunction) => {
+const assignPSTNInNumber = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -864,7 +832,10 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
     }
 
     for (const action of destination_action) {
-      if (action.destination_app == undefined || action.destination_data == undefined) {
+      if (
+        action.destination_app == undefined ||
+        action.destination_data == undefined
+      ) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
           success: 0,
           message:
@@ -916,7 +887,8 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
         });
       }
 
-      select_type_data.select_name = get_extension?.first_name + " " + get_extension?.last_name;
+      select_type_data.select_name =
+        get_extension?.first_name + " " + get_extension?.last_name;
       select_type_data.select_extension = get_extension?.user_extension;
       select_type_data.select_id = get_extension?._id;
     }
@@ -1005,7 +977,8 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
         destination_condition: get_company_pstn?.destination_condition,
         destination_action,
         description: get_company_pstn?.description,
-        destination_enabled: get_company_pstn?.destination_enabled == true ? "true" : "false",
+        destination_enabled:
+          get_company_pstn?.destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
       },
     };
@@ -1099,10 +1072,12 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
           case config.SELECT_NAME.RECORDING:
             break;
           default:
-            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-              success: 0,
-              message: "Fetch Error in Assign Module Data ||",
-            });
+            return res
+              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+              .send({
+                success: 0,
+                message: "Fetch Error in Assign Module Data ||",
+              });
         }
 
         if (select_type == config.SELECT_NAME.EXTENSION) {
@@ -1127,10 +1102,14 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
               user: get_extension_detail.user_extension,
               extension_password: get_extension_detail.password,
               outbound_caller_id_name:
-                get_extension_detail.first_name + " " + get_extension_detail.last_name,
+                get_extension_detail.first_name +
+                " " +
+                get_extension_detail.last_name,
               outbound_caller_id_number: get_company_pstn?.destination,
               effective_caller_id_name:
-                get_extension_detail.first_name + " " + get_extension_detail.last_name,
+                get_extension_detail.first_name +
+                " " +
+                get_extension_detail.last_name,
               effective_caller_id_number: get_company_pstn?.destination,
               max_registrations: "5",
               limit_max: "5",
@@ -1148,16 +1127,20 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
             const data: any = await axios.request(api_config);
             console.log("data", data.data);
             if (!data) {
-              return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-                success: 0,
-                message: "Failed To add Extension number",
-              });
+              return res
+                .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+                .send({
+                  success: 0,
+                  message: "Failed To add Extension number",
+                });
             }
           } catch (error: any) {
-            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-              success: 0,
-              message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-            });
+            return res
+              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+              .send({
+                success: 0,
+                message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+              });
           }
         }
 
@@ -1185,7 +1168,11 @@ const assignPSTNInNumber = async (req: Request, res: Response, next: NextFunctio
     });
   }
 };
-const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction) => {
+const updateAssignPSTN = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -1242,7 +1229,10 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
     }
 
     for (const action of destination_action) {
-      if (action.destination_app == undefined || action.destination_data == undefined) {
+      if (
+        action.destination_app == undefined ||
+        action.destination_data == undefined
+      ) {
         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
           success: 0,
           message:
@@ -1303,7 +1293,10 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
         select_type_id?.select_type_data?.select_id,
         select_type_id?.select_type
       );
-    } else if (number_id == pstn_id && select_type != select_type_id?.select_type) {
+    } else if (
+      number_id == pstn_id &&
+      select_type != select_type_id?.select_type
+    ) {
       await user.updateMany(
         {
           pstn_number: number_id,
@@ -1571,7 +1564,8 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
           message: `Extension Not Found.`,
         });
       }
-      select_type_data.select_name = get_extension?.first_name + " " + get_extension?.last_name;
+      select_type_data.select_name =
+        get_extension?.first_name + " " + get_extension?.last_name;
       select_type_data.select_extension = get_extension?.user_extension;
       select_type_data.select_id = get_extension?._id;
     }
@@ -1667,7 +1661,8 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
         destination_condition: get_company_pstn?.destination_condition,
         destination_action,
         description: get_company_pstn?.description,
-        destination_enabled: get_company_pstn?.destination_enabled == true ? "true" : "false",
+        destination_enabled:
+          get_company_pstn?.destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
       },
     };
@@ -1761,10 +1756,12 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
           case config.SELECT_NAME.RECORDING:
             break;
           default:
-            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-              success: 0,
-              message: "Fetch Error in Assign Module Data ||",
-            });
+            return res
+              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+              .send({
+                success: 0,
+                message: "Fetch Error in Assign Module Data ||",
+              });
         }
 
         if (select_type == config.SELECT_NAME.EXTENSION) {
@@ -1789,10 +1786,14 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
               user: get_extension_detail.user_extension,
               extension_password: get_extension_detail.password,
               outbound_caller_id_name:
-                get_extension_detail.first_name + " " + get_extension_detail.last_name,
+                get_extension_detail.first_name +
+                " " +
+                get_extension_detail.last_name,
               outbound_caller_id_number: get_company_pstn?.destination,
               effective_caller_id_name:
-                get_extension_detail.first_name + " " + get_extension_detail.last_name,
+                get_extension_detail.first_name +
+                " " +
+                get_extension_detail.last_name,
               effective_caller_id_number: get_company_pstn?.destination,
               max_registrations: "5",
               limit_max: "5",
@@ -1810,16 +1811,20 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
             const data: any = await axios.request(api_config);
             console.log("data", data.data);
             if (!data) {
-              return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-                success: 0,
-                message: "Failed To add Extension number",
-              });
+              return res
+                .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+                .send({
+                  success: 0,
+                  message: "Failed To add Extension number",
+                });
             }
           } catch (error: any) {
-            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-              success: 0,
-              message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-            });
+            return res
+              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+              .send({
+                success: 0,
+                message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+              });
           }
         }
 
@@ -1847,7 +1852,11 @@ const updateAssignPSTN = async (req: Request, res: Response, next: NextFunction)
     });
   }
 };
-const removeAssignpstn = async (req: Request, res: Response, next: NextFunction) => {
+const removeAssignpstn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     let pstn_id: any = data.pstn_id;
@@ -1907,7 +1916,8 @@ const removeAssignpstn = async (req: Request, res: Response, next: NextFunction)
         caller_id_number: get_company_pstn?.caller_id_number,
         destination_condition: get_company_pstn?.destination_condition,
         description: get_company_pstn?.description,
-        destination_enabled: get_company_pstn?.destination_enabled == true ? "true" : "false",
+        destination_enabled:
+          get_company_pstn?.destination_enabled == true ? "true" : "false",
         destination_id: get_company_pstn?.pstn_uuid,
         destination_action: [],
       },
@@ -2002,10 +2012,12 @@ const removeAssignpstn = async (req: Request, res: Response, next: NextFunction)
           case config.SELECT_NAME.RECORDING:
             break;
           default:
-            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-              success: 0,
-              message: "Fetch Error in Assign Module Data ||",
-            });
+            return res
+              .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+              .send({
+                success: 0,
+                message: "Fetch Error in Assign Module Data ||",
+              });
         }
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -2028,7 +2040,11 @@ const removeAssignpstn = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-const getNumberdetailByid = async (req: Request, res: Response, next: NextFunction) => {
+const getNumberdetailByid = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     let number_id: any = data.number_id;
@@ -2080,7 +2096,11 @@ const getNumberdetailByid = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-const dropdownData = async (req: Request, res: Response, next: NextFunction) => {
+const dropdownData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -2313,7 +2333,9 @@ const dropdownData = async (req: Request, res: Response, next: NextFunction) => 
 
       try {
         const data: any = await axios.request(api_config);
-        const selectTypeUUIDs = recordCheck?.map((item: any) => item.select_type_uuid);
+        const selectTypeUUIDs = recordCheck?.map(
+          (item: any) => item.select_type_uuid
+        );
 
         unAssignRecord = data?.data?.recordings?.filter(
           (item: any) => !selectTypeUUIDs.includes(item.uuid)
@@ -2395,306 +2417,310 @@ const dropdownData = async (req: Request, res: Response, next: NextFunction) => 
     });
   }
 };
-const updatePstnNumber = async (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.body, "-------req----------");
-  try {
-    const token = await get_token(req);
-    const user_detail = await User_token(token);
-    let create_cid = new mongoose.Types.ObjectId(user_detail?.cid);
-    let uid: any = user_detail?.uid;
+// const updatePstnNumber = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   console.log(req.body, "-------req----------");
+//   try {
+//     const token = await get_token(req);
+//     const user_detail = await User_token(token);
+//     let create_cid = new mongoose.Types.ObjectId(user_detail?.cid);
+//     let uid: any = user_detail?.uid;
 
-    const {
-      type,
-      destination,
-      caller_id_name,
-      caller_id_number,
-      destination_condition,
-      cid,
-      description,
-      destination_enabled,
-      gateway_id,
-      pstn_id,
-      pstn_range_uuid,
-    } = req.body;
+//     const {
+//       type,
+//       destination,
+//       caller_id_name,
+//       caller_id_number,
+//       destination_condition,
+//       cid,
+//       description,
+//       destination_enabled,
+//       gateway_id,
+//       pstn_id,
+//       pstn_range_uuid,
+//     } = req.body;
 
-    let user_body: any = req.body.user;
+//     let user_body: any = req.body.user;
 
-    if (Object.keys(req.body).length === 0) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Request Body Params Is Empty",
-      });
-    }
+//     if (Object.keys(req.body).length === 0) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+//         success: 0,
+//         message: "Request Body Params Is Empty",
+//       });
+//     }
 
-    const requiredFields = {
-      type: "Type",
-      // destination: "Destination",
-      caller_id_name: "Caller ID Name",
-      caller_id_number: "Caller ID Number",
-      destination_condition: "Destination Condition",
-      description: "Description",
-      destination_enabled: "Destination Enabled",
-      pstn_range_uuid: "PSTN range uuid",
-    };
+//     const requiredFields = {
+//       type: "Type",
+//       // destination: "Destination",
+//       caller_id_name: "Caller ID Name",
+//       caller_id_number: "Caller ID Number",
+//       destination_condition: "Destination Condition",
+//       description: "Description",
+//       destination_enabled: "Destination Enabled",
+//       pstn_range_uuid: "PSTN range uuid",
+//     };
 
-    for (const [field, name] of Object.entries(requiredFields)) {
-      if (req.body[field] === undefined || req.body[field] === null) {
-        return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-          success: 0,
-          message: `${name} Is Mandatory.`,
-        });
-      }
-    }
+//     for (const [field, name] of Object.entries(requiredFields)) {
+//       if (req.body[field] === undefined || req.body[field] === null) {
+//         return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+//           success: 0,
+//           message: `${name} Is Mandatory.`,
+//         });
+//       }
+//     }
 
-    if (user_body == undefined) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-        success: 0,
-        message: "User Is Mandatory.",
-      });
-    }
+//     if (user_body == undefined) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+//         success: 0,
+//         message: "User Is Mandatory.",
+//       });
+//     }
 
-    if (!mongoose.Types.ObjectId.isValid(gateway_id)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Gateway ID is Invalid.",
-      });
-    }
+//     if (!mongoose.Types.ObjectId.isValid(gateway_id)) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+//         success: 0,
+//         message: "Gateway ID is Invalid.",
+//       });
+//     }
 
-    const gatewayIdDetail = await trunks.findOne({
-      _id: gateway_id,
-      is_deleted: 0,
-    });
+//     const gatewayIdDetail = await trunks.findOne({
+//       _id: gateway_id,
+//       is_deleted: 0,
+//     });
 
-    if (!gatewayIdDetail) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
-        success: 0,
-        message: "Gateway Id Not Found.",
-      });
-    }
+//     if (!gatewayIdDetail) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
+//         success: 0,
+//         message: "Gateway Id Not Found.",
+//       });
+//     }
 
-    if (!mongoose.Types.ObjectId.isValid(cid)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-        success: 0,
-        message: "Company ID Invalid.",
-      });
-    }
+//     if (!mongoose.Types.ObjectId.isValid(cid)) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+//         success: 0,
+//         message: "Company ID Invalid.",
+//       });
+//     }
 
-    const companyDetail = await company.findOne({
-      _id: cid,
-      is_deleted: 0,
-    });
+//     const companyDetail = await company.findOne({
+//       _id: cid,
+//       is_deleted: 0,
+//     });
 
-    if (!companyDetail) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
-        success: 0,
-        message: "Company Not Found.",
-      });
-    }
+//     if (!companyDetail) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
+//         success: 0,
+//         message: "Company Not Found.",
+//       });
+//     }
 
-    if (!pstn_id) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Pstn Number Id Is Required",
-      });
-    }
+//     if (!pstn_id) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+//         success: 0,
+//         message: "Pstn Number Id Is Required",
+//       });
+//     }
 
-    let get_company_pstn: any = await pstn_number.findById({
-      _id: pstn_id,
-    });
+//     let get_company_pstn: any = await pstn_number.findById({
+//       _id: pstn_id,
+//     });
 
-    if (!get_company_pstn) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "Pstn Number Not Found",
-      });
-    }
+//     if (!get_company_pstn) {
+//       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+//         success: 0,
+//         message: "Pstn Number Not Found",
+//       });
+//     }
 
-    // let check_pstn_number_already_exists: any = await pstn_number.findOne({
-    //   destination: destination,
-    //   is_deleted: 0,
-    //   _id: { $ne: pstn_id },
-    // });
+//     // let check_pstn_number_already_exists: any = await pstn_number.findOne({
+//     //   destination: destination,
+//     //   is_deleted: 0,
+//     //   _id: { $ne: pstn_id },
+//     // });
 
-    // if (check_pstn_number_already_exists) {
-    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-    //     success: 0,
-    //     message: "Pstn Number Already Exists",
-    //   });
-    // }
-    // console.log("get_company_pstn", get_company_pstn);
-    // let api_config = {
-    //   method: "delete",
-    //   maxBodyLength: Infinity,
-    //   url: `${config.PBX_API.PSTN.REMOVE}${get_company_pstn?.pstn_uuid}`,
-    //   auth: config.PBX_API.AUTH,
-    // };
+//     // if (check_pstn_number_already_exists) {
+//     //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+//     //     success: 0,
+//     //     message: "Pstn Number Already Exists",
+//     //   });
+//     // }
+//     // console.log("get_company_pstn", get_company_pstn);
+//     // let api_config = {
+//     //   method: "delete",
+//     //   maxBodyLength: Infinity,
+//     //   url: `${config.PBX_API.PSTN.REMOVE}${get_company_pstn?.pstn_uuid}`,
+//     //   auth: config.PBX_API.AUTH,
+//     // };
 
-    try {
-      // const data: any = await axios.request(api_config);
+//     try {
+//       // const data: any = await axios.request(api_config);
 
-      if (true) {
-        await pstn_number.findByIdAndUpdate(
-          {
-            _id: pstn_id,
-          },
-          {
-            isassigned: 0,
-            destination_action: [],
-            select_type_data: {},
-            select_type: "",
-            select_type_uuid: "",
-            last_updated_user: uid,
-          },
-          {
-            new: true,
-          }
-        );
+//       if (true) {
+//         await pstn_number.findByIdAndUpdate(
+//           {
+//             _id: pstn_id,
+//           },
+//           {
+//             isassigned: 0,
+//             destination_action: [],
+//             select_type_data: {},
+//             select_type: "",
+//             select_type_uuid: "",
+//             last_updated_user: uid,
+//           },
+//           {
+//             new: true,
+//           }
+//         );
 
-        switch (get_company_pstn?.select_type) {
-          case config.SELECT_NAME.IVR:
-            await IVR.findByIdAndUpdate(
-              { _id: get_company_pstn?.select_type_data?.select_id },
-              {
-                assign_pstn_number: "",
-                last_updated_user: user_detail?.uid,
-              },
-              {
-                new: true,
-                runValidators: true,
-              }
-            );
-            break;
-          case config.SELECT_NAME.RINGGROUP:
-            await ring_group.findByIdAndUpdate(
-              { _id: get_company_pstn?.select_type_data?.select_id },
-              {
-                assign_pstn_number: "",
-                last_updated_user: user_detail?.uid,
-              },
-              {
-                new: true,
-                runValidators: true,
-              }
-            );
-            break;
-          case config.SELECT_NAME.EXTENSION:
-            await user.findByIdAndUpdate(
-              { _id: get_company_pstn?.select_type_data?.select_id },
-              {
-                pstn_number: null,
-                last_updated_user: user_detail?.uid,
-              },
-              {
-                new: true,
-                runValidators: true,
-              }
-            );
-            break;
-          case config.SELECT_NAME.CONFERENCE:
-            await conferncers.findByIdAndUpdate(
-              { _id: get_company_pstn?.select_type_data?.select_id },
-              {
-                assign_pstn_number: "",
-                last_updated_user: user_detail?.uid,
-              },
-              {
-                new: true,
-                runValidators: true,
-              }
-            );
-            break;
-          case config.SELECT_NAME.TIMECONDTION:
-            await time_condition.findByIdAndUpdate(
-              { _id: get_company_pstn?.select_type_data?.select_id },
-              {
-                assign_pstn_number: "",
-                last_updated_user: user_detail?.uid,
-              },
-              {
-                new: true,
-                runValidators: true,
-              }
-            );
-            break;
-          case config.SELECT_NAME.RECORDING:
-            break;
-          default:
-        }
-      }
-    } catch (error: any) {
-      console.log("error", error);
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-      });
-    }
+//         switch (get_company_pstn?.select_type) {
+//           case config.SELECT_NAME.IVR:
+//             await IVR.findByIdAndUpdate(
+//               { _id: get_company_pstn?.select_type_data?.select_id },
+//               {
+//                 assign_pstn_number: "",
+//                 last_updated_user: user_detail?.uid,
+//               },
+//               {
+//                 new: true,
+//                 runValidators: true,
+//               }
+//             );
+//             break;
+//           case config.SELECT_NAME.RINGGROUP:
+//             await ring_group.findByIdAndUpdate(
+//               { _id: get_company_pstn?.select_type_data?.select_id },
+//               {
+//                 assign_pstn_number: "",
+//                 last_updated_user: user_detail?.uid,
+//               },
+//               {
+//                 new: true,
+//                 runValidators: true,
+//               }
+//             );
+//             break;
+//           case config.SELECT_NAME.EXTENSION:
+//             await user.findByIdAndUpdate(
+//               { _id: get_company_pstn?.select_type_data?.select_id },
+//               {
+//                 pstn_number: null,
+//                 last_updated_user: user_detail?.uid,
+//               },
+//               {
+//                 new: true,
+//                 runValidators: true,
+//               }
+//             );
+//             break;
+//           case config.SELECT_NAME.CONFERENCE:
+//             await conferncers.findByIdAndUpdate(
+//               { _id: get_company_pstn?.select_type_data?.select_id },
+//               {
+//                 assign_pstn_number: "",
+//                 last_updated_user: user_detail?.uid,
+//               },
+//               {
+//                 new: true,
+//                 runValidators: true,
+//               }
+//             );
+//             break;
+//           case config.SELECT_NAME.TIMECONDTION:
+//             await time_condition.findByIdAndUpdate(
+//               { _id: get_company_pstn?.select_type_data?.select_id },
+//               {
+//                 assign_pstn_number: "",
+//                 last_updated_user: user_detail?.uid,
+//               },
+//               {
+//                 new: true,
+//                 runValidators: true,
+//               }
+//             );
+//             break;
+//           case config.SELECT_NAME.RECORDING:
+//             break;
+//           default:
+//         }
+//       }
+//     } catch (error: any) {
+//       console.log("error", error);
+//       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+//         success: 0,
+//         message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+//       });
+//     }
 
-    let api_config_update = {
-      method: "put",
-      maxBodyLength: Infinity,
-      url: config.PBX_API.PSTN.UPDATE,
-      auth: config.PBX_API.AUTH,
-      data: {
-        domain: companyDetail?.domain_uuid,
-        type,
-        user_body,
-        destination,
-        caller_id_name,
-        caller_id_number,
-        destination_condition,
-        destination_action: [], 
-        description,
-        destination_enabled: destination_enabled == true ? "true" : "false",
-        destination_id: get_company_pstn?.pstn_uuid,
-        gateway_id: gateway_id,
-      },
-    };
+//     let api_config_update = {
+//       method: "put",
+//       maxBodyLength: Infinity,
+//       url: config.PBX_API.PSTN.UPDATE,
+//       auth: config.PBX_API.AUTH,
+//       data: {
+//         domain: companyDetail?.domain_uuid,
+//         type,
+//         user_body,
+//         destination,
+//         caller_id_name,
+//         caller_id_number,
+//         destination_condition,
+//         destination_action: [],
+//         description,
+//         destination_enabled: destination_enabled == true ? "true" : "false",
+//         destination_id: get_company_pstn?.pstn_uuid,
+//         gateway_id: gateway_id,
+//       },
+//     };
 
-    try {
-      const data_updated_pstn: any = await axios.request(api_config_update);
+//     try {
+//       const data_updated_pstn: any = await axios.request(api_config_update);
 
-      if (data_updated_pstn) {
-        const post: any = await pstn_number.updateMany(
-          { pstn_range_uuid: pstn_range_uuid },
-          {
-            type,
-            user_body,
-            // destination,
-            caller_id_name,
-            caller_id_number,
-            destination_condition,
-            destination_action: [],
-            cid,
-            description,
-            destination_enabled,
-            last_updated_user: uid,
-            gateway_id,
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
-      }
-    } catch (error) {
-      console.log(error);
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: "Failed To Update pstn number",
-      });
-    }
-    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-      success: 1,
-      message: "Pstn Number Updated Successfully.",
-    });
-  } catch (error: any) {
-    console.log(error);
-    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-      success: 0,
-      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-    });
-  }
-};
+//       if (data_updated_pstn) {
+//         const post: any = await pstn_number.updateMany(
+//           { pstn_range_uuid: pstn_range_uuid },
+//           {
+//             type,
+//             user_body,
+//             // destination,
+//             caller_id_name,
+//             caller_id_number,
+//             destination_condition,
+//             destination_action: [],
+//             cid,
+//             description,
+//             destination_enabled,
+//             last_updated_user: uid,
+//             gateway_id,
+//           },
+//           {
+//             new: true,
+//             runValidators: true,
+//           }
+//         );
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+//         success: 0,
+//         message: "Failed To Update pstn number",
+//       });
+//     }
+//     return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+//       success: 1,
+//       message: "Pstn Number Updated Successfully.",
+//     });
+//   } catch (error: any) {
+//     console.log(error);
+//     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+//       success: 0,
+//       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+//     });
+//   }
+// };
 
 type DataItem = {
   _id: string;
@@ -2714,209 +2740,11 @@ type GroupedItem = {
   pstn_range_uuid: string;
 };
 
-function groupByDestinationRange(data: DataItem[]): GroupedItem[] {
-  // Sort the data by destination
-  const sortedData = data.sort((a, b) => parseInt(a.destination) - parseInt(b.destination));
-
-  const result: GroupedItem[] = [];
-  let currentGroup: DataItem[] = [];
-
-  for (let i = 0; i < sortedData.length; i++) {
-    const current = sortedData[i];
-    const prev = currentGroup[currentGroup.length - 1];
-
-    if (
-      currentGroup.length === 0 ||
-      (current.pstn_range_uuid === prev.pstn_range_uuid &&
-        parseInt(current.destination) === parseInt(prev.destination) + 1)
-    ) {
-      currentGroup.push(current);
-    } else {
-      // Finalize the current group
-      const range: GroupedItem = {
-        ...currentGroup[0],
-        destination: `${currentGroup[0].destination}-${
-          currentGroup[currentGroup.length - 1].destination
-        }`,
-      };
-      result.push(range);
-      currentGroup = [current];
-    }
-  }
-
-  // Finalize the last group
-  if (currentGroup.length > 0) {
-    const range: GroupedItem = {
-      ...currentGroup[0],
-      destination: `${currentGroup[0].destination}-${
-        currentGroup[currentGroup.length - 1].destination
-      }`,
-    };
-    result.push(range);
-  }
-
-  return result;
-}
-
-const CompanyWisePstnListByQueryParams = async (
+const getPstnNumberdetailByid = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    let page: any = req.query.page;
-    let size: any = req.query.size;
-    let cid: any = req.query.cid;
-    let search: any = req.query.search;
-    if (!page) page = 1;
-    if (!size) size = 20;
-    const limit = parseInt(size);
-    const skip = (page - 1) * size;
-
-    let find_query: { [key: string]: any } = {
-      is_deleted: 0,
-    };
-    if (search) {
-      find_query.$or = [
-        {
-          type: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          destination: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-
-        {
-          trunk_name: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          company_name: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-      ];
-    }
-
-    if (cid) {
-      let create_cid: any = new mongoose.Types.ObjectId(cid);
-      find_query.cid = create_cid;
-    }
-
-    const pstn_list = await pstn_number.aggregate([
-      {
-        $lookup: {
-          from: "trunks",
-          localField: "gateway_id",
-          foreignField: "_id",
-          pipeline: [{ $match: { is_deleted: 0 } }],
-          as: "trunk_detail",
-        },
-      },
-      { $unwind: "$trunk_detail" },
-      {
-        $lookup: {
-          from: "companies",
-          localField: "cid",
-          foreignField: "_id",
-          pipeline: [{ $match: { is_deleted: 0 } }],
-          as: "cid_detail",
-        },
-      },
-      { $unwind: "$cid_detail" },
-      {
-        $addFields: {
-          trunk_name: "$trunk_detail.gateway_name",
-          company_name: "$cid_detail.company_name",
-        },
-      },
-      { $match: find_query },
-      { $sort: { createdAt: -1 } },
-      {
-        $project: {
-          destination: 1,
-          cid: 1,
-          gateway_id: 1,
-          trunk_name: 1,
-          company_name: 1,
-          type: 1,
-          pstn_range_uuid: 1,
-        },
-      },
-    ]);
-
-    const grouped_pstn_list = groupByDestinationRange(pstn_list);
-    const endIndex: number = skip + limit;
-    const paginated_pstn_data = grouped_pstn_list.slice(skip, endIndex);
-    const pstn_total_counts: number = grouped_pstn_list.length;
-    const total_page_count: number = Math.ceil(grouped_pstn_list.length / limit);
-
-    res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-      success: 1,
-      message: "PSTN List",
-      data: paginated_pstn_data,
-      total_page_count: total_page_count,
-      pstn_total_counts: pstn_total_counts,
-    });
-  } catch (error) {
-    console.log(error);
-
-    return res.status(500).send({
-      success: 0,
-      message: "Internal Server Error",
-    });
-  }
-};
-const getPstnNumberdetailByidOLD = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    let pstn_number_id: any = req.query.pstn_number_id;
-
-    if (!pstn_number_id) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "pstn_number_id is Mandatory",
-      });
-    }
-    if (!mongoose.Types.ObjectId.isValid(pstn_number_id)) {
-      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-        success: 0,
-        message: "pstn_number_id Id Is Invalid.",
-      });
-    }
-    const getPstnNumberDetail: any = await pstn_number.findOne({
-      _id: pstn_number_id,
-      is_deleted: 0,
-    });
-
-    if (!getPstnNumberDetail) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: "PSTN Number Data Not Found",
-      });
-    }
-
-    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-      success: 1,
-      message: "PSTN Number Detail",
-      PstnNumberDetail: getPstnNumberDetail,
-    });
-  } catch (error) {
-    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-      success: 0,
-      message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-    });
-  }
-};
-
-const getPstnNumberdetailByid = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let pstn_range_uuid: any = req.query.pstn_range_uuid ?? "";
 
@@ -2969,7 +2797,11 @@ const getPstnNumberdetailByid = async (req: Request, res: Response, next: NextFu
     });
   }
 };
-const CallReportsdropdownData = async (req: Request, res: Response, next: NextFunction) => {
+const CallReportsdropdownData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -3130,7 +2962,7 @@ export default {
   addNewRecord,
   UpdateRecord,
   getpstnNumberList,
-  removepstn,
+  // removepstn,
   getAnAssignedPstnNumberList,
   CompanyWisePstnList,
   assignPSTNInNumber,
@@ -3138,8 +2970,7 @@ export default {
   removeAssignpstn,
   getNumberdetailByid,
   dropdownData,
-  CompanyWisePstnListByQueryParams,
-  updatePstnNumber,
+  // updatePstnNumber,
   getPstnNumberdetailByid,
   CallReportsdropdownData,
 };

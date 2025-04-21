@@ -58,7 +58,7 @@ const config = {
     ADD: BASE_URL + "/pstn/add",
     DELETE: BASE_URL + "/pstn/delete",
     DETAIL: BASE_URL + "/pstn/detail",
-    EDIT: BASE_URL + "/pstn/edit",
+    // EDIT: BASE_URL + "/pstn/edit",
     LIST: BASE_URL + "/pstn/list",
     EXTENSION_LIST: BASE_URL + "/pstn/unassigned/list",
   },

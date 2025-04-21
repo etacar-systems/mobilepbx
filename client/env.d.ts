@@ -2,6 +2,9 @@ declare module "*.svg" {
   export const ReactComponent: React.FunctionComponent<
     React.SVGAttributes<SVGAElement>
   >;
+  
+  const content: string;
+  export default content;
 }
 
 declare module "*.mp4" {

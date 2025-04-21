@@ -6,7 +6,7 @@ class SocketConnection
 
         public static function _event_socket_create()
     {
-        $host = '70.34.207.207';
+        $host = '70.34.212.211';
         $password = 'ClueCon';
         $port = '8021';
 
