@@ -176,14 +176,14 @@ export default function Truncks() {
       ).then((response) => {
         setsaveLoading(false);
         const editsvalues = response?.payload?.response?.TrunkDetail;
-        console.log(
-          '(editsvalues?.destination).replace(/^sip:/, "").split(":")',
-          (editsvalues?.destination).replace(/^sip:/, "").split(":")
-        );
+        // console.log(
+        //   '(editsvalues?.destination).replace(/^sip:/, "").split(":")',
+        //   (editsvalues?.destination)?.replace(/^sip:/, "").split(":")
+        // );
         setFormData({
           gateway_name: editsvalues?.description,
-          ip: (editsvalues?.destination).replace(/^sip:/, "").split(":")[0],
-          port: (editsvalues?.destination).replace(/^sip:/, "").split(":")[1],
+          ip: (editsvalues?.destination)?.replace(/^sip:/, "").split(":")[0],
+          port: (editsvalues?.destination)?.replace(/^sip:/, "").split(":")[1],
           gt_type: editsvalues?.gt_type,
         });
       });
@@ -419,7 +419,7 @@ export default function Truncks() {
                     Trunksdata.map((val, index) => (
                       <tr className="table_body">
                         <td>{val?.description}</td>
-                        <td>{(val?.destination).replace(/^sip:/, "")}</td>
+                        <td>{(val?.destination)?.replace(/^sip:/, "")}</td>
                         <td>{val?.gt_type === 1 ? "Ingress" : "Egress"}</td>
                         <td>
                           <td>

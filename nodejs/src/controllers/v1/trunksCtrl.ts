@@ -221,49 +221,76 @@ const DeleteRocrd = async (req: Request, res: Response, next: NextFunction) => {
 };
 const gettrunkslist = async (req: Request, res: Response, next: NextFunction) => {
   try {
+
     let data: any = req.body;
-    let page: any = data.page;
+    let page: any = data.page || 1;
     let size: any = data.size;
-    let search: any = data.search;
+    let search: any = data.search?.toString();
     if (!page) page = 1;
     if (!size) size = 20;
     const limit = parseInt(size);
     const skip = (page - 1) * size;
-    const where = search
-      ? {
-        OR: [
+
+    let find_query: { [key: string]: any } = {};
+    if (search) {
+      find_query = {
+        is_deleted: 0,
+        $or: [
           {
-            destination: {
-              contains: search
+            gateway_name: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            proxy: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            context: {
+              $regex: search,
+              $options: "i",
             },
           },
           {
             description: {
-              contains: search,
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            username: {
+              $regex: search,
+              $options: "i",
             },
           },
         ],
-      }
-      : undefined;
+      };
+    } else {
+      find_query = {
+        is_deleted: 0,
+      };
+    }
 
-    const [trunk_list, total] = await prisma.$transaction([
-      prisma.dispatcher.findMany({
-        skip,
-        take: limit,
-        where
-      }),
-      prisma.dispatcher.count({
-        where
-      }),
-    ]);
+    const trunk_list: any = await trunks
+      .find(find_query)
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skip);
+
+    const trunk_total_counts: any = await trunks.find(find_query).countDocuments();
+
+    let total_page_count: any = Math.ceil(trunk_total_counts / size);
 
     res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
       message: "Trunk List",
       data: trunk_list,
-      total,
-      total_page_count: Math.ceil(total / size),
-      currentPage: Number(page),
+      total: trunk_total_counts,
+      total_page_count: total_page_count,
+      currentPage: page,
     });
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({

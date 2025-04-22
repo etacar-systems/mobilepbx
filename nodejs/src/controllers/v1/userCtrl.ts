@@ -439,12 +439,6 @@ const addUser = async (req: Request, res: Response, next: NextFunction) => {
     };
     if (user_type !== CONSTANT.ROLE.SUB_ADMIN) {
       try {
-        const random_password = Array.from({ length: 15 }, () =>
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".charAt(
-            Math.floor(Math.random() * 77)
-          )
-        ).join("");
-
         let api_config = {
           method: "put",
           maxBodyLength: Infinity,
@@ -453,7 +447,7 @@ const addUser = async (req: Request, res: Response, next: NextFunction) => {
           data: {
             extension: user_extension,
             user: user_extension,
-            extension_password: random_password,
+            extension_password: password,
             outbound_caller_id_name: first_name + " " + last_name,
             outbound_caller_id_number:
               pstn_number !== undefined
