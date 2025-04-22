@@ -65,7 +65,6 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
         _id: results?.cid,
         is_deleted: 0,
       });
-     
 
       if (!company_details) {
         return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).json({
@@ -101,7 +100,7 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       let company_details: any;
       if (
         results_user.role.type === CONSTANT.ROLE.AGENT ||
-        results_user.role.type === CONSTANT.ROLE.ADMIN || 
+        results_user.role.type === CONSTANT.ROLE.ADMIN ||
         results_user.role.type === CONSTANT.ROLE.SUB_ADMIN
       ) {
         company_details = await company.findOne({
@@ -137,7 +136,7 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
         UserDetails: {
           ...results_user.toObject(),
           ...userData,
-          company_details: company_details
+          company_details: company_details,
         },
       });
     } catch (error) {
@@ -179,456 +178,499 @@ const userLogout = async (req: Request, res: Response, next: NextFunction) => {
 };
 const addUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const token = await get_token(req);
-  const user_detail = await User_token(token);
-  if (user_detail === undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.COMPANY_NOT_EXIST).send({
-      success: 0,
-      message: config.RESPONSE.MESSAGE.COMPANY_ERROR,
-    });
-  }
+    const user_detail = await User_token(token);
+    if (user_detail === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.COMPANY_NOT_EXIST).send({
+        success: 0,
+        message: config.RESPONSE.MESSAGE.COMPANY_ERROR,
+      });
+    }
 
-  let cid: any = user_detail?.cid;
+    let cid: any = user_detail?.cid;
 
-  let company_details: any = await company.findOne({ _id: cid, is_deleted: 0 });
-  if (!company_details) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Please Select Domain.",
-    });
-  }
-
-  let roleId = await role.findOne({ type: 1 });
-
-  let extensionCount = await user.find({cid:cid, is_deleted: 0 , role: { $eq: roleId?._id }}).countDocuments()
-  
-  if(company_details?.extension_count === extensionCount){
-    return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-      success: 0,
-      message: `You can't create more than ${company_details?.extension_count} extensions`,
-    });
-  }
-
-  let {
-    pstn_number,
-    first_name,
-    last_name,
-    password,
-    user_image,
-    user_custom_msg,
-    user_extension,
-    user_email,
-    mobile,
-    country,
-    user_record,
-    user_type
-  } = req.body;
-
-  if (cid == undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Cid Is Mandatory.",
-    });
-  }
-  if (!mongoose.Types.ObjectId.isValid(cid)) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Invalid ObjectId",
-    });
-  }
-  // if (user_extension == undefined) {
-  //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-  //     success: 0,
-  //     message: "User Extentsion Is Mandatory.",
-  //   });
-  // }
-  if (user_extension != undefined && !REGEXP.USER.user_extension.test(user_extension)) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "User Extentsion Is Invalid.",
-    });
-  }
-  if (first_name == undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "First Name Is Mandatory.",
-    });
-  }
-  // if (!REGEXP.USER.first_name.test(first_name)) {
-  //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-  //     success: 0,
-  //     message: "First Name Is Invalid.",
-  //   });
-  // }
-  if (last_name == undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Last Name Is Mandatory.",
-    });
-  }
-  // if (!REGEXP.USER.last_name.test(last_name)) {
-  //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-  //     success: 0,
-  //     message: "Last Name Is Invalid.",
-  //   });
-  // }
-  if (user_email == undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "User Email Is Mandatory.",
-    });
-  }
-  if (!REGEXP.USER.user_email.test(user_email)) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "User Email Is Invalid.",
-    });
-  }
-  if (password == undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Password Is Mandatory.",
-    });
-  }
-  if (!REGEXP.USER.password.test(password)) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "Password Is Invalid.",
-    });
-  }
-
-  // if (mobile !== undefined && !REGEXP.extension.mobile.test(mobile)) {
-  //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-  //     success: 0,
-  //     message: "Mobile Is Invalid.",
-  //   });
-  // }
-  
-  if (user_custom_msg === undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "user_custom_msg Is Mandatory.",
-    });
-  }
-  if (user_image === undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "user_image Is Mandatory.",
-    });
-  }
-
-  if (country === undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "country Is Mandatory.",
-    });
-  }
-  if (user_type === undefined) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "user type Is Mandatory.",
-    });
-  }
-
-  if (!REGEXP.USER.user_type.test(user_type)) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "user type Is Invalid.",
-    });
-  }
-
-  const emailCheck: any = await user.findOne({
-    user_email: user_email.toLowerCase(),
-    is_deleted: 0,
-  });
-
-  if (emailCheck) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "User Email Is Already Exist.",
-    });
-  }
-
-
-  if(user_extension !== undefined){
-
-    let check_extension: any = await user.findOne({
+    let company_details: any = await company.findOne({
+      _id: cid,
       is_deleted: 0,
-      user_extension: user_extension,
-      cid:company_details._id
     });
-
-    if (check_extension) {
+    if (!company_details) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
-        message: "Extension Number Already Exist.",
+        message: "Please Select Domain.",
       });
     }
 
-  }
+    let roleId = await role.findOne({ type: 1 });
 
-  let userRole = await role.findOne({ type: user_type});
+    let extensionCount = await user
+      .find({ cid: cid, is_deleted: 0, role: { $eq: roleId?._id } })
+      .countDocuments();
 
-  if (!userRole) {
-    res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-      success: 0,
-      message: "Role is incorrect",
+    if (company_details?.extension_count === extensionCount) {
+      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+        success: 0,
+        message: `You can't create more than ${company_details?.extension_count} extensions`,
+      });
+    }
+
+    let {
+      pstn_number,
+      first_name,
+      last_name,
+      password,
+      user_image,
+      user_custom_msg,
+      user_extension,
+      user_email,
+      mobile,
+      country,
+      user_record,
+      user_type,
+    } = req.body;
+
+    if (cid == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Cid Is Mandatory.",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(cid)) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Invalid ObjectId",
+      });
+    }
+    // if (user_extension == undefined) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "User Extentsion Is Mandatory.",
+    //   });
+    // }
+    if (
+      user_extension != undefined &&
+      !REGEXP.USER.user_extension.test(user_extension)
+    ) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "User Extentsion Is Invalid.",
+      });
+    }
+    if (first_name == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "First Name Is Mandatory.",
+      });
+    }
+    // if (!REGEXP.USER.first_name.test(first_name)) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "First Name Is Invalid.",
+    //   });
+    // }
+    if (last_name == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Last Name Is Mandatory.",
+      });
+    }
+    // if (!REGEXP.USER.last_name.test(last_name)) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Last Name Is Invalid.",
+    //   });
+    // }
+    if (user_email == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "User Email Is Mandatory.",
+      });
+    }
+    if (!REGEXP.USER.user_email.test(user_email)) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "User Email Is Invalid.",
+      });
+    }
+    if (password == undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Password Is Mandatory.",
+      });
+    }
+    if (!REGEXP.USER.password.test(password)) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "Password Is Invalid.",
+      });
+    }
+
+    // if (mobile !== undefined && !REGEXP.extension.mobile.test(mobile)) {
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Mobile Is Invalid.",
+    //   });
+    // }
+
+    if (user_custom_msg === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "user_custom_msg Is Mandatory.",
+      });
+    }
+    if (user_image === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "user_image Is Mandatory.",
+      });
+    }
+
+    if (country === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "country Is Mandatory.",
+      });
+    }
+    if (user_type === undefined) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "user type Is Mandatory.",
+      });
+    }
+
+    if (!REGEXP.USER.user_type.test(user_type)) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "user type Is Invalid.",
+      });
+    }
+
+    const emailCheck: any = await user.findOne({
+      user_email: user_email.toLowerCase(),
+      is_deleted: 0,
     });
-    return;
-  }
 
-  let get_company_pstn:any = null;
-if(pstn_number !== undefined && user_type !== CONSTANT.ROLE.SUB_ADMIN){
-  get_company_pstn = await PSTNNumber.findOne({
-    _id: pstn_number,
-    is_deleted: 0,
-  });
+    if (emailCheck) {
+      return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+        success: 0,
+        message: "User Email Is Already Exist.",
+      });
+    }
 
-  if (!get_company_pstn) {
-    return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-      success: 0,
-      message: "PSTN Number Not Found.",
-    });
-  }
-}
+    if (user_extension !== undefined) {
+      let check_extension: any = await user.findOne({
+        is_deleted: 0,
+        user_extension: user_extension,
+        cid: company_details._id,
+      });
 
-
-  let check_extension_limit:any = await company.findById({
-    _id:cid
-  })
-
-  let get_subadmin_role:any = await role.find({
-    $or:[
-      {type:CONSTANT.ROLE.SUB_ADMIN},
-      {type:CONSTANT.ROLE.ADMIN}
-    ],
-  }).distinct("_id")
-  
-  let get_total_extantion:any = await user.find({
-    cid:cid,
-    is_deleted:0,
-    role:{$nin:get_subadmin_role}
-  }).countDocuments()
-
-  // if(check_extension_limit.extension_count == get_total_extantion || get_total_extantion > check_extension_limit.extension_count){
-  //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
-  //     success: 0,
-  //     message: "Extension Creation Limit is Over",
-  //   });
-  // }
-
-  let create_add_obj: any = {
-    cid,
-    pstn_number:pstn_number !== undefined ? pstn_number : null,
-    first_name,
-    last_name,
-    password,
-    user_image,
-    user_custom_msg,
-    user_extension,
-    user_email: user_email.toLowerCase(),
-    mobile:mobile !== undefined ? mobile : "",
-    country,
-    role: userRole._id,
-    last_updated_user: user_detail?.uid,
-    user_record,
-  };
-  if(user_type !== CONSTANT.ROLE.SUB_ADMIN){
-    try {
-      const random_password = Array.from({ length: 15 }, () =>
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".charAt(
-          Math.floor(Math.random() * 77)
-        )
-      ).join("");
-  
-      let api_config = {
-        method: "put",
-        maxBodyLength: Infinity,
-        url: config.PBX_API.EXTENSION.ADD,
-        auth: config.PBX_API.AUTH,
-        data: {
-          extension: user_extension,
-          user: user_extension,
-          extension_password: random_password,
-          outbound_caller_id_name: first_name + " " + last_name,
-          outbound_caller_id_number: pstn_number !== undefined ?  get_company_pstn?.destination : user_extension,
-          effective_caller_id_name: first_name + " " + last_name,
-          effective_caller_id_number:  pstn_number !== undefined ? get_company_pstn?.destination : user_extension,
-          max_registrations: "5",
-          limit_max: "5",
-          user_record: user_record ? "true" : "false",
-          account_code: company_details.domain_name,
-          domain: company_details?.domain_uuid,
-          context: company_details.domain_name,
-          extension_enabled: "true",
-          description: "",
-        },
-      };
-      //console.log(api_config)
-      const data: any = await axios.request(api_config);
-      //console.log(data?.data);
-      if (data?.data?.id && data?.data?.msg) {
-        create_add_obj.extension_uuid = data?.data?.id;
-  
-        const CreatedUser = await user.create(create_add_obj);
-
-        try {
-          let get_emptdetail_tmp:any = await getsmtpDetail();
-          let get_email_content:any = await email.findOne({
-            email_type:1
-          })
-
-          if(get_email_content !== null && Object.keys(get_emptdetail_tmp).length > 0){
-            let user_name_tmp:any = first_name +" "+ last_name
-            let email_aadress:any = CreatedUser.user_email
-            let replace_name:any = get_email_content.message.replace("{{Username}}",user_name_tmp)
-            let replace_email = replace_name.replace("{{Email}}",email_aadress)
-            let replace_password = replace_email.replace("{{Password}}",password)
-           
-            //console.log("replace_pass",replace_pass)
-              let notification_obj:any = {
-                host:get_emptdetail_tmp.mail_host,
-                port:get_emptdetail_tmp.port,
-                username:get_emptdetail_tmp.auth_user,
-                password:get_emptdetail_tmp.auth_password,
-                from:get_email_content.from,
-                to:CreatedUser.user_email,
-                subject:get_email_content.subject,
-                html:replace_password,
-                title:get_email_content.email_title
-              }
-              if(get_emptdetail_tmp.sendgrid_auth){
-                sendMailSendGrid(notification_obj,get_emptdetail_tmp.is_auth,get_emptdetail_tmp.sendgrid_token)
-              }else{
-                sendMail(notification_obj,get_emptdetail_tmp.is_auth);
-              }
-          }
-        } catch (error) {
-          //console.log("Error in sending Email for new Enterprise creation :",error);
-        }
-  
-        let select_type_data: any = {
-          select_name: first_name + " " + last_name,
-          select_extension: user_extension,
-          select_id: CreatedUser?._id,
-        };
-  
-        let destination_action: any = [
-          {
-            destination_app: "transfer",
-            destination_data: `${user_extension} XML ${company_details?.domain_name}`,
-          },
-        ];
-        if(pstn_number){
-          try {
-            let api_config1 = {
-              method: "put",
-              maxBodyLength: Infinity,
-              url: config.PBX_API.PSTN.UPDATE,
-              auth: config.PBX_API.AUTH,
-              data: {
-                domain: company_details?.domain_uuid,
-                type: get_company_pstn?.type,
-                user: get_company_pstn?.user,
-                destination: get_company_pstn?.destination,
-                caller_id_name: get_company_pstn?.caller_id_name,
-                caller_id_number: get_company_pstn?.caller_id_number,
-                destination_condition: get_company_pstn?.destination_condition,
-                destination_action,
-                description: get_company_pstn?.description,
-                destination_enabled:
-                  get_company_pstn?.destination_enabled == true ? "true" : "false",
-                destination_id: get_company_pstn?.pstn_uuid,
-              },
-            };
-            //console.log("pstn_number update",api_config1)
-            const data1: any = await axios.request(api_config1);
-    
-            if (data1) {
-              await PSTNNumber.findByIdAndUpdate(
-                {
-                  _id: pstn_number,
-                  cid,
-                },
-                {
-                  isassigned: 1,
-                  assigend_extensionId: CreatedUser._id,
-                  last_updated_user: user_detail?.uid,
-                  destination_action,
-                  select_type_data,
-                  select_type: 3,
-                  select_type_uuid: data?.data?.id,
-                },
-                {
-                  runValidators: true,
-                }
-              );
-            }
-          } catch (error) {
-            return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-              success: 0,
-              message: "Failed To add pstn number",
-            });
-          }
-        }
-        return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-          success: 1,
-          message: "User created successfully",
-          data: CreatedUser,
+      if (check_extension) {
+        return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+          success: 0,
+          message: "Extension Number Already Exist.",
         });
       }
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: data?.data?.message,
-      });
-    } catch (error: any) {
-      return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
-        success: 0,
-        message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
-      });
     }
-  }else{
-    create_add_obj.user_extension = ""
-    create_add_obj.pstn_number = null
-    const CreatedUser_SubAdmin = await user.create(create_add_obj);
 
-    try {
-      let get_emptdetail_tmp:any = await getsmtpDetail();
-      let get_email_content:any = await email.findOne({
-        email_type:3
-      })
+    let userRole = await role.findOne({ type: user_type });
 
-      if(get_email_content !== null && Object.keys(get_emptdetail_tmp).length > 0){
-        let user_name_tmp:any = first_name +" "+ last_name
-        let email_aadress:any = CreatedUser_SubAdmin.user_email
-        let replace_name:any = get_email_content.message.replace("{{CustomerName}}",user_name_tmp)
-        let replace_email = replace_name.replace("{{CustomerEmail}}",email_aadress)
-        let replace_password = replace_email.replace("{{CustomerPass}}",password)
-       
-        //console.log("replace_pass",replace_pass)
-          let notification_obj:any = {
-            host:get_emptdetail_tmp.mail_host,
-            port:get_emptdetail_tmp.port,
-            username:get_emptdetail_tmp.auth_user,
-            password:get_emptdetail_tmp.auth_password,
-            from:get_email_content.from,
-            to:CreatedUser_SubAdmin.user_email,
-            subject:get_email_content.subject,
-            html:replace_password,
-            title:get_email_content.email_title
-          }
-        sendMail(notification_obj,get_emptdetail_tmp.is_auth);
+    if (!userRole) {
+      res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: "Role is incorrect",
+      });
+      return;
+    }
+
+    let get_company_pstn: any = null;
+    if (pstn_number !== undefined && user_type !== CONSTANT.ROLE.SUB_ADMIN) {
+      get_company_pstn = await PSTNNumber.findOne({
+        _id: pstn_number,
+        is_deleted: 0,
+      });
+
+      if (!get_company_pstn) {
+        return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+          success: 0,
+          message: "PSTN Number Not Found.",
+        });
       }
-    } catch (error) {
-      //console.log("Error in sending Email for new Enterprise creation :",error);
     }
-    return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
-      success: 1,
-      message: "User created successfully",
-      data: CreatedUser_SubAdmin,
+
+    let check_extension_limit: any = await company.findById({
+      _id: cid,
     });
-  } 
+
+    let get_subadmin_role: any = await role
+      .find({
+        $or: [{ type: CONSTANT.ROLE.SUB_ADMIN }, { type: CONSTANT.ROLE.ADMIN }],
+      })
+      .distinct("_id");
+
+    let get_total_extantion: any = await user
+      .find({
+        cid: cid,
+        is_deleted: 0,
+        role: { $nin: get_subadmin_role },
+      })
+      .countDocuments();
+
+    // if(check_extension_limit.extension_count == get_total_extantion || get_total_extantion > check_extension_limit.extension_count){
+    //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
+    //     success: 0,
+    //     message: "Extension Creation Limit is Over",
+    //   });
+    // }
+
+    let create_add_obj: any = {
+      cid,
+      pstn_number: pstn_number !== undefined ? pstn_number : null,
+      first_name,
+      last_name,
+      password,
+      user_image,
+      user_custom_msg,
+      user_extension,
+      user_email: user_email.toLowerCase(),
+      mobile: mobile !== undefined ? mobile : "",
+      country,
+      role: userRole._id,
+      last_updated_user: user_detail?.uid,
+      user_record,
+    };
+    if (user_type !== CONSTANT.ROLE.SUB_ADMIN) {
+      try {
+        const random_password = Array.from({ length: 15 }, () =>
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".charAt(
+            Math.floor(Math.random() * 77)
+          )
+        ).join("");
+
+        let api_config = {
+          method: "put",
+          maxBodyLength: Infinity,
+          url: config.PBX_API.EXTENSION.ADD,
+          auth: config.PBX_API.AUTH,
+          data: {
+            extension: user_extension,
+            user: user_extension,
+            extension_password: random_password,
+            outbound_caller_id_name: first_name + " " + last_name,
+            outbound_caller_id_number:
+              pstn_number !== undefined
+                ? get_company_pstn?.destination
+                : user_extension,
+            effective_caller_id_name: first_name + " " + last_name,
+            effective_caller_id_number:
+              pstn_number !== undefined
+                ? get_company_pstn?.destination
+                : user_extension,
+            max_registrations: "5",
+            limit_max: "5",
+            user_record: user_record ? "true" : "false",
+            account_code: company_details.domain_name,
+            domain: company_details?.domain_uuid,
+            context: company_details.domain_name,
+            extension_enabled: "true",
+            description: "",
+          },
+        };
+        //console.log(api_config)
+        const data: any = await axios.request(api_config);
+        //console.log(data?.data);
+        if (data?.data?.id && data?.data?.msg) {
+          create_add_obj.extension_uuid = data?.data?.id;
+
+          const CreatedUser = await user.create(create_add_obj);
+
+          try {
+            let get_emptdetail_tmp: any = await getsmtpDetail();
+            let get_email_content: any = await email.findOne({
+              email_type: 1,
+            });
+
+            if (
+              get_email_content !== null &&
+              Object.keys(get_emptdetail_tmp).length > 0
+            ) {
+              let user_name_tmp: any = first_name + " " + last_name;
+              let email_aadress: any = CreatedUser.user_email;
+              let replace_name: any = get_email_content.message.replace(
+                "{{Username}}",
+                user_name_tmp
+              );
+              let replace_email = replace_name.replace(
+                "{{Email}}",
+                email_aadress
+              );
+              let replace_password = replace_email.replace(
+                "{{Password}}",
+                password
+              );
+
+              //console.log("replace_pass",replace_pass)
+              let notification_obj: any = {
+                host: get_emptdetail_tmp.mail_host,
+                port: get_emptdetail_tmp.port,
+                username: get_emptdetail_tmp.auth_user,
+                password: get_emptdetail_tmp.auth_password,
+                from: get_email_content.from,
+                to: CreatedUser.user_email,
+                subject: get_email_content.subject,
+                html: replace_password,
+                title: get_email_content.email_title,
+              };
+              if (get_emptdetail_tmp.sendgrid_auth) {
+                sendMailSendGrid(
+                  notification_obj,
+                  get_emptdetail_tmp.is_auth,
+                  get_emptdetail_tmp.sendgrid_token
+                );
+              } else {
+                sendMail(notification_obj, get_emptdetail_tmp.is_auth);
+              }
+            }
+          } catch (error) {
+            //console.log("Error in sending Email for new Enterprise creation :",error);
+          }
+
+          let select_type_data: any = {
+            select_name: first_name + " " + last_name,
+            select_extension: user_extension,
+            select_id: CreatedUser?._id,
+          };
+
+          let destination_action: any = [
+            {
+              destination_app: "transfer",
+              destination_data: `${user_extension} XML ${company_details?.domain_name}`,
+            },
+          ];
+          if (pstn_number) {
+            try {
+              let api_config1 = {
+                method: "put",
+                maxBodyLength: Infinity,
+                url: config.PBX_API.PSTN.UPDATE,
+                auth: config.PBX_API.AUTH,
+                data: {
+                  domain: company_details?.domain_uuid,
+                  type: get_company_pstn?.type,
+                  user: get_company_pstn?.user,
+                  destination: get_company_pstn?.destination,
+                  caller_id_name: get_company_pstn?.caller_id_name,
+                  caller_id_number: get_company_pstn?.caller_id_number,
+                  destination_condition:
+                    get_company_pstn?.destination_condition,
+                  destination_action,
+                  description: get_company_pstn?.description,
+                  destination_enabled:
+                    get_company_pstn?.destination_enabled == true
+                      ? "true"
+                      : "false",
+                  destination_id: get_company_pstn?.pstn_uuid,
+                },
+              };
+              //console.log("pstn_number update",api_config1)
+              const data1: any = await axios.request(api_config1);
+
+              if (data1) {
+                await PSTNNumber.findByIdAndUpdate(
+                  {
+                    _id: pstn_number,
+                    cid,
+                  },
+                  {
+                    isassigned: 1,
+                    assigend_extensionId: CreatedUser._id,
+                    last_updated_user: user_detail?.uid,
+                    destination_action,
+                    select_type_data,
+                    select_type: 3,
+                    select_type_uuid: data?.data?.id,
+                  },
+                  {
+                    runValidators: true,
+                  }
+                );
+              }
+            } catch (error) {
+              return res
+                .status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER)
+                .send({
+                  success: 0,
+                  message: "Failed To add pstn number",
+                });
+            }
+          }
+          return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+            success: 1,
+            message: "User created successfully",
+            data: CreatedUser,
+          });
+        }
+        return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+          success: 0,
+          message: data?.data?.message,
+        });
+      } catch (error: any) {
+        return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
+          success: 0,
+          message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
+        });
+      }
+    } else {
+      create_add_obj.user_extension = "";
+      create_add_obj.pstn_number = null;
+      const CreatedUser_SubAdmin = await user.create(create_add_obj);
+
+      try {
+        let get_emptdetail_tmp: any = await getsmtpDetail();
+        let get_email_content: any = await email.findOne({
+          email_type: 3,
+        });
+
+        if (
+          get_email_content !== null &&
+          Object.keys(get_emptdetail_tmp).length > 0
+        ) {
+          let user_name_tmp: any = first_name + " " + last_name;
+          let email_aadress: any = CreatedUser_SubAdmin.user_email;
+          let replace_name: any = get_email_content.message.replace(
+            "{{CustomerName}}",
+            user_name_tmp
+          );
+          let replace_email = replace_name.replace(
+            "{{CustomerEmail}}",
+            email_aadress
+          );
+          let replace_password = replace_email.replace(
+            "{{CustomerPass}}",
+            password
+          );
+
+          //console.log("replace_pass",replace_pass)
+          let notification_obj: any = {
+            host: get_emptdetail_tmp.mail_host,
+            port: get_emptdetail_tmp.port,
+            username: get_emptdetail_tmp.auth_user,
+            password: get_emptdetail_tmp.auth_password,
+            from: get_email_content.from,
+            to: CreatedUser_SubAdmin.user_email,
+            subject: get_email_content.subject,
+            html: replace_password,
+            title: get_email_content.email_title,
+          };
+          sendMail(notification_obj, get_emptdetail_tmp.is_auth);
+        }
+      } catch (error) {
+        //console.log("Error in sending Email for new Enterprise creation :",error);
+      }
+      return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
+        success: 1,
+        message: "User created successfully",
+        data: CreatedUser_SubAdmin,
+      });
+    }
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
@@ -651,13 +693,12 @@ const getForwarduserlist = async (
     let create_uid_String = uid.toString();
     let create_cid = new mongoose.Types.ObjectId(cid);
 
-    let get_subadmin_role:any = await role.find({
-      $or:[
-        {type:CONSTANT.ROLE.SUB_ADMIN},
-        {type:CONSTANT.ROLE.ADMIN}
-      ]
-    }).distinct("_id")
-    
+    let get_subadmin_role: any = await role
+      .find({
+        $or: [{ type: CONSTANT.ROLE.SUB_ADMIN }, { type: CONSTANT.ROLE.ADMIN }],
+      })
+      .distinct("_id");
+
     let get_detail: any[] = await user
       .aggregate([
         {
@@ -666,7 +707,7 @@ const getForwarduserlist = async (
             cid: create_cid,
             is_deleted: 0,
             isguest: { $ne: 1 },
-            role:{$nin:get_subadmin_role}
+            role: { $nin: get_subadmin_role },
           },
         },
         {
@@ -1053,7 +1094,7 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
       mobile,
       country,
       user_record,
-      user_type
+      user_type,
     } = req.body;
 
     // if (user_extension == undefined) {
@@ -1063,7 +1104,10 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
     //   });
     // }
 
-    if (user_extension !== undefined && !REGEXP.extension.extension_number.test(user_extension)) {
+    if (
+      user_extension !== undefined &&
+      !REGEXP.extension.extension_number.test(user_extension)
+    ) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
         message: "Extension Number Is Invalid.",
@@ -1153,7 +1197,7 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
         message: "user type Is Mandatory.",
       });
     }
-  
+
     if (!REGEXP.USER.user_type.test(user_type)) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
@@ -1161,15 +1205,15 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    let userRole = await role.findOne({ type: user_type});
+    let userRole = await role.findOne({ type: user_type });
 
-  if (!userRole) {
-    res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
-      success: 0,
-      message: "Role is incorrect",
-    });
-    return;
-  }
+    if (!userRole) {
+      res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
+        success: 0,
+        message: "Role is incorrect",
+      });
+      return;
+    }
 
     let check_email: any = await user.findOne({
       _id: { $ne: uid },
@@ -1196,12 +1240,12 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    if(user_extension !== undefined){
+    if (user_extension !== undefined) {
       let check_extension: any = await user.findOne({
         _id: { $ne: uid },
         is_deleted: 0,
         user_extension: user_extension,
-        cid:cid._id
+        cid: cid._id,
       });
 
       if (check_extension) {
@@ -1210,15 +1254,14 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
           message: "Extension Number Already Exist.",
         });
       }
-  }
+    }
 
     let old_user_details: any = await user.findById({
       _id: uid,
     });
-    
 
     let get_company_pstn: any = null;
-    if (pstn_number !== undefined && user_type !== CONSTANT.ROLE.SUB_ADMIN ) {
+    if (pstn_number !== undefined && user_type !== CONSTANT.ROLE.SUB_ADMIN) {
       get_company_pstn = await PSTNNumber.findOne({
         _id: pstn_number,
         is_deleted: 0,
@@ -1230,7 +1273,7 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
           message: "PSTN Number Not Found.",
         });
       }
-      if(old_user_details.pstn_number !== null){
+      if (old_user_details.pstn_number !== null) {
         await PSTNNumber.findByIdAndUpdate(
           {
             _id: old_user_details.pstn_number,
@@ -1249,7 +1292,7 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
         );
       }
     }
-    
+
     let update_extantion_obj: any = {
       pstn_number: pstn_number !== undefined ? pstn_number : null,
       first_name,
@@ -1258,7 +1301,7 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
       user_image,
       user_custom_msg,
       user_email: user_email.toLowerCase(),
-      mobile:mobile !== undefined ? mobile : "",
+      mobile: mobile !== undefined ? mobile : "",
       country,
       last_updated_user: user_detail?.uid,
       user_record,
@@ -1276,9 +1319,15 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
         user: user_extension,
         extension_password: password,
         outbound_caller_id_name: first_name + " " + last_name,
-        outbound_caller_id_number: pstn_number !== undefined ?  get_company_pstn?.destination : user_extension,
+        outbound_caller_id_number:
+          pstn_number !== undefined
+            ? get_company_pstn?.destination
+            : user_extension,
         effective_caller_id_name: first_name + " " + last_name,
-        effective_caller_id_number: pstn_number !== undefined ? get_company_pstn?.destination : user_extension,
+        effective_caller_id_number:
+          pstn_number !== undefined
+            ? get_company_pstn?.destination
+            : user_extension,
         max_registrations: "5",
         limit_max: "5",
         user_record: user_record ? "true" : "false",
@@ -1291,12 +1340,11 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     let post: any;
-    if(user_type !== CONSTANT.ROLE.SUB_ADMIN){
+    if (user_type !== CONSTANT.ROLE.SUB_ADMIN) {
       try {
         const data: any = await axios.request(api_config);
-  
+
         if (data) {
-  
           post = await user.findByIdAndUpdate(
             {
               _id: uid,
@@ -1318,15 +1366,15 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
         select_extension: user_extension,
         select_id: uid,
       };
-  
+
       let destination_action: any = [
         {
           destination_app: "transfer",
           destination_data: `${user_extension} XML ${cid?.domain_name}`,
         },
       ];
-  
-      if(pstn_number !== undefined){
+
+      if (pstn_number !== undefined) {
         try {
           let api_config1 = {
             method: "put",
@@ -1344,7 +1392,9 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
               destination_action,
               description: get_company_pstn?.description,
               destination_enabled:
-              get_company_pstn?.destination_enabled == true ? "true" : "false",
+                get_company_pstn?.destination_enabled == true
+                  ? "true"
+                  : "false",
               destination_id: get_company_pstn?.pstn_uuid,
             },
           };
@@ -1377,8 +1427,8 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
           });
         }
       }
-    }else{
-      update_extantion_obj.pstn_number = null
+    } else {
+      update_extantion_obj.pstn_number = null;
       post = await user.findByIdAndUpdate(
         {
           _id: uid,
@@ -1389,14 +1439,13 @@ const EditUser = async (req: Request, res: Response, next: NextFunction) => {
         }
       );
     }
-    
+
     return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
       message: "Extension update successfully",
     });
-
   } catch (error) {
-    console.log("error",error)
+    console.log("error", error);
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
       message: config.RESPONSE.MESSAGE.INTERNAL_SERVER,
@@ -1454,21 +1503,11 @@ const DeleteUser = async (req: Request, res: Response, next: NextFunction) => {
     const data: any = await axios.request(api_config);
 
     if (data) {
-      const post = await user.findByIdAndUpdate(
-        {
-          _id: uid,
-        },
-        {
-          is_deleted: 1,
-          last_updated_user: user_detail?.uid,
-        },
-        {
-          runValidators: true,
-        }
-      );
+      const post = await user.findByIdAndDelete({
+        _id: uid,
+      });
 
-      if(post?.pstn_number !== null){
-
+      if (post?.pstn_number !== null) {
         await PSTNNumber.findByIdAndUpdate(
           {
             _id: post?.pstn_number,
@@ -1532,14 +1571,16 @@ const GetUserListByCompany = async (
 
     let cid: any = user_detail?.cid;
 
-    let userRole = await role.findOne({ type:{$in:[1,4]} }).distinct("_id")
+    let userRole = await role
+      .findOne({ type: { $in: [1, 4] } })
+      .distinct("_id");
 
     let find_query: { [key: string]: any } = {};
     if (search) {
       find_query = {
         cid,
         is_deleted: 0,
-        role:{$in:userRole},
+        role: { $in: userRole },
         $or: [
           {
             first_name: {
@@ -1571,7 +1612,7 @@ const GetUserListByCompany = async (
       find_query = {
         cid,
         is_deleted: 0,
-        role:{$in:userRole},
+        role: { $in: userRole },
       };
     }
 
@@ -1641,95 +1682,94 @@ const GetUserDetailsByID = async (
       });
     }
 
-      let user_data: any = await user.aggregate([
-        {
-          $match: { _id: new mongoose.Types.ObjectId(uid) }
+    let user_data: any = await user.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(uid) },
+      },
+      {
+        $lookup: {
+          from: "pstn_numbers",
+          localField: "pstn_number",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                destination: 1,
+              },
+            },
+          ],
+          as: "pstn_number",
         },
-        {
-          $lookup: {
-            from: "pstn_numbers",  
-            localField: "pstn_number", 
-            foreignField: "_id",
-            pipeline:[
-              {
-              $project:{
-                _id:1,
-                destination:1
-              }
-            } 
-            ],
-            as: "pstn_number"
-          }
+      },
+      {
+        $unwind: {
+          path: "$pstn_number",
+          preserveNullAndEmptyArrays: true,
         },
-        {
-          $unwind: {
-            path: "$pstn_number",
-            preserveNullAndEmptyArrays: true
-          }
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "role",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                type: 1,
+              },
+            },
+          ],
+          as: "role_data",
         },
-        {
-          $lookup: {
-            from: "roles",  
-            localField: "role", 
-            foreignField: "_id",
-            pipeline:[
-              {
-              $project:{
-                _id:1,
-                type:1
-              }
-            } 
-            ],
-            as: "role_data"
-          }
+      },
+      {
+        $unwind: {
+          path: "$role_data",
+          preserveNullAndEmptyArrays: true,
         },
-        {
-          $unwind: {
-            path: "$role_data",
-            preserveNullAndEmptyArrays: true
-          }
+      },
+      {
+        $addFields: {
+          pstn_number: { $ifNull: ["$pstn_number", null] },
+          role: { $ifNull: ["$role_data", null] },
         },
-        {
-          $addFields: {
-            pstn_number: { $ifNull: ["$pstn_number", null] },
-            role:{ $ifNull: ["$role_data", null] }
-          }
+      },
+      {
+        $project: {
+          pstn_number: 1,
+          _id: 1,
+          cid: 1,
+          last_updated_user: 1,
+          extension_uuid: 1,
+          first_name: 1,
+          last_name: 1,
+          password: 1,
+          user_image: 1,
+          is_deleted: 1,
+          user_custome_msg: 1,
+          is_online: 1,
+          last_seen: 1,
+          user_devices: 1,
+          user_extension: 1,
+          user_email: 1,
+          conversation_deleted_users: 1,
+          role: 1,
+          mobile: 1,
+          country: 1,
+          user_record: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          __v: 1,
         },
-        {
-          $project: {
-            pstn_number: 1,
-            _id: 1,
-            cid:1,
-            last_updated_user:1,
-            extension_uuid:1,
-            first_name:1,
-            last_name:1,
-            password:1,
-            user_image:1,
-            is_deleted:1,
-            user_custome_msg:1,
-            is_online:1,
-            last_seen:1,
-            user_devices:1,
-            user_extension:1,
-            user_email:1,
-            conversation_deleted_users:1,
-            role:1,
-            mobile:1,
-            country:1,
-            user_record:1,
-            createdAt:1,
-            updatedAt:1,
-            __v:1
-          }
-        }
-      ]);
+      },
+    ]);
 
-     
     return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
       success: 1,
       message: "User Detail",
-      data: user_data[0]
+      data: user_data[0],
     });
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
@@ -1758,26 +1798,26 @@ const GetExtensionListByCompany = async (
     const extensionList = await user.aggregate([
       {
         $lookup: {
-          from: "roles", 
+          from: "roles",
           localField: "role",
           foreignField: "_id",
-          as: "roleDetails"
-        }
+          as: "roleDetails",
+        },
       },
       {
         $match: {
-          "roleDetails.type":1,
+          "roleDetails.type": 1,
           cid: cid,
-          is_deleted: 0
-        }
+          is_deleted: 0,
+        },
       },
       {
         $project: {
-          cid:1,
-          user_extension:1,
-          _id:1
-        }
-      }
+          cid: 1,
+          user_extension: 1,
+          _id: 1,
+        },
+      },
     ]);
 
     res.send({
@@ -1785,7 +1825,6 @@ const GetExtensionListByCompany = async (
       message: "Extension List",
       usersData: extensionList,
     });
-
   } catch (error) {
     return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
       success: 0,
@@ -1802,5 +1841,5 @@ export default {
   DeleteUser,
   GetUserListByCompany,
   GetUserDetailsByID,
-  GetExtensionListByCompany
+  GetExtensionListByCompany,
 };

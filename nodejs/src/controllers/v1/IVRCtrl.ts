@@ -50,7 +50,10 @@ const createIVR = async (req: Request, res: Response, next: NextFunction) => {
 
     let cid: any = user_detail?.cid;
 
-    let company_details: any = await company.findOne({ _id: cid, is_deleted: 0 });
+    let company_details: any = await company.findOne({
+      _id: cid,
+      is_deleted: 0,
+    });
     if (!company_details) {
       return res.status(404).send({
         status: 0,
@@ -58,9 +61,9 @@ const createIVR = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    let ivrCount = await IVR.find({cid:cid, is_deleted: 0 }).countDocuments()
-    
-    if(company_details?.ivr_count === ivrCount){
+    let ivrCount = await IVR.find({ cid: cid, is_deleted: 0 }).countDocuments();
+
+    if (company_details?.ivr_count === ivrCount) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
         success: 0,
         message: `You can't create more than ${company_details?.ivr_count} IVRs`,
@@ -235,8 +238,6 @@ const createIVR = async (req: Request, res: Response, next: NextFunction) => {
         message: "Valid IVR Menu Options are mandatory.",
       });
     }
-
-    
 
     ivr_menu_option.forEach((option, index) => {
       if (
@@ -737,11 +738,7 @@ const deleteIVR = async (req: Request, res: Response, next: NextFunction) => {
         });
       }
 
-      await IVR.findByIdAndUpdate(
-        id,
-        { is_deleted: 1, last_updated_user: user_detail?.uid },
-        { runValidators: true }
-      );
+      await IVR.deleteOne(id);
 
       await pstn_number.updateOne(
         {

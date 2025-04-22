@@ -16,7 +16,11 @@ const toBoolean = (value: any) => {
   return undefined;
 };
 
-const createConferference = async (req: Request, res: Response, next: NextFunction) => {
+const createConferference = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -30,7 +34,10 @@ const createConferference = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
-    let company_details: any = await company.findOne({ _id: cid, is_deleted: 0 });
+    let company_details: any = await company.findOne({
+      _id: cid,
+      is_deleted: 0,
+    });
     if (!company_details) {
       return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
         success: 0,
@@ -38,7 +45,9 @@ const createConferference = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
-    let conferenceCount = await conferncers.find({ cid: cid, is_deleted: 0 }).countDocuments();
+    let conferenceCount = await conferncers
+      .find({ cid: cid, is_deleted: 0 })
+      .countDocuments();
 
     if (company_details?.conference_count === conferenceCount) {
       return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
@@ -81,7 +90,9 @@ const createConferference = async (req: Request, res: Response, next: NextFuncti
         message: "conference_description is Mandatory",
       });
     }
-    if (!REGEXP.conference.conference_description.test(conference_description)) {
+    if (
+      !REGEXP.conference.conference_description.test(conference_description)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "conference_description is Invalid",
@@ -230,7 +241,11 @@ const createConferference = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-const editConferference = async (req: Request, res: Response, next: NextFunction) => {
+const editConferference = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     const token = await get_token(req);
@@ -285,7 +300,9 @@ const editConferference = async (req: Request, res: Response, next: NextFunction
         message: "conference_description is Mandatory",
       });
     }
-    if (!REGEXP.conference.conference_description.test(conference_description)) {
+    if (
+      !REGEXP.conference.conference_description.test(conference_description)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "conference_description is Invalid",
@@ -453,7 +470,11 @@ const editConferference = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-const deleteConference = async (req: Request, res: Response, next: NextFunction) => {
+const deleteConference = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -494,19 +515,9 @@ const deleteConference = async (req: Request, res: Response, next: NextFunction)
       const data: any = await axios.request(api_config);
 
       if (data) {
-        const updated_data: any = await conferncers.findByIdAndUpdate(
-          {
-            _id: conference_id,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
+        await conferncers.deleteOne({
+          _id: conference_id,
+        });
 
         await pstn_number.updateOne(
           {
@@ -544,7 +555,11 @@ const deleteConference = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-const conferenceGetById = async (req: Request, res: Response, next: NextFunction) => {
+const conferenceGetById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -591,7 +606,11 @@ const conferenceGetById = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-const conferenceList = async (req: Request, res: Response, next: NextFunction) => {
+const conferenceList = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
 
@@ -674,7 +693,11 @@ const conferenceList = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-const getConferenceProfile = async (req: Request, res: Response, next: NextFunction) => {
+const getConferenceProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let api_config = {
       method: "get",

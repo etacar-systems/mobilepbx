@@ -30,7 +30,7 @@ const getTimeConditionList = async (
     let page: any = data?.page;
     let size: any = data?.size;
     let search: any = data?.search?.toString();
-    let type: Number = data?.type
+    let type: Number = data?.type;
     console.log("dataadas", type);
 
     if (!page) return (page = 1);
@@ -71,7 +71,7 @@ const getTimeConditionList = async (
       find_query = {
         is_deleted: 0,
         cid: cid,
-        type: type
+        type: type,
       };
     }
     const ListData = await TimeCondition.find(find_query)
@@ -121,7 +121,6 @@ const addTimeCondition = async (
       timecondition_data,
     } = req.body;
     console.log("role from frontend", type);
-
 
     const requiredFields = {
       name: "Name",
@@ -236,23 +235,42 @@ const editTimeCondition = async (
       dialplan_action,
       dialplan_anti_action,
       timecondition_data,
-      type
+      type,
     } = req.body;
 
     const monthMap: any = {
-      January: 1, February: 2, March: 3, April: 4, May: 5, June: 6,
-      July: 7, August: 8, September: 9, October: 10, November: 11, December: 12
+      January: 1,
+      February: 2,
+      March: 3,
+      April: 4,
+      May: 5,
+      June: 6,
+      July: 7,
+      August: 8,
+      September: 9,
+      October: 10,
+      November: 11,
+      December: 12,
     };
 
     const dayMap: any = {
-      Sunday: 1, Monday: 2, Tuesday: 3, Wednesday: 4, Thursday: 5, Friday: 6, Saturday: 7
+      Sunday: 1,
+      Monday: 2,
+      Tuesday: 3,
+      Wednesday: 4,
+      Thursday: 5,
+      Friday: 6,
+      Saturday: 7,
     };
 
     timecondition_data = timecondition_data.map((item: any) => {
       let [val1, val2] = item?.dialplan_detail_data?.split("-") || [];
 
       // Check if both values are either months or weekdays
-      if ((val1 in monthMap && val2 in monthMap) || (val1 in dayMap && val2 in dayMap)) {
+      if (
+        (val1 in monthMap && val2 in monthMap) ||
+        (val1 in dayMap && val2 in dayMap)
+      ) {
         val1 = monthMap[val1] || dayMap[val1];
         val2 = monthMap[val2] || dayMap[val2];
 
@@ -353,9 +371,7 @@ const editTimeCondition = async (
         },
       };
       const responseData = await axios.request(api_config);
-      if (
-        responseData?.data?.msg === "Time Condition Updated Successfully"
-      ) {
+      if (responseData?.data?.msg === "Time Condition Updated Successfully") {
         const result = await TimeCondition.findByIdAndUpdate(
           time_condition_id,
           {
@@ -439,11 +455,7 @@ const deleteTimeCondition = async (
         });
       }
 
-      await TimeCondition.findByIdAndUpdate(
-        id,
-        { is_deleted: 1, last_updated_user: user_detail?.uid },
-        { runValidators: true }
-      );
+      await TimeCondition.deleteOne(id);
 
       await pstn_number.updateOne(
         {
@@ -518,7 +530,7 @@ const getTimeConditionById = async (
       message: "Time Condition fetch successfully.",
       data: resultObj,
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 
 // NEW
@@ -546,8 +558,8 @@ const getTimeConditionOption = async (
       domain_id: domain_uuid,
       extension: user_extension,
       type: type,
-      is_deleted: 0
-    })
+      is_deleted: 0,
+    });
 
     // if (!mongoose.Types.ObjectId.isValid(id)) {
     //   return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).send({
@@ -569,7 +581,7 @@ const getTimeConditionOption = async (
       message: "Time Condition fetch successfully.",
       data: resultObj,
     });
-  } catch (error) { }
+  } catch (error) {}
 };
 
 export default {

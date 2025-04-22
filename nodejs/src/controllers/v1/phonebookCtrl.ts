@@ -42,7 +42,11 @@ const addPhonebookData = async (
       });
     }
 
-    if (last_name !== undefined && last_name !== "" && !REGEXP.phonebook.last_name.test(last_name)) {
+    if (
+      last_name !== undefined &&
+      last_name !== "" &&
+      !REGEXP.phonebook.last_name.test(last_name)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Last name Is Invalid.",
@@ -63,21 +67,33 @@ const addPhonebookData = async (
       });
     }
 
-    if (mobile_number !== undefined && mobile_number !== "" && !REGEXP.phonebook.mobile.test(mobile_number)) {
+    if (
+      mobile_number !== undefined &&
+      mobile_number !== "" &&
+      !REGEXP.phonebook.mobile.test(mobile_number)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Mobile number Is Invalid.",
       });
     }
 
-    if (company !== undefined && company !== "" && !REGEXP.phonebook.company.test(company)) {
+    if (
+      company !== undefined &&
+      company !== "" &&
+      !REGEXP.phonebook.company.test(company)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Company Is Invalid.",
       });
     }
 
-    if (position !== undefined && position !== "" && !REGEXP.phonebook.position.test(position)) {
+    if (
+      position !== undefined &&
+      position !== "" &&
+      !REGEXP.phonebook.position.test(position)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Position Is Invalid.",
@@ -90,7 +106,7 @@ const addPhonebookData = async (
       mobile_number: mobile_number,
       company: company,
       position: position,
-      cid:cid
+      cid: cid,
     };
 
     const dataAdd = await phonebook.create(newObject);
@@ -142,7 +158,11 @@ const editPhonebookData = async (
       });
     }
 
-    if (last_name !== undefined && last_name !== "" && !REGEXP.phonebook.last_name.test(last_name)) {
+    if (
+      last_name !== undefined &&
+      last_name !== "" &&
+      !REGEXP.phonebook.last_name.test(last_name)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Last name Is Invalid.",
@@ -163,21 +183,33 @@ const editPhonebookData = async (
       });
     }
 
-    if (mobile_number !== undefined && mobile_number !== "" && !REGEXP.phonebook.mobile.test(mobile_number)) {
+    if (
+      mobile_number !== undefined &&
+      mobile_number !== "" &&
+      !REGEXP.phonebook.mobile.test(mobile_number)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Mobile number Is Invalid.",
       });
     }
 
-    if (company !== undefined && company !== ""  && !REGEXP.phonebook.company.test(company)) {
+    if (
+      company !== undefined &&
+      company !== "" &&
+      !REGEXP.phonebook.company.test(company)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Company Is Invalid.",
       });
     }
 
-    if (position !== undefined && position !== ""  && !REGEXP.phonebook.position.test(position)) {
+    if (
+      position !== undefined &&
+      position !== "" &&
+      !REGEXP.phonebook.position.test(position)
+    ) {
       return res.status(400).send({
         success: 0,
         message: "Position Is Invalid.",
@@ -191,7 +223,7 @@ const editPhonebookData = async (
       company: company,
       position: position,
     };
-    
+
     const dataAdd = await phonebook.findByIdAndUpdate(
       {
         _id: phonebook_id,
@@ -238,7 +270,7 @@ const getPhonrbookRecord = async (
     if (search) {
       find_query = {
         is_deleted: 0,
-        cid:cid,
+        cid: cid,
         $or: [
           {
             first_name: {
@@ -281,7 +313,7 @@ const getPhonrbookRecord = async (
     } else {
       find_query = {
         is_deleted: 0,
-        cid:cid
+        cid: cid,
       };
     }
     console.dir(find_query, { depth: null });
@@ -349,17 +381,9 @@ const deletePhonrbookData = async (
       });
     }
 
-    const deleteData = await phonebook.findByIdAndUpdate(
-      {
-        _id: phonebook_id,
-      },
-      {
-        is_deleted: 1,
-      },
-      {
-        runValidators: true,
-      }
-    );
+    await phonebook.deleteOne({
+      _id: phonebook_id,
+    });
 
     return res.status(200).send({
       success: 1,

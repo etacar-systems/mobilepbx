@@ -1444,7 +1444,6 @@ const DeleteCompany = async (req: Request, res: Response, next: NextFunction) =>
 
     let companyDetail: any = await company.findOne({
       _id: cid,
-      is_deleted: 0,
     });
 
     if (!companyDetail) {
@@ -1465,8 +1464,8 @@ const DeleteCompany = async (req: Request, res: Response, next: NextFunction) =>
       const data: any = await axios.request(api_config);
 
       if (data?.data?.message) {
-        const updated_data: any = await company.deleteMany({
-          _id: cid,
+        await company.deleteMany({
+          _id: companyDetail._id,
         });
         const post = await user.deleteMany({
           cid: cid,

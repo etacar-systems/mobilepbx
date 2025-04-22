@@ -570,15 +570,9 @@ const DeleteRocrd = async (req: Request, res: Response, next: NextFunction) => {
     const data: any = await axios.request(config);
 
     if (data) {
-      const post = await extension.findByIdAndUpdate(
+      const post = await extension.findByIdAndDelete(
         {
           _id: extension_id,
-        },
-        {
-          is_deleted: 1,
-        },
-        {
-          runValidators: true,
         }
       );
       return res.status(200).send({

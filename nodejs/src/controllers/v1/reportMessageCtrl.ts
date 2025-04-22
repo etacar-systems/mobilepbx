@@ -113,16 +113,9 @@ const ReportMessgeRemove = async (
   try {
     var report_id = req.params.report_id;
     if (report_id) {
-      await message_report.findByIdAndUpdate(
+      await message_report.deleteOne(
         {
           _id: report_id,
-        },
-        {
-          isRemoved: 1,
-        },
-        {
-          new: true,
-          runValidators: true,
         }
       );
       return res.status(200).send({

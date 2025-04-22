@@ -31,8 +31,8 @@ class Utils {
 
   // Calculate the sum for each type
   static formatDuration = (seconds) => {
-    // seconds = Math.max(seconds || 0, 0); // Ensure non-negative
-    // seconds = Math.round(seconds); // Round seconds to nearest integer
+    seconds = Math.max(seconds || 0, 0); // Ensure non-negative
+    seconds = Math.round(seconds); // Round seconds to nearest integer
     let hrs = Math.floor(seconds / 3600);
     let mins = Math.floor((seconds % 3600) / 60);
     let secs = seconds % 60;

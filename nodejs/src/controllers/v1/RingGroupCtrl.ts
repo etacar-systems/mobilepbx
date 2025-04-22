@@ -577,16 +577,9 @@ const DeleteRecord = async (req: Request, res: Response, next: NextFunction) => 
     };
     const data: any = await axios.request(api_config);
 
-    const post = await ring_group.findByIdAndUpdate(
+    await ring_group.deleteOne(
       {
         _id: ring_group_id,
-      },
-      {
-        is_deleted: 1,
-        last_updated_user: user_detail?.uid,
-      },
-      {
-        runValidators: true,
       }
     );
 

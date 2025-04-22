@@ -8,7 +8,11 @@ import User_token from "../../helper/helper";
 import { config } from "../../config";
 import axios from "axios";
 
-const addFirewallData = async (req: Request, res: Response, next: NextFunction) => {
+const addFirewallData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -50,7 +54,8 @@ const addFirewallData = async (req: Request, res: Response, next: NextFunction) 
         if (!node.node_type || !node.node_cidr || !node.node_description) {
           return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
             success: 0,
-            message: "Each node must include node_type, node_cidr, and node_description.",
+            message:
+              "Each node must include node_type, node_cidr, and node_description.",
           });
         }
       }
@@ -132,7 +137,11 @@ const addFirewallData = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-const editFirewallData = async (req: Request, res: Response, next: NextFunction) => {
+const editFirewallData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -175,7 +184,8 @@ const editFirewallData = async (req: Request, res: Response, next: NextFunction)
         if (!node.node_type || !node.node_cidr || !node.node_description) {
           return res.status(config.RESPONSE.STATUS_CODE.INVALID_FIELD).json({
             success: 0,
-            message: "Each node must include node_type, node_cidr, and node_description.",
+            message:
+              "Each node must include node_type, node_cidr, and node_description.",
           });
         }
       }
@@ -282,7 +292,11 @@ const editFirewallData = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-const getFirewallRecord = async (req: Request, res: Response, next: NextFunction) => {
+const getFirewallRecord = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     let page: any = data.page;
@@ -337,7 +351,9 @@ const getFirewallRecord = async (req: Request, res: Response, next: NextFunction
       .limit(limit)
       .skip(skip);
 
-    const total_msg_count: any = await firewall.find(find_query).countDocuments();
+    const total_msg_count: any = await firewall
+      .find(find_query)
+      .countDocuments();
 
     const total_pages: any = Math.ceil(total_msg_count / size);
 
@@ -358,7 +374,11 @@ const getFirewallRecord = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-const deleteFirewallData = async (req: Request, res: Response, next: NextFunction) => {
+const deleteFirewallData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = await get_token(req);
     const user_detail = await User_token(token);
@@ -401,18 +421,9 @@ const deleteFirewallData = async (req: Request, res: Response, next: NextFunctio
       const data: any = await axios.request(api_config);
 
       if (data) {
-        const deleteData = await firewall.findByIdAndUpdate(
-          {
-            _id: firewall_id,
-          },
-          {
-            is_deleted: 1,
-            last_updated_user: user_detail?.uid,
-          },
-          {
-            runValidators: true,
-          }
-        );
+        await firewall.deleteOne({
+          _id: firewall_id,
+        });
 
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
@@ -435,7 +446,11 @@ const deleteFirewallData = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-const getFirewallDataById = async (req: Request, res: Response, next: NextFunction) => {
+const getFirewallDataById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let data: any = req.body;
     let firewall_id: any = data.firewall_id;

@@ -388,7 +388,7 @@ const EditNewRecord = async (
 
         return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
           success: 1,
-          message:"Dialplan Outbound Updated Successfully !!",
+          message: "Dialplan Outbound Updated Successfully !!",
         });
       } else {
         return res.status(config.RESPONSE.STATUS_CODE.INTERNAL_SERVER).send({
@@ -458,18 +458,9 @@ const DeleteRecord = async (
     const data: any = await axios.request(api_config);
 
     if (data) {
-      const post = await outbound_route.findByIdAndUpdate(
-        {
-          _id: outbound_id,
-        },
-        {
-          is_deleted: 1,
-          last_updated_user: uid,
-        },
-        {
-          runValidators: true,
-        }
-      );
+      await outbound_route.deleteOne({
+        _id: outbound_id,
+      });
 
       return res.status(config.RESPONSE.STATUS_CODE.SUCCESS).send({
         success: 1,
