@@ -27,7 +27,7 @@
         $start_date = (isset($data->start_date)) ? $data->start_date : '' ;
         $end_date = (isset($data->end_date)) ? $data->end_date : '' ;
 
-        $result = $report->fetch_ring_group($con,$domain_uuid,$start_date,$end_date);
+        $result = $report->fetch_ring_group($con, $domain_uuid, $start_date, $end_date);
 
         if (pg_num_rows($result) > 0 ) {
 

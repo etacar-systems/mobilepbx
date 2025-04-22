@@ -261,7 +261,7 @@ export default function DashboardDesign() {
 
           <MissedCalls />
 
-          <ExtensionsDetails data={data?.data || []} />
+          <ExtensionsDetails ringGroups={data?.ring_group || []} extensions={data?.data || []} />
 
           <div className="row clearfix">
             <CallsDetails

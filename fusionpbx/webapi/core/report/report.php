@@ -716,7 +716,8 @@
                 $sql .= " voicemail_message \n";
                 $sql .= " from v_xml_cdr \n";
 
-                $sql .= " where domain_uuid = '".$domain_uuid."' and module_name = 'ring_group' \n";
+                $sql .= " where domain_uuid = '".$domain_uuid."' ";
+                // and module_name = 'ring_group' \n";
                 $sql .= $sql_date_range;
                 $sql .= ") as c \n";
                 $sql .= "where \n";
@@ -726,7 +727,6 @@
                 $sql .= "group by r.ring_group_uuid, r.ring_group_extension, r.ring_group_name \n";
                 $sql .= "order by ring_group_extension asc \n";
 
-            
             $result = pg_query($con, $sql);
 
             return $result;

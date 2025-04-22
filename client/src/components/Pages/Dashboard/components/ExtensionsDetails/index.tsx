@@ -6,10 +6,11 @@ import RingsGroupDashboard from "../../../RingsGroupDashboard";
 import { IGetDashboardStatisticOutput } from "../../../../../requests/queries";
 
 interface IExtensionsDetailsProps {
-  data?: NonNullable<IGetDashboardStatisticOutput>["data"];
+  extensions?: NonNullable<IGetDashboardStatisticOutput>["data"];
+  ringGroups?: NonNullable<IGetDashboardStatisticOutput>["ring_group"];
 }
 
-export const ExtensionsDetails = ({ data }: IExtensionsDetailsProps) => {
+export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetailsProps) => {
   const { t } = useTranslation();
   // @ts-ignore
   const allListeners = useSelector((state) => state.allListeners.allListeners);
@@ -17,7 +18,7 @@ export const ExtensionsDetails = ({ data }: IExtensionsDetailsProps) => {
   return (
     <div className="row clearfix">
       <Col lg={4} md={12} sm={12} className="col-name p-0">
-        <RingsGroupDashboard />
+        <RingsGroupDashboard ringGroups={ringGroups} />
       </Col>
 
       <Col lg={8} md={12} className="col-name p-0">
@@ -29,7 +30,7 @@ export const ExtensionsDetails = ({ data }: IExtensionsDetailsProps) => {
             <div className="table-responsive new-table-responsive">
               <table className=" table-news table m-0 ">
                 <tbody>
-                  {data?.map((val) => {
+                  {extensions?.map((val) => {
                     if (val) {
                       const localCalls = Number(val?.local_calls) || 0;
                       const answered = Number(val?.answered) || 0;

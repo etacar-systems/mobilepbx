@@ -11,7 +11,6 @@ import { authorizedProcedure } from "./procedure";
 import company from "../../../models/company";
 
 import { callMetricsQueryDto, statisticQueryDto } from "./dashboard.dto";
-import { number } from "zod";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -62,6 +61,26 @@ interface IStatistic {
   };
 }
 
+interface IRingGroup {
+  answer_percentage: number;
+  answered: string;
+  avg_call_length: any;
+  busy: string;
+  calld_percentage: number;
+  inbound_calls: string;
+  inbound_duration: any;
+  missed: string;
+  missed_percentage: number;
+  no_answer: string;
+  outbound_calls: string;
+  outbound_duration: any;
+  response_seconds: any;
+  ring_group_extension: string;
+  ring_group_name: string;
+  ring_group_uuid: string;
+  total_calls: string;
+}
+
 export const dashboardRouter = router({
   statistic: authorizedProcedure
     .input(statisticQueryDto)
@@ -76,6 +95,16 @@ export const dashboardRouter = router({
           throw new TRPCError({ code: "FORBIDDEN" });
         }
 
+        const start_date = dayjs
+          .utc(startDate + " 00:00")
+          .utcOffset(dayjs().tz(timeZone).utcOffset() * -1)
+          .format("YYYY-MM-DD HH:mm");
+
+        const end_date = dayjs
+          .utc(endDate + " 24:00")
+          .utcOffset(dayjs().tz(timeZone).utcOffset() * -1)
+          .format("YYYY-MM-DD HH:mm");
+
         const api_config = {
           method: "post",
           maxBodyLength: Infinity,
@@ -83,23 +112,38 @@ export const dashboardRouter = router({
           auth: config.PBX_API.AUTH,
           data: {
             domain_id: companyDetail.domain_uuid,
-            // extension: user.role === "agent" ? user.extension_uuid : undefined,
-            start_date: dayjs
-              .utc(startDate + " 00:00")
-              .utcOffset(dayjs().tz(timeZone).utcOffset() * -1)
-              .format("YYYY-MM-DD HH:mm"),
-            end_date: dayjs
-              .utc(endDate + " 24:00")
-              .utcOffset(dayjs().tz(timeZone).utcOffset() * -1)
-              .format("YYYY-MM-DD HH:mm"),
+            start_date,
+            end_date,
             time_zone: timeZone,
+          },
+        };
+
+        let api_ring_groups = {
+          method: "post",
+          maxBodyLength: Infinity,
+          url: config.PBX_API.DASHBOARD.GET_RINGGROUP_CALL,
+          auth: config.PBX_API.AUTH,
+          data: {
+            domain_id: companyDetail.domain_uuid,
+            start_date,
+            end_date,
           },
         };
 
         try {
           const reports_api_data = await axios.request<IStatistic>(api_config);
-          if (reports_api_data.status === 200) {
-            return reports_api_data.data;
+          const ring_group_api_data = await axios.request<{ data: Array<IRingGroup> }>(api_ring_groups);
+
+          if (
+            reports_api_data.status === 200 &&
+            ring_group_api_data.status === 200
+          ) {
+            return {
+              ...reports_api_data.data,
+              ring_group: ring_group_api_data.data.data,
+            };
+          } else {
+            throw new TRPCError({ code: "BAD_GATEWAY" });
           }
         } catch (e) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
@@ -188,12 +232,12 @@ export const dashboardRouter = router({
             missed_calls: string;
             total_calls: string;
             total_response_time: string;
-          }>,
+          }>;
           total_counts: {
-            average_waiting_time: number,
-            total_calls: number,
-            total_missed: number
-          },
+            average_waiting_time: number;
+            total_calls: number;
+            total_missed: number;
+          };
         }>(api_config);
         if (missedCalls.status === 200) {
           return missedCalls.data;

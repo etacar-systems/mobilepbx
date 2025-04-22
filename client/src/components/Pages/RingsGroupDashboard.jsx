@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import ProgressCircle from "./Dashboard/CustomeChart";
 import { ReactComponent as Usersicon } from "../../Assets/Icon/users-svgrepo.svg";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import RingGroupModal from "../Modal/RingGroupModal";
 import Cookies from "js-cookie";
 import {
@@ -14,15 +14,8 @@ import {
 import { toast } from "react-toastify";
 import config from "../../config";
 import { TypeInnumber } from "../ConstantConfig";
-function RingsGroupDashboard() {
-  const data = useSelector(
-    (state) =>
-      state.getapiall.getapiall.dashboardData?.DashboardDetail
-        ?.ring_group_detail?.ring_group_list
-  );
-  const userdata = useSelector(
-    (state) => state?.postapiAll?.postapiall?.Extension?.usersData
-  );
+
+function RingsGroupDashboard({ ringGroups }) {
   const { t } = useTranslation();
   let Token = Cookies.get("Token");
   const dispatch = useDispatch();
@@ -103,7 +96,7 @@ function RingsGroupDashboard() {
         )
       );
     }
-  }, [filteredList, userdata, editsvalues]);
+  }, [filteredList, filteredData, editsvalues]);
 
   useEffect(() => {
     if (show && editsvalues) {
@@ -342,7 +335,7 @@ function RingsGroupDashboard() {
         <div className="table-responsive">
           <table className=" table-news table m-0 ">
             <tbody>
-              {data?.map((ele, index) => {
+              {ringGroups?.map((ele) => {
                 return (
                   <>
                     <tr
