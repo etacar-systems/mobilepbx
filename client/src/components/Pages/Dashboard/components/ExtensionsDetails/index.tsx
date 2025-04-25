@@ -2,7 +2,7 @@ import { Badge, Card, Col, ProgressBar } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import RingsGroupDashboard from "../../../RingsGroupDashboard";
+import { RingGroups } from "./RingGroups";
 import { IGetDashboardStatisticOutput } from "../../../../../requests/queries";
 
 interface IExtensionsDetailsProps {
@@ -18,7 +18,7 @@ export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetails
   return (
     <div className="row clearfix">
       <Col lg={4} md={12} sm={12} className="col-name p-0">
-        <RingsGroupDashboard ringGroups={ringGroups} />
+        <RingGroups ringGroups={ringGroups} />
       </Col>
 
       <Col lg={8} md={12} className="col-name p-0">

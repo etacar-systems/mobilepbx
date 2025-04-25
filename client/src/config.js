@@ -8,12 +8,7 @@ const config = {
     WAV: "wav",
   },
   RING_GROUP: {
-    ADD: BASE_URL + "/ringgroup/add",
-    UPDATE: BASE_URL + "/ringgroup/edit",
-    DELETE: BASE_URL + "/ringgroup/delete",
     LIST: BASE_URL + "/ringgroup/list",
-    DETAIL: BASE_URL + "/ringgroup/detail",
-    EXTENSION: BASE_URL + "/extension/list",
   },
   RING_GROUP_KEY: {
     ADD: "ringgroup_add",

@@ -13,6 +13,7 @@ interface ICustomDropDownProps<
   labelKey: keyof T;
   value?: string | number;
   disabled?: boolean;
+  placeHolder?: string;
   sort?: boolean;
   onChange?: any;
 }
@@ -25,6 +26,7 @@ export const DropDown = ({
   name,
   value,
   disabled,
+  placeHolder,
   onChange: onChangeExternal,
 }: ICustomDropDownProps) => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -79,7 +81,7 @@ export const DropDown = ({
           <div className="elipsisDrodownshow">
             {(options?.find((val) => val[valueKey] === value) || {})[
               labelKey
-            ] || ""}
+            ] || placeHolder || ""}
           </div>
           <div>
             <ArrowIcon />

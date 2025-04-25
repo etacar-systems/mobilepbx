@@ -338,6 +338,25 @@
             }
         }
 
-       
+        public function fetch_namelist($con, $id) {
+            $query = "SELECT conference_center_extension as extension, conference_center_uuid as uuid, conference_center_name as name, 'transfer' as app, concat(conference_center_extension, ' XML ',v_domains.domain_name) AS data FROM public.v_conference_centers
+            JOIN public.v_domains
+            ON v_domains.domain_uuid = v_conference_centers.domain_uuid
+            WHERE v_conference_centers.domain_uuid = '$id' 
+            ORDER BY conference_center_extension ASC";
+            $result = pg_query($con, $query);
+            
+            if (pg_num_rows($result) > 0 ) {
+
+                $arr = array();
+                while ($row = pg_fetch_assoc($result)) {
+                    $arr[] = $row;
+                }
+
+                return $arr;
+            }else{
+                return array();
+            }
+        }
     }
 ?>

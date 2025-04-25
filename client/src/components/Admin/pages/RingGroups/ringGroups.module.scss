@@ -1,0 +1,19 @@
+.page {
+  padding: 2px 11px;
+  height: 100%;
+
+  &__tableWrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 32px - 36px);
+    max-height: 870px;
+  }
+
+  &__pagination {
+    margin-top: auto;
+  }
+}
+
+.clear_fix {
+  right: 0.75rem !important;
+}

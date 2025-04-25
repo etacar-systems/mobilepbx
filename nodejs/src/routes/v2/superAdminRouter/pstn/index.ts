@@ -326,7 +326,7 @@ export const pstnRouter = router({
           "") as string,
       })),
       total_page_count: Math.ceil((pages[0]?.totalGroups || 0) / input.limit),
-      pstn_total_counts: pages[0]?.totalGroups || 0,
+      pstn_total_counts: (pages[0]?.totalGroups || 0) as number,
     };
   }),
   detail: superAdminProcedure

@@ -403,5 +403,26 @@
                 return;
             }
         }
+
+        public function fetch_namelist($con, $id) {
+            $query = "SELECT extension as extension, extension_uuid as uuid, extension as name, 'transfer' as app, concat(extension, ' XML ',v_domains.domain_name) AS data FROM public.v_extensions
+            JOIN public.v_domains
+            ON v_domains.domain_uuid = v_extensions.domain_uuid
+            WHERE v_extensions.domain_uuid = '$id' 
+            ORDER BY extension ASC";
+            $result = pg_query($con, $query);
+            
+            if (pg_num_rows($result) > 0 ) {
+
+                $arr = array();
+                while ($row = pg_fetch_assoc($result)) {
+                    $arr[] = $row;
+                }
+
+                return $arr;
+            }else{
+                return array();
+            }
+        }
     }
 ?>

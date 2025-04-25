@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactComponent as Cross } from "../Assets/Icon/cross_for_search.svg";
-export const ClearSearch = ({ clearSearch, number }) => {
+export const ClearSearch = ({ clearSearch, number, className }) => {
   return (
     <Cross
       style={{
@@ -10,7 +10,7 @@ export const ClearSearch = ({ clearSearch, number }) => {
         cursor: "pointer",
       }}
       onClick={clearSearch}
-      className={number ? "for_search_number" : "for_search_all"}
+      className={className ? className : number ? "for_search_number" : "for_search_all"}
     />
   );
 };

@@ -226,5 +226,26 @@
             }
         }
 
+        public function fetch_namelist($con, $id) {
+            $query = "SELECT recording_filename as recording_filename, recording_uuid  as uuid, recording_name as name, 'lua' as app, concat('streamfile.lua', recording_filename) AS data FROM public.v_recordings
+            JOIN public.v_domains
+            ON v_domains.domain_uuid = v_recordings.domain_uuid
+            WHERE v_recordings.domain_uuid = '$id' 
+            ORDER BY recording_filename ASC";
+            $result = pg_query($con, $query);
+            
+            if (pg_num_rows($result) > 0 ) {
+
+                $arr = array();
+                while ($row = pg_fetch_assoc($result)) {
+                    $arr[] = $row;
+                }
+
+                return $arr;
+            }else{
+                return array();
+            }
+        }
+
     }
 ?>

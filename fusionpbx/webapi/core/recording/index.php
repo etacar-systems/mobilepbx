@@ -3,8 +3,6 @@
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
 
-
-
     require("../../config/config.php");
     require("recording.php");
 

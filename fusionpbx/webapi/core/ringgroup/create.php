@@ -49,8 +49,9 @@
     		$uuid1 = Uuid::uuid4();
     		$dialplanuuid=$uuid1->toString();
             if ($ring_group_enabled == "true" || $ring_group_enabled == "false") {
-                $ringGroup->post($con, $uuidringGroup, $data, $id,$dialplanuuid);
-    			$ringGroup->create_dialplan($con, $uuidringGroup, $data, $id,$dialplanuuid);
+                $result = $ringGroup->post($con, $uuidringGroup, $data, $id,$dialplanuuid);
+
+                $ringGroup->create_dialplan($con, $uuidringGroup, $data, $id,$dialplanuuid);
 
             } else {
                 echo json_encode([

@@ -2,7 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { useTranslation } from "react-i18next";
 
-import { ReactComponent as Closeicon } from "../../../../../../Assets/Icon/close.svg";
+import { ReactComponent as Closeicon } from "../../../Assets/Icon/close.svg";
 
 interface IDeleteModalProps {
   close: () => void;

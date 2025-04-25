@@ -23,7 +23,7 @@
 
     if ($json_response['msg'] == 'true') {
         if (isset($_GET['id'])) {
-            $result = $ringGroup->fetch_by_id($con, $_GET['id']);
+            $result = $ringGroup->fetch_by_id($con, $_GET['id'], $_GET['domain_uuid']);
 
             if (pg_num_rows($result) > 0 ) {
 

@@ -20,7 +20,7 @@ import ForgotPassword from "./components/Pages/ForgotPassword";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Extension from "./components/Admin/Extension";
-import Groups from "./components/Admin/Groups";
+// import Groups from "./components/Admin/Groups";
 import Conference from "./components/Admin/Conference";
 import IVR from "./components/Admin/IVR";
 import TimeCondition from "./components/Admin/TimeCondition";
@@ -127,6 +127,7 @@ const SupportPage = lazy(() => import("./components/Pages/Support"));
 const PSTNNumbersPage = lazy(() =>
   import("./components/Admin/pages/PSTNNumbers")
 );
+const RingGroups = lazy(() => import("./components/Admin/pages/RingGroups"));
 
 function App() {
   // console.log = console.warn = console.error = () => {};
@@ -203,7 +204,9 @@ function App() {
               path="/ring"
               element={
                 <Protected>
-                  <Groups />
+                  <Suspense fallback={<></>}>
+                    <RingGroups />
+                  </Suspense>
                 </Protected>
               }
             />

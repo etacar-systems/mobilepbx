@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { RouterInputs } from "../../contexts";
 import { trpc } from "../../utils/trpc";
 
@@ -11,6 +13,13 @@ export const useListPSTNNumber = ({
   sort_column,
   sort_direction,
 }: IListPSTNNumberInput) => {
+  const [pages, setPages] = useState<{
+    total_page_count: number;
+    pstn_total_counts: number;
+  }>({
+    total_page_count: 0,
+    pstn_total_counts: 0,
+  });
   const { data, isFetching } = trpc.superAdmin.pstn.list.useQuery(
     {
       page,
@@ -21,7 +30,6 @@ export const useListPSTNNumber = ({
       sort_direction,
     },
     {
-      // enabled: !!cid,
       refetchInterval: false,
       refetchOnMount: false,
       refetchIntervalInBackground: false,
@@ -32,8 +40,20 @@ export const useListPSTNNumber = ({
     }
   );
 
+  useEffect(() => {
+    if (!data?.total_page_count || !data?.pstn_total_counts) return;
+
+    setPages({
+      total_page_count: data.total_page_count,
+      pstn_total_counts: data.pstn_total_counts,
+    });
+  }, [pages, data?.total_page_count, data?.pstn_total_counts]);
+
   return {
     isFetching,
-    data,
+    data: {
+      ...(data || {}),
+      ...pages,
+    },
   };
 };

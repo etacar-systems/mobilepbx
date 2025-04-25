@@ -8,8 +8,6 @@ import { AdminHeader } from "../../AdminHeader";
 import {
   AddViewEditModal,
   SuccessModal,
-  DeleteModal,
-  SortArrows,
 } from "./components";
 import Paginationall from "../../../Pages/Paginationall";
 import Loader from "../../../Loader";
@@ -20,21 +18,21 @@ import {
   usePSTNDetails,
   useTrunksNames,
 } from "../../../../requests/queries";
-import { DropDown, Select } from "../../../shared";
-import { useQueryParams } from "../../../../hooks";
-
-import { ReactComponent as DeleteIcon } from "../../../../Assets/Icon/delete.svg";
-import { ReactComponent as EditIcon } from "../../../../Assets/Icon/edit.svg";
+import { DropDown, Select, SortArrows, DeleteModal } from "../../../shared";
+import { IQueryParamResult, useQueryParams } from "../../../../hooks";
 import { TPSTNNumberFormArgs } from "./components/AddViewEditModal/form.dto";
 import {
   ICreatePSTNNumberOutput,
   useCreatePSTNNumber,
   useDeletePSTNNumber,
+  useUpdatePSTNNumber,
 } from "../../../../requests/mutations";
 import config from "../../../../config";
 
+import { ReactComponent as DeleteIcon } from "../../../../Assets/Icon/delete.svg";
+import { ReactComponent as EditIcon } from "../../../../Assets/Icon/edit.svg";
+
 import styles from "./pstnNumbers.module.scss";
-import { useUpdatePSTNNumber } from "../../../../requests/mutations/updatePSTNNumber";
 
 export default function PSTNNumbersPage() {
   const { t } = useTranslation();
@@ -145,23 +143,34 @@ export default function PSTNNumbersPage() {
     del.set(undefined);
   }, [edit, del]);
 
-  const handleSearchChange = useMemo(() => {
-    const debounced = debounce((newSearch: string) => {
-      if (!newSearch.trim()) {
-        search.set(undefined);
-      } else {
-        search.set(newSearch);
-      }
-      page.set(1);
-    }, 300);
+  const handleSearchChange = useCallback(
+    debounce(
+      (
+        newSearch: string,
+        {
+          search,
+          page,
+        }: {
+          search: IQueryParamResult<undefined>;
+          page: IQueryParamResult<undefined>;
+        }
+      ) => {
+        if (!newSearch.trim()) {
+          search.set(undefined);
+        } else {
+          search.set(newSearch);
+        }
+        page.set(1);
+      },
+      300
+    ),
+    []
+  );
 
-    return debounced;
-  }, [page, search]);
-
-  const onSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
-    handleSearchChange(event.target.value);
-  };
+    handleSearchChange(event.target.value, { search, page });
+  }, [search, page, handleSearchChange]);
 
   const onSubmit = useCallback(
     (data: TPSTNNumberFormArgs) => {
@@ -213,87 +222,6 @@ export default function PSTNNumbersPage() {
       }
     );
   }, [deletePSTNNumber, del.value, handleClose, page, t]);
-  //   const datavalues = {
-  //     type: "inbound",
-  //     caller_id_name: "",
-  //     caller_id_number: "",
-  //     destination_condition: "",
-  //     cid: formData.Domain,
-  //     user: "",
-  //     description: "",
-  //     destination_enabled: true,
-  //     gateway_id: formData?.gateway_id,
-  //   };
-
-  //   // if (mode === "add") {
-  //   //   setsaveLoading(true);
-  //   //   const data = {
-  //   //     ...datavalues,
-  //   //     destination: formData.destination_number,
-  //   //     create_range: +Math.abs(formData.range - formData.destination_number),
-  //   //   };
-  //   //   dispatch(
-  //   //     postapiAll({
-  //   //       inputData: data,
-  //   //       Api: config.PSTN_NUMBER.ADD,
-  //   //       Token: Token,
-  //   //       urlof: config.PSTN_NUMBER_KEY.ADD,
-  //   //     })
-  //   //   ).then((res) => {
-  //   //     if (res.payload.response) {
-  //   //       setsaveLoading(false);
-  //   //       setModalData(res.payload.response);
-  //   //       setShowSuccessModal(true);
-  //   //       handleClose();
-  //   //       setsavedata(!savedata);
-  //   //       setCurrentPage(1);
-  //   //       setSearchterm("");
-  //   //     } else {
-  //   //       setsaveLoading(false);
-  //   //       toast.error(t(res.payload.error.message), {
-  //   //         autoClose: config.TOST_AUTO_CLOSE,
-  //   //       });
-  //   //     }
-  //   //   });
-  //   // } else {
-  //   //   console.log(formData, "formData");
-  //   //   setsaveLoading(true);
-  //   //   const data = {
-  //   //     ...datavalues,
-  //   //     destination: formData.Number.trim(""),
-  //   //     destination_number: formData.destination_number.trim(""),
-  //   //     range: formData.range,
-  //   //     pstn_id: formData.pstn_id,
-  //   //     pstn_range_uuid: EditId,
-  //   //   };
-  //   //   dispatch(
-  //   //     putapiall({
-  //   //       inputData: data,
-  //   //       Api: config.PSTN_NUMBER.EDIT,
-  //   //       Token: Token,
-  //   //       urlof: config.PSTN_NUMBER_KEY.EDIT,
-  //   //     })
-  //   //   ).then((res) => {
-  //   //     if (res.payload.response) {
-  //   //       setsaveLoading(false);
-  //   //       handleClose();
-  //   //       setsavedata(!savedata);
-  //   //       setCurrentPage(1);
-  //   //       setFormData("");
-  //   //       setSearchterm("");
-  //   //       toast.success(t(res.payload.response.message), {
-  //   //         autoClose: config.TOST_AUTO_CLOSE,
-  //   //       });
-  //   //     } else {
-  //   //       console.log(res, "res");
-  //   //       setsaveLoading(false);
-  //   //       toast.error(t(res?.payload?.error?.message), {
-  //   //         autoClose: config.TOST_AUTO_CLOSE,
-  //   //       });
-  //   //     }
-  //   //   });
-  //   // }
-  // };
 
   const sortFunctionFabric = useCallback(
     (columnName: "destination" | "trunk_name" | "company_name") => {
@@ -367,13 +295,12 @@ export default function PSTNNumbersPage() {
             <Form.Control
               type="text"
               height={38}
-              // onPaste={handlePaste}
               value={searchInput || ""}
               onChange={onSearchChange}
               className="search-bg new-search-add"
             />
             {search.value && (
-              <ClearSearch clearSearch={clearSearch} number={true} />
+              <ClearSearch clearSearch={clearSearch} number={true} className={undefined} />
             )}
 
             <div className="companyfilter">

@@ -696,8 +696,9 @@
                 $sql .= ") \n";
                 $sql .= "as total_calls \n";
 
-                $sql .= "from v_ring_groups as r, v_domains as d, \n";
-                $sql .= "( select \n";
+                $sql .= "from v_ring_groups as r \n";
+                $sql .= "JOIN v_domains AS d ON d.domain_uuid = r.domain_uuid \n";
+                $sql .= "LEFT JOIN LATERAL ( select \n";
                 $sql .= " domain_uuid, \n";
                 $sql .= " extension_uuid, \n";
                 $sql .= " caller_id_number, \n";
@@ -719,7 +720,7 @@
                 $sql .= " where domain_uuid = '".$domain_uuid."' ";
                 // and module_name = 'ring_group' \n";
                 $sql .= $sql_date_range;
-                $sql .= ") as c \n";
+                $sql .= ") as c ON true \n";
                 $sql .= "where \n";
                 $sql .= "d.domain_uuid = r.domain_uuid \n";
                 $sql .= " and r.domain_uuid = '".$domain_uuid."' \n";

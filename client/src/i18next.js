@@ -1883,6 +1883,7 @@ i18n
       },
       en: {
         translation: {
+          "Ring group with this extension already exist": "Ring group with this extension already exist",
           "Destination number must be between start and end digits long.":
             "Destination number must be between {{ start, number }} and {{ end, number }} digits long.",
           id: "id",
@@ -2681,7 +2682,7 @@ i18n
           Vacation: "Vacation",
           Other: "Other",
           "No transfer": "No transfer",
-          Extension: "Extensions",
+          // Extension: "Extensions",
           Group: "Group",
           Operator: "Operator",
           "Add new customer": "Add new customer",

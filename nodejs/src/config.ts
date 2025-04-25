@@ -56,21 +56,26 @@ export const config = {
     },
     RING_GROUP: {
       ADD: PBX_BASE_URL + "ringgroup/create.php",
+      DETAILS: PBX_BASE_URL + "ringgroup/fetch_ringgroup_by_id.php?id=",
+      DETAILS_BY_EXTENSION: PBX_BASE_URL + "ringgroup/by_extension.php?extension=",
       REMOVE: PBX_BASE_URL + "ringgroup/delete.php?id=",
       LIST: PBX_BASE_URL + "ringgroup/fetch_ringgroup_by_domain.php?id=",
       UPDATE: PBX_BASE_URL + "ringgroup/update.php",
+      NAMELIST: PBX_BASE_URL + "ringgroup/namelist.php",
     },
     IVR: {
       ADD: PBX_BASE_URL + "ivr/create.php",
       REMOVE: PBX_BASE_URL + "ivr/delete.php?id=",
       LIST: PBX_BASE_URL + "ivr/fetch_ivr_by_domain.php?id=",
       UPDATE: PBX_BASE_URL + "ivr/update.php",
+      NAMELIST: PBX_BASE_URL + "ivr/namelist.php",
     },
     EXTENSION: {
       ADD: PBX_BASE_URL + "extension/create.php",
       UPDATE: PBX_BASE_URL + "extension/update.php",
       DELETE: PBX_BASE_URL + "extension/delete.php",
       GET_BY_ID: PBX_BASE_URL + "extension/fetch_extension_by_id.php?id=",
+      NAMELIST: PBX_BASE_URL + "extension/namelist.php",
     },
     TIME_CONDITION: {
       ADD: PBX_BASE_URL + "timeconditions/create.php",
@@ -83,6 +88,7 @@ export const config = {
       REMOVE: PBX_BASE_URL + "conference/delete.php?id=",
       UPDATE: PBX_BASE_URL + "conference/update.php",
       PROFILE: PBX_BASE_URL + "conference/fetch_conference_profile.php",
+      NAMELIST: PBX_BASE_URL + "conference_center/namelist.php",
     },
     COMPANY: {
       ADD: PBX_BASE_URL + "domain/create.php",
@@ -99,6 +105,9 @@ export const config = {
       ADD: PBX_BASE_URL + "gateway/create.php",
       REMOVE: PBX_BASE_URL + "gateway/delete.php?id=",
       UPDATE: PBX_BASE_URL + "gateway/update.php",
+    },
+    DIALPLAN: {
+      NAMELIST: PBX_BASE_URL + "dialplan/namelist.php",
     },
     OUTBOUND_ROUTE: {
       ADD: PBX_BASE_URL + "dialplan_outbound/create.php",
@@ -120,6 +129,7 @@ export const config = {
     RECORDING: {
       GET: PBX_BASE_URL + "cdr/fetch_by_recordings.php?id=",
       GET_uuid: PBX_BASE_URL + "recording/fetch_recording_by_id.php?id=",
+      NAMELIST: PBX_BASE_URL + "recording/namelist.php",
     },
     DASHBOARD: {
       GET_REPORTS: PBX_BASE_URL + "report/index.php",

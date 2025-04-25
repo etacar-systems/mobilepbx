@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 import { dummyData } from "../DummyData";
 import config from "../../../config";
 import { getapiAll } from "../../../Redux/Reducers/ApiServices";
-import RingGroupModal from "../../Modal/RingGroupModal";
 import { useDashboardStatistic } from "../../../requests/queries";
 import {
   ChartCard,
@@ -44,21 +43,9 @@ export default function DashboardDesign() {
   const { t } = useTranslation();
 
   const [tableHight, setTableHight] = useState(window.innerHeight - 500);
-  const [show, setShow] = useState(false);
   const formatDate = (date: Date) => {
     return dayjs(date).format("YYYY-MM-DD");
   };
-
-  const [formData, setFormData] = useState({
-    ringgroup: "",
-    ringgroupdesc: "",
-    ringgroupphno: "",
-    ringgroupstgy: 0,
-    ringgroupremote: 0,
-    ringgroupendpnt: 0,
-  });
-  const [sliderValue, setSliderValue] = useState(0);
-  const [ringDropdown, setRingDropDown] = useState([]);
 
   const [selectType, setSelectType] = useState({
     id: "",
@@ -89,14 +76,6 @@ export default function DashboardDesign() {
     endDate: end.value as string,
   });
 
-  const [selectExtension, setSelectExtension] = useState({
-    app: "",
-    data: "",
-    display: "",
-  });
-  const [selectedValuesSecond, setSelectedValuesSecond] = useState([]);
-  const [filteredList, setFilteredList] = useState([]);
-  const [selectedValuesFirst, setSelectedValuesFirst] = useState([]);
   const [allDropdown, setAllDropDown] = useState({});
   const dispatch = useDispatch();
 
@@ -207,10 +186,6 @@ export default function DashboardDesign() {
     </tr>
   ));
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
   const handleComponentLoad = () => {
     setIsComponentLoaded(true);
   };
@@ -277,7 +252,7 @@ export default function DashboardDesign() {
           </div>
         </div>
       </Suspense>
-      {show && (
+      {/* {show && (
         // @ts-ignore
         <RingGroupModal
           ringDropdown={ringDropdown}
@@ -304,7 +279,7 @@ export default function DashboardDesign() {
           filteredList={filteredList}
           setFilteredList={setFilteredList}
         />
-      )}
+      )} */}
       {/* <CallDetailByIdPage /> */}
     </div>
   );

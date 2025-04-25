@@ -29,7 +29,7 @@
     if ($json_response['msg'] == 'true') {
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
             if (isset($_GET['id'])) {
-                $ringgroup->delete($con, $_GET['id']);
+                $ringgroup->delete($con, $_GET['id'], $_GET['domain_uuid']);
             }
         }
     } else {

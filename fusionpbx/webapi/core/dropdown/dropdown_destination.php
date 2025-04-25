@@ -38,7 +38,7 @@
             $response['ivr_menus'] = $this->get_ivrs($con, $id);
             $response['ring_groups'] = $this->get_ring_groups($con, $id);
             $response['extensions'] = $this->extensions($con, $id);
-	    $response['conference'] = $this->conference($con, $id);
+	        $response['conference'] = $this->conference($con, $id);
 			$response['recordings'] = $this->recordings($con, $id);
             $response['timeconditions'] = $this->timeconditions($con, $id);
 

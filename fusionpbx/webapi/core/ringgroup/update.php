@@ -43,12 +43,12 @@
 
             $ring_group_destinations = $data->ring_group_destinations;
 
-            $check_ext = validateExtension::validate($con,$extension,$domain,$ring_group_id);
+            $check_ext = validateExtension::validate($con, $extension, $domain, $ring_group_id);
 
             if(!isset($check_ext['app'])){
 
                 if ($ring_group_enabled == "true" || $ring_group_enabled == "false") {
-                    $ringGroup->update($con, $data,$id);
+                    $ringGroup->update($con, $data, $id);
                 } else {
                     echo json_encode([
                         "message" => "Ring Group Enabled Value Must be either True or False !!"

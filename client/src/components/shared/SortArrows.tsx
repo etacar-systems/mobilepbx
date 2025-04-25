@@ -1,5 +1,5 @@
-import { ReactComponent as UpArrow } from "../../../../../Assets/Icon/up-arrow.svg";
-import { ReactComponent as DownArrow } from "../../../../../Assets/Icon/down-arrow.svg";
+import { ReactComponent as UpArrow } from "../../Assets/Icon/up-arrow.svg";
+import { ReactComponent as DownArrow } from "../../Assets/Icon/down-arrow.svg";
 
 interface ISortArrowsProps {
   direction?: "asc" | "desc";

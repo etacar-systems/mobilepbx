@@ -40,12 +40,89 @@
             return $result;
         }
 
-        public function fetch_by_id($con, $id) {
-            $query = "SELECT * FROM public.v_ring_groups
+        public function fetch_by_id($con, $id, $domain_uuid) {
+            $query = "SELECT v_ring_groups.*, v_domains.*, array_agg(v_ring_group_destinations.destination_number) AS destinations,
+            CASE 
+                WHEN v_ring_groups.ring_group_strategy = 'sequence' THEN MAX(v_ring_group_destinations.destination_timeout) ELSE v_ring_groups.ring_group_call_timeout 
+            END AS duration,
+            CASE 
+                WHEN v_ring_groups.ring_group_timeout_data = concat('streamfile.lua', v_recordings.recording_filename) THEN 'recording'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_ivr_menus.ivr_menu_extension, ' XML ', v_domains.domain_name) THEN 'ivr'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(rd2.ring_group_extension, ' XML ', v_domains.domain_name) THEN 'ringGroup'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_extensions.extension, ' XML ', v_domains.domain_name) THEN 'extension'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_conference_centers.conference_center_extension, ' XML ', v_domains.domain_name) THEN 'conference'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_dialplans.dialplan_number, ' XML ', v_domains.domain_name) THEN 'dialplan'
+                ELSE NULL
+            END AS remote_no_answer_strategy,
+            CASE 
+                WHEN v_ring_groups.ring_group_timeout_data = concat('streamfile.lua', v_recordings.recording_filename) THEN v_recordings.recording_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_ivr_menus.ivr_menu_extension, ' XML ', v_domains.domain_name) THEN v_ivr_menus.ivr_menu_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(rd2.ring_group_extension, ' XML ', v_domains.domain_name) THEN rd2.ring_group_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_extensions.extension, ' XML ', v_domains.domain_name) THEN v_extensions.extension_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_conference_centers.conference_center_extension, ' XML ', v_domains.domain_name) THEN v_conference_centers.conference_center_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_dialplans.dialplan_number, ' XML ', v_domains.domain_name) THEN v_dialplans.dialplan_uuid
+                ELSE NULL
+            END AS endpoint_uuid
+            FROM public.v_ring_groups
             JOIN public.v_domains
             ON v_domains.domain_uuid = v_ring_groups.domain_uuid
-            WHERE v_ring_groups.ring_group_uuid = '$id'";
+            LEFT JOIN public.v_ring_group_destinations
+			ON v_ring_group_destinations.ring_group_uuid = v_ring_groups.ring_group_uuid
+
+            LEFT JOIN public.v_ring_groups rd2 ON v_ring_groups.ring_group_timeout_data = concat(rd2.ring_group_extension, ' XML ',v_domains.domain_name)
+            LEFT JOIN public.v_recordings ON v_ring_groups.ring_group_timeout_data = concat('streamfile.lua', v_recordings.recording_filename)
+            LEFT JOIN public.v_ivr_menus ON v_ring_groups.ring_group_timeout_data = concat(v_ivr_menus.ivr_menu_extension, ' XML ', v_domains.domain_name)
+            LEFT JOIN public.v_extensions ON v_ring_groups.ring_group_timeout_data = concat(v_extensions.extension, ' XML ', v_domains.domain_name)
+            LEFT JOIN public.v_conference_centers ON v_ring_groups.ring_group_timeout_data = concat(v_conference_centers.conference_center_extension, ' XML ', v_domains.domain_name)
+            LEFT JOIN public.v_dialplans ON v_ring_groups.ring_group_timeout_data = concat(v_dialplans.dialplan_number, ' XML ', v_domains.domain_name)
+
+            WHERE v_ring_groups.ring_group_uuid = '$id' AND v_ring_groups.domain_uuid = '$domain_uuid' 
+            GROUP BY v_domains.domain_uuid, v_ring_groups.ring_group_uuid, v_recordings.recording_filename, v_ivr_menus.ivr_menu_extension, v_ring_groups.ring_group_extension, v_extensions.extension, v_conference_centers.conference_center_extension, v_dialplans.dialplan_number, v_recordings.recording_uuid, v_ivr_menus.ivr_menu_uuid, v_extensions.extension_uuid, v_conference_centers.conference_center_uuid, v_dialplans.dialplan_uuid, rd2.ring_group_extension, rd2.ring_group_uuid";
             $result = pg_query($con, $query);
+
+            return $result;
+        }
+
+        public function fetch_by_extension($con, $extension, $domain_uuid) {
+            $query = "SELECT v_ring_groups.*, v_domains.*, array_agg(v_ring_group_destinations.destination_number) AS destinations,
+            CASE 
+                WHEN v_ring_groups.ring_group_strategy = 'sequence' THEN MAX(v_ring_group_destinations.destination_timeout) ELSE v_ring_groups.ring_group_call_timeout 
+            END AS duration,
+            CASE 
+                WHEN v_ring_groups.ring_group_timeout_data = concat('streamfile.lua', v_recordings.recording_filename) THEN 'recording'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_ivr_menus.ivr_menu_extension, ' XML ', v_domains.domain_name) THEN 'ivr'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(rd2.ring_group_extension, ' XML ', v_domains.domain_name) THEN 'ringGroup'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_extensions.extension, ' XML ', v_domains.domain_name) THEN 'extension'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_conference_centers.conference_center_extension, ' XML ', v_domains.domain_name) THEN 'conference'
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_dialplans.dialplan_number, ' XML ', v_domains.domain_name) THEN 'dialplan'
+                ELSE NULL
+            END AS remote_no_answer_strategy,
+            CASE 
+                WHEN v_ring_groups.ring_group_timeout_data = concat('streamfile.lua', v_recordings.recording_filename) THEN v_recordings.recording_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_ivr_menus.ivr_menu_extension, ' XML ', v_domains.domain_name) THEN v_ivr_menus.ivr_menu_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(rd2.ring_group_extension, ' XML ', v_domains.domain_name) THEN rd2.ring_group_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_extensions.extension, ' XML ', v_domains.domain_name) THEN v_extensions.extension_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_conference_centers.conference_center_extension, ' XML ', v_domains.domain_name) THEN v_conference_centers.conference_center_uuid
+                WHEN v_ring_groups.ring_group_timeout_data = concat(v_dialplans.dialplan_number, ' XML ', v_domains.domain_name) THEN v_dialplans.dialplan_uuid
+                ELSE NULL
+            END AS endpoint_uuid
+            FROM public.v_ring_groups
+            JOIN public.v_domains
+            ON v_domains.domain_uuid = v_ring_groups.domain_uuid
+            LEFT JOIN public.v_ring_group_destinations
+			ON v_ring_group_destinations.ring_group_uuid = v_ring_groups.ring_group_uuid
+
+            LEFT JOIN public.v_ring_groups rd2 ON v_ring_groups.ring_group_timeout_data = concat(rd2.ring_group_extension, ' XML ',v_domains.domain_name)
+            LEFT JOIN public.v_recordings ON v_ring_groups.ring_group_timeout_data = concat('streamfile.lua', v_recordings.recording_filename)
+            LEFT JOIN public.v_ivr_menus ON v_ring_groups.ring_group_timeout_data = concat(v_ivr_menus.ivr_menu_extension, ' XML ', v_domains.domain_name)
+            LEFT JOIN public.v_extensions ON v_ring_groups.ring_group_timeout_data = concat(v_extensions.extension, ' XML ', v_domains.domain_name)
+            LEFT JOIN public.v_conference_centers ON v_ring_groups.ring_group_timeout_data = concat(v_conference_centers.conference_center_extension, ' XML ', v_domains.domain_name)
+            LEFT JOIN public.v_dialplans ON v_ring_groups.ring_group_timeout_data = concat(v_dialplans.dialplan_number, ' XML ', v_domains.domain_name)
+
+            WHERE v_ring_groups.ring_group_extension = '$extension' AND v_ring_groups.domain_uuid = '$domain_uuid' 
+            GROUP BY v_domains.domain_uuid, v_ring_groups.ring_group_uuid, v_recordings.recording_filename, v_ivr_menus.ivr_menu_extension, v_ring_groups.ring_group_extension, v_extensions.extension, v_conference_centers.conference_center_extension, v_dialplans.dialplan_number, v_recordings.recording_uuid, v_ivr_menus.ivr_menu_uuid, v_extensions.extension_uuid, v_conference_centers.conference_center_uuid, v_dialplans.dialplan_uuid, rd2.ring_group_extension, rd2.ring_group_uuid";
+            $result = pg_query($con, $query);
+
             return $result;
         }
 
@@ -64,13 +141,51 @@
             return $result;
         }
 
-        public function fetch_by_domain($con, $id) {
-            $query = "SELECT * FROM public.v_ring_groups
-            JOIN public.v_domains
-            ON v_domains.domain_uuid = v_ring_groups.domain_uuid
-            WHERE v_ring_groups.domain_uuid = '$id'";
+        public function fetch_by_domain($con, $id, $limit, $page, $search, $sort_column, $sort_direction) {
+            $offset = ($page - 1) * $limit;
+            $query = "SELECT ring_group_description, ring_group_uuid, ring_group_extension, ring_group_name, ring_group_caller_id_number, insert_date FROM public.v_ring_groups
+            WHERE v_ring_groups.domain_uuid = '$id' "; 
+
+            $total_count_query = "SELECT count(*) FROM public.v_ring_groups
+                WHERE v_ring_groups.domain_uuid = '$id' ";
+
+            if ($search) {
+                $query .= "AND (ring_group_description ILIKE '%$search%' OR ring_group_extension ILIKE '%$search%' OR ring_group_name ILIKE '%$search%' OR ring_group_caller_id_number ILIKE '%$search%') ";
+                $total_count_query .= "AND (ring_group_description ILIKE '%$search%' OR ring_group_extension ILIKE '%$search%' OR ring_group_name ILIKE '%$search%' OR ring_group_caller_id_number ILIKE '%$search%') ";
+            }
+
+            $query .= "ORDER BY ";
+            if ($sort_column == 'name') {
+                $query .= "LOWER(ring_group_name) $sort_direction, ";
+            }
+
+            if ($sort_column == "description") {
+                $query .= "LOWER(ring_group_description) $sort_direction, ";
+            }
+
+            if ($sort_column == "phone_number") {
+                $query .= "ring_group_caller_id_number $sort_direction, ";
+            }
+
+            if ($sort_column == "extension") {
+                $query .= "LOWER(ring_group_extension) $sort_direction, ";
+            }
+
+            if ($sort_column == "date") {
+                $query .= "insert_date $sort_direction ";
+            } else {
+                $query .= "insert_date desc ";
+            }
+            
+            $query .= "LIMIT $limit 
+            OFFSET $offset";
             $result = pg_query($con, $query);
-            return $result;
+
+            $total_count_result = pg_query($con, $total_count_query);
+            return [
+                'result' => $result,
+                'total_count' => $total_count_result,
+            ];
         }
 
         public function post($con, $uuidringGroup, $data, $userID,$dialplanuuid) {
@@ -80,7 +195,7 @@
             $ring_group_greeting = $data->ring_group_greeting;
             $ring_group_timeout_app = $data->ring_group_timeout_app;
             $ring_group_timeout_data = $data->ring_group_timeout_data;
-            $ring_group_call_timeout = (strlen($data->ring_group_call_timeout) == 0) ? 30 : $data->ring_group_call_timeout;
+            $ring_group_call_timeout = (strlen($data->ring_group_call_timeout) == 0) ? 30 : (int)$data->ring_group_call_timeout;
             $ring_group_caller_id_name = $data->ring_group_caller_id_name;
             $ring_group_caller_id_number = $data->ring_group_caller_id_number;
             $ring_group_ringback = (strlen($data->ring_group_ringback) == 0) ? "\${us-ring}" : $data->ring_group_ringback;
@@ -128,11 +243,11 @@
             //$usRing = "\${us-ring}";
 
             // $userID = '3d7c90a5-3936-422a-8fac-4dbfbea35237';
-            $insertRingGroup = "INSERT INTO public.v_ring_groups (ring_group_uuid, domain_uuid, ring_group_name, ring_group_extension, ring_group_context, ring_group_call_timeout, ring_group_forward_enabled, ring_group_strategy, ring_group_ringback, ring_group_enabled, insert_user, ring_group_greeting,ring_group_timeout_app,ring_group_timeout_data, ring_group_caller_id_name, ring_group_caller_id_number, ring_group_call_forward_enabled,ring_group_follow_me_enabled,ring_group_missed_call_app, ring_group_missed_call_data, ring_group_forward_destination,ring_group_forward_toll_allow, ring_group_description,dialplan_uuid) VALUES ('$uuidringGroup', '$domain_id', '$name', '$extension', '$context', '$ring_group_call_timeout', '$ring_group_forward_enabled', '$ring_group_strategy', '$ring_group_ringback', '$ring_group_enabled', '$userID', '$ring_group_greeting', '$ring_group_timeout_app', '$ring_group_timeout_data', '$ring_group_caller_id_name','$ring_group_caller_id_number', '$ring_group_call_forward_enabled','$ring_group_follow_me_enabled','$ring_group_missed_call_app','$ring_group_missed_call_data','$ring_group_forward_destination', '$ring_group_forward_toll_allow', '$ring_group_description','$dialplanuuid')";
+            $insertRingGroup = "INSERT INTO public.v_ring_groups (ring_group_uuid, domain_uuid, ring_group_name, ring_group_extension, ring_group_context, ring_group_call_timeout, ring_group_forward_enabled, ring_group_strategy, ring_group_ringback, ring_group_enabled, insert_user, ring_group_greeting,ring_group_timeout_app,ring_group_timeout_data, ring_group_caller_id_name, ring_group_caller_id_number, ring_group_call_forward_enabled,ring_group_follow_me_enabled,ring_group_missed_call_app, ring_group_missed_call_data, ring_group_forward_destination,ring_group_forward_toll_allow, ring_group_description,dialplan_uuid, insert_date) 
+                                                          VALUES ('$uuidringGroup', '$domain_id', '$name', '$extension', '$context', '$ring_group_call_timeout', '$ring_group_forward_enabled', '$ring_group_strategy', '$ring_group_ringback', '$ring_group_enabled', '$userID', '$ring_group_greeting', '$ring_group_timeout_app', '$ring_group_timeout_data', '$ring_group_caller_id_name','$ring_group_caller_id_number', '$ring_group_call_forward_enabled','$ring_group_follow_me_enabled','$ring_group_missed_call_app','$ring_group_missed_call_data','$ring_group_forward_destination', '$ring_group_forward_toll_allow', '$ring_group_description','$dialplanuuid', CURRENT_TIMESTAMP)";
             $resultRingGroup = pg_query($con, $insertRingGroup);
             if ($resultRingGroup) {
 
-                
                 // start : 04/08/2024 : atul
                 $destination_array = array();
                 if(!empty($ring_group_destinations)){
@@ -144,8 +259,8 @@
                         $ring_group_id = $uuidringGroup;
                         $destination_number = $k->destination_number;
                         $destination_delay = $k->destination_delay;
-                        $destination_timeout = $k->destination_timeout;
-                        $destination_prompt = ($k->destination_prompt == 'NULL') ? 1 : $k->destination_prompt;
+                        $destination_timeout = (int)$k->destination_timeout;
+                        $destination_prompt = 'null';
                         $ringgroup_destination_enabled = $k->destination_enabled;
 
                         array_push($destination_array, array('destination_number'=>$destination_number,'ring_group_destination_uuid'=>$uuidRingGroupDestination));
@@ -227,7 +342,8 @@ public function create_dialplan($con,$uuidringGroup, $data, $userID, $dialplanuu
             }
 
             // $userID = '3d7c90a5-3936-422a-8fac-4dbfbea35237';
-            $insertRingGroupDestination = "INSERT INTO public.v_ring_group_destinations (ring_group_destination_uuid, ring_group_uuid, domain_uuid, destination_number, destination_delay, destination_timeout, destination_enabled, insert_user, destination_prompt) VALUES ('$uuidRingGroupDestination', '$ring_group_id', '$domain', '$destination_number', '$destination_delay', '$destination_timeout', '$ringGroupDestination_enabled', '$userID', '$destination_prompt')";
+            $insertRingGroupDestination = "INSERT INTO public.v_ring_group_destinations (ring_group_destination_uuid, ring_group_uuid, domain_uuid, destination_number, destination_delay, destination_timeout, destination_enabled, insert_user, destination_prompt) 
+                                                                                VALUES ('$uuidRingGroupDestination', '$ring_group_id', '$domain', '$destination_number', '$destination_delay', '$destination_timeout', '$ringGroupDestination_enabled', '$userID', $destination_prompt)";
             $resultRingGroupDestination = pg_query($con, $insertRingGroupDestination);
             if ($resultRingGroupDestination) {
                 // echo json_encode([
@@ -259,7 +375,7 @@ public function create_dialplan($con,$uuidringGroup, $data, $userID, $dialplanuu
             $ring_group_greeting = $data->ring_group_greeting;
             $ring_group_timeout_app = $data->ring_group_timeout_app;
             $ring_group_timeout_data = $data->ring_group_timeout_data;
-            $ring_group_call_timeout = (strlen($data->ring_group_call_timeout) == 0) ? 30 : $data->ring_group_call_timeout;
+            $ring_group_call_timeout = (int)(strlen($data->ring_group_call_timeout) == 0) ? 30 : (int)$data->ring_group_call_timeout;
             $ring_group_caller_id_name = $data->ring_group_caller_id_name;
             $ring_group_caller_id_number = $data->ring_group_caller_id_number;
             $ring_group_ringback = (strlen($data->ring_group_ringback) == 0) ? "\${us-ring}" : $data->ring_group_ringback;
@@ -362,8 +478,8 @@ public function create_dialplan($con,$uuidringGroup, $data, $userID, $dialplanuu
                         //$ring_group_destination_id = $k->ring_group_destination_id;
                         $destination_number = $k->destination_number;
                         $destination_delay = $k->destination_delay;
-                        $destination_timeout = $k->destination_timeout;
-                        $destination_prompt = ($k->destination_prompt == 'NULL') ? 1 : $k->destination_prompt;
+                        $destination_timeout = (int)$k->destination_timeout;
+                        $destination_prompt = 'null';
                         $ringgroup_destination_enabled = $k->destination_enabled;
 
                         array_push($destination_array, array('destination_number'=>$destination_number,'ring_group_destination_uuid'=>$uuidRingGroupDestination));
@@ -423,8 +539,8 @@ public function create_dialplan($con,$uuidringGroup, $data, $userID, $dialplanuu
             }       
         }
 
-        public function delete($con, $id) {
-            $checkDialplan = "SELECT * FROM public.v_ring_groups WHERE ring_group_uuid = '$id'";
+        public function delete($con, $id, $domain_uuid) {
+            $checkDialplan = "SELECT * FROM public.v_ring_groups WHERE ring_group_uuid = '$id' AND domain_uuid = '$domain_uuid'";
             $resultCheckDialplan = pg_query($con, $checkDialplan);
             if (pg_num_rows($resultCheckDialplan) > 0) {
                 $row = pg_fetch_assoc($resultCheckDialplan); 
@@ -435,7 +551,7 @@ public function create_dialplan($con,$uuidringGroup, $data, $userID, $dialplanuu
                 pg_query($con, $queryDeleteDialplanDetails);
             }
 
-            $query = "DELETE FROM public.v_ring_groups WHERE ring_group_uuid = '$id'";
+            $query = "DELETE FROM public.v_ring_groups WHERE ring_group_uuid = '$id' AND domain_uuid = '$domain_uuid'";
             $result = pg_query($con, $query);
             if ($result) {
                 $queryRingGroupDestination = "DELETE FROM public.v_ring_group_destinations WHERE ring_group_uuid = '$id'";
@@ -472,6 +588,27 @@ public function create_dialplan($con,$uuidringGroup, $data, $userID, $dialplanuu
                     "message" => "Failed to Delete Ring Group Destination, Try Again !!"
                 ]);            
                 return;
+            }
+        }
+
+        public function fetch_namelist($con, $id) {
+            $query = "SELECT ring_group_extension as extension, ring_group_uuid as uuid, ring_group_name as name, 'transfer' as app, concat(ring_group_extension, ' XML ', v_domains.domain_name) AS data FROM public.v_ring_groups
+            JOIN public.v_domains 
+            ON v_domains.domain_uuid = v_ring_groups.domain_uuid
+            WHERE v_ring_groups.domain_uuid = '$id' 
+            ORDER BY ring_group_extension ASC";
+            $result = pg_query($con, $query);
+            
+            if (pg_num_rows($result) > 0 ) {
+
+                $arr = array();
+                while ($row = pg_fetch_assoc($result)) {
+                    $arr[] = $row;
+                }
+
+                return $arr;
+            }else{
+                return array();
             }
         }
     }
