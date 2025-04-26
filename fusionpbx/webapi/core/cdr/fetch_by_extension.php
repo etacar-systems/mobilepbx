@@ -33,9 +33,10 @@
             $caller_number= (isset($_GET['caller_number'])) ? $_GET['caller_number'] : '';
             $module= (isset($_GET['module'])) ? $_GET['module'] : '';
             $hide_internal = (isset($_GET['hide_internal'])) ? $_GET['hide_internal'] == 'true' ? true : false : '';
+            $cdr_by = isset($_GET['cdr_by']) ? $_GET['cdr_by'] : 'all'; 
 
         if (isset($_GET['id'])) {
-            $result = $cdr->fetch_by_extension($con, $_GET['id'],$per_page,$page,$start_date,$end_date,$extension,$direction,$destination,$caller_name,$caller_number,$module, $hide_internal);
+            $result = $cdr->fetch_by_extension($con, $_GET['id'],$per_page,$page,$start_date,$end_date,$extension,$direction,$destination,$caller_name,$caller_number,$module, $hide_internal, $cdr_by);
 
             if (pg_num_rows($result['records']) > 0 ) {
                 $arr = array();

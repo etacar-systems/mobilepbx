@@ -801,7 +801,7 @@ const getAllDataByDomainList = async (
     const end_date = data.end_date;
     const cid = data.cid;
     const extensionId = data.extension_id;
-    const select_type = data.select_type;
+    const select_type: "extension" | "ring_group" | "all" = data.select_type || "all";
     const sort_by = data.sort_by;
     const sort_order = data.sort_order ? 1 : -1;
 
@@ -910,6 +910,8 @@ const getAllDataByDomainList = async (
       });
     }
 
+    newParamString += `&cdr_by=${select_type}`; 
+
     const countries: any = companyDetail?.company_country;
 
     // const timezone = "Asia/Dubai";
@@ -936,7 +938,7 @@ const getAllDataByDomainList = async (
     };
     try {
       const data: any = await axios.request(api_config);
-      
+
       const total_record = Number(data.data.total_rows);
       const total_page = Number(data.data.total_pages);
       delete data.data.total_rows;

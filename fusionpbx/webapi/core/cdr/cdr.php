@@ -159,7 +159,7 @@
         }
 
 
-        public function fetch_by_extension($con, $id,$per_page,$page,$start_date,$end_date,$extension,$direction,$destination,$caller_name,$caller_number,$module, $hide_internal) {
+        public function fetch_by_extension($con, $id,$per_page,$page,$start_date,$end_date,$extension,$direction,$destination,$caller_name,$caller_number,$module, $hide_internal, $cdr_by) {
             $start    = ($page - 1) * $per_page;
 
             $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause, SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' and leg = 'a' ";
@@ -204,6 +204,14 @@
             if(strlen($module) > 0){
                 $query .= " AND module_name LIKE '%".$module."%' ";
                 $count_query .= " AND module_name LIKE '%".$module."%' ";
+            }
+
+            if ($cdr_by === 'extension') {
+                $query .= " AND destination_number in (SELECT extension AS ID FROM public.v_extensions WHERE domain_uuid='$id') ";
+                $count_query .= " AND destination_number in (SELECT extension AS ID FROM public.v_extensions WHERE domain_uuid='$id') ";
+            } else if ($cdr_by === 'ring_group') {
+                $query .= " AND destination_number in (SELECT ring_group_extension AS ID FROM public.v_ring_groups WHERE domain_uuid='$id') ";
+                $count_query .= " AND destination_number in (SELECT ring_group_extension AS ID FROM public.v_ring_groups WHERE domain_uuid='$id') ";
             }
 
             $query .= " ORDER BY start_stamp desc LIMIT $per_page OFFSET $start";

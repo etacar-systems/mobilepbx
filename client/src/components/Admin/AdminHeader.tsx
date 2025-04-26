@@ -1,7 +1,8 @@
 import React, { MouseEvent, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { pages } from "../Pages/VideoUpload/pages";
 import { useLocation } from "react-router-dom";
+
+import { pages } from "../Pages/VideoUpload/pages";
 
 interface IAdminHeaderProps {
   openModal?: (e: MouseEvent<HTMLButtonElement>) => void;

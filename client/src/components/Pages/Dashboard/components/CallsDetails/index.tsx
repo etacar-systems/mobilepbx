@@ -44,7 +44,7 @@ export const CallsDetails = ({
   const [callerid, setcallerid] = useState("");
   const [callername, setcallername] = useState("");
   const [createdat, setcreatedat] = useState("");
-  const [Extensiontype, setextensiontype] = useState(0);
+  const [Extensiontype, setextensiontype] = useState("");
   const [openDropdown, setOpenDropdown] = useState(null);
   const [Direction, setDirection] = useState("");
   const [timezone, setTimezone] = useState();
@@ -56,11 +56,11 @@ export const CallsDetails = ({
   useEffect(() => {
     if (activeKey) {
       if (activeKey === "logsextension") {
-        setextensiontype(3);
+        setextensiontype("extension");
       } else if (activeKey === "logsgroup") {
-        setextensiontype(2);
+        setextensiontype("ring_group");
       } else if (activeKey === "logs") {
-        setextensiontype(0);
+        setextensiontype("all");
       }
       setSearchterm("");
       setCurrentPage(1);
