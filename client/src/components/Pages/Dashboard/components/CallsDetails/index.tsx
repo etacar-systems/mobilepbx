@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import Paginationall from "../../../Paginationall";
 import { postapiAll } from "../../../../../Redux/Reducers/ApiServices";
 import config from "../../../../../config";
-import Callrecordingdashboard from "../../../../Modal/Callrecordingdashboard";
 import Loader from "../../../../Loader";
 import { Category } from "../../../../ConstantConfig";
 import CustomDropDown from "../../../../CustomDropDown";
@@ -16,6 +15,7 @@ import Utils from "../../../../../utils";
 import { ReactComponent as Uparrow } from "../../../../../Assets/Icon/up-arrow.svg";
 import { ReactComponent as Call_logo } from "../../../../../Assets/Icon/playrecording.svg";
 import { ReactComponent as Downarrow } from "../../../../../Assets/Icon/down-arrow.svg";
+import { AudioDetailsModal } from "../../../CallRecording/components";
 
 export const CallsDetails = ({
   activeKey,
@@ -68,19 +68,11 @@ export const CallsDetails = ({
     }
   }, [activeKey]);
   const handlelistner = (val: any) => {
-    const formattedDate = new Date(val?.start_stamp).toLocaleString("en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
     setListner(true);
-    setRecordingUrl(val?.recording_url);
+    setRecordingUrl(val?.record_url);
     setcallerid(val?.caller_id_number);
     setcallername(val?.caller_id_name);
-    setcreatedat(formattedDate);
+    setcreatedat(val?.start_stamp);
   };
   const handleCloseListner = () => {
     setListner(false);
@@ -146,7 +138,7 @@ export const CallsDetails = ({
     });
   }, [
     searchTerm,
-    internalCalls, // new
+    internalCalls,
     select,
     currentPage,
     filter,
@@ -154,6 +146,13 @@ export const CallsDetails = ({
     Extensiontype,
     Direction,
     ascending,
+    formattedDate,
+    formattedEnddata,
+    companyid,
+    sortBy,
+    userid,
+    dispatch,
+    token,
   ]);
 
   const convertToSeconds = (duration: any) => {
@@ -617,15 +616,15 @@ export const CallsDetails = ({
                                 >
                                   <button
                                     // @ts-ignore
-                                    disabled={!row.recording_url}
+                                    disabled={!row.record_url}
                                     style={{
                                       // @ts-ignore
-                                      backgroundColor: !row.recording_url
+                                      backgroundColor: !row.record_url
                                         ? "var(--main-forgot-color)"
                                         : "var(--main-orange-color)",
                                       border: "none",
                                       // @ts-ignore
-                                      opacity: !row.recording_url ? "0.5" : "",
+                                      opacity: !row.record_url ? "0.5" : "",
                                     }}
                                     onClick={() => {
                                       handlelistner(row);
@@ -716,13 +715,12 @@ export const CallsDetails = ({
         </Tab.Container>
       </div>
       {listner && (
-        <Callrecordingdashboard
-          show={listner}
+        <AudioDetailsModal
           onHide={handleCloseListner}
           recordingUrl={recordingUrl}
-          callerid={callerid}
-          callername={callername}
-          createdat={createdat}
+          caller_id_number={callerid}
+          caller_id_name={callername}
+          createdAt={createdat}
         />
       )}
     </div>

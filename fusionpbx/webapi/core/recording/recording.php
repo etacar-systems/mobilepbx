@@ -92,7 +92,7 @@
                 echo json_encode([
                     "message" => "Recording Added Successfully !!",
                     "id"      => $uuidRecording,
-		    "recording_url" => "https://mobilepbx.mobiililinja.fi/ext_storage/recordings/".$domain."/".$fileName,
+		    "recording_url" => "https://mobile.mobiililinja.fi/ext_storage/recordings/".$domain."/".$fileName,
 		    "recording_filename" => $fileName
                 ]);            
                 return;
@@ -158,7 +158,7 @@
                 echo json_encode([
                     "message" => "Recording Added Successfully !!",
                     "id"      => $recording_id,
-                    "recording_url" => "https://mobilepbx.mobiililinja.fi/ext_storage/recordings/".$domain."/".$fileName,
+                    "recording_url" => "https://mobile.mobiililinja.fi/ext_storage/recordings/".$domain."/".$fileName,
                     "recording_filename" => $fileName
                 ]);            
                 return;

@@ -2,6 +2,7 @@ import user_tokens from "../models/user_tokens";
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { config } from "../config";
+import user from "../models/user";
 
 const authUser = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
@@ -23,6 +24,8 @@ const authUser = async (req: Request, res: Response, next: NextFunction) => {
             message: "Authentication failed",
           });
         } else {
+          // @ts-ignore
+          req.user_id = user_token_check.uid,
           next();
         }
       }

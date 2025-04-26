@@ -21,6 +21,7 @@ const getRingGrouplist = async (
     const skip = (page - 1) * size;
     const token = await get_token(req);
     const user_detail = await User_token(token);
+    
     if (user_detail === undefined) {
       return res.status(config.RESPONSE.STATUS_CODE.COMPANY_NOT_EXIST).send({
         success: 0,

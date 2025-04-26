@@ -1,17 +1,62 @@
-import { Modal, Button } from "react-bootstrap";
-import { ReactComponent as Closeicon } from "../../Assets/Icon/close.svg";
+import { Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-const Callrecordingdashboard = ({
-  show,
+import Cookies from "js-cookie";
+
+import { ReactComponent as Closeicon } from "../../../../../Assets/Icon/close.svg";
+import { Suspense, useEffect, useState } from "react";
+import axios from "axios";
+
+interface IAudioDetailsModal {
+  onHide: () => void;
+  recordingUrl: string;
+  caller_id_number: string;
+  caller_id_name: string;
+  createdAt: string | Date;
+}
+
+export const AudioDetailsModal = ({
   onHide,
   recordingUrl,
-  callerid,
-  callername,
-  createdat,
-}) => {
+  caller_id_number,
+  caller_id_name,
+  createdAt,
+}: IAudioDetailsModal) => {
+  const token = Cookies.get("Token");
+
+  const [recordUrl, setRecordUrl] = useState<string>();
   const { t } = useTranslation();
+
+  const formatData = (date: Date | string) => {
+    return new Date(date).toLocaleString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  useEffect(() => {
+    if (!recordingUrl || !token) return;
+    axios
+      .get(
+        process.env.REACT_APP_MOBIILILINJA_BASE_URL + "/company/call_record/" + recordingUrl,
+        {
+          headers: {
+            Authorization: token,
+          },
+          responseType: "blob",
+        }
+      )
+      .then((response) => {
+        setRecordUrl(URL.createObjectURL(response.data));
+      })
+      .catch(() => "");
+  }, [recordingUrl, token]);
+
   return (
-    <Modal show={show} onHide={onHide} size="lg">
+    <Modal show={true} onHide={onHide} size="lg">
       <Modal.Header
         className="rec-modal"
         style={{
@@ -33,23 +78,25 @@ const Callrecordingdashboard = ({
               <div className="row clearfix">
                 <div className="col-lg-12 col-md-12">
                   <label className="listner-modal-text2">
-                    {callerid} {callername}
+                    {caller_id_number} {caller_id_name}
                   </label>
                   <br></br>
                   <label style={{ color: "var(--main-adminheaderpage-color)" }}>
-                    {createdat}
+                    {formatData(createdAt)}
                   </label>
                   <div className="form-group new-audio">
                     <div className="container-audio new-audio-listner2">
-                      <audio
-                        src={recordingUrl}
-                        controls
-                        loop
-                        className="audio-data"
-                      >
-                        <source src="" type="audio/wav" />
-                        {t("Your browser does not support the audio tag.")}
-                      </audio>
+                      <Suspense>
+                        <audio
+                          src={recordUrl}
+                          controls
+                          loop
+                          className="audio-data"
+                        >
+                          <source src="" type="audio/wav" />
+                          {t("Your browser does not support the audio tag.")}
+                        </audio>
+                      </Suspense>
                     </div>
                     <textarea
                       name=""
@@ -86,5 +133,3 @@ const Callrecordingdashboard = ({
     </Modal>
   );
 };
-
-export default Callrecordingdashboard;

@@ -45,6 +45,7 @@ import { appRouter } from "./v2";
 import { createContext } from "../utils/trpc";
 import { SUPPORT_VIDEOS_DIRECTORY_PATH } from "./v2/superAdminRouter/video";
 import { mimeTypes } from "./v2/superAdminRouter/video/video.dto";
+import { expressRouter } from "./v2/company";
 
 export const route = Router();
 
@@ -86,6 +87,7 @@ route.use("/v1/email", emailRoute);
 route.use("/v1/dashboard", dashboardRoute);
 route.use("/v1/save-call-recording-details", callRecordingRoute);
 
+route.use("/v1", expressRouter);
 route.get("/v1/uploads/supportVideos/:file_name", (req, res) => {
   try {
     const filename = req.params.file_name;

@@ -28,7 +28,7 @@
 
             $arr = array();
             while ($row = pg_fetch_assoc($result)) {
-                $row['recording_url'] = "https://mobilepbx.mobiililinja.fi/ext_storage/recordings/".$row['domain_name']."/".$row['recording_filename'];
+                $row['recording_url'] = "https://mobile.mobiililinja.fi/ext_storage/recordings/".$row['domain_name']."/".$row['recording_filename'];
                 $arr[] = $row;
             }
 

@@ -21,14 +21,14 @@
         }
         
         public function fetch($con) {
-        $query = "SELECT xml_cdr_uuid,domain_uuid,domain_name,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr";    
+        $query = "SELECT xml_cdr_uuid,domain_uuid,domain_name,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr";    
 	$result = pg_query($con, $query);
             return $result;
         }
 
 	// Date :08-08-2024 Added by Atul for get cdr by extension uuid
 	 public function fetch_by_extension_uuid($con,$id) {
-            $query = "SELECT xml_cdr_uuid,domain_uuid,domain_name,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr where extension_uuid='$id'";
+            $query = "SELECT xml_cdr_uuid,domain_uuid,domain_name,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr where extension_uuid='$id'";
             $result = pg_query($con, $query);
             return $result;
         }
@@ -39,7 +39,7 @@
 
             $start    = ($page - 1) * $per_page;
 
-            $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' ";
+            $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' ";
 
             $count_query = "SELECT count(*) as total FROM public.v_xml_cdr WHERE domain_uuid ='$id' ";
 
@@ -92,7 +92,7 @@
         }
 
         public function fetch_by_domain_date($con, $id, $start_date, $end_date) {
-            $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' AND insert_date::date BETWEEN '$start_date' AND '$end_date'";
+            $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' AND insert_date::date BETWEEN '$start_date' AND '$end_date'";
             $result = pg_query($con, $query);
             return $result;
         }
@@ -102,7 +102,7 @@
 
             $start    = ($page - 1) * $per_page;
 
-            $query = "SELECT xml_cdr_uuid,domain_name,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' and record_name IS NOT NULL ";
+            $query = "SELECT xml_cdr_uuid,domain_name,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause,SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' and record_name IS NOT NULL ";
 
             $count_query = "SELECT count(*) as total FROM public.v_xml_cdr WHERE domain_uuid ='$id' and record_name IS NOT NULL ";
 
@@ -162,7 +162,7 @@
         public function fetch_by_extension($con, $id,$per_page,$page,$start_date,$end_date,$extension,$direction,$destination,$caller_name,$caller_number,$module, $hide_internal) {
             $start    = ($page - 1) * $per_page;
 
-            $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause, REPLACE(record_path, '/var/lib/freeswitch/recordings/', 'https://mobilepbx.mobiililinja.fi/call_recording/') || '/' || record_name as recording_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' and leg = 'a' ";
+            $query = "SELECT xml_cdr_uuid,domain_name,domain_uuid,sip_call_id,extension_uuid,direction,caller_id_name,caller_id_number,destination_number,start_stamp,duration,record_name,status,hangup_cause, SUBSTRING(record_path, POSITION('archive/' IN record_path) + 8) || '/' || record_name as record_url FROM public.v_xml_cdr WHERE domain_uuid ='$id' and leg = 'a' ";
 
             $count_query = "SELECT count(*) as total FROM public.v_xml_cdr WHERE domain_uuid ='$id' and leg = 'a' ";
             

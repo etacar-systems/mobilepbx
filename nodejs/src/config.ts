@@ -130,6 +130,7 @@ export const config = {
       GET: PBX_BASE_URL + "cdr/fetch_by_recordings.php?id=",
       GET_uuid: PBX_BASE_URL + "recording/fetch_recording_by_id.php?id=",
       NAMELIST: PBX_BASE_URL + "recording/namelist.php",
+      GET_AUDIO: PBX_BASE_URL + "recording/get_record.php",
     },
     DASHBOARD: {
       GET_REPORTS: PBX_BASE_URL + "report/index.php",

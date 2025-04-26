@@ -8,7 +8,6 @@ import DatePickers from "./DatePickers";
 // import { ReactComponent as DeleteLogo } from "../../Assets/Icon/delete.svg";
 import { ReactComponent as CallLogo } from "../../Assets/Icon/call_logo.svg";
 // import DeleteModal from "../Modal/DeleteModal";
-import ListenRecordingModal from "../Modal/ListnerRecord";
 // import EditRecording from "../Modal/EditRecording";
 import Paginationall from "../Pages/Paginationall";
 import { useTranslation } from "react-i18next";
@@ -18,6 +17,7 @@ import Cookies from "js-cookie";
 import config from "../../config";
 import Loader from "../Loader";
 import { ClearSearch } from "../ClearSearch";
+import { AudioDetailsModal } from '../Pages/CallRecording/components';
 
 export default function Call_recordings() {
   const { t } = useTranslation();
@@ -35,6 +35,7 @@ export default function Call_recordings() {
   const [count, setCount] = useState(0);
   const [countData, setCountData] = useState(0);
   const [audioURL, setAudioURL] = useState(null);
+  const [caller, setCaller] = useState(null);
   const [startDate, setStartDate] = useState("");
   const [Date1, setDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -115,9 +116,13 @@ export default function Call_recordings() {
       setSortedColumn("");
     });
   }, [searchTerm, select, currentPage, Token, filter]);
-  const handlelistner = (URL, date) => {
+  const handlelistner = (URL, date, caller_id_name, caller_id_number) => {
     setDate(date);
     setAudioURL(URL);
+    setCaller({
+      caller_id_name, 
+      caller_id_number
+    });
     setListner(true);
   };
 
@@ -391,16 +396,16 @@ export default function Call_recordings() {
                             <td>{t(val.direction)}</td>
                             <td className="table_edit2">
                               <button
-                                disabled={!val.recording_url}
+                                disabled={!val.record_url}
                                 style={{
-                                  backgroundColor: !val.recording_url
+                                  backgroundColor: !val.record_url
                                     ? "var(--main-forgot-color)"
                                     : "var(--main-orange-color)",
                                   border: "none",
-                                  opacity: !val.recording_url ? "0.5" : "",
+                                  opacity: !val.record_url ? "0.5" : "",
                                 }}
                                 onClick={() => {
-                                  handlelistner(val.recording_url, val.start_stamp);
+                                  handlelistner(val.record_url, val.start_stamp, val.caller_id_name, val.caller_id_number);
                                 }}
                               >
                                 <CallLogo width={14} height={14} className="edithover" />
@@ -459,12 +464,13 @@ export default function Call_recordings() {
         />
       )} */}
       {listner && (
-        <ListenRecordingModal
+        <AudioDetailsModal
           recordingUrl={audioURL}
-          show={listner}
           onHide={handleCloseListner}
-          recordDate={Date1}
-        />
+          caller_id_number={caller?.caller_id_number || ""}
+          caller_id_name={caller?.caller_id_name || ""}
+          createdAt={Date1}
+         />
       )}
       {/* {editListner && (
         <EditRecording show={editListner} onHide={handleCloseEditListner} />
