@@ -11,6 +11,7 @@ const ProgressCircle = ({
   Answeredcall,
   Title1,
   Title2,
+  mode
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -53,8 +54,66 @@ const ProgressCircle = ({
         />
       </svg>
       {/* changed */}
-      {pragressLable == "progress-circle__label1 chart-value progressfont2" ? (
-        <div className={pragressLable}>{totalUnits || 0}</div>
+      {pragressLable == "progress-circle__label1 chart-value progressfont2" ? 
+        mode ? (
+<div
+          className="progress-circle__label1 chart-value"
+          style={{
+            display: "inline-flex",
+            flexDirection: "row",
+            fontSize: "24px",
+            fontWeight: "600",
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+            }}
+          >
+            {totalUnits - Answeredcall === 0
+              ? Answeredcall || 0
+              : totalUnits - Answeredcall || 0}
+          </p>{" "}
+          /{" "}
+          <p
+            style={{
+              margin: 0,
+            }}
+          >
+            {Answeredcall || 0}
+          </p>
+        </div>
+        ) : (<div className={pragressLable}>{totalUnits || 0}</div>)
+       : mode ? (
+        <div
+          className="progress-circle__label1 chart-value"
+          style={{
+            display: "inline-flex",
+            flexDirection: "row",
+            fontSize: "24px",
+            fontWeight: "600",
+          }}
+        >
+          <p
+            style={{
+              color: "var(--main-red-color)",
+              margin: 0,
+            }}
+          >
+            {totalUnits - Answeredcall === 0
+              ? Answeredcall || 0
+              : totalUnits - Answeredcall || 0}
+          </p>{" "}
+          /{" "}
+          <p
+            style={{
+              color: "var(--main-green-color)",
+              margin: 0,
+            }}
+          >
+            {Answeredcall || 0}
+          </p>
+        </div>
       ) : (
         <div
           className="progress-circle__label1 chart-value"

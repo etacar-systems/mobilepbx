@@ -20,7 +20,9 @@ export const MultiLineChart = ({ data }: any) => {
   const Theme = useSelector((state) => state?.Theme?.Theme);
   const theme = Cookies.get("Theme");
 
-  const dataValues = data.datasets.flatMap((dataset: { data: Array<number> }) => dataset.data);
+  const dataValues = data.datasets.flatMap(
+    (dataset: { data: Array<number> }) => dataset.data
+  );
   const calculatedMax = Math.max(...dataValues);
 
   const dynamicMin = 0;
@@ -28,8 +30,9 @@ export const MultiLineChart = ({ data }: any) => {
 
   useEffect(() => {
     if (!chartRef.current) return;
-    
-    const textColor = Theme === Dark || theme === Dark ? Whitecolor : Blackcolor;
+
+    const textColor =
+      Theme === Dark || theme === Dark ? Whitecolor : Blackcolor;
     const gridLineColor =
       Theme === Dark || theme === Dark ? Gridlinedarkcolor : Girdlinelightcolor;
 
@@ -63,7 +66,7 @@ export const MultiLineChart = ({ data }: any) => {
       }
     };
 
-    const adjustedMax = ( Math.round(dynamicMax/10) + 1 ) * 10;
+    const adjustedMax = Math.ceil(dynamicMax / 10) * 10;
     const stepSize = determineStepSize(adjustedMax);
 
     const myChart = new Chart(chartRef.current, {
@@ -97,7 +100,10 @@ export const MultiLineChart = ({ data }: any) => {
             callbacks: {
               label: (tooltipItem) => {
                 const label = tooltipItem.dataset.label || "";
-                const value = tooltipItem.datasetIndex === 1 ? Utils.formatDuration(tooltipItem.raw) : tooltipItem.raw;
+                const value =
+                  tooltipItem.datasetIndex === 1
+                    ? Utils.formatDuration(tooltipItem.raw)
+                    : tooltipItem.raw;
                 return `${label}: ${value}`;
               },
             },

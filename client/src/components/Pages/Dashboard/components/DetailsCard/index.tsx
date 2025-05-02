@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { Card, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { setExtensionStatus } from "../../../../../Redux/Reducers/DataServices";
 import Utils from "../../../../../utils";
 
 import { ReactComponent as Personicon } from "../../../../../Assets/Icon/person-line-drawing.svg";
@@ -14,69 +13,27 @@ import { IGetDashboardStatisticOutput } from "../../../../../requests/queries";
 export const DashboardCardDetails = ({
   valuedata,
 }: {
-  valuedata?: NonNullable<IGetDashboardStatisticOutput>['total_counts'];
+  valuedata?: NonNullable<IGetDashboardStatisticOutput>["total_counts"];
 }) => {
-  // const dispatch = useDispatch();
   const { t } = useTranslation();
   // @ts-ignore
   const allListeners = useSelector((state) => state.allListeners.allListeners);
-  // const data = useSelector((state) => state.getapiall.getapiall.dashboardData);
-  // let valuedata = data?.DashboardDetail?.reports_counts_updated;
-  // console.log(data, valuedata, "datacheckfinal");
-  // console.log(allListeners, "allListenerscheck");
-  // const busyAndOnlineCount =
-  //   (allListeners?.listener_params?.busy_extension?.length || 0) +
-  //   (allListeners?.listener_params?.online_extension?.length || 0);
-  const offlineCount =
-    allListeners?.listener_params?.offline_extension?.length || 0;
-  const [onlinecount, setOnlineCount] = useState(0);
-  const [offlinecount, setofflineCount] = useState(offlineCount);
 
-  useEffect(() => {
-    const calculateOnlineSum = (array: Array<any>) => {
-      let sum = 0;
-      for (const item of array) {
-        sum += item.is_online || 0; // Add `is_online` or default to 0
-      }
-      return sum;
-    };
-    const calculateofflineSum = (array: Array<any>) => {
-      let sum = 0;
-      for (const item of array) {
-        sum += item.is_online === 0 ? 1 : 0; // Add `is_online` or default to 0
-      }
-      return sum;
-    };
-    if (
-      allListeners?.listener_params?.busy_extension?.length ||
-      allListeners?.listener_params?.offline_extension?.length ||
-      allListeners?.listener_params?.online_extension?.length
-    ) {
-      const busy_extension_sum =
-        allListeners?.listener_params?.busy_extension.length &&
-        calculateOnlineSum(allListeners?.listener_params.busy_extension);
-      // console.log(`busy_extension_sum Extension Online Sum: ${busy_extension_sum}`);
+  const { offlineExtensionsCount, onlineExtensionsCount, busyExtensionsCount } =
+    useMemo(() => {
+      const offlineExtensionsCount =
+        allListeners?.listener_params?.offline_extension?.length || 0;
+      const busyExtensionsCount =
+        allListeners?.listener_params?.busy_extension?.length || 0;
 
-      const offline_extension_sum =
-        allListeners?.listener_params?.offline_extension.length &&
-        calculateOnlineSum(allListeners?.listener_params.offline_extension);
-      // console.log(`offline_extension_sum Extension Online Sum: ${offline_extension_sum}`);
-
-      const online_extension_sum =
-        allListeners?.listener_params?.online_extension.length &&
-        calculateOnlineSum(allListeners?.listener_params.online_extension);
-      // console.log(`offline_extension_sum Extension Online Sum: ${online_extension_sum}`);
-
-      const offline_extension_count =
-        allListeners?.listener_params?.offline_extension.length &&
-        calculateofflineSum(allListeners?.listener_params.offline_extension);
-      // console.log(`offline_extension_sum Extension Online Sum: ${offline_extension_count}`);
-      setofflineCount(offline_extension_count);
-      setOnlineCount(
-        busy_extension_sum + offline_extension_sum + online_extension_sum
-      );
-    }
-  }, [allListeners?.listener_params]);
+      return {
+        offlineExtensionsCount,
+        busyExtensionsCount,
+        onlineExtensionsCount:
+          (allListeners?.listener_params?.online_extension?.length || 0) +
+          busyExtensionsCount,
+      };
+    }, [allListeners?.listener_params]);
 
   return (
     <>
@@ -94,7 +51,7 @@ export const DashboardCardDetails = ({
               <div className="ml-4">
                 <span className="chart-value">{t("Agent online")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
-                  {onlinecount}
+                  {onlineExtensionsCount}
                 </h4>
               </div>
             </div>
@@ -118,7 +75,7 @@ export const DashboardCardDetails = ({
               <div className="ml-4">
                 <span className="chart-value">{t("Agent offline")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
-                  {offlinecount}
+                  {offlineExtensionsCount}
                 </h4>
               </div>
             </div>
@@ -133,12 +90,14 @@ export const DashboardCardDetails = ({
         >
           <Card.Body style={{ padding: "20px " }}>
             <div className="d-flex align-items-center">
-              <div className="icon-in-bg bg-warning text-white rounded-circle">
+              <div className="icon-in-bg bg-red text-white rounded-circle">
                 <Usersicon className="icon-users fa-2x  call-in-icon" />
               </div>
               <div className="ml-4">
-                <span className="chart-value">{t("Calls queue")}</span>
-                <h4 className="mb-0 font-weight-medium chart-value">0</h4>
+                <span className="chart-value">{t("Agent busy")}</span>
+                <h4 className="mb-0 font-weight-medium chart-value">
+                  {busyExtensionsCount}
+                </h4>
               </div>
             </div>
           </Card.Body>
@@ -160,7 +119,9 @@ export const DashboardCardDetails = ({
                 <span className="chart-value">{t("Average")}</span>
                 <h4 className="mb-0 font-weight-medium chart-value">
                   {Utils.formatDuration(
-                    !valuedata ? 0 : (valuedata.total_duration_sec / valuedata.total_local)
+                    !valuedata
+                      ? 0
+                      : valuedata.total_duration_sec / valuedata.total_local
                     // (valuedata?.total_answered + valuedata?.total_outbound)
                     // valuedata?.avg_response_sec /
                     // (valuedata?.total_answered)

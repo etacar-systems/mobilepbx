@@ -93,7 +93,7 @@ export const LineChart = ({
       y: {
         display: true,
         min: 0,
-        max: maxValue,
+        max: Math.ceil(maxValue / 10) * 10,
         ticks: {
           color: Textcolor,
           font: {

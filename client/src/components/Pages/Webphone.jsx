@@ -394,11 +394,8 @@ export default function Webphone() {
                         >
                           <div className="row g-0">
                             {groupList?.map((item) => {
-                              const statusText =
-                                groupUserOnline == 0 ? "Offline" : "Online";
-
-                              const statusClass =
-                                groupUserOnline == 0 ? "Offline" : "Online";
+                              const isGroupOnline = item.user_details.some((user) => user.is_online === 1);
+                              const statusText = isGroupOnline ? "Online" : "Offline";
 
                               return (
                                 <div
@@ -411,7 +408,7 @@ export default function Webphone() {
                                     name={item.name}
                                     message={statusText}
                                     status={statusText}
-                                    statusClass={statusClass}
+                                    statusClass={statusText}
                                     activeTab={activeTab}
                                     onOpenModal={(e) =>
                                       openModal({

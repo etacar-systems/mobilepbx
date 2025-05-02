@@ -143,6 +143,7 @@
 
 .right_chat li.Offline .status {
   background:var(--main-orange-color);
+  outline: 3px solid var(--main-white-color);
 }
 
 .webphone-table {

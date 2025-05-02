@@ -16,6 +16,7 @@ export default function DatePickerComponent({
   Setselected,
   minDate,
   Borderclass,
+  name,
 }) {
   // Retrieve language setting from cookies
   const language = Cookies.get("language");
@@ -23,8 +24,11 @@ export default function DatePickerComponent({
   return (
     <>
       <DatePicker
+        name={name}
         selected={selected}
-        onChange={(date) => Setselected(date)}
+        onChange={(date) => {
+          Setselected(date);
+        }}
         selectsStart
         startDate={startDate}
         locale={language === "fi" ? "fi" : "en-GB"} // Match the registered locale keys

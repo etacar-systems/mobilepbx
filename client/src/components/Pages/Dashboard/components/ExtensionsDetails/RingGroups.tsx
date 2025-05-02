@@ -5,25 +5,23 @@ import { useTranslation } from "react-i18next";
 import ProgressCircle from "../../../Dashboard/CustomeChart";
 import { RingGroupModal } from "../../../../Admin/pages/RingGroups/components";
 import { useQueryParams } from "../../../../../hooks";
-import { IGetDashboardStatisticOutput, useRingGroupDetails } from "../../../../../requests/queries";
+import {
+  IGetDashboardStatisticOutput,
+  useRingGroupDetails,
+} from "../../../../../requests/queries";
 import { useUpdateRingGroup } from "../../../../../requests/mutations";
 import { TRingGroupsFormArgs } from "../../../../Admin/pages/RingGroups/components/AddEditModal/form.dto";
 
 import { ReactComponent as Usersicon } from "../../../../../Assets/Icon/users-svgrepo.svg";
 
 interface IRingGroups {
-  ringGroups?: NonNullable<IGetDashboardStatisticOutput>["ring_group"]
+  ringGroups?: NonNullable<IGetDashboardStatisticOutput>["ring_group"];
 }
 
 export const RingGroups = ({ ringGroups }: IRingGroups) => {
   const { t } = useTranslation();
 
-  const { edit } =
-    useQueryParams(
-      [
-        { key: "edit" as const },
-      ]
-    );
+  const { edit } = useQueryParams([{ key: "edit" as const }]);
 
   const handleClose = useCallback(() => {
     edit.set(undefined);
@@ -39,8 +37,7 @@ export const RingGroups = ({ ringGroups }: IRingGroups) => {
 
   const { data: editEntity } = useRingGroupDetails({ uuid: edit.value });
 
-  const { updateRingGroup, isFetching: isUpdating } =
-    useUpdateRingGroup();
+  const { updateRingGroup, isFetching: isUpdating } = useUpdateRingGroup();
 
   const onSubmit = useCallback(
     (
@@ -112,12 +109,17 @@ export const RingGroups = ({ ringGroups }: IRingGroups) => {
                           passWholeProgress="progress-circle1"
                           classNames="progress-circle__svg1"
                           pragressLable="progress-circle__label2"
-                          Totalcall={Number(ele?.answered || 0) +
-                            Number(ele?.missed || 0)}
+                          Totalcall={
+                            Number(ele?.answered || 0) +
+                            Number(ele?.missed || 0)
+                          }
                           Answeredcall={Number(ele?.answered || 0)}
                           Title1={t("Answered")}
-                          Title2={t("Missed")} 
-                          completedColor={undefined} bgcolor={undefined}                        />
+                          Title2={t("Missed")}
+                          completedColor={undefined}
+                          bgcolor={undefined}
+                          mode={undefined}
+                        />
                       </td>
                     </tr>
                   </>
@@ -127,7 +129,7 @@ export const RingGroups = ({ ringGroups }: IRingGroups) => {
           </table>
         </div>
       </div>
-      {(edit.value && editEntity) && (
+      {edit.value && editEntity && (
         <RingGroupModal
           handleClose={handleClose}
           onSubmit={onSubmit}
@@ -152,4 +154,4 @@ export const RingGroups = ({ ringGroups }: IRingGroups) => {
       )}
     </Card>
   );
-}
+};

@@ -67,20 +67,20 @@ export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetails
                                 className="but-badge"
                                 style={{
                                   color:
-                                    allListeners?.listener_params?.offline_extension?.find(
+                                    !!allListeners?.listener_params?.online_extension?.find(
                                       (extension: any) =>
                                         extension.extension_uuid ===
                                         val.extension_uuid
-                                    )?.is_online
+                                    )
                                       ? "var(--main-green-color)"
                                       : "var(--main-orangecustomermodal-color)",
                                 }}
                               >
-                                {allListeners?.listener_params?.offline_extension?.find(
+                                {!!allListeners?.listener_params?.online_extension?.find(
                                   (extension: any) =>
                                     extension.extension_uuid ===
                                     val.extension_uuid
-                                )?.is_online
+                                )
                                   ? t("Online")
                                   : t("Offline")}
                               </Badge>

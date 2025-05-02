@@ -245,11 +245,29 @@
 
             $sql .= "stats AS ( ";
             $sql .= "   SELECT ";
-            $sql .= "       SUM(CASE WHEN missed_call = 'true' THEN 1 ELSE 0 END) AS missed_calls, ";
-            $sql .= "       SUM(CASE WHEN missed_call = 'false' THEN 1 ELSE 0 END) AS answered_calls, ";
-            $sql .= "       SUM(CASE WHEN direction = 'inbound' THEN 1 ELSE 0 END) AS inbound_calls, ";
-            $sql .= "       SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) AS outbound_calls, ";
-            $sql .= "       SUM(CASE WHEN direction = 'local' THEN 1 ELSE 0 END) AS local_calls, ";
+            $sql .= "   SUM(CASE WHEN missed_call = 'true' 
+                                AND (cc_side IS NULL OR cc_side != 'agent') 
+                                AND (direction = 'inbound' OR direction = 'local') 
+                            THEN 1 
+                            ELSE 0 
+                        END) AS missed_calls, ";
+            $sql .= "   SUM(CASE WHEN missed_call = 'false' 
+                            AND (cc_side IS NULL OR cc_side != 'agent') 
+                            AND (direction = 'inbound' OR direction = 'local') 
+                            THEN 1 
+                            ELSE 0 
+                        END) AS answered_calls, ";
+            $sql .= "   SUM(CASE WHEN direction = 'inbound' 
+                            AND (cc_side IS NULL OR cc_side != 'agent') 
+                            THEN 1 
+                            ELSE 0 
+                        END) AS inbound_calls, ";
+            $sql .= "   SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) AS outbound_calls, ";
+            $sql .= "   SUM(CASE WHEN direction = 'local' 
+                            AND (cc_side IS NULL OR cc_side != 'agent') 
+                            THEN 1 
+                            ELSE 0 
+                        END) AS local_calls, ";
             $sql .= "       date_trunc('$date_trunc', start_stamp AT TIME ZONE '$time_zone') AS step_interval ";
             $sql .= "   FROM v_xml_cdr ";
             $sql .= "   WHERE domain_uuid = '$domain_uuid' ";

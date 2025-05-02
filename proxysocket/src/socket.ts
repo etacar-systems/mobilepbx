@@ -3253,7 +3253,6 @@ export const connect = async (server: any) => {
         let freeSwitch_client_response: any = await fs_command(
           "api show registrations as json"
         );
-	console.log(freeSwitch_client_response,"freeSwitch_client_response")
         freeSwitch_client_response = JSON.parse(freeSwitch_client_response);
         let extensions_obj: any = JSON.parse(freeSwitch_client_response) || [];
 
@@ -3264,7 +3263,6 @@ export const connect = async (server: any) => {
         freeSwitch_client_response_busy = JSON.parse(
           freeSwitch_client_response_busy
         );
-console.log(freeSwitch_client_response_busy,"freeSwitch_client_response")
 
         let busy_extensions_obj: any = JSON.parse(
           freeSwitch_client_response_busy
@@ -3275,7 +3273,6 @@ console.log(freeSwitch_client_response_busy,"freeSwitch_client_response")
           is_deleted: 0,
         });
 
-        let domain_extension_list: any = [];
         let get_online_extension: any = [];
         let get_offline_extension: any = [];
         let get_busy_extenstion: any = [];
@@ -3361,27 +3358,16 @@ console.log(freeSwitch_client_response_busy,"freeSwitch_client_response")
               ]);
             }
           }
-console.log(extensions_obj,"extensions_obj")
-	if(extensions_obj.row_count > 0 ){
+        }
 
-          let filter_single_domain_extension: any = extensions_obj?.rows?.filter(
-            (items: any) =>
-              items.realm == company_domain &&
-              !domain_busy_extension_list.includes(items.reg_user)
-          );
-
-          domain_extension_list = filter_single_domain_extension.map(
-            (item: any) => item.reg_user
-          );
-}
-          if (get_company_detail !== null && domain_extension_list.length > 0) {
+          if (get_company_detail !== null) {
             get_online_extension = await user.aggregate([
               {
                 $match: {
-                  user_extension: { $in: domain_extension_list },
                   cid: get_company_detail._id,
                   is_deleted: 0,
-                  role:{$nin:get_role_details}
+                  role:{$nin:get_role_details},
+                  is_online: 1,
                 },
               },
               {
@@ -3429,17 +3415,13 @@ console.log(extensions_obj,"extensions_obj")
               },
             ]);
           }
-        }
-        if(domain_extension_list.length == 0 && domain_busy_extension_list.length > 0){
-          domain_extension_list = domain_extension_list.concat(
-            domain_busy_extension_list
-          );
-        }
-        if (get_company_detail !== null) {
+
+          if (get_company_detail !== null) {
           get_offline_extension = await user.aggregate([
             {
               $match: {
-                user_extension: { $nin: domain_extension_list },
+                is_online: 0,
+                user_extension: { $nin: domain_busy_extension_list },
                 cid: get_company_detail._id,
                 is_deleted: 0,
                 role:{$nin:get_role_details}

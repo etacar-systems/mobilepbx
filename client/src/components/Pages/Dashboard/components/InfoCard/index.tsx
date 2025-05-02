@@ -30,6 +30,7 @@ export const InfoCard = ({ data }: IInfoCardProps) => {
                   Answeredcall={data?.total_answered}
                   Title1={t("Answered")}
                   Title2={t("Missed")}
+                  mode
                   completedColor={undefined}
                   bgcolor={undefined}
                 />
@@ -51,13 +52,14 @@ export const InfoCard = ({ data }: IInfoCardProps) => {
                   bgcolor="var(--main-borderblue-color)"
                   pragressLable="progress-circle__label1 chart-value progressfont2"
                   Totalcall={
-                    !data ? 0 : data.total_calls
+                    !data ? 0 : data.total_calls + data.total_answered
                     //data.total_answered
                     // data.today_total_calls
                   }
                   Answeredcall={!data ? 0 : data?.total_answered}
                   Title1={t("Answered")}
                   Title2={t("Called")}
+                  mode
                   completedColor={undefined}
                 />
               </div>
