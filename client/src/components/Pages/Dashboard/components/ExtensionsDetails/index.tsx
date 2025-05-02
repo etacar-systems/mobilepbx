@@ -67,6 +67,11 @@ export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetails
                                 className="but-badge"
                                 style={{
                                   color:
+                                  !!allListeners?.listener_params?.busy_extension?.find(
+                                    (extension: any) =>
+                                      extension.extension_uuid ===
+                                      val.extension_uuid
+                                  ) ? "var(--main-red-color)" : 
                                     !!allListeners?.listener_params?.online_extension?.find(
                                       (extension: any) =>
                                         extension.extension_uuid ===
@@ -76,7 +81,12 @@ export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetails
                                       : "var(--main-orangecustomermodal-color)",
                                 }}
                               >
-                                {!!allListeners?.listener_params?.online_extension?.find(
+                                {
+                                !!allListeners?.listener_params?.busy_extension?.find(
+                                  (extension: any) =>
+                                    extension.extension_uuid ===
+                                    val.extension_uuid
+                                ) ? t("Busy") : !!allListeners?.listener_params?.online_extension?.find(
                                   (extension: any) =>
                                     extension.extension_uuid ===
                                     val.extension_uuid

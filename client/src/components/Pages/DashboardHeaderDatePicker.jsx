@@ -42,15 +42,22 @@ export const DashboardHeaderDatePicker = ({
     },
     [setStartDate, setEndDate]
   );
+
+  const onClear = () => {
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setState({ start: new Date(), end: new Date() });
+  };
+
   return (
     <div className="col-12 col-name p-0">
       <Form onSubmit={onSubmit} className="card" action="" method="post">
         <div className="body date_picker_container">
           <Row>
-            <Col lg={6} md={12} className="col-name">
+            <Col lg={8} md={12} className="col-name">
               <Form.Label className="modal-head">{t("Date Picker")}</Form.Label>
               <Row>
-                <Col lg={8} md={12} className="col-name">
+                <Col lg={6} md={12} className="col-name">
                   <div className="input-group">
                     <div
                       className="input-daterange input-group"
@@ -80,7 +87,7 @@ export const DashboardHeaderDatePicker = ({
                     </div>
                   </div>
                 </Col>
-                <Col lg={4} md={12} className="filter_btn mt-2  mt-lg-0">
+                <Col lg={2} md={12} className="filter_btn mt-2  mt-lg-0">
                   <Button
                     type="submit"
                     style={{ backgroundColor: "white", width: "100%" }}
@@ -89,14 +96,19 @@ export const DashboardHeaderDatePicker = ({
                     {t("Search")}
                   </Button>
                 </Col>
+                <Col lg={2} md={12} className="filter_btn2 mt-2  mt-lg-0">
+                  <Button type="button" variant="primary" onClick={onClear}>
+                    {t("Clear")}
+                  </Button>
+                </Col>
               </Row>
             </Col>
-            <div className="d-none col-md-6 col-sm-12 col-name text-right mt-4 hidden-xs">
+            {/* <div className="d-none col-md-6 col-sm-12 col-name text-right mt-4 hidden-xs">
               <a className="p-1 text-blue pdffont" href="#">
                 <i className="fa fa-envelope mr-1"></i>
                 {t("Send to Email")}
               </a>
-            </div>
+            </div> */}
           </Row>
         </div>
       </Form>

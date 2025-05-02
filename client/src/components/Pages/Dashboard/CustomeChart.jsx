@@ -53,38 +53,7 @@ const ProgressCircle = ({
           }}
         />
       </svg>
-      {/* changed */}
-      {pragressLable == "progress-circle__label1 chart-value progressfont2" ? 
-        mode ? (
-<div
-          className="progress-circle__label1 chart-value"
-          style={{
-            display: "inline-flex",
-            flexDirection: "row",
-            fontSize: "24px",
-            fontWeight: "600",
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-            }}
-          >
-            {totalUnits - Answeredcall === 0
-              ? Answeredcall || 0
-              : totalUnits - Answeredcall || 0}
-          </p>{" "}
-          /{" "}
-          <p
-            style={{
-              margin: 0,
-            }}
-          >
-            {Answeredcall || 0}
-          </p>
-        </div>
-        ) : (<div className={pragressLable}>{totalUnits || 0}</div>)
-       : mode ? (
+       {mode ? (
         <div
           className="progress-circle__label1 chart-value"
           style={{
@@ -96,7 +65,7 @@ const ProgressCircle = ({
         >
           <p
             style={{
-              color: "var(--main-red-color)",
+              color: bgcolor || "var(--main-red-color)",
               margin: 0,
             }}
           >
@@ -131,7 +100,6 @@ const ProgressCircle = ({
             : totalUnits - Answeredcall || 0}
         </div>
       )}
-      {/* <div className={pragressLable}>{totalUnits || 0}</div> */}
 
       {/* Tooltip */}
       {showTooltip && (

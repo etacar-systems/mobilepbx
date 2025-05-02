@@ -75,54 +75,51 @@ export const RingGroups = ({ ringGroups }: IRingGroups) => {
             <tbody>
               {ringGroups?.map((ele) => {
                 return (
-                  <>
-                    <tr
-                      className="table-custom-body-trs"
-                      style={{
-                        borderBottom: "5px solid var(--main-grey-color)",
-                      }}
-                    >
-                      <td className="w40 table-custom-body-td">
-                        <div className="icon-in-bg1 bg-orange text-white rounded-circle">
-                          <Usersicon className="icon-users fa-2x call-in-icon" />
-                        </div>
-                      </td>
-                      <td className="table-custom-body-td">
-                        <small className="small-cusnam">
-                          {ele?.ring_group_name}
-                        </small>
-                        <h6 className="mb-0 small-cusnum">
-                          {ele?.ring_group_extension}
-                        </h6>
-                        <Button
-                          size="sm"
-                          className="mr-2 new-button-ui"
-                          data-toggle="modal"
-                          data-target="#routing"
-                          onClick={() => onEditClick(ele?.ring_group_uuid)}
-                        >
-                          {t("Open")}
-                        </Button>
-                      </td>
-                      <td className="table-custom-body-td">
-                        <ProgressCircle
-                          passWholeProgress="progress-circle1"
-                          classNames="progress-circle__svg1"
-                          pragressLable="progress-circle__label2"
-                          Totalcall={
-                            Number(ele?.answered || 0) +
-                            Number(ele?.missed || 0)
-                          }
-                          Answeredcall={Number(ele?.answered || 0)}
-                          Title1={t("Answered")}
-                          Title2={t("Missed")}
-                          completedColor={undefined}
-                          bgcolor={undefined}
-                          mode={undefined}
-                        />
-                      </td>
-                    </tr>
-                  </>
+                  <tr
+                    className="table-custom-body-trs"
+                    style={{
+                      borderBottom: "5px solid var(--main-grey-color)",
+                    }}
+                  >
+                    <td className="w40 table-custom-body-td">
+                      <div className="icon-in-bg1 bg-orange text-white rounded-circle">
+                        <Usersicon className="icon-users fa-2x call-in-icon" />
+                      </div>
+                    </td>
+                    <td className="table-custom-body-td">
+                      <small className="small-cusnam">
+                        {ele?.ring_group_name}
+                      </small>
+                      <h6 className="mb-0 small-cusnum">
+                        {ele?.ring_group_extension}
+                      </h6>
+                      <Button
+                        size="sm"
+                        className="mr-2 new-button-ui"
+                        data-toggle="modal"
+                        data-target="#routing"
+                        onClick={() => onEditClick(ele?.ring_group_uuid)}
+                      >
+                        {t("Open")}
+                      </Button>
+                    </td>
+                    <td className="table-custom-body-td">
+                      <ProgressCircle
+                        passWholeProgress="progress-circle1"
+                        classNames="progress-circle__svg1"
+                        pragressLable="progress-circle__label2"
+                        Totalcall={
+                          Number(ele?.answered || 0) + Number(ele?.missed || 0)
+                        }
+                        Answeredcall={Number(ele?.answered || 0)}
+                        Title1={t("Answered")}
+                        Title2={t("Missed")}
+                        completedColor={undefined}
+                        bgcolor={undefined}
+                        mode={undefined}
+                      />
+                    </td>
+                  </tr>
                 );
               })}
             </tbody>
