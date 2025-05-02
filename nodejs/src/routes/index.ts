@@ -37,7 +37,7 @@ import { settingRoute } from "./v1/setting";
 import { smtpRoute } from "./v1/smtp";
 import { whatsapplogIn } from "./v1/loginWhatsapp";
 import { emailRoute } from "./v1/email";
-import { dashboardRoute } from "./v1/dashboard";
+// import { dashboardRoute } from "./v1/dashboard";
 import { callRecordingRoute } from "./v1/callRecording";
 
 import * as trpcExpress from "@trpc/server/adapters/express";
@@ -84,7 +84,7 @@ route.use("/v1/setting", settingRoute);
 route.use("/v1/smtp", smtpRoute);
 route.use("/v1/api", whatsapplogIn);
 route.use("/v1/email", emailRoute);
-route.use("/v1/dashboard", dashboardRoute);
+// route.use("/v1/dashboard", dashboardRoute);
 route.use("/v1/save-call-recording-details", callRecordingRoute);
 
 route.use("/v1", expressRouter);

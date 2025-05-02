@@ -1,9 +1,4 @@
-import React, {
-  KeyboardEvent,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import React, { KeyboardEvent, useCallback, useEffect, useRef } from "react";
 import Modal from "react-bootstrap/Modal";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -183,10 +178,7 @@ export const RingGroupModal = withNameList(
                     <CustomTooltipModal tooltip={t("Enter name")} />
                   </Form.Label>
                   <InputGroup className="">
-                    <Form.Control
-                      className="search-bg"
-                      {...register("name")}
-                    />
+                    <Form.Control className="search-bg" {...register("name")} />
                   </InputGroup>
                   {errors.name?.message && (
                     <div className="text-danger error-ui">
@@ -294,10 +286,7 @@ export const RingGroupModal = withNameList(
                         className="record_switch"
                         style={{ marginLeft: "8px" }}
                       >
-                        <input
-                          type="checkbox"
-                          {...register("record_calls")}
-                        />
+                        <input type="checkbox" {...register("record_calls")} />
                         <span className="record_slider"></span>
                       </label>
                     </div>
@@ -343,7 +332,7 @@ export const RingGroupModal = withNameList(
                                 handleAddExtensionToGroup(val.extension)
                               }
                             >
-                              {val.extension}
+                              {val.name}, {val.extension}
                             </div>
                           ))}
                       </div>
@@ -391,7 +380,10 @@ export const RingGroupModal = withNameList(
                                 handleRemoveExtensionFromGroup(val)
                               }
                             >
-                              {val}
+                              {extensions.find(
+                                (extension) => extension.extension === val
+                              )?.name || ""}
+                              , {val}
                             </div>
                           ))}
                         </div>

@@ -30,12 +30,13 @@ export const ChartCard = ({
   const data = useMemo(() => {
     return [
       {
-        title: "called",
+        title: "Called",
         value: totalCalls,
         label: undefined,
         img: (
           <img
             className="icon-call-out fa-2x call-icon"
+            alt="total"
             src={totalCallsIcon}
             style={{ width: "30px", height: "30px" }}
           ></img>
@@ -48,6 +49,7 @@ export const ChartCard = ({
         img: (
           <img
             className="icon-call-out fa-2x call-icon"
+            alt="answered"
             src={answeredCallsIcon}
             style={{ width: "30px", height: "30px" }}
           ></img>
@@ -67,10 +69,10 @@ export const ChartCard = ({
       },
       {
         title: "Response time",
-        label: "s",
         img: (
           <img
             className="icon-call-out fa-2x call-icon"
+            alt="Average response time"
             src={responseTimeIcon}
             style={{ width: "30px", height: "30px" }}
           ></img>
@@ -115,8 +117,7 @@ export const ChartCard = ({
             </Card.Body>
             <div className="card-chart-bg">
               <LineChart
-                inLineLabels={chart.string}
-                label={chart.label || chart.title}
+                label={t(chart.title)}
                 color={chart.color}
                 value={chart.value}
               />

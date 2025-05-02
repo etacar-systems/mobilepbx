@@ -73,48 +73,6 @@ export const ringGroupRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }),
-  details: adminProcedure
-    .input(getRingGroupDetails)
-    .query(async ({ ctx: { admin }, input }) => {
-      const companyDetails = await company.findById(admin.cid).select({
-        domain_uuid: true,
-      });
-
-      if (!companyDetails?.domain_uuid) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
-
-      const api_config = {
-        method: "get",
-        maxBodyLength: Infinity,
-        url:
-          config.PBX_API.RING_GROUP.DETAILS +
-          input.uuid +
-          `&domain_uuid=${companyDetails.domain_uuid}`,
-        auth: config.PBX_API.AUTH,
-      };
-
-      try {
-        const response = await axios.request<TRingGroupDetails>(api_config);
-
-        if (response.status === 200) {
-          return {
-            ...response.data[0],
-            context: response.data[0].domain_name,
-            destinations: response.data[0].destinations.slice(1, -1).split(","),
-            domain_id: response.data[0].domain_uuid,
-            extension: response.data[0].ring_group_extension,
-            name: response.data[0].ring_group_name,
-            record_calls: false,
-            // ring_group_caller_id_number: 5,
-          };
-        } else {
-          throw new TRPCError({ code: "BAD_GATEWAY" });
-        }
-      } catch (e) {
-        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-      }
-    }),
   add: adminProcedure
     .input(ringGroupsFormDto)
     .mutation(async ({ ctx: { admin }, input }) => {

@@ -1,10 +1,10 @@
 import { RouterInputs } from "../../contexts";
 import { trpc } from "../../utils/trpc";
 
-type IGetRingGroupDetailsInput = RouterInputs["admin"]["ringGroup"]["details"];
+type IGetRingGroupDetailsInput = RouterInputs["ringGroup"]["details"];
 
 export const useRingGroupDetails = ({ uuid }: Partial<IGetRingGroupDetailsInput>) => {
-  const { data, isFetching, refetch } = trpc.admin.ringGroup.details.useQuery(
+  const { data, isFetching, refetch } = trpc.ringGroup.details.useQuery(
     { uuid: uuid || '' },
     {
       enabled: !!uuid,

@@ -22,7 +22,6 @@ export const LineChart = ({
   value,
   color,
   label,
-  inLineLabels,
 }: ILineChartProps) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
@@ -45,8 +44,8 @@ export const LineChart = ({
   useEffect(() => {
     if (!chartRef.current) return;
 
-    const dynamicMax = value <= 7 ? value : Math.ceil(value / 1.5);
-    const data = Utils.generateArray(value);
+    const dynamicMax = value <= 7 ? Math.ceil(value) : Math.ceil(value / 1.5);
+    const data = Utils.generateArray(Math.ceil(value));
 
     const adjustedMax = dynamicMax > 10 ? getNextMultiple(dynamicMax, 100) : 10;
 
@@ -63,7 +62,7 @@ export const LineChart = ({
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
-        labels: data.map((val) => (inLineLabels ? val + label : label)),
+        labels: data.map(() => label),
         datasets: [
           {
             data,

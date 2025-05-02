@@ -1,49 +1,38 @@
 import moment from "moment/moment";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import Utils from "../utils";
+import { useTranslation } from "react-i18next";
 
 const TimeLable = ({ timeFormate, lastMessageTime, todaytoTime, message }) => {
-  const formattedDate = timeFormate;
+  const { t } = useTranslation();
+
   const dateFormate = "Do MMM YYYY";
 
-  const [TimeFormate, setTimeFormatted] = useState();
-  const now = new Date(lastMessageTime);
-  const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
-  const minutes = now.getMinutes();
-  const amPm = now.getHours() >= 12 ? "pm" : "am";
-  const showingtime = `${hours}:${minutes < 10 ? "0" : ""}${minutes} ${amPm}`;
+  const TimeFormate = useMemo(() => {
+    const now = new Date(lastMessageTime);
 
-  useEffect(() => {
     if (lastMessageTime != null) {
       // if (formattedDate) {
-      const isToday = moment(formattedDate, dateFormate).isSame(
+      const isToday = moment(timeFormate, dateFormate).isSame(
         moment(),
         "day"
       );
-      const isYesterday = moment(formattedDate, dateFormate).isSame(
+      const isYesterday = moment(timeFormate, dateFormate).isSame(
         moment().subtract(1, "days"),
         "day"
       );
-      const isCurrentYear = moment(formattedDate, dateFormate).isSame(
-        moment(),
-        "year"
-      );
+      
       if (isToday) {
-        setTimeFormatted(Utils.timeDisplay(now));
+        return (Utils.timeDisplay(now));
       } else if (isYesterday) {
-        setTimeFormatted("Yesterday");
-      } else if (isCurrentYear) {
-        setTimeFormatted(moment(formattedDate, dateFormate).format("D MMM"));
+        return (t("Yesterday"));
       } else {
-        setTimeFormatted(
-          Utils.dateDisplay(now)
-        );
+        return (moment(timeFormate, dateFormate).format("DD.MM.YYYY"));
       }
     } else {
-      setTimeFormatted("");
+      return ("");
     }
-  }, [timeFormate, lastMessageTime]);
+  }, [t, lastMessageTime, dateFormate, timeFormate]);
 
   return (
     <div>

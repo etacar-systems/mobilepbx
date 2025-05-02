@@ -59,7 +59,7 @@ const ProgressCircle = ({
           style={{
             display: "inline-flex",
             flexDirection: "row",
-            fontSize: "24px",
+            fontSize: "20px",
             fontWeight: "600",
           }}
         >

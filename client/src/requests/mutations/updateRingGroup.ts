@@ -40,7 +40,7 @@ export const useUpdateRingGroup = (props?: IListRingGroupsInput) => {
             }
           );
         }
-        utils.admin.ringGroup.details.invalidate(
+        utils.ringGroup.details.invalidate(
           { uuid: input.uuid },
           {
             refetchType: "none",

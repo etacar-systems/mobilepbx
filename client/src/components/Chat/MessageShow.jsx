@@ -44,6 +44,7 @@ function MessageShow({
   replyOnclick,
   setSidebarobjget,
 }) {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [DeletAllhidee, setDeletAllhidee] = useState([]);
   const getMessageobj = useRef("");
@@ -154,11 +155,9 @@ function MessageShow({
     } else if (messageDate === yesterday.toDateString()) {
       return t("Yesterday");
     } else {
-      const options = { month: "short", day: "numeric" };
       return Utils.dateDisplay(new Date(messageDate));
     }
   };
-  const { t } = useTranslation();
   const handleCopyMessage = (fullobject) => {
     navigator.clipboard.writeText(fullobject.message);
     toast.success(t("Message copied!"), {
@@ -871,7 +870,7 @@ function MessageShow({
                               val?.media_type !== 13 &&
                               val?.media_type !== 14 && (
                                 <p className="msg_left_time">
-                                  {moment(val?.createdAt).format("LT")}
+                                  {moment(val?.createdAt).format("HH:mm")}
                                 </p>
                               )}
                           </div>
@@ -1259,9 +1258,7 @@ function MessageShow({
                               val?.media_type !== 14 && (
                                 <div className="d-flex align-items-center justify-content-end">
                                   <p className="msg_right_time">
-                                    {Utils.timeDisplay(
-                                      moment(val?.createdAt).toDate()
-                                    )}
+                                    {moment(val?.createdAt).format("HH:mm")}
                                   </p>
                                   {val?.delivery_type === 1 ? (
                                     <SingleTick className="single_tick" />
