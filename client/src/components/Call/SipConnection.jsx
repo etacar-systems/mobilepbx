@@ -129,13 +129,13 @@ export default function SipConnection({ show, setShow }) {
   useEffect(() => {
     const pc = new RTCPeerConnection();
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjFjYzYzZWIwN2ViODgzYTQ0ZTRjNTgiLCJlaWQiOiI2NjFjMzRlYmIwN2ViODgzYTQ0ZGZjNWIiLCJkZXZpY2VfaWQiOiJlMjEyYjE2MWVmOTM0NTk0Iiwic2lwX3VzZXJuYW1lIjoiMzAwNSIsInNpcF9wYXNzd29yZCI6IjMwMDUiLCJzaXBfZG9tYWluIjoibXRlc3QxLmNvbSIsInNpcF9pcCI6IjE3Mi4yMC4xMDYuMTQwIiwic2lwX3BvcnQiOiI1MDYwIiwiZW5kcG9pbnROdW1iZXIiOiIzMDA1IiwiY2FsbGVySWQiOiIzMDA1IiwiaWF0IjoxNzE1Nzc3MTI1LCJleHAiOjE3MTU4NjM1MjV9.IEPqCD48jsStQiZODhA7R-UtnsyWdHU5064eso9o60c";
-    if (!token) return;
+    // const token =
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NjFjYzYzZWIwN2ViODgzYTQ0ZTRjNTgiLCJlaWQiOiI2NjFjMzRlYmIwN2ViODgzYTQ0ZGZjNWIiLCJkZXZpY2VfaWQiOiJlMjEyYjE2MWVmOTM0NTk0Iiwic2lwX3VzZXJuYW1lIjoiMzAwNSIsInNpcF9wYXNzd29yZCI6IjMwMDUiLCJzaXBfZG9tYWluIjoibXRlc3QxLmNvbSIsInNpcF9pcCI6IjE3Mi4yMC4xMDYuMTQwIiwic2lwX3BvcnQiOiI1MDYwIiwiZW5kcG9pbnROdW1iZXIiOiIzMDA1IiwiY2FsbGVySWQiOiIzMDA1IiwiaWF0IjoxNzE1Nzc3MTI1LCJleHAiOjE3MTU4NjM1MjV9.IEPqCD48jsStQiZODhA7R-UtnsyWdHU5064eso9o60c";
+    // if (!token) return;
     const Role = Cookies.get("role");
     const user_extension = Cookies.get("user_extension");
     const sip_password = Cookies.get("sip_password");
-    const Sip_number = "5002";
+    // const Sip_number = "5002";
     let domainName = Cookies.get("domain_name");
 
     var socket = new JsSIP.WebSocketInterface("wss://oss.mobiililinja.fi:8443");

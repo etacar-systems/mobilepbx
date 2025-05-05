@@ -82,9 +82,6 @@ jobs:
       with:
         name: client-build
         path: build
-
-    - name: Check build files
-      run: ls -la client/build/
     
     - name: Upload client
       uses: appleboy/scp-action@master
