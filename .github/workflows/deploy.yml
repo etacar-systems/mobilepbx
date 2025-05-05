@@ -172,7 +172,7 @@ jobs:
         script: npm i
 
   restart:
-    needs: upload-client installation-api installation-proxysocket
+    needs: upload-client, installation-api, installation-proxysocket
     runs-on: ubuntu-latest
 
     steps:
