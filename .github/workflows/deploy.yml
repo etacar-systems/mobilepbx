@@ -77,6 +77,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: client-build
+        path: client/build
+    
     - name: Upload client
       uses: appleboy/scp-action@master
       with:
