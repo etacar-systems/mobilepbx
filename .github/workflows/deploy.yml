@@ -89,7 +89,7 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "build/*"
+        source: "build/build/*"
         target: "/var/www/html/"
         overwrite: true
 
