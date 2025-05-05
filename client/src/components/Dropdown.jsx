@@ -43,7 +43,6 @@ function DropDown({
     if (name === "ivr_menu_parent_id") {
       Showstate(valueArray?.find((i) => i.ivr_uuid === showValue)?.name);
     }
-    // eslint-disable-next-line
   }, [showValue, valueArray]);
 
   useEffect(() => {

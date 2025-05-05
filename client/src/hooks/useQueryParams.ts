@@ -70,7 +70,6 @@ export const useQueryParams = <
       };
       acc[key] = a;
       return acc;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, {} as any);
   }, [navigate, queryKeys, queryParams]);
 
