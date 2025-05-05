@@ -70,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: client-build
-        path: client/build
+        path: client/build/
 
   upload-client:
     needs: build
@@ -81,7 +81,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: client-build
-        path: client/build
+        path: build
 
     - name: Check build files
       run: ls -la client/build/
@@ -92,7 +92,7 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "client/build/."
+        source: "build/*"
         target: "/var/www/html/"
         overwrite: true
 
