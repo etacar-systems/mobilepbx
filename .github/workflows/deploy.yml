@@ -92,6 +92,7 @@ jobs:
         source: "build/*"
         target: "/var/www/html"
         overwrite: true
+        strip_components: 1
 
   # upload-api:
   #   runs-on: ubuntu-latest
