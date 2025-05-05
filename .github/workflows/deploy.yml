@@ -90,7 +90,7 @@ jobs:
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
         source: "client/build/*"
-        target: "/var/www/html"
+        target: "/var/www/html/"
         overwrite: true
 
   upload-api:
@@ -113,7 +113,7 @@ jobs:
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
         source: "nodejs/src/*"
-        target: "/var/www/html/nodejs/src"
+        target: "/var/www/html/nodejs/src/"
         overwrite: true
 
     - name: Upload api dependencies files
@@ -123,7 +123,7 @@ jobs:
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
         source: "nodejs/package-lock.json,nodejs/package.json,nodejs/mobininja_backend.ts,nodejs/tsconfig.json"
-        target: "/var/www/html/nodejs"
+        target: "/var/www/html/nodejs/"
         overwrite: true
 
   upload-proxysocket:
@@ -141,7 +141,7 @@ jobs:
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
         source: "proxysocket/src/*"
-        target: "/var/www/html/proxysocket/src"
+        target: "/var/www/html/proxysocket/src/"
         overwrite: true
 
     - name: Upload proxysocket dependencies files
@@ -151,7 +151,7 @@ jobs:
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
         source: "proxysocket/package-lock.json,proxysocket/package.json,proxysocket/mobininja_socket.ts,proxysocket/tsconfig.json"
-        target: "/var/www/html/proxysocket"
+        target: "/var/www/html/proxysocket/"
         overwrite: true
 
   installation-api:
@@ -165,8 +165,9 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        target: "/var/www/html/nodejs"
-        script: npm i
+        script: |
+          cd /var/www/html/nodejs
+          npm i
 
   installation-proxysocket:
     needs: upload-proxysocket
@@ -179,8 +180,9 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        target: "/var/www/html/proxysocket"
-        script: npm i
+        script: |
+          cd /var/www/html/proxysocket
+          npm i
 
   restart:
     needs: [upload-client, installation-api, installation-proxysocket]
