@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -89,7 +89,7 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "client/build/*"
+        source: "client/build/."
         target: "/var/www/html/"
         overwrite: true
 
