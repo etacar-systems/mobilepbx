@@ -73,7 +73,7 @@ class EventSocket
                 //set defaults
                 if ($host == '') { $host = '127.0.0.1'; }
                 if ($port == '') { $port = '8021'; }
-                if ($password == '') { $password = 'ClueCon'; }
+                if ($password == '') { $password = '5NOiMPw6S7ei'; }
 
                 try {
                         $fp = fsockopen($host, $port, $errno, $errdesc, 3);

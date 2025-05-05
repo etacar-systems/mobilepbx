@@ -1,6 +1,8 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { Role } from "./role";
 
+export const userStatuses = ['online', 'available', 'away', 'busy', 'lunch', 'vacation', 'other'] as const;
+
 export interface User {
   cid: String;
   pstn_number: String;
@@ -22,6 +24,7 @@ export interface User {
   extension_uuid: String;
   last_updated_user: String;
   user_record: Boolean;
+  status: typeof userStatuses;
 }
 
 export interface UserModel extends User, Document {}
@@ -113,6 +116,11 @@ const UserSchema: Schema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      enum: userStatuses,
+      default: 'online'
+    }
   },
   {
     timestamps: true,

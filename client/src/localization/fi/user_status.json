@@ -1,0 +1,10 @@
+{
+  "online": "paikalla",
+  "offline": "poissa",
+  "available": "saatavilla",
+  "busy": "varattu",
+  "away": "poissa",
+  "lunch": "lounas",
+  "vacation": "loma",
+  "other": "muu"
+}

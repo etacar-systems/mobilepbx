@@ -1,8 +1,11 @@
 import React, { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChangeHandler } from "react-hook-form";
+
+import styles from "./dropDown.module.scss";
 
 import { ReactComponent as ArrowIcon } from "../../../Assets/Icon/Dropdownicon.svg";
+
+export interface ISyntheticEvent { target: { value: any; name?: string } };
 
 interface ICustomDropDownProps<
   T extends { [key: string]: any } = { [key: string]: any }
@@ -15,7 +18,9 @@ interface ICustomDropDownProps<
   disabled?: boolean;
   placeHolder?: string;
   sort?: boolean;
-  onChange?: any;
+  onChange?: (e: ISyntheticEvent) => void;
+  translateLabels?: boolean;
+  style?: any;
 }
 
 export const DropDown = ({
@@ -28,6 +33,8 @@ export const DropDown = ({
   disabled,
   placeHolder,
   onChange: onChangeExternal,
+  translateLabels,
+  style,
 }: ICustomDropDownProps) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const { t } = useTranslation();
@@ -62,33 +69,33 @@ export const DropDown = ({
   );
 
   return (
-    <div>
-      <div
-        className="Selfmade-dropdown "
-        // style={{
-        // width: "100%",
-        // backgroundColor: mode === "edit" ? "var(--main-input-disabled)" : "",
-        // }}
-      >
+    <div style={style}>
+      <div className="Selfmade-dropdown ">
         <div
           className="Selfmadedropdown-btn "
           onClick={disabled ? undefined : onClick}
-          // style={{
-          // background: bgcolor,
-          // width: fullWidth ? undefined : "100px",
-          // }}
         >
           <div className="elipsisDrodownshow">
-            {(options?.find((val) => val[valueKey] === value) || {})[
-              labelKey
-            ] || placeHolder || ""}
+            {(translateLabels
+              ? t(
+                  (options?.find((val) => val[valueKey] === value) || {})[
+                    labelKey
+                  ]
+                )
+              : (options?.find((val) => val[valueKey] === value) || {})[
+                  labelKey
+                ]) ||
+              placeHolder ||
+              ""}
           </div>
           <div>
             <ArrowIcon />
           </div>
         </div>
         {isOpen ? (
-          <ul className="Selfmadedropdown-content">
+          <ul
+            className={["Selfmadedropdown-content", styles.wrapper].join(" ")}
+          >
             {options && options.length > 0 ? (
               (!sort ? options : options?.sort()).map((item, index) => {
                 return (
@@ -97,7 +104,7 @@ export const DropDown = ({
                     className="elipsisDrodownshow"
                     onClick={onChangeFabric(item)}
                   >
-                    {item[labelKey]}
+                    {translateLabels ? t(item[labelKey]) : item[labelKey]}
                   </li>
                 );
               })

@@ -1,0 +1,10 @@
+{
+  "online": "online",
+  "offline": "offline",
+  "available": "available",
+  "busy": "busy",
+  "away": "away",
+  "lunch": "lunch",
+  "vacation": "vacation",
+  "other": "other"
+}

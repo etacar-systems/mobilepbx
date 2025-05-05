@@ -5,7 +5,7 @@ import { publicProcedure, ITokenPayload } from "../../../utils/trpc";
 import { config } from "../../../config";
 
 import role from "../../../models/role";
-import user from "../../../models/user";
+import user, { userStatuses } from "../../../models/user";
 import user_tokens from "../../../models/user_tokens";
 
 export const authorizedProcedure = publicProcedure.use(
@@ -51,6 +51,7 @@ export const authorizedProcedure = publicProcedure.use(
           mobile: string;
           country: string;
           user_record: boolean;
+          status: (typeof userStatuses)[number],
           createdAt: Date;
           updatedAt: Date;
         }

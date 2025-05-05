@@ -6,4 +6,5 @@ export * from './removeVideo';
 export * from './updateChatCredentials';
 export * from './updatePSTNNumber';
 export * from './updateRingGroup';
+export * from './updateUserStatus';
 export * from './uploadVideo';

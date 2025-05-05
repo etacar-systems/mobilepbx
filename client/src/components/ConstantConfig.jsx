@@ -69,14 +69,6 @@ export default {
     },
   },
 };
-export const SELECTSTATUS = [
-  { item: "Available" },
-  { item: "Away" },
-  { item: "Busy" },
-  { item: "Lunch" },
-  { item: "Vacation" },
-  { item: "Other" },
-];
 export const TRANSFERCALL = [
   { item: "No transfer" },
   { item: "Extension" },

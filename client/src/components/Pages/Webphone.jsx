@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Card, Col, Nav, Row, Spinner, Tab, Table } from "react-bootstrap";
 import ChatList from "./ChatList";
 import "./webphoneCss.css";
-import './Dashboard/DashboardCss.css';
+import "./Dashboard/DashboardCss.css";
 import ContactCardModal from "./webphoneModal";
 import DialPad from "../Call/DialPad";
 import Cookies from "js-cookie";
@@ -17,11 +17,6 @@ import { setExtensionStatus } from "../../Redux/Reducers/DataServices";
 export default function Webphone() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("Extension");
-  const statusType = {
-    online: "Online",
-    offline: "Offline",
-    busy: "Busy",
-  };
   const dispatch = useDispatch();
   const allListeners = useSelector((state) => state.allListeners.allListeners);
   useEffect(() => {
@@ -299,7 +294,7 @@ export default function Webphone() {
                           {t("Contact")}
                         </Nav.Link>
                       </Nav.Item>
-                    {/* <Nav.Item className="custom-nav-item">
+                      {/* <Nav.Item className="custom-nav-item">
                         <Nav.Link eventKey="BLF" className="nav-link2">
                           {t("BLF")}
                         </Nav.Link>
@@ -343,11 +338,15 @@ export default function Webphone() {
                                 const isOnline = statusItem?.is_online === 1;
                                 const isBusy = statusItem?.isbusy === 1;
 
-                                const statusText = isBusy
-                                  ? statusType.busy
+                                const status = isBusy
+                                  ? "busy"
                                   : isOnline
-                                  ? statusType.online
-                                  : statusType.offline;
+                                  ? statusItem?.status
+                                    ? statusItem.status
+                                    : "online"
+                                  : "offline";
+
+                                const statusText = t(`user_status.${status}`);
 
                                 const statusClass = isBusy
                                   ? "Busy"
@@ -368,7 +367,7 @@ export default function Webphone() {
                                       image={item?.user_image}
                                       message={statusText}
                                       status={statusText}
-                                      statusClass={statusClass}
+                                      statusName={status}
                                       activeTab={activeTab}
                                       onOpenModal={() =>
                                         openModal({
@@ -394,9 +393,14 @@ export default function Webphone() {
                         >
                           <div className="row g-0">
                             {groupList?.map((item) => {
-                              const isGroupOnline = item.user_details.some((user) => user.is_online === 1);
-                              const statusText = isGroupOnline ? "Online" : "Offline";
+                              const isGroupOnline = item.user_details.some(
+                                (user) => user.is_online === 1
+                              );
 
+                              const status = isGroupOnline
+                                ? "online"
+                                : "offline";
+                              const statusText = t(`user_status.${status}`);
                               return (
                                 <div
                                   className="col-12 col-sm-4"
@@ -408,7 +412,7 @@ export default function Webphone() {
                                     name={item.name}
                                     message={statusText}
                                     status={statusText}
-                                    statusClass={statusText}
+                                    statusName={status}
                                     activeTab={activeTab}
                                     onOpenModal={(e) =>
                                       openModal({
@@ -447,7 +451,7 @@ export default function Webphone() {
                                     }
                                     message="Online"
                                     status="Online"
-                                    statusClass="online"
+                                    statusName="online"
                                     activeTab={activeTab}
                                     onOpenModal={(e) =>
                                       openModal({
@@ -480,7 +484,7 @@ export default function Webphone() {
                                         name="Function"
                                         message=""
                                         status=""
-                                        statusClass="online"
+                                        statusName="online"
                                         onOpenModal={(e) =>
                                           openModal(e, "Function", 185)
                                         }
@@ -491,7 +495,7 @@ export default function Webphone() {
                                         name="Function"
                                         message=""
                                         status=""
-                                        statusClass="busy"
+                                        statusName="busy"
                                         onOpenModal={(e) =>
                                           openModal(e, "Function", 180)
                                         }
@@ -502,7 +506,7 @@ export default function Webphone() {
                                         name="Function"
                                         message=""
                                         status=""
-                                        statusClass="offline"
+                                        statusName="offline"
                                         onOpenModal={(e) =>
                                           openModal(e, "Function", 181)
                                         }

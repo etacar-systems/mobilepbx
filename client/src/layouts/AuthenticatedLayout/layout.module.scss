@@ -57,3 +57,43 @@
 .header {
   border: 1px solid var(--main-bordermodaldashboard-color);
 }
+
+.userStatus {
+  &_busy {
+    --color: var(--main-badgebusy-color);
+  }
+
+  &_online,
+  &_available {
+    --color: var(--main-green-color);
+  }
+
+  &_vacation {
+    --color: #0180ff;
+  }
+
+  &_other {
+    --color: #ffe401;
+  }
+
+  &_lunch {
+    --color: #ba01ff;
+  }
+
+  &_away {
+    --color: #ff01c5;
+  }
+
+  &_offline {
+    --color: var(--main-orangecustomermodal-color)
+  }
+
+  &_badge {
+    width: 12px;
+    height: 12px;
+    border-radius: 100px;
+    outline: 3px solid var(--main-white-color);
+  }
+
+  background-color: var(--color);
+}

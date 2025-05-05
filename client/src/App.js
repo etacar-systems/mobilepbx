@@ -177,9 +177,7 @@ function App() {
               path="/dashboard"
               element={
                 <Protected>
-                  <Suspense fallback={<></>}>
-                    <DashboardPage />
-                  </Suspense>
+                  <DashboardPage />
                 </Protected>
               }
             />
@@ -204,9 +202,7 @@ function App() {
               path="/ring"
               element={
                 <Protected>
-                  <Suspense fallback={<></>}>
-                    <RingGroups />
-                  </Suspense>
+                  <RingGroups />
                 </Protected>
               }
             />
@@ -291,9 +287,7 @@ function App() {
               path="/pstn"
               element={
                 <Protected>
-                  <Suspense fallback={<></>}>
-                    <PSTNNumbersPage />
-                  </Suspense>
+                  <PSTNNumbersPage />
                 </Protected>
               }
             />
@@ -333,9 +327,7 @@ function App() {
               path="/video"
               element={
                 <Protected>
-                  <Suspense fallback={<></>}>
-                    <VideoUploadPage />
-                  </Suspense>
+                  <VideoUploadPage />
                 </Protected>
               }
             />
@@ -343,9 +335,7 @@ function App() {
               path="/support"
               element={
                 <Protected>
-                  <Suspense fallback={<></>}>
-                    <SupportPage />
-                  </Suspense>
+                  <SupportPage />
                 </Protected>
               }
             />
@@ -381,9 +371,7 @@ function App() {
               path="/dashboard"
               element={
                 <Protected>
-                  <Suspense fallback={<></>}>
-                    <DashboardPage />
-                  </Suspense>
+                  <DashboardPage />
                 </Protected>
               }
             />

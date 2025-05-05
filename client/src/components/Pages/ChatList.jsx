@@ -1,17 +1,20 @@
 import React from "react";
+
+import statusClassName from '../../layouts/AuthenticatedLayout/layout.module.scss'
+
 function ChatList({
   usersOnline,
   name,
   message,
   status,
-  statusClass,
+  statusName,
   onOpenModal,
   activeTab,
   badge,
   image,
 }) {
   return (
-    <ul className={`right_chat list-unstyled mb-0 ${statusClass}`}>
+    <ul className={`right_chat list-unstyled mb-0`}>
       <li className={`${status}`}>
         <a href="#" data-toggle="modal" data-target="#contactcard">
           <div
@@ -22,12 +25,12 @@ function ChatList({
             <div
               className="avtar-pic w35 bg-cyan"
               style={{
-                fontSize:"18px",
+                fontSize: "18px",
                 flexShrink: 0,
                 backgroundColor: "var(--main-orange-color)",
               }}
             >
-             {image ? (
+              {image ? (
                 <img
                   style={{ height: "34px", width: "34px", borderRadius: "5px" }}
                   src={process.env.REACT_APP_FILE_BASE_URL + "/" + image}
@@ -54,8 +57,15 @@ function ChatList({
               >
                 {name}
               </span>
-              <span className="message webchatstatus m-0">{message}</span>
-              {badge && <span className="badge badge-outline status"></span>}
+              <span
+                style={{
+                  textTransform: "capitalize",
+                }}
+                className="message webchatstatus m-0"
+              >
+                {message}
+              </span>
+              {badge && <span className={`badge badge-outline status ${statusClassName.userStatus} ${statusClassName.userStatus_badge} ${statusClassName[`userStatus_${statusName}`]}`}></span>}
             </div>
           </div>
         </a>

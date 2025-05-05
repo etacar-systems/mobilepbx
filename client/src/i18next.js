@@ -3,6 +3,8 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import Cookies from "js-cookie";
+import { fi } from "./localization/fi";
+import { en } from "./localization/en";
 
 const language = Cookies.get("language") || "en";
 i18n
@@ -14,6 +16,7 @@ i18n
     resources: {
       fi: {
         translation: {
+          ...fi,
           "Destination number must be between start and end digits long.":
             "Destination number must be between {{ start, number }} and {{ end, number }} digits long.",
             
@@ -1884,6 +1887,7 @@ i18n
       },
       en: {
         translation: {
+          ...en,
           "Ring group with this extension already exist": "Ring group with this extension already exist",
           "Destination number must be between start and end digits long.":
             "Destination number must be between {{ start, number }} and {{ end, number }} digits long.",

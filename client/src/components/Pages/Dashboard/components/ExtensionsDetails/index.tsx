@@ -5,12 +5,17 @@ import { useSelector } from "react-redux";
 import { RingGroups } from "./RingGroups";
 import { IGetDashboardStatisticOutput } from "../../../../../requests/queries";
 
+import userStatusStyles from "../../../../../layouts/AuthenticatedLayout/layout.module.scss";
+
 interface IExtensionsDetailsProps {
   extensions?: NonNullable<IGetDashboardStatisticOutput>["data"];
   ringGroups?: NonNullable<IGetDashboardStatisticOutput>["ring_group"];
 }
 
-export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetailsProps) => {
+export const ExtensionsDetails = ({
+  extensions,
+  ringGroups,
+}: IExtensionsDetailsProps) => {
   const { t } = useTranslation();
   // @ts-ignore
   const allListeners = useSelector((state) => state.allListeners.allListeners);
@@ -64,35 +69,50 @@ export const ExtensionsDetails = ({ extensions, ringGroups }: IExtensionsDetails
                             <p className="mb-0 text-muted text-size">
                               {t("Status")}:{" "}
                               <Badge
-                                className="but-badge"
+                                className={[
+                                  "but-badge",
+                                  userStatusStyles[
+                                    `userStatus_${
+                                      allListeners?.listener_params?.online_extension?.find(
+                                        (extension: any) =>
+                                          extension.extension_uuid ===
+                                          val.extension_uuid
+                                      )?.status || "offline"
+                                    }`
+                                  ],
+                                ].join(" ")}
                                 style={{
                                   color:
-                                  !!allListeners?.listener_params?.busy_extension?.find(
-                                    (extension: any) =>
-                                      extension.extension_uuid ===
-                                      val.extension_uuid
-                                  ) ? "var(--main-red-color)" : 
-                                    !!allListeners?.listener_params?.online_extension?.find(
+                                    !!allListeners?.listener_params?.busy_extension?.find(
                                       (extension: any) =>
                                         extension.extension_uuid ===
                                         val.extension_uuid
                                     )
-                                      ? "var(--main-green-color)"
+                                      ? "var(--main-red-color)"
+                                      : !!allListeners?.listener_params?.online_extension?.find(
+                                          (extension: any) =>
+                                            extension.extension_uuid ===
+                                            val.extension_uuid
+                                        )
+                                      ? "var(--color)"
                                       : "var(--main-orangecustomermodal-color)",
                                 }}
                               >
-                                {
-                                !!allListeners?.listener_params?.busy_extension?.find(
-                                  (extension: any) =>
-                                    extension.extension_uuid ===
-                                    val.extension_uuid
-                                ) ? t("Busy") : !!allListeners?.listener_params?.online_extension?.find(
+                                {!!allListeners?.listener_params?.busy_extension?.find(
                                   (extension: any) =>
                                     extension.extension_uuid ===
                                     val.extension_uuid
                                 )
-                                  ? t("Online")
-                                  : t("Offline")}
+                                  ? t("user_status.busy")
+                                  : t(
+                                      `user_status.${
+                                        allListeners?.listener_params?.online_extension?.find(
+                                          (extension: any) =>
+                                            extension.extension_uuid ===
+                                            val.extension_uuid
+                                        )?.status || "offline"
+                                      }`
+                                    )}
                               </Badge>
                             </p>
                           </td>

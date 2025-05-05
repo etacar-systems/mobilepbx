@@ -20,18 +20,22 @@ import Supports from "../../components/Chat/Supports";
 import { company_Features } from "../../components/ConstantConfig";
 import LanguageSelect from "../../components/Modal/LanguageSelect";
 import CustomDropDown from "../../components/CustomDropDown";
-import { SELECTSTATUS } from "../../components/ConstantConfig";
 import { ActionBar, Logo } from "./components";
 import {
   adminMenuConfig,
   agentMenuConfig,
   superAdminMenuConfig,
 } from "./pathsConfigs";
+import { DropDown, ISyntheticEvent } from "../../components/shared";
+import { useAgentStatuses } from "../../requests/queries";
 
 import classNames from "./layout.module.scss";
+import { useMeContext } from "../../contexts/MeContext";
+import { useUpdateUserStatus } from "../../requests/mutations";
 
 export const AuthenticatedLayout = ({ children }: PropsWithChildren) => {
   const { t } = useTranslation();
+  const { me } = useMeContext();
 
   // @ts-ignore
   const sipRegister = useSelector((state) => state.sipconnect.sipconnect);
@@ -139,7 +143,7 @@ export const AuthenticatedLayout = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (sideRef.current && !sideRef.current.contains(event.target as Node)) {
-      setIsSidebarOpen(false);
+        setIsSidebarOpen(false);
       }
     };
 
@@ -162,19 +166,27 @@ export const AuthenticatedLayout = ({ children }: PropsWithChildren) => {
     }
   }, [navigate]);
 
-  const openModal = () => {
-    setShow(true);
-  };
   const openModal2 = () => {
     setShow2(true);
   };
 
   let path1 = window.location.pathname;
 
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const { statuses } = useAgentStatuses();
 
-  const toggleDropdown = (dropdown: any) => {
-    setOpenDropdown((prevState) => (prevState === dropdown ? null : dropdown));
+  const options = useMemo(() => {
+    return (
+      statuses?.map((status) => ({
+        value: status,
+        label: `user_status.${status}`,
+      })) || []
+    );
+  }, [statuses]);
+
+  const { updateUserStatus } = useUpdateUserStatus();
+
+  const onUserStatusChange = (event: ISyntheticEvent) => {
+    updateUserStatus({ status: event.target.value });
   };
 
   return (
@@ -288,9 +300,7 @@ export const AuthenticatedLayout = ({ children }: PropsWithChildren) => {
                   {t("Support")}
                 </div>
               </div>
-              <div
-                className="d-flex align-items-center gap-3"
-              >
+              <div className="d-flex align-items-center gap-3">
                 {role === 1 && (
                   <div
                     className="d-flex align-items-center"
@@ -313,22 +323,18 @@ export const AuthenticatedLayout = ({ children }: PropsWithChildren) => {
                 )}
 
                 {window.location.pathname === "/webphone" && (
-                  <CustomDropDown
-                    toggleDropdown={toggleDropdown}
-                    openDropdown={openDropdown}
-                    valueArray={SELECTSTATUS}
-                    handleSelection={() => {}}
-                    name={"selectstatus"}
-                    defaultValue={t("Available")}
-                    mapValue={"item"}
-                    storeValue={"item"}
-                    setOpenDropdown={setOpenDropdown}
-                    sorting={true}
-                    showValue={undefined}
-                    bgcolor={undefined}
-                    mode={undefined}
-                    fullWidth={undefined}
-                  />
+                  <>
+                    <div className={[classNames.userStatus, classNames.userStatus_badge, classNames[`userStatus_${me.status}`]].join(" ")}></div>
+                    <DropDown
+                      labelKey={"label"}
+                      valueKey={"value"}
+                      value={me.status}
+                      style={{ minWidth: "100px", textTransform: "capitalize" }}
+                      onChange={onUserStatusChange}
+                      options={options}
+                      translateLabels
+                    />
+                  </>
                 )}
               </div>
             </div>

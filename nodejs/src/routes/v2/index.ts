@@ -10,10 +10,12 @@ import { recordingRouter } from "./recording";
 import { ringGroupRouter } from "./ringGroup";
 import { superAdminRouter } from "./superAdminRouter";
 import { trunkRouter } from "./trunk";
+import { userRouter } from "./user";
 
 export const appRouter = router({
   admin: adminRouter,
   superAdmin: superAdminRouter,
+  agent: userRouter,
 
   conference: conferenceRouter,
   company: companyRouter,

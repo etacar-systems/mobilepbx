@@ -1,5 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+export const userStatuses = ['online', 'available', 'away', 'busy', 'lunch', 'vacation', 'other'] as const;
+
 export interface User {
   cid: String;
   first_name: String;
@@ -14,6 +16,7 @@ export interface User {
   user_extension:String;
   user_email:String;
   conversation_deleted_users: String;
+  status: typeof userStatuses,
 }
 
 export interface UserModel extends User, Document { }
@@ -67,6 +70,11 @@ const UserSchema: Schema = new Schema({
   user_email:{
     type:String,
     required: "user_email is required",
+  },
+  status: {
+    type: String,
+    enum: userStatuses,
+    default: 'online'
   },
   conversation_deleted_users: [{
     type: String
