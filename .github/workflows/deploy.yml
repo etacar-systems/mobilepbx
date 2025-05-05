@@ -89,12 +89,12 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "client/build/*"
+        source: "build/*"
         target: "/var/www/html/"
         overwrite: true
+      working-directory: client
 
   upload-api:
-    # needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -112,19 +112,21 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "nodejs/src/*"
-        target: "/var/www/html/nodejs/src/"
+        source: "src,package-lock.json,package.json,mobininja_backend.ts,tsconfig.json"
+        target: "/var/www/html/nodejs"
         overwrite: true
+      working-directory: nodejs
 
-    - name: Upload api dependencies files
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ env.SSH_HOST }}
-        username: ${{ env.SSH_USERNAME }}
-        password: ${{ env.SSH_PASSWORD }}
-        source: "nodejs/package-lock.json,nodejs/package.json,nodejs/mobininja_backend.ts,nodejs/tsconfig.json"
-        target: "/var/www/html/nodejs/"
-        overwrite: true
+    # - name: Upload api dependencies files
+    #   uses: appleboy/scp-action@master
+    #   with:
+    #     host: ${{ env.SSH_HOST }}
+    #     username: ${{ env.SSH_USERNAME }}
+    #     password: ${{ env.SSH_PASSWORD }}
+    #     source: "nodejs/package-lock.json,nodejs/package.json,nodejs/mobininja_backend.ts,nodejs/tsconfig.json"
+    #     target: "/var/www/html/nodejs/"
+    #     overwrite: true
+      
 
   upload-proxysocket:
     # needs: build
