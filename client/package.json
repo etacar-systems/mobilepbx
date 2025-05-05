@@ -72,12 +72,6 @@
     "eject": "react-scripts eject",
     "postbuild": "rimraf build/static/**/*.map"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -94,7 +88,7 @@
     "@types/c3": "^0.7.11",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash.debounce": "^4.0.9",
-    "sass": "^1.86.0"
+    "sass": "^1.87.0"
   },
   "overrides": {
     "typescript": "^5.0.1"
