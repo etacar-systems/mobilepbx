@@ -18,7 +18,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build client code
+    - name: Setup Node.js
+      uses: actions/setup-node
+      with:
+        node-version: '23.1.0'
+
+    - name: Install dependencies and build client code
       env: 
         REACT_APP_MOBIILILINJA_BASE_URL: https://pabx.mobiililinja.fi/v1
         REACT_APP_MOBIILILINJA_FILE_BASE_URL: https://pabx.mobiililinja.fi/
@@ -70,6 +75,20 @@ jobs:
         source: "client/build"
         target: "/var/www/html"
         overwrite: true
+
+  # installation:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - name: install api dependencies
+  #     uses: appleboy/scp-action@master
+  #     with:
+  #       host: ${{ env.SSH_HOST }}
+  #       username: ${{ env.SSH_USERNAME }}
+  #       password: ${{ env.SSH_PASSWORD }}
+  #       target: "/var/www/html/nodejs"
+  #       script: npm i
 
   restart:
     needs: upload

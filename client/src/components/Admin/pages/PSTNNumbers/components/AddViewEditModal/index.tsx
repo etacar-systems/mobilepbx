@@ -55,7 +55,12 @@ export const AddViewEditModal = ({
           _id: string;
           gateway_name: string;
       }) => trunkName._id),
-        companiesNames.map((companyName) => companyName._id)
+        companiesNames.map((companyName: {
+          _id: string;
+          company_name: string;
+          domain_name: string;
+          domain_uuid: string;
+      }) => companyName._id)
       )
     ),
     defaultValues: {
