@@ -166,17 +166,17 @@ jobs:
   #         npm i
 
   # restart:
-    needs: [upload-client, installation-api, installation-proxysocket]
-    runs-on: ubuntu-latest
+  #   needs: [upload-client, installation-api, installation-proxysocket]
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Restart server with pm2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.SSH_HOST }}
-        username: ${{ env.SSH_USERNAME }}
-        password: ${{ env.SSH_PASSWORD }}
-        script: |
-          pm2 --update-env restart mobininja_socket
-          pm2 --update-env restart mobininja_backend
-          pm2 --update-env restart node-ts
+  #   steps:
+  #   - name: Restart server with pm2
+  #     uses: appleboy/ssh-action@master
+  #     with:
+  #       host: ${{ env.SSH_HOST }}
+  #       username: ${{ env.SSH_USERNAME }}
+  #       password: ${{ env.SSH_PASSWORD }}
+  #       script: |
+  #         pm2 --update-env restart mobininja_socket
+  #         pm2 --update-env restart mobininja_backend
+  #         pm2 --update-env restart node-ts
