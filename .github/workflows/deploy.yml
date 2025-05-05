@@ -104,7 +104,7 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "/nodejs/src"
+        source: "/nodejs/src/*"
         target: "/var/www/html/nodejs/src"
         overwrite: true
 
@@ -129,7 +129,7 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "/proxysocket/src"
+        source: "/proxysocket/src/*"
         target: "/var/www/html/proxysocket/src"
         overwrite: true
 
