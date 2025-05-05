@@ -1,0 +1,53 @@
+name: Deploy Client Code
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SSH_HOST: 70.34.195.182 # ${{ secrets.SSH_HOST }}
+  SSH_USERNAME: root # ${{ secrets.SSH_USERNAME }}
+  SSH_PASSWORD: .a9Ld?fwUz)Je-N? # ${{ secrets.SSH_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build client code
+      run: |
+        cd client
+        npm install
+        npm run build
+
+  upload:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Upload client
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        source: "client/build"
+        target: "/var/www/html"
+        overwrite: true
+
+  restart:
+    needs: upload
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Restart server with pm2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        script: pm2 --update-env restart node-ts
