@@ -161,6 +161,7 @@ jobs:
     needs: upload-proxysocket
     runs-on: ubuntu-latest
 
+    steps:
     - name: install proxysocket dependencies
       uses: appleboy/scp-action@master
       with:
