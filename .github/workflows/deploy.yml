@@ -89,8 +89,8 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        source: "build/build/*"
-        target: "/var/www/html/"
+        source: "build/*"
+        target: "/var/www/html"
         overwrite: true
 
   # upload-api:
