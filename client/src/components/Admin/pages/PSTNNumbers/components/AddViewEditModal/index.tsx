@@ -51,7 +51,10 @@ export const AddViewEditModal = ({
   } = useForm<TPSTNNumberFormArgs>({
     resolver: zodResolver(
       pstnNumberRangeDto(
-        trunksNames.map((trunkName) => trunkName._id),
+        trunksNames.map((trunkName: {
+          _id: string;
+          gateway_name: string;
+      }) => trunkName._id),
         companiesNames.map((companyName) => companyName._id)
       )
     ),
