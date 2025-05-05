@@ -93,48 +93,68 @@ jobs:
         target: "/var/www/html"
         overwrite: true
 
-  #   - name: Upload api
-  #     uses: appleboy/scp-action@master
-  #     with:
-  #       host: ${{ env.SSH_HOST }}
-  #       username: ${{ env.SSH_USERNAME }}
-  #       password: ${{ env.SSH_PASSWORD }}
-  #       source: "nodejs/src"
-  #       target: "/var/www/html/nodejs/src"
-  #       overwrite: true
+    - name: Upload api
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        source: "nodejs/src"
+        target: "/var/www/html/nodejs/src"
+        overwrite: true
 
-  #   - name: Upload api dependencies files
-  #     uses: appleboy/scp-action@master
-  #     with:
-  #       host: ${{ env.SSH_HOST }}
-  #       username: ${{ env.SSH_USERNAME }}
-  #       password: ${{ env.SSH_PASSWORD }}
-  #       source: "nodejs/package-lock.json,nodejs/package.json"
-  #       target: "/var/www/html/nodejs"
-  #       overwrite: true
+    - name: Upload api dependencies files
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        source: "nodejs/package-lock.json,nodejs/package.json,nodejs/mobininja_backend.ts,nodejs/tsconfig.json"
+        target: "/var/www/html/nodejs"
+        overwrite: true
 
-  # installation:
-  #   needs: build
-  #   runs-on: ubuntu-latest
+    - name: Upload proxysocket
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        source: "proxysocket/src"
+        target: "/var/www/html/proxysocket/src"
+        overwrite: true
 
-  #   steps:
-  #   - name: install api dependencies
-  #     uses: appleboy/scp-action@master
-  #     with:
-  #       host: ${{ env.SSH_HOST }}
-  #       username: ${{ env.SSH_USERNAME }}
-  #       password: ${{ env.SSH_PASSWORD }}
-  #       target: "/var/www/html/nodejs"
-  #       script: npm i
+    - name: Upload proxysocket dependencies files
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        source: "proxysocket/package-lock.json,proxysocket/package.json,proxysocket/mobininja_socket.ts,proxysocket/tsconfig.json"
+        target: "/var/www/html/proxysocket"
+        overwrite: true
 
-  #   - name: install proxysocket dependencies
-  #     uses: appleboy/scp-action@master
-  #     with:
-  #       host: ${{ env.SSH_HOST }}
-  #       username: ${{ env.SSH_USERNAME }}
-  #       password: ${{ env.SSH_PASSWORD }}
-  #       target: "/var/www/html/proxysocket"
-  #       script: npm i
+  installation:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: install api dependencies
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        target: "/var/www/html/nodejs"
+        script: npm i
+
+    - name: install proxysocket dependencies
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ env.SSH_PASSWORD }}
+        target: "/var/www/html/proxysocket"
+        script: npm i
 
   restart:
     needs: upload
@@ -147,4 +167,7 @@ jobs:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
         password: ${{ env.SSH_PASSWORD }}
-        script: pm2 --update-env restart node-ts
+        script: |
+          pm2 --update-env restart mobininja_socket
+          pm2 --update-env restart mobininja_backend
+          pm2 --update-env restart node-ts
